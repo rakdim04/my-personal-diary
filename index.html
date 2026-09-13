@@ -1,1 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
 
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#6b4226">
+
+  <meta name="description"
+        content="My Personal Diary - Daily Journal">
+
+  <link rel="manifest" href="manifest.json">
+
+  <title>My Personal Diary</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Georgia, serif;
+      background: #cbb99a;
+      color: #3d2b1f;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: auto;
+      padding: 12px;
+    }
+
+    /* HEADER */
+
+    .header {
+      background: #6b4226;
+      color: white;
+      padding: 18px;
+      border-radius: 16px;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.25);
+    }
+
+    .header small {
+      display: block;
+      font-size: 13px;
+      margin-top: 5px;
+      opacity: 0.8;
+    }
+
+
+    /* DATE CONTROLS */
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+
+    .date-display {
+      font-weight: bold;
+      font-size: 17px;
+      text-align: center;
+    }
+
+    button {
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      background: #6b4226;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+
+    /* DIARY PAGE */
+
+    .diary-page {
+
+      position: relative;
+
+      background-color: #fffdf4;
+
+      min-height: 620px;
+
+      padding:
+        40px
+        25px
+        30px
+        65px;
+
+      border-radius: 10px;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,0,0,0.25);
+
+      background-image:
+        repeating-linear-gradient(
+          to bottom,
+          #fffdf4 0px,
+          #fffdf4 38px,
+          #c9dce8 39px,
+          #fffdf4 40px
+        );
+
+    }
+
+
+    /* RED MARGIN LINE */
+
+    .diary-page::before {
+
+      content: "";
+
+      position: absolute;
+
+      left: 42px;
+
+      top: 0;
+
+      bottom: 0;
+
+      border-left:
+        2px solid #e3a0a0;
+
+    }
+
+
+    /* DATE */
+
+    .diary-date {
+
+      font-size: 20px;
+
+      font-weight: bold;
+
+      margin-bottom: 18px;
+
+    }
+
+
+    /* TITLE */
+
+    #title {
+
+      width: 100%;
+
+      border: none;
+
+      border-bottom:
+        2px solid #8c6b52;
+
+      background: transparent;
+
+      font-family: Georgia;
+
+      font-size: 23px;
+
+      padding: 8px;
+
+      outline: none;
+
+    }
+
+
+    /* JOURNAL TEXT */
+
+    #journal {
+
+      width: 100%;
+
+      min-height: 480px;
+
+      border: none;
+
+      background: transparent;
+
+      outline: none;
+
+      resize: vertical;
+
+      padding: 10px;
+
+      font-family: cursive;
+
+      font-size: 22px;
+
+      line-height: 40px;
+
+    }
+
+
+    /* MOOD */
+
+    .section {
+
+      margin-top: 15px;
+
+      background: #f5ead8;
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+    }
+
+    .section h3 {
+
+      margin-top: 0;
+
+    }
+
+
+    .moods {
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+    }
+
+    .mood {
+
+      background: white;
+
+      color: #333;
+
+      font-size: 23px;
+
+      padding: 8px 12px;
+
+      border: 2px solid transparent;
+
+    }
+
+    .mood.selected {
+
+      border-color: #6b4226;
+
+      background: #ead7bd;
+
+    }
+
+
+    /* SAVE BUTTON */
+
+    .save-area {
+
+      margin-top: 15px;
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+    }
+
+    .save {
+
+      background: #2f6b3c;
+
+    }
+
+    .delete {
+
+      background: #a63d3d;
+
+    }
+
+
+    /* STATUS */
+
+    .status {
+
+      margin-top: 10px;
+
+      padding: 10px;
+
+      text-align: center;
+
+      background: #e0f0e2;
+
+      border-radius: 8px;
+
+      font-size: 13px;
+
+    }
+
+
+    /* SAVED ENTRIES */
+
+    .entries {
+
+      margin-top: 20px;
+
+      background: #f5ead8;
+
+      padding: 15px;
+
+      border-radius: 12px;
+
+    }
+
+    .entry {
+
+      background: white;
+
+      margin-top: 10px;
+
+      padding: 14px;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      border-left:
+        5px solid #6b4226;
+
+    }
+
+    .entry:hover {
+
+      background: #fff8e8;
+
+    }
+
+    .entry-title {
+
+      font-weight: bold;
+
+      font-size: 17px;
+
+    }
+
+    .entry-date {
+
+      font-size: 12px;
+
+      opacity: 0.7;
+
+      margin-top: 5px;
+
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 600px) {
+
+      .app {
+
+        padding: 8px;
+
+      }
+
+      .header {
+
+        font-size: 20px;
+
+      }
+
+      .diary-page {
+
+        padding-left: 45px;
+
+      }
+
+      .diary-page::before {
+
+        left: 28px;
+
+      }
+
+      #journal {
+
+        font-size: 20px;
+
+        line-height: 36px;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+    📖 My Personal Diary
+
+    <small>
+      My thoughts, memories and journey
+    </small>
+
+  </div>
+
+
+  <!-- DATE CONTROLS -->
+
+  <div class="controls">
+
+    <button onclick="previousDay()">
+      ◀ Previous
+    </button>
+
+
+    <div
+      class="date-display"
+      id="currentDate">
+    </div>
+
+
+    <button onclick="nextDay()">
+      Next ▶
+    </button>
+
+  </div>
+
+
+  <!-- DIARY PAGE -->
+
+  <div class="diary-page">
+
+    <div
+      class="diary-date"
+      id="diaryDate">
+    </div>
+
+
+    <input
+
+      id="title"
+
+      placeholder="Give today's page a title..."
+
+    >
+
+
+    <textarea
+
+      id="journal"
+
+      placeholder="Dear Diary...
+
+Write your thoughts, memories and feelings here...
+
+Today was..."
+
+    ></textarea>
+
+
+  </div>
+
+
+
+  <!-- MOOD -->
+
+  <div class="section">
+
+    <h3>
+      😊 How are you feeling today?
+    </h3>
+
+
+    <div class="moods">
+
+      <button
+        class="mood"
+        onclick="selectMood('😀',this)">
+        😀
+      </button>
+
+
+      <button
+        class="mood"
+        onclick="selectMood('😊',this)">
+        😊
+      </button>
+
+
+      <button
+        class="mood"
+        onclick="selectMood('😍',this)">
+        😍
+      </button>
+
+
+      <button
+        class="mood"
+        onclick="selectMood('😌',this)">
+        😌
+      </button>
+
+
+      <button
+        class="mood"
+        onclick="selectMood('😢',this)">
+        😢
+      </button>
+
+
+      <button
+        class="mood"
+        onclick="selectMood('😡',this)">
+        😡
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- SAVE -->
+
+  <div class="save-area">
+
+    <button
+      class="save"
+      onclick="saveEntry()">
+
+      💾 Save Diary Page
+
+    </button>
+
+
+    <button
+      class="delete"
+      onclick="deleteEntry()">
+
+      🗑 Delete Page
+
+    </button>
+
+  </div>
+
+
+  <div
+    class="status"
+    id="status">
+
+    Ready to write ✍️
+
+  </div>
+
+
+
+  <!-- SAVED PAGES -->
+
+  <div class="entries">
+
+    <h2>
+      📚 My Saved Diary Pages
+    </h2>
+
+    <div id="entryList"></div>
+
+  </div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+
+   DIARY SETTINGS
+
+========================= */
+
+
+const STORAGE_KEY =
+  "myPersonalDiaryEntries";
+
+
+let selectedDate =
+  new Date()
+  .toISOString()
+  .split("T")[0];
+
+
+let selectedMood = "";
+
+
+
+/* =========================
+
+   DATE FORMAT
+
+========================= */
+
+
+function formatDate(date) {
+
+  return new Date(
+    date + "T00:00:00"
+  ).toLocaleDateString(
+
+    undefined,
+
+    {
+
+      weekday: "long",
+
+      year: "numeric",
+
+      month: "long",
+
+      day: "numeric"
+
+    }
+
+  );
+
+}
+
+
+
+/* =========================
+
+   LOAD DATE
+
+========================= */
+
+
+function loadDate() {
+
+  document
+    .getElementById("currentDate")
+    .innerText =
+    formatDate(selectedDate);
+
+
+  document
+    .getElementById("diaryDate")
+    .innerText =
+    formatDate(selectedDate);
+
+
+  loadEntry();
+
+}
+
+
+
+/* =========================
+
+   GET ALL ENTRIES
+
+========================= */
+
+
+function getEntries() {
+
+  return JSON.parse(
+
+    localStorage.getItem(
+      STORAGE_KEY
+    )
+
+    ||
+
+    "[]"
+
+  );
+
+}
+
+
+
+/* =========================
+
+   SAVE ALL ENTRIES
+
+========================= */
+
+
+function storeEntries(entries) {
+
+  localStorage.setItem(
+
+    STORAGE_KEY,
+
+    JSON.stringify(entries)
+
+  );
+
+}
+
+
+
+/* =========================
+
+   SAVE ENTRY
+
+========================= */
+
+
+function saveEntry() {
+
+
+  const title =
+
+    document
+      .getElementById("title")
+      .value;
+
+
+  const journal =
+
+    document
+      .getElementById("journal")
+      .value;
+
+
+  let entries =
+    getEntries();
+
+
+  entries =
+
+    entries.filter(
+
+      entry =>
+
+        entry.date !== selectedDate
+
+    );
+
+
+  entries.push({
+
+    date:
+      selectedDate,
+
+    title:
+      title,
+
+    journal:
+      journal,
+
+    mood:
+      selectedMood
+
+  });
+
+
+  entries.sort(
+
+    (a,b) =>
+
+      b.date.localeCompare(
+        a.date
+      )
+
+  );
+
+
+  storeEntries(entries);
+
+
+  document
+    .getElementById("status")
+    .innerText =
+
+    "💾 Diary page saved successfully!";
+
+
+  renderEntries();
+
+}
+
+
+
+/* =========================
+
+   LOAD ENTRY
+
+========================= */
+
+
+function loadEntry() {
+
+
+  const entries =
+    getEntries();
+
+
+  const entry =
+
+    entries.find(
+
+      entry =>
+
+        entry.date === selectedDate
+
+    );
+
+
+  if(entry) {
+
+
+    document
+      .getElementById("title")
+      .value =
+      entry.title;
+
+
+    document
+      .getElementById("journal")
+      .value =
+      entry.journal;
+
+
+    selectedMood =
+      entry.mood || "";
+
+
+  }
+
+  else {
+
+
+    document
+      .getElementById("title")
+      .value = "";
+
+
+    document
+      .getElementById("journal")
+      .value = "";
+
+
+    selectedMood = "";
+
+
+  }
+
+
+  updateMoodButtons();
+
+}
+
+
+
+/* =========================
+
+   MOOD
+
+========================= */
+
+
+function selectMood(
+  mood,
+  button
+) {
+
+
+  selectedMood =
+    mood;
+
+
+  updateMoodButtons();
+
+
+}
+
+
+
+function updateMoodButtons() {
+
+
+  document
+    .querySelectorAll(".mood")
+
+    .forEach(
+
+      button => {
+
+        button
+          .classList
+          .remove("selected");
+
+
+        if(
+
+          button.innerText ===
+          selectedMood
+
+        ) {
+
+
+          button
+            .classList
+            .add("selected");
+
+
+        }
+
+      }
+
+    );
+
+}
+
+
+
+/* =========================
+
+   DELETE
+
+========================= */
+
+
+function deleteEntry() {
+
+
+  const confirmation =
+
+    confirm(
+
+      "Are you sure you want to delete this diary page?"
+
+    );
+
+
+  if(
+
+    !confirmation
+
+  ) {
+
+    return;
+
+  }
+
+
+  let entries =
+    getEntries();
+
+
+  entries =
+
+    entries.filter(
+
+      entry =>
+
+        entry.date !== selectedDate
+
+    );
+
+
+  storeEntries(entries);
+
+
+  document
+    .getElementById("title")
+    .value = "";
+
+
+  document
+    .getElementById("journal")
+    .value = "";
+
+
+  selectedMood = "";
+
+
+  updateMoodButtons();
+
+
+  renderEntries();
+
+
+  document
+    .getElementById("status")
+    .innerText =
+
+    "🗑 Diary page deleted";
+
+
+}
+
+
+
+/* =========================
+
+   PREVIOUS DAY
+
+========================= */
+
+
+function previousDay() {
+
+
+  const date =
+
+    new Date(
+      selectedDate
+      +
+      "T00:00:00"
+    );
+
+
+  date.setDate(
+
+    date.getDate()
+    -
+    1
+
+  );
+
+
+  selectedDate =
+
+    date
+      .toISOString()
+      .split("T")[0];
+
+
+  loadDate();
+
+}
+
+
+
+/* =========================
+
+   NEXT DAY
+
+========================= */
+
+
+function nextDay() {
+
+
+  const date =
+
+    new Date(
+      selectedDate
+      +
+      "T00:00:00"
+    );
+
+
+  date.setDate(
+
+    date.getDate()
+    +
+    1
+
+  );
+
+
+  selectedDate =
+
+    date
+      .toISOString()
+      .split("T")[0];
+
+
+  loadDate();
+
+}
+
+
+
+/* =========================
+
+   SHOW SAVED PAGES
+
+========================= */
+
+
+function renderEntries() {
+
+
+  const entries =
+    getEntries();
+
+
+  const list =
+
+    document
+      .getElementById(
+        "entryList"
+      );
+
+
+  list.innerHTML = "";
+
+
+  if(
+
+    entries.length === 0
+
+  ) {
+
+
+    list.innerHTML =
+
+      "<p>No diary pages saved yet. Start writing your story! 📖</p>";
+
+
+    return;
+
+  }
+
+
+
+  entries.forEach(
+
+    entry => {
+
+
+      const div =
+
+        document
+          .createElement("div");
+
+
+      div.className =
+        "entry";
+
+
+      div.innerHTML =
+
+        "<div class='entry-title'>"
+
+        +
+
+        (entry.mood || "📖")
+
+        +
+
+        " "
+
+        +
+
+        (entry.title || "Untitled Diary Page")
+
+        +
+
+        "</div>"
+
+        +
+
+        "<div class='entry-date'>"
+
+        +
+
+        formatDate(entry.date)
+
+        +
+
+        "</div>";
+
+
+      div.onclick =
+
+        function() {
+
+
+          selectedDate =
+            entry.date;
+
+
+          loadDate();
+
+
+          window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+          });
+
+
+        };
+
+
+      list.appendChild(div);
+
+
+    }
+
+  );
+
+
+}
+
+
+
+/* =========================
+
+   AUTO SAVE
+
+========================= */
+
+
+let autoSaveTimer;
+
+
+document
+  .getElementById("title")
+
+  .addEventListener(
+
+    "input",
+
+    autoSave
+
+  );
+
+
+document
+  .getElementById("journal")
+
+  .addEventListener(
+
+    "input",
+
+    autoSave
+
+  );
+
+
+
+function autoSave() {
+
+
+  clearTimeout(
+    autoSaveTimer
+  );
+
+
+  document
+    .getElementById("status")
+    .innerText =
+
+    "✍️ Writing...";
+
+
+  autoSaveTimer =
+
+    setTimeout(
+
+      function() {
+
+        saveEntry();
+
+      },
+
+      1500
+
+    );
+
+}
+
+
+
+/* =========================
+
+   SERVICE WORKER
+
+========================= */
+
+
+if(
+
+  "serviceWorker"
+
+  in
+
+  navigator
+
+) {
+
+
+  window
+    .addEventListener(
+
+      "load",
+
+      function() {
+
+
+        navigator
+          .serviceWorker
+          .register(
+
+            "service-worker.js"
+
+          );
+
+
+      }
+
+    );
+
+
+}
+
+
+
+/* =========================
+
+   START APP
+
+========================= */
+
+
+loadDate();
+
+
+renderEntries();
+
+
+</script>
+
+
+</body>
+
+</html>

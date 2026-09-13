@@ -176,34 +176,29 @@
 
     }
 
-
-    /* JOURNAL TEXT */
-
     #journal {
 
-      width: 100%;
+  width: 100%;
 
-      min-height: 480px;
+  min-height: 480px;
 
-      border: none;
+  border: none;
 
-      background: transparent;
+  outline: none;
 
-      outline: none;
+  resize: vertical;
 
-      resize: vertical;
+  padding: 0 10px;
 
-      padding: 10px;
+  font-family: cursive;
 
-      font-family: cursive;
+  font-size: 22px;
 
-      font-size: 22px;
+  line-height: 40px;
 
-      line-height: 40px;
+  background: transparent;
 
     }
-
-
     /* MOOD */
 
     .section {
@@ -444,41 +439,38 @@
 
 
   <!-- DIARY PAGE -->
+.diary-page {
 
-  <div class="diary-page">
+  position: relative;
 
-    <div
-      class="diary-date"
-      id="diaryDate">
-    </div>
+  background-color: #fffdf4;
 
+  min-height: 620px;
 
-    <input
+  padding:
+    40px
+    25px
+    30px
+    65px;
 
-      id="title"
+  border-radius: 10px;
 
-      placeholder="Give today's page a title..."
+  box-shadow:
+    0 10px 30px
+    rgba(0,0,0,0.25);
 
-    >
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 38px,
+      #c9dce8 39px,
+      transparent 40px
+    );
 
+  background-position: 0 14px;
 
-    <textarea
-
-      id="journal"
-
-      placeholder="Dear Diary...
-
-Write your thoughts, memories and feelings here...
-
-Today was..."
-
-    ></textarea>
-
-
-  </div>
-
-
-
+}
   <!-- MOOD -->
 
   <div class="section">
@@ -1013,6 +1005,15 @@ function deleteEntry() {
 
 
 
+function getLocalDateString(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return year + "-" + month + "-" + day;
+}
+
+
 function previousDay() {
 
   saveEntry();
@@ -1052,9 +1053,14 @@ function nextDay() {
 
   loadDate();
 
-
-
 }
+
+
+
+
+
+
+
 
 
 
@@ -1111,6 +1117,7 @@ function renderEntries() {
         document
           .createElement("div");
 
+      
 
       div.className =
         "entry";

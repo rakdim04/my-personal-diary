@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,3 +13,120 @@
 .app{max-width:1100px;margin:auto;padding:12px}.topbar{background:#6b4226;color:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 5px 18px #0002}.topbar h1{margin:0;font-size:24px}.topbar small{opacity:.85}.toolbar,.nav{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}.btn,.mood{border:0;border-radius:9px;padding:9px 12px;background:#fff4df;color:#4b2e1e;font-weight:700;cursor:pointer}.btn:active,.mood:active{transform:scale(.98)}.btn.primary{background:#8a5a34;color:#fff}.btn.danger{background:#8d3030;color:#fff}.btn input{display:none}
 .layout{display:grid;grid-template-columns:270px 1fr;gap:14px;margin-top:14px}.panel{background:#f8eedc;border-radius:14px;padding:13px;box-shadow:0 4px 14px #0002}.panel h3{margin:4px 0 10px}.calendar-head{display:flex;justify-content:space-between;align-items:center}.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.cal-day,.cal-week{min-height:34px;display:flex;align-items:center;justify-content:center;border-radius:7px;font-size:13px}.cal-week{font-weight:bold;color:#79563f}.cal-day{cursor:pointer;position:relative}.cal-day:hover{background:#ead8bd}.cal-day.today{outline:2px solid #8a5a34}.cal-day.selected{background:#8a5a34;color:white}.cal-day.has-entry:after{content:'';width:5px;height:5px;background:#8d3030;border-radius:50%;position:absolute;bottom:3px}.cal-day.has-event:before{content:'•';position:absolute;top:0;right:3px;color:#315f45}.list{max-height:310px;overflow:auto}.entry-item{padding:8px;border-bottom:1px solid #d7c2a5;cursor:pointer}.entry-item:hover{background:#ead8bd}.entry-item strong{display:block}.event-form{display:grid;gap:7px;margin-top:8px}.event-form input{width:100%;padding:8px;border:1px solid #c7ad8d;border-radius:7px;background:#fffaf0}
 .diary-wrap{perspective:1600px}.page{position:relative;background:#fff8e9;min-height:760px;border-radius:4px 12px 12px 4px;padding:34px 30px 28px 78px;box-shadow:8px 8px 24px #0003;overflow:hidden;transform-origin:left center;transition:transform .55s ease,opacity .35s ease}.page:before{content:'';position:absolute;left:52px;top:0;bottom:0;width:2px;background:#d87575aa}.page:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,#89a1b955 32px);pointer-events:none}.page.turn-next{transform:rotateY(-88deg);opacity:.15}.page.turn-prev{transform-origin:right center;transform:rotateY(88deg);opacity:.15}.page-content{position:relative;z-index:1}.date-title{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:2px solid #b98e65;padding-bottom:8px;margin-bottom:8px}.date-title h2{margin:0;font-size:22px}.moods{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}.mood{padding:5px 8px;background:#fff;box-shadow:0 1px 3px #0002}.mood.selected{background:#8a5a34;color:#fff}.editor-tools{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}.tool{border:1px solid #bda789;border-radius:7px;background:#fff8e9;min-width:38px;padding:6px 9px;font-weight:bold;cursor:pointer}.editor{min-height:430px;outline:none;font-size:18px;line-height:32px;white-space:pre-wrap;word-break:break-word}.editor:empty:before{content:'Write your thoughts, memories and moments here…';color:#987f68}.memory-area{margin-top:14px;border-top:1px dashed #bda789;padding-top:10px}.attachments{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:8px}.attachment{background:#f4e5cc;border-radius:8px;padding:7px;overflow:hidden}.attachment img{width:100%;height:110px;object-fit:cover;border-radius:5px}.attachment a{color:#6b4226;font-weight:bold;word-break:break-word}.attachment button{float:right;border:0;background:transparent;color:#8d3030;cursor:pointer}.event-card{background:#eef3e9;border-left:4px solid #52765d;padding:7px;margin:6px 0;border-radius:5px}.status{font-size:12px;color:#6b5748;min-height:18px}.bottom{margin-top:10px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}.hidden{display:none}
+
+/* Google Calendar + Gallery */
+.google-panel{margin-top:10px;padding-top:10px;border-top:1px solid #d7c2a5}.google-status{font-size:12px;margin-top:6px}.gallery-panel{margin-top:14px}.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}.gallery-card{background:#fff8e9;border:1px solid #d7c2a5;border-radius:9px;overflow:hidden;cursor:pointer}.gallery-card img{width:100%;height:120px;object-fit:cover;display:block}.gallery-card .cap{padding:6px;font-size:12px}.gallery-empty{padding:15px;text-align:center;color:#806b57}.modal{position:fixed;inset:0;background:#0008;display:flex;align-items:center;justify-content:center;z-index:50;padding:18px}.modal-card{background:#fff8e9;max-width:650px;width:100%;max-height:90vh;overflow:auto;border-radius:14px;padding:18px;box-shadow:0 15px 50px #0005}.modal-card h3{margin-top:0}.modal-card input{width:100%;padding:10px;border:1px solid #c7ad8d;border-radius:8px}.lightbox img{max-width:90vw;max-height:75vh;object-fit:contain}.drag-hint{text-align:center;font-size:12px;color:#8a7058;margin-top:5px}.page.dragging{transition:none;cursor:grabbing}.page.drag-left{transform:translateX(-20px) rotateY(-10deg)}.page.drag-right{transform:translateX(20px) rotateY(10deg)}
+@media(max-width:760px){.gallery-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.page{min-height:700px;padding-left:58px}.page:before{left:39px}.editor{min-height:390px;font-size:17px}.topbar h1{font-size:21px}}
+@media print{body{background:#fff}.topbar,.panel,.toolbar,.nav,.bottom,.status,.editor-tools{display:none!important}.layout{display:block}.diary-wrap{margin:0}.page{box-shadow:none;min-height:100vh;border-radius:0;transform:none!important}.memory-area{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+<h1>📖 My Personal Diary</h1><small>Thoughts • Memories • Journey</small>
+<div class="toolbar">
+<button class="btn primary" onclick="saveEntry()">💾 Save</button>
+<button class="btn" onclick="backupDiary()">⬇ Backup</button>
+<label class="btn">⬆ Restore<input type="file" accept="application/json,.json" onchange="restoreDiary(event)"></label>
+<button class="btn" onclick="printCurrentPage()">🖨 Print / PDF</button>
+<button class="btn" onclick="printAllPages()">📚 Print All</button>
+<button class="btn" onclick="openGallery()">🖼 Memories</button>
+<button class="btn" onclick="openGoogleSettings()">📅 Google Calendar</button>
+</div>
+</header>
+<div class="layout">
+<aside class="panel">
+<div class="calendar-head"><button class="btn" onclick="changeMonth(-1)">‹</button><strong id="monthLabel"></strong><button class="btn" onclick="changeMonth(1)">›</button></div>
+<div class="calendar-grid" id="calendar"></div>
+<hr>
+<h3>📅 Events for <span id="eventDateLabel"></span></h3>
+<div class="event-form"><input id="eventText" placeholder="Add an event / reminder"><button class="btn primary" onclick="addEvent()">Add Event</button></div>
+<div id="eventsList"></div>
+<div class="google-panel">
+<h3>🗓 Google Calendar</h3>
+<button class="btn primary" onclick="connectGoogleCalendar()">Connect / Refresh</button>
+<button class="btn" onclick="disconnectGoogleCalendar()">Disconnect</button>
+<div class="google-status" id="googleStatus">Not connected</div>
+</div>
+<hr><h3>📜 Saved Pages</h3><div class="list" id="entriesList"></div>
+</aside>
+<main class="diary-wrap">
+<section class="page" id="page">
+<div class="page-content">
+<div class="date-title"><button class="btn" onclick="previousDay()">←</button><h2 id="dateTitle"></h2><button class="btn" onclick="nextDay()">→</button></div>
+<div class="moods" id="moods"></div>
+<div class="editor-tools">
+<button class="tool" onclick="formatText('bold')"><b>B</b></button>
+<button class="tool" onclick="formatText('underline')"><u>U</u></button>
+<button class="tool" onclick="formatText('italic')"><i>I</i></button>
+<button class="tool" onclick="formatText('insertUnorderedList')">☷ List</button>
+<button class="tool" onclick="formatText('removeFormat')">Clear</button>
+</div>
+<div id="editor" class="editor" contenteditable="true" spellcheck="true" oninput="autoSave()" onpaste="handlePaste(event)"></div>
+<div class="memory-area">
+<strong>📎 Memories & Documents</strong><br><small>Add photos, screenshots, PDFs or other documents. You can also paste a copied image directly into the diary.</small>
+<div class="editor-tools"><label class="tool">📷 Photo<input class="hidden" type="file" accept="image/*" multiple onchange="addAttachments(event)"></label><label class="tool">📎 Document<input class="hidden" type="file" multiple onchange="addAttachments(event)"></label></div>
+<div id="attachments" class="attachments"></div>
+<div id="pageEvents"></div>
+</div>
+<div class="drag-hint">↔ Swipe or drag the page left/right to change day</div><div class="status" id="status"></div>
+</div></section>
+<div class="bottom"><button class="btn" onclick="goToday()">Today</button><button class="btn danger" onclick="deleteEntry()">Delete Diary Page</button></div>
+</main>
+</div>
+
+<div id="galleryModal" class="modal hidden" onclick="if(event.target===this)closeGallery()"><div class="modal-card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>🖼 Memory Gallery & Timeline</h3><button class="btn" onclick="closeGallery()">✕</button></div><div id="galleryContent"></div></div></div>
+<div id="googleModal" class="modal hidden" onclick="if(event.target===this)closeGoogleSettings()"><div class="modal-card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>📅 Google Calendar Setup</h3><button class="btn" onclick="closeGoogleSettings()">✕</button></div><p>For security, the diary uses Google OAuth in your browser. Create a Google OAuth 2.0 <b>Web application</b> client ID and enter it below.</p><label><b>Google OAuth Client ID</b><input id="googleClientId" placeholder="xxxxxxxxxxxx-xxxxxxxx.apps.googleusercontent.com"></label><p><small>For this GitHub Pages app, add your exact diary site origin to Authorized JavaScript origins in Google Cloud. Do not put a client secret in this app.</small></p><button class="btn primary" onclick="saveGoogleClientId()">Save Client ID</button></div></div>
+<div id="lightboxModal" class="modal lightbox hidden" onclick="if(event.target===this)closeLightbox()"><div class="modal-card" style="text-align:center"><button class="btn" onclick="closeLightbox()">Close</button><div id="lightboxContent" style="margin-top:10px"></div></div></div>
+</div>
+<script>
+const STORAGE_KEY='myPersonalDiaryEntries';
+const EVENT_KEY='myPersonalDiaryEvents';
+const DB_NAME='myPersonalDiaryDB', DB_VERSION=1, STORE='attachments';
+let selectedDate=localDateString(new Date()), calendarDate=new Date();
+let dbPromise=openDB();
+const moods=['😀 Happy','😊 Good','😌 Calm','😐 Normal','😔 Sad','😡 Angry','🙏 Grateful'];
+function localDateString(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function dateObj(s){const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)}
+function formatDate(s){return dateObj(s).toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function getEntries(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')}catch{return {}}}
+function setEntries(x){localStorage.setItem(STORAGE_KEY,JSON.stringify(x))}
+function getEvents(){try{return JSON.parse(localStorage.getItem(EVENT_KEY)||'{}')}catch{return {}}}
+function setEvents(x){localStorage.setItem(EVENT_KEY,JSON.stringify(x))}
+function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB_NAME,DB_VERSION);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains(STORE))r.result.createObjectStore(STORE,{keyPath:'id',autoIncrement:true})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
+async function dbAdd(file,date){const db=await dbPromise;return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');const req=tx.objectStore(STORE).add({date,name:file.name,type:file.type,size:file.size,blob:file});req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error)})}
+async function dbGetByDate(date){const db=await dbPromise;return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly'),req=tx.objectStore(STORE).getAll();req.onsuccess=()=>res(req.result.filter(x=>x.date===date));req.onerror=()=>rej(req.error)})}
+async function dbDelete(id){const db=await dbPromise;return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
+async function dbAll(){const db=await dbPromise;return new Promise((res,rej)=>{const r=db.transaction(STORE,'readonly').objectStore(STORE).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
+function renderMoods(){const box=document.getElementById('moods');box.innerHTML=moods.map(m=>`<button class="mood" data-mood="${m}" onclick="selectMood('${m.replace(/'/g,"\\'")}')">${m}</button>`).join('')}
+function selectMood(m){const e=getEntries();e[selectedDate]=e[selectedDate]||{};e[selectedDate].mood=m;setEntries(e);updateMoodButtons()}
+function updateMoodButtons(){const m=(getEntries()[selectedDate]||{}).mood;document.querySelectorAll('.mood').forEach(b=>b.classList.toggle('selected',b.dataset.mood===m))}
+async function loadDate(date,animate=''){if(animate){const p=document.getElementById('page');p.classList.add(animate);setTimeout(()=>{p.classList.remove(animate);loadDateNow(date)},260)}else loadDateNow(date)}
+async function loadDateNow(date){selectedDate=date;calendarDate=dateObj(date);const e=getEntries()[date]||{};document.getElementById('dateTitle').textContent=formatDate(date);document.getElementById('editor').innerHTML=e.html||e.content||'';renderMoods();updateMoodButtons();document.getElementById('status').textContent=e.html||e.content?'Saved entry loaded.':'New diary page.';renderCalendar();renderEntries();renderEvents();renderAttachments()}
+function saveEntry(show=true){const html=document.getElementById('editor').innerHTML.trim();const text=document.getElementById('editor').innerText.trim();const e=getEntries();if(!html&&!text&&!(e[selectedDate]&&e[selectedDate].mood)){delete e[selectedDate];setEntries(e)}else{e[selectedDate]={...(e[selectedDate]||{}),html,text,updatedAt:new Date().toISOString()};setEntries(e)}if(show){document.getElementById('status').textContent='Saved ✓';renderCalendar();renderEntries()}}
+let saveTimer;function autoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>saveEntry(false),700);document.getElementById('status').textContent='Saving…'}
+function previousDay(){saveEntry(false);const d=dateObj(selectedDate);d.setDate(d.getDate()-1);loadDate(localDateString(d),'turn-prev')}
+function nextDay(){saveEntry(false);const d=dateObj(selectedDate);d.setDate(d.getDate()+1);loadDate(localDateString(d),'turn-next')}
+function goToday(){saveEntry(false);loadDate(localDateString(new Date()))}
+function deleteEntry(){if(!confirm('Delete this diary page and its text? Attachments must be removed separately.'))return;const e=getEntries();delete e[selectedDate];setEntries(e);loadDateNow(selectedDate)}
+function changeMonth(n){calendarDate=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+n,1);renderCalendar()}
+function renderCalendar(){const y=calendarDate.getFullYear(),m=calendarDate.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0), entries=getEntries(),events=getEvents();document.getElementById('monthLabel').textContent=calendarDate.toLocaleDateString(undefined,{month:'long',year:'numeric'});let h=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(x=>`<div class="cal-week">${x}</div>`).join('');for(let i=0;i<first.getDay();i++)h+='<div></div>';for(let d=1;d<=last.getDate();d++){const s=localDateString(new Date(y,m,d));h+=`<div class="cal-day ${s===selectedDate?'selected ':''}${s===localDateString(new Date())?'today ':''}${entries[s]?'has-entry ':''}${(events[s]?.length||window.googleEvents?.[s]?.length)?'has-event':''}" onclick="loadDate('${s}')">${d}</div>`}document.getElementById('calendar').innerHTML=h}
+function renderEntries(){const box=document.getElementById('entriesList'),e=getEntries(),keys=Object.keys(e).sort().reverse();box.innerHTML=keys.length?keys.map(k=>`<div class="entry-item" onclick="loadDate('${k}')"><strong>${k}</strong><span>${escapeHtml((e[k].text||strip(e[k].html||'')).slice(0,70))}</span></div>`).join(''):'<small>No saved pages yet.</small>'}
+function strip(h){const d=document.createElement('div');d.innerHTML=h;return d.innerText}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function formatText(cmd){document.execCommand(cmd,false,null);document.getElementById('editor').focus();autoSave()}
+function handlePaste(ev){const items=ev.clipboardData?.items||[];for(const item of items){if(item.type.startsWith('image/')){ev.preventDefault();const file=item.getAsFile();if(file)addAttachmentFile(file);return}}}
+async function addAttachments(ev){for(const f of ev.target.files||[])await addAttachmentFile(f);ev.target.value='';renderAttachments()}
+async function addAttachmentFile(file){try{await dbAdd(file,selectedDate);document.getElementById('status').textContent='Memory attached ✓';await renderAttachments()}catch(err){alert('Could not save attachment: '+err.message)}}
+async function renderAttachments(){const box=document.getElementById('attachments');try{const arr=await dbGetByDate(selectedDate);box.innerHTML='';for(const a of arr){const url=URL.createObjectURL(a.blob);const isImg=a.type.startsWith('image/');const div=document.createElement('div');div.className='attachment';div.innerHTML=isImg?`<img src="${url}" alt="${escapeHtml(a.name)}">`:`<a href="${url}" target="_blank" rel="noopener">📄 ${escapeHtml(a.name)}</a>`;const b=document.createElement('button');b.textContent='✕';b.title='Remove';b.onclick=async()=>{if(confirm('Remove this attachment?')){await dbDelete(a.id);renderAttachments()}};div.appendChild(b);box.appendChild(div)}}catch{box.innerHTML='<small>Attachment storage unavailable in this browser.</small>'}}
+function addEvent(){const text=document.getElementById('eventText').value.trim();if(!text)return;const ev=getEvents();ev[selectedDate]=ev[selectedDate]||[];ev[selectedDate].push({text,createdAt:new Date().toISOString()});setEvents(ev);document.getElementById('eventText').value='';renderEvents();renderCalendar()}
+function renderEvents(){const ev=getEvents(),arr=ev[selectedDate]||[];document.getElementById('eventDateLabel').textContent=dateObj(selectedDate).toLocaleDateString(undefined,{day:'numeric',month:'short'});document.getElementById('eventsList').innerHTML=arr.length?arr.map((x,i)=>`<div class="event-card">${escapeHtml(x.text)} <button class="btn" style="float:right;padding:2px 6px" onclick="deleteEvent(${i})">×</button></div>`).join(''):'<small>No events.</small>';document.getElementById('pageEvents').innerHTML=arr.length?'<h4>📅 Today’s Events</h4>'+arr.map(x=>`<div class="event-card">${escapeHtml(x.text)}</div>`).join(''):''}
+function deleteEvent(i){const ev=getEvents();ev[selectedDate].splice(i,1);if(!ev[selectedDate].length)delete ev[selectedDate];setEvents(ev);renderEvents();renderCalendar()}
+async function backupDiary(){saveEntry(false);const entries=getEntries(),events=getEvents(),attachments=await dbAll();const files=[];for(const a of attachments){files.push({id:a.id,date:a.date,name:a.name,type:a.type,size:a.size,data:await blobToDataURL(a.blob)})}const data={version:2,exportedAt:new Date().toISOString(),entries,events,attachments:files};const blob=new Blob([JSON.stringify(data)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='my-personal-diary-backup-'+localDateString(new Date())+'.json';a.click();URL.revokeObjectURL(url);document.getElementById('status').textContent='Backup created ✓'}
+function blobToDataURL(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error);r.readAsDataURL(blob)})}
+function dataURLToBlob(data){const [head,b64]=data.split(',');const mime=(head.match(/:(.*?);/)||[])[1]||'application/octet-stream';const bin=atob(b64),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
+async function restoreDiary(ev){const file=ev.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data.entries&&!data.events)throw new Error('Not a valid diary backup');const entries=getEntries();Object.assign(entries,data.entries||{});setEntries(entries);const events=getEvents();Object.assign(events,data.events||{});setEvents(events);for(const a of data.attachments||[]){if(a.data){const blob=dataURLToBlob(a.data);await dbAdd(new File([blob],a.name,{type:a.type}),a.date)}}await loadDateNow(selectedDate);alert('Diary restored successfully. Existing dates were kept unless the backup contained the same date.')}catch(e){alert('Restore failed: '+e.message)}ev.target.value=''}
+function printCurrentPage(){saveEntry(false);window.print()}
+function printAllPages(){saveEntry(false);const e=getEntries(),keys=Object.keys(e).sort();if(!keys.length){alert('No saved diary pages to print.');return}const w=window.open('','_blank');w.document.write('<!DOCTYPE html><html><head><title>My Personal Diary</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script><style>@page{size:auto;margin:12mm}body{font-family:Georgia,serif;color:#3e2a1f}.print-page{min-height:260mm;padding:20mm 15mm 15mm 25mm;position:relative;page-break-after:always;background:linear-gradient(to bottom,transparent 0,transparent 31px,#89a1b955 32px);background-size:100% 32px}.print-page:before{content:"";position:absolute;left:18mm;top:0;bottom:0;border-left:2px solid #d87575}.print-page h2{border-bottom:1px solid #b98e65;padding-bottom:7px}.event{padding:5px;background:#eef3e9;margin:5px 0}.att{margin-top:10px}img{max-width:100%;max-height:90mm}</style></head><body>');keys.forEach(k=>{const x=e[k];w.document.write('<section class="print-page"><h2>'+escapeHtml(formatDate(k))+'</h2><div>'+((x.html||escapeHtml(x.text||'')))+'</div>'+((x.mood)?'<p><b>Mood:</b> '+escapeHtml(x.mood)+'</p>':'')+'</section>')});w.document.write('</body></html>');w.document.close();w.focus();setTimeout(()=>w.print(),500)}

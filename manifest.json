@@ -1,12 +1,14 @@
+
+
 {
   "name": "My Personal Diary",
   "short_name": "My Diary",
-  "description": "My thoughts, memories and journey",
+  "description": "Personal diary, calendar, memories and documents",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#cbb99a",
+  "background_color": "#d6c3a5",
   "theme_color": "#6b4226",
   "icons": []
 }

@@ -1,7 +1,7 @@
 {
   "name": "My Personal Diary",
   "short_name": "My Diary",
-  "description": "Personal diary, calendar, memories and documents",
+  "description": "Personal diary, memories, events and journal",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -10,4 +10,3 @@
   "theme_color": "#6b4226",
   "icons": []
 }
-

@@ -1,3249 +1,4465 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#6b4226">
-<link rel="manifest" href="./manifest.json">
-<title>My Personal Diary v7.1</title>
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<meta name="theme-color" content="#6b4226">
+
+<link rel="manifest" href="./manifest.json">
+
+<title>My Personal Diary v8</title>
+
+<script src="https://accounts.google.com/gsi/client"
+        async
+        defer></script>
 
 <style>
-*{box-sizing:border-box}
 
-body{
-    margin:0;
-    background:#d6c3a5;
-    color:#3e2a1f;
-    font-family:Georgia,'Times New Roman',serif;
-    min-height:100vh
-}
+/* =========================================================
+   BASIC
+========================================================= */
 
-.app{
-    max-width:1100px;
-    margin:auto;
-    padding:12px
+* {
+    box-sizing: border-box;
 }
 
-.topbar{
-    background:#6b4226;
-    color:#fff;
-    border-radius:14px;
-    padding:14px 16px;
-    box-shadow:0 5px 18px #0002
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
 }
 
-.topbar h1{
-    margin:0;
-    font-size:24px
-}
+body {
+    background:
+        linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.15)),
+        #d6c3a5;
 
-.topbar small{
-    opacity:.85
-}
+    color: #3e2a1f;
 
-.toolbar,.nav{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    align-items:center;
-    margin-top:10px
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 }
 
-.btn,.mood{
-    border:0;
-    border-radius:9px;
-    padding:9px 12px;
-    background:#fff4df;
-    color:#4b2e1e;
-    font-weight:700;
-    cursor:pointer
+/* IMPORTANT:
+   hidden attribute always wins over modal display */
+[hidden] {
+    display: none !important;
 }
 
-.btn:active,.mood:active{
-    transform:scale(.98)
+button,
+input,
+textarea,
+select {
+    font: inherit;
 }
 
-.btn.primary{
-    background:#8a5a34;
-    color:#fff
+button {
+    cursor: pointer;
 }
 
-.btn.danger{
-    background:#8d3030;
-    color:#fff
-}
+/* =========================================================
+   HEADER
+========================================================= */
 
-.btn input{
-    display:none
-}
+.header {
+    background: #5a351f;
+    color: white;
 
-.layout{
-    display:grid;
-    grid-template-columns:270px 1fr;
-    gap:14px;
-    margin-top:14px
-}
+    padding: 14px;
+
+    text-align: center;
 
-.panel{
-    background:#f8eedc;
-    border-radius:14px;
-    padding:13px;
-    box-shadow:0 4px 14px #0002
+    position: sticky;
+    top: 0;
+
+    z-index: 20;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.25);
 }
 
-.panel h3{
-    margin:4px 0 10px
+.header h1 {
+    margin: 0;
+    font-size: 23px;
 }
 
-.calendar-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center
+.header small {
+    opacity: .85;
 }
+
+/* =========================================================
+   MAIN APP
+========================================================= */
 
-.calendar-grid{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:3px
+.app {
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 12px;
 }
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar {
+    display: flex;
+
+    flex-wrap: wrap;
 
-.cal-day,.cal-week{
-    min-height:34px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:7px;
-    font-size:13px
+    gap: 7px;
+
+    margin-bottom: 12px;
+
+    justify-content: center;
 }
+
+.btn {
+    border: 0;
+
+    border-radius: 8px;
+
+    padding: 9px 13px;
+
+    background: #6b4226;
 
-.cal-week{
-    font-weight:bold;
-    color:#79563f
+    color: white;
+
+    box-shadow:
+        0 2px 5px rgba(0,0,0,.2);
 }
 
-.cal-day{
-    cursor:pointer;
-    position:relative
+.btn:active {
+    transform: translateY(1px);
 }
 
-.cal-day:hover{
-    background:#ead8bd
+.btn.secondary {
+    background: #8b6a4a;
 }
 
-.cal-day.today{
-    outline:2px solid #8a5a34
+.btn.danger {
+    background: #8b2f2f;
 }
 
-.cal-day.selected{
-    background:#8a5a34;
-    color:white
+.btn.green {
+    background: #456b43;
 }
+
+/* =========================================================
+   DATE AREA
+========================================================= */
+
+.datebar {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
 
-.cal-day.has-entry:after{
-    content:'';
-    width:5px;
-    height:5px;
-    background:#8d3030;
-    border-radius:50%;
-    position:absolute;
-    bottom:3px
+    gap: 8px;
+
+    margin-bottom: 10px;
+
+    flex-wrap: wrap;
 }
+
+.datebar input {
+    padding: 8px;
+
+    border: 1px solid #9d8060;
+
+    border-radius: 7px;
 
-.cal-day.has-event:before{
-    content:'•';
-    position:absolute;
-    top:0;
-    right:3px;
-    color:#315f45
+    background: #fffaf0;
 }
 
-.list{
-    max-height:310px;
-    overflow:auto
+/* =========================================================
+   DIARY BOOK
+========================================================= */
+
+.book {
+    perspective: 1500px;
+
+    width: 100%;
+
+    margin: auto;
 }
+
+.page {
+    background:
+        linear-gradient(
+            to right,
+            rgba(90,50,20,.08),
+            transparent 30px
+        ),
+        #fffdf4;
+
+    min-height: 700px;
 
-.entry-item{
-    padding:8px;
-    border-bottom:1px solid #d7c2a5;
-    cursor:pointer
+    padding: 32px 35px;
+
+    border-radius: 5px 15px 15px 5px;
+
+    box-shadow:
+        0 8px 22px rgba(0,0,0,.30);
+
+    position: relative;
+
+    transform-origin: left center;
+
+    transition:
+        transform .55s ease,
+        opacity .3s ease;
 }
+
+.page.turn-next {
+    transform:
+        rotateY(-90deg);
 
-.entry-item:hover{
-    background:#ead8bd
+    opacity: .2;
 }
 
-.entry-item strong{
-    display:block
+.page.turn-prev {
+    transform:
+        rotateY(90deg);
+
+    opacity: .2;
 }
+
+/* paper lines */
+
+.editor {
+    min-height: 640px;
+
+    line-height: 32px;
+
+    font-size: 19px;
 
-.event-form{
-    display:grid;
-    gap:7px;
-    margin-top:8px
+    outline: none;
+
+    padding: 5px 10px;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent 31px,
+            rgba(80,110,140,.25) 32px
+        );
+
+    overflow: hidden;
 }
+
+/* =========================================================
+   PAGE TITLE
+========================================================= */
+
+.page-title {
+    display: flex;
 
-.event-form input{
-    width:100%;
-    padding:8px;
-    border:1px solid #c7ad8d;
-    border-radius:7px;
-    background:#fffaf0
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom: 1px solid #b99b78;
+
+    padding-bottom: 8px;
+
+    margin-bottom: 10px;
 }
+
+.page-title h2 {
+    margin: 0;
 
-.diary-wrap{
-    perspective:1600px
+    font-size: 22px;
 }
 
-.page{
-    position:relative;
-    background:#fff8e9;
-    min-height:760px;
-    border-radius:4px 12px 12px 4px;
-    padding:34px 30px 28px 78px;
-    box-shadow:8px 8px 24px #0003;
-    overflow:hidden;
-    transform-origin:left center;
-    transition:transform .55s ease,opacity .35s ease
+.page-number {
+    font-size: 14px;
+
+    color: #79583d;
 }
+
+/* =========================================================
+   EDITOR TOOLBAR
+========================================================= */
+
+.editor-toolbar {
+    display: flex;
 
-.page:before{
-    content:'';
-    position:absolute;
-    left:52px;
-    top:0;
-    bottom:0;
-    width:2px;
-    background:#d87575aa
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-bottom: 8px;
 }
+
+.format-btn {
+    border: 1px solid #a58a6a;
 
-.page:after{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:repeating-linear-gradient(
-        to bottom,
-        transparent 0,
-        transparent 31px,
-        #89a1b955 32px
-    );
-    pointer-events:none
+    background: #f4ead7;
+
+    border-radius: 6px;
+
+    min-width: 40px;
+
+    min-height: 35px;
 }
+
+/* =========================================================
+   MOODS
+========================================================= */
+
+.moods {
+    display: flex;
 
-.page.turn-next{
-    transform:rotateY(-88deg);
-    opacity:.15
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin: 10px 0;
 }
+
+.mood {
+    border: 1px solid #b99b78;
+
+    background: #fffaf0;
+
+    border-radius: 20px;
+
+    padding: 6px 9px;
 
-.page.turn-prev{
-    transform-origin:right center;
-    transform:rotateY(88deg);
-    opacity:.15
+    font-size: 21px;
 }
 
-.page-content{
-    position:relative;
-    z-index:1
+.mood.selected {
+    background: #ead2a7;
+
+    border: 2px solid #6b4226;
 }
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+.page-nav {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
 
-.date-title{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    align-items:center;
-    border-bottom:2px solid #b98e65;
-    padding-bottom:8px;
-    margin-bottom:8px
+    margin-top: 12px;
 }
 
-.date-title h2{
-    margin:0;
-    font-size:22px
+.page-nav button {
+    flex: 1;
 }
 
-.moods{
-    display:flex;
-    gap:5px;
-    flex-wrap:wrap;
-    margin-bottom:8px
+/* =========================================================
+   MEMORY AREA
+========================================================= */
+
+.section {
+    background: rgba(255,250,240,.85);
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    margin-top: 15px;
+
+    box-shadow:
+        0 3px 10px rgba(0,0,0,.12);
 }
 
-.mood{
-    padding:5px 8px;
-    background:#fff;
-    box-shadow:0 1px 3px #0002
+.section h3 {
+    margin-top: 0;
 }
+
+.memory-buttons {
+    display: flex;
 
-.mood.selected{
-    background:#8a5a34;
-    color:#fff
+    flex-wrap: wrap;
+
+    gap: 7px;
 }
 
-.editor-tools{
-    display:flex;
-    gap:5px;
-    flex-wrap:wrap;
-    margin:7px 0
+input[type="file"] {
+    display: none;
 }
+
+/* =========================================================
+   MEMORY GALLERY
+========================================================= */
 
-.tool{
-    border:1px solid #bda789;
-    border-radius:7px;
-    background:#fff8e9;
-    min-width:38px;
-    padding:6px 9px;
-    font-weight:bold;
-    cursor:pointer
+.gallery {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill,minmax(130px,1fr));
+
+    gap: 10px;
 }
+
+.memory-card {
+    background: white;
 
-.editor{
-    min-height:430px;
-    outline:none;
-    font-size:18px;
-    line-height:32px;
-    white-space:pre-wrap;
-    word-break:break-word
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 2px 7px rgba(0,0,0,.2);
 }
 
-.editor:empty:before{
-    content:'Write your thoughts, memories and moments here…';
-    color:#987f68
+.memory-card img {
+    width: 100%;
+
+    height: 120px;
+
+    object-fit: cover;
 }
+
+.memory-card .memory-info {
+    padding: 7px;
 
-.memory-area{
-    margin-top:14px;
-    border-top:1px dashed #bda789;
-    padding-top:10px
+    font-size: 13px;
 }
 
-.attachments{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-    gap:8px;
-    margin-top:8px
+.memory-actions {
+    display: flex;
+
+    gap: 5px;
+
+    padding: 5px;
 }
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+.calendar {
+    background: #fffaf0;
+
+    border-radius: 10px;
 
-.attachment{
-    background:#f4e5cc;
-    border-radius:8px;
-    padding:7px;
-    overflow:hidden
+    padding: 10px;
+
+    margin-top: 15px;
 }
+
+.calendar-head {
+    display: flex;
+
+    justify-content: space-between;
 
-.attachment img{
-    width:100%;
-    height:110px;
-    object-fit:cover;
-    border-radius:5px
+    align-items: center;
+
+    margin-bottom: 8px;
 }
+
+.calendar-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7,1fr);
 
-.attachment a{
-    color:#6b4226;
-    font-weight:bold;
-    word-break:break-word
+    gap: 3px;
 }
 
-.attachment button{
-    float:right;
-    border:0;
-    background:transparent;
-    color:#8d3030;
-    cursor:pointer
+.calendar-weekday {
+    text-align: center;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    padding: 5px;
 }
+
+.day {
+    min-height: 55px;
+
+    border: 1px solid #d5c2a5;
 
-.event-card{
-    background:#eef3e9;
-    border-left:4px solid #52765d;
-    padding:7px;
-    margin:6px 0;
-    border-radius:5px
+    background: #fffdf6;
+
+    border-radius: 5px;
+
+    padding: 4px;
+
+    position: relative;
+
+    cursor: pointer;
 }
 
-.status{
-    font-size:12px;
-    color:#6b5748;
-    min-height:18px
+.day:hover {
+    background: #f2e5cc;
 }
 
-.bottom{
-    margin-top:10px;
-    display:flex;
-    justify-content:space-between;
-    gap:8px;
-    flex-wrap:wrap
+.day.today {
+    border: 2px solid #6b4226;
 }
 
-.hidden{
-    display:none !important;
+.day.selected {
+    background: #ead2a7;
 }
 
-.google-panel{
-    margin-top:10px;
-    padding-top:10px;
-    border-top:1px solid #d7c2a5
+.day .num {
+    font-size: 13px;
 }
+
+.day .day-mood {
+    position: absolute;
+
+    right: 4px;
 
-.google-status{
-    font-size:12px;
-    margin-top:6px
+    bottom: 3px;
+
+    font-size: 17px;
 }
+
+.day .event-dot {
+    width: 7px;
+
+    height: 7px;
+
+    background: #a23b3b;
+
+    border-radius: 50%;
 
-.gallery-panel{
-    margin-top:14px
+    display: inline-block;
+
+    margin-left: 3px;
 }
 
-.gallery-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
-    gap:10px
+/* =========================================================
+   EVENTS
+========================================================= */
+
+.event-list {
+    margin-top: 10px;
 }
+
+.event-item {
+    background: #fffdf6;
+
+    border-left: 4px solid #6b4226;
+
+    padding: 9px;
+
+    margin-bottom: 7px;
 
-.gallery-card{
-    background:#fff8e9;
-    border:1px solid #d7c2a5;
-    border-radius:9px;
-    overflow:hidden;
-    cursor:pointer
+    border-radius: 5px;
 }
 
-.gallery-card img{
-    width:100%;
-    height:120px;
-    object-fit:cover;
-    display:block
+.event-item.google {
+    border-left-color: #4b6ca7;
 }
 
-.gallery-card .cap{
-    padding:6px;
-    font-size:12px
+/* =========================================================
+   MODALS
+========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(0,0,0,.62);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 15px;
+
+    z-index: 100;
 }
+
+.modal-box {
+    background: #fffaf0;
+
+    width: min(700px,100%);
 
-.gallery-empty{
-    padding:15px;
-    text-align:center;
-    color:#806b57
+    max-height: 90vh;
+
+    overflow: auto;
+
+    border-radius: 12px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.4);
 }
 
-.modal{
-    position:fixed;
-    inset:0;
-    background:#0008;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:50;
-    padding:18px
+.modal-box h2 {
+    margin-top: 0;
 }
+
+.modal-actions {
+    display: flex;
 
-.modal-card{
-    background:#fff8e9;
-    max-width:650px;
-    width:100%;
-    max-height:90vh;
-    overflow:auto;
-    border-radius:14px;
-    padding:18px;
-    box-shadow:0 15px 50px #0005
+    gap: 7px;
+
+    flex-wrap: wrap;
+
+    margin-top: 15px;
 }
+
+/* =========================================================
+   LIGHTBOX
+========================================================= */
 
-.modal-card h3{
-    margin-top:0
+.lightbox-content {
+    max-width: 95vw;
+
+    max-height: 85vh;
+
+    text-align: center;
 }
+
+.lightbox-content img {
+    max-width: 95vw;
 
-.modal-card input{
-    width:100%;
-    padding:10px;
-    border:1px solid #c7ad8d;
-    border-radius:8px
+    max-height: 80vh;
+
+    object-fit: contain;
 }
+
+/* =========================================================
+   FORMS
+========================================================= */
 
-.lightbox img{
-    max-width:90vw;
-    max-height:75vh;
-    object-fit:contain
+.form-row {
+    margin-bottom: 10px;
 }
 
-.drag-hint{
-    text-align:center;
-    font-size:12px;
-    color:#8a7058;
-    margin-top:5px
+.form-row label {
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 4px;
 }
+
+.form-row input,
+.form-row textarea,
+.form-row select {
+    width: 100%;
 
-.page.dragging{
-    transition:none;
-    cursor:grabbing
+    padding: 9px;
+
+    border: 1px solid #b59a79;
+
+    border-radius: 7px;
+
+    background: white;
 }
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+    text-align: center;
+
+    min-height: 22px;
 
-.page.drag-left{
-    transform:translateX(-20px) rotateY(-10deg)
+    color: #65482f;
+
+    font-size: 14px;
 }
+
+.toast {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 20px;
+
+    transform: translateX(-50%);
 
-.page.drag-right{
-    transform:translateX(20px) rotateY(10deg)
+    background: #3e2a1f;
+
+    color: white;
+
+    padding: 10px 16px;
+
+    border-radius: 20px;
+
+    z-index: 300;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,.3);
 }
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
-@media(max-width:760px){
+@media(max-width:650px) {
 
-    .gallery-grid{
-        grid-template-columns:repeat(2,1fr)
+    .app {
+        padding: 7px;
     }
 
-    .layout{
-        grid-template-columns:1fr
+    .page {
+        padding: 22px 17px;
+
+        min-height: 620px;
     }
 
-    .page{
-        min-height:700px;
-        padding-left:58px
+    .editor {
+        min-height: 560px;
+
+        font-size: 17px;
+
+        line-height: 28px;
+
+        background:
+            repeating-linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent 27px,
+                rgba(80,110,140,.25) 28px
+            );
     }
 
-    .page:before{
-        left:39px
-    }
-
-    .editor{
-        min-height:390px;
-        font-size:17px
-    }
-
-    .topbar h1{
-        font-size:21px
-    }
-}
-
-@media print{
-
-    body{
-        background:#fff
-    }
-
-    .topbar,
-    .panel,
-    .toolbar,
-    .nav,
-    .bottom,
-    .status,
-    .editor-tools{
-        display:none!important
-    }
-
-    .layout{
-        display:block
-    }
-
-    .diary-wrap{
-        margin:0
-    }
-
-    .page{
-        box-shadow:none;
-        min-height:100vh;
-        border-radius:0;
-        transform:none!important
-    }
-
-    .memory-area{
-        page-break-inside:avoid
+    .day {
+        min-height: 48px;
     }
 }
+
 </style>
 </head>
 
 <body>
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="header">
+
+    <h1>📖 My Personal Diary</h1>
+
+    <small>Version 8</small>
+
+</div>
+
+
 <div class="app">
 
-<header class="topbar">
-
-<h1>📖 My Personal Diary</h1>
-
-<small>
-Thoughts • Memories • Journey • v7.1
-</small>
+<!-- =====================================================
+     MAIN TOOLBAR
+===================================================== -->
 
 <div class="toolbar">
 
-<button class="btn primary" onclick="saveEntry()">
-💾 Save
-</button>
+    <button class="btn"
+            onclick="saveCurrentPage()">
+        💾 Save
+    </button>
 
-<button class="btn" onclick="backupDiary()">
-⬇ Backup
-</button>
+    <button class="btn secondary"
+            onclick="openGallery()">
+        🖼 Memories
+    </button>
 
-<label class="btn">
-⬆ Restore
-<input
-type="file"
-accept="application/json,.json"
-onchange="restoreDiary(event)">
-</label>
+    <button class="btn secondary"
+            onclick="openEventModal()">
+        📅 Add Event
+    </button>
 
-<button class="btn" onclick="printCurrentPage()">
-🖨 Print / PDF
-</button>
+    <button class="btn secondary"
+            onclick="openGoogleModal()">
+        🗓 Google Calendar
+    </button>
 
-<button class="btn" onclick="printAllPages()">
-📚 Print All
-</button>
+    <button class="btn secondary"
+            onclick="enableAlerts()">
+        🔔 Alerts
+    </button>
 
-<button class="btn" onclick="openGallery()">
-🖼 Memories
-</button>
+    <button class="btn secondary"
+            onclick="backupDiary()">
+        💾 Backup
+    </button>
 
-<button class="btn" onclick="openGoogleSettings()">
-📅 Google Calendar
-</button>
+    <button class="btn secondary"
+            onclick="document.getElementById('restoreInput').click()">
+        ♻ Restore
+    </button>
 
-</div>
-</header>
+    <button class="btn secondary"
+            onclick="printCurrentPage()">
+        🖨 Print
+    </button>
 
-
-<div class="layout">
-
-<aside class="panel">
-
-<div class="calendar-head">
-
-<button class="btn" onclick="changeMonth(-1)">
-‹
-</button>
-
-<strong id="monthLabel"></strong>
-
-<button class="btn" onclick="changeMonth(1)">
-›
-</button>
-
-</div>
-
-<div class="calendar-grid" id="calendar"></div>
-
-<hr>
-
-<h3>
-📅 Events for
-<span id="eventDateLabel"></span>
-</h3>
-
-<div class="event-form">
-
-<input
-id="eventText"
-placeholder="Add an event / reminder">
-
-<button class="btn primary" onclick="addEvent()">
-Add Event
-</button>
-
-</div>
-
-<div id="eventsList"></div>
-
-
-<div class="google-panel">
-
-<h3>
-🗓 Google Calendar
-</h3>
-
-<button
-class="btn primary"
-onclick="connectGoogleCalendar()">
-Connect / Refresh
-</button>
-
-<button
-class="btn"
-onclick="disconnectGoogleCalendar()">
-Disconnect
-</button>
-
-<div
-class="google-status"
-id="googleStatus">
-Not connected
-</div>
+    <button class="btn secondary"
+            onclick="printAllPages()">
+        🖨 All Pages
+    </button>
 
 </div>
 
 
-<hr>
-
-<h3>
-📜 Saved Pages
-</h3>
-
-<div
-class="list"
-id="entriesList">
-</div>
-
-</aside>
+<input type="file"
+       id="restoreInput"
+       accept=".json"
+       onchange="restoreDiary(event)">
 
 
-<main class="diary-wrap">
+<!-- =====================================================
+     DATE
+===================================================== -->
 
-<section
-class="page"
-id="page">
+<div class="datebar">
 
-<div class="page-content">
+    <button class="btn"
+            onclick="changeDate(-1)">
+        ◀ Day
+    </button>
 
-<div class="date-title">
+    <input type="date"
+           id="datePicker"
+           onchange="selectDate(this.value)">
 
-<button
-class="btn"
-onclick="previousDay()">
-←
-</button>
-
-<h2 id="dateTitle"></h2>
-
-<button
-class="btn"
-onclick="nextDay()">
-→
-</button>
+    <button class="btn"
+            onclick="changeDate(1)">
+        Day ▶
+    </button>
 
 </div>
 
 
-<div
-class="moods"
-id="moods">
+<div class="status"
+     id="status">
 </div>
 
 
-<div class="editor-tools">
+<!-- =====================================================
+     CALENDAR
+===================================================== -->
 
-<button
-class="tool"
-onclick="formatText('bold')">
-<b>B</b>
-</button>
+<div class="calendar">
 
-<button
-class="tool"
-onclick="formatText('underline')">
-<u>U</u>
-</button>
+    <div class="calendar-head">
 
-<button
-class="tool"
-onclick="formatText('italic')">
-<i>I</i>
-</button>
+        <button class="btn"
+                onclick="changeMonth(-1)">
+            ◀
+        </button>
 
-<button
-class="tool"
-onclick="formatText('insertUnorderedList')">
-☷ List
-</button>
+        <strong id="calendarTitle"></strong>
 
-<button
-class="tool"
-onclick="formatText('removeFormat')">
-Clear
-</button>
+        <button class="btn"
+                onclick="changeMonth(1)">
+            ▶
+        </button>
+
+    </div>
+
+    <div class="calendar-grid"
+         id="calendarGrid">
+    </div>
 
 </div>
 
 
-<div
-id="editor"
-class="editor"
-contenteditable="true"
-spellcheck="true"
-oninput="autoSave()"
-onpaste="handlePaste(event)">
-</div>
+<!-- =====================================================
+     DIARY BOOK
+===================================================== -->
+
+<div class="book">
+
+<div class="page"
+     id="diaryPage">
+
+    <div class="page-title">
+
+        <h2 id="pageDateTitle">
+            My Diary
+        </h2>
+
+        <div class="page-number"
+             id="pageNumber">
+        </div>
+
+    </div>
 
 
-<div class="memory-area">
+    <!-- FORMAT BUTTONS -->
 
-<strong>
-📎 Memories & Documents
-</strong>
+    <div class="editor-toolbar">
 
-<br>
+        <button class="format-btn"
+                onclick="formatText('bold')">
+            <b>B</b>
+        </button>
 
-<small>
-Add photos, screenshots, PDFs or other documents.
-You can also paste a copied image directly into the diary.
-</small>
+        <button class="format-btn"
+                onclick="formatText('underline')">
+            <u>U</u>
+        </button>
 
+        <button class="format-btn"
+                onclick="formatText('italic')">
+            <i>I</i>
+        </button>
 
-<div class="editor-tools">
+        <button class="format-btn"
+                onclick="insertBullet()">
+            • List
+        </button>
 
-<label class="tool">
-
-📷 Photo
-
-<input
-class="hidden"
-type="file"
-accept="image/*"
-multiple
-onchange="addAttachments(event)">
-
-</label>
+    </div>
 
 
-<label class="tool">
+    <!-- MOODS -->
 
-📎 Document
+    <div class="moods"
+         id="moods">
 
-<input
-class="hidden"
-type="file"
-multiple
-onchange="addAttachments(event)">
+        <button class="mood"
+                data-mood="😊"
+                onclick="setMood('😊')">
+            😊
+        </button>
 
-</label>
+        <button class="mood"
+                data-mood="😍"
+                onclick="setMood('😍')">
+            😍
+        </button>
 
-</div>
+        <button class="mood"
+                data-mood="😄"
+                onclick="setMood('😄')">
+            😄
+        </button>
+
+        <button class="mood"
+                data-mood="😐"
+                onclick="setMood('😐')">
+            😐
+        </button>
+
+        <button class="mood"
+                data-mood="😔"
+                onclick="setMood('😔')">
+            😔
+        </button>
+
+        <button class="mood"
+                data-mood="😡"
+                onclick="setMood('😡')">
+            😡
+        </button>
+
+        <button class="mood"
+                data-mood="🙏"
+                onclick="setMood('🙏')">
+            🙏
+        </button>
+
+        <button class="mood"
+                data-mood="❤️"
+                onclick="setMood('❤️')">
+            ❤️
+        </button>
+
+    </div>
 
 
-<div
-id="attachments"
-class="attachments">
-</div>
+    <!-- WRITING AREA -->
+
+    <div id="editor"
+         class="editor"
+         contenteditable="true"
+         spellcheck="true"
+         aria-label="Diary writing area">
+    </div>
 
 
-<div id="pageEvents"></div>
+    <div style="margin-top:8px;font-size:13px">
 
-</div>
+        <span id="lineCounter">
+            0 / 20 lines
+        </span>
 
+        &nbsp; | &nbsp;
 
-<div class="drag-hint">
-↔ Swipe or drag the page left/right to change day
-</div>
+        <span id="saveTime">
+        </span>
 
-<div
-class="status"
-id="status">
-</div>
-
-</div>
-
-</section>
+    </div>
 
 
-<div class="bottom">
+    <!-- PAGE NAVIGATION -->
 
-<button
-class="btn"
-onclick="goToday()">
-Today
-</button>
+    <div class="page-nav">
 
-<button
-class="btn danger"
-onclick="deleteEntry()">
-Delete Diary Page
-</button>
+        <button class="btn secondary"
+                onclick="previousPage()">
+            ← Previous Page
+        </button>
 
-</div>
+        <button class="btn green"
+                onclick="newSameDatePage()">
+            + New Page
+        </button>
 
-</main>
+        <button class="btn"
+                onclick="nextPage()">
+            Next Page →
+        </button>
+
+    </div>
+
 
 </div>
 
 </div>
 
 
-<!-- MEMORY GALLERY -->
+<!-- =====================================================
+     EVENTS
+===================================================== -->
 
-<div
-id="galleryModal"
-class="modal hidden"
-onclick="if(event.target===this)closeGallery()">
+<div class="section">
 
-<div class="modal-card">
+    <h3>
+        📅 Events for this date
+    </h3>
 
-<div
-style="display:flex;justify-content:space-between;align-items:center">
-
-<h3>
-🖼 Memory Gallery & Timeline
-</h3>
-
-<button
-class="btn"
-onclick="closeGallery()">
-✕
-</button>
-
-</div>
-
-<div id="galleryContent"></div>
-
-</div>
+    <div id="eventList"
+         class="event-list">
+    </div>
 
 </div>
 
 
-<!-- GOOGLE CALENDAR -->
+<!-- =====================================================
+     MEMORIES
+===================================================== -->
 
-<div
-id="googleModal"
-class="modal hidden"
-onclick="if(event.target===this)closeGoogleSettings()">
+<div class="section">
 
-<div class="modal-card">
+    <h3>
+        📸 Add Memory
+    </h3>
 
-<div
-style="display:flex;justify-content:space-between;align-items:center">
+    <div class="memory-buttons">
 
-<h3>
-📅 Google Calendar Setup
-</h3>
+        <button class="btn"
+                onclick="document.getElementById('cameraInput').click()">
+            📷 Take Photo
+        </button>
 
-<button
-class="btn"
-onclick="closeGoogleSettings()">
-✕
-</button>
+        <button class="btn"
+                onclick="document.getElementById('scanInput').click()">
+            📄 Scan Document
+        </button>
 
-</div>
+        <button class="btn secondary"
+                onclick="document.getElementById('memoryInput').click()">
+            🖼 Choose Photo
+        </button>
 
+        <button class="btn secondary"
+                onclick="document.getElementById('documentInput').click()">
+            📎 Attach Document
+        </button>
 
-<p>
-For security, the diary uses Google OAuth in your browser.
-Create a Google OAuth 2.0
-<b>Web application</b>
-client ID and enter it below.
-</p>
-
-
-<label>
-
-<b>
-Google OAuth Client ID
-</b>
-
-<input
-id="googleClientId"
-placeholder="xxxxxxxxxxxx-xxxxxxxx.apps.googleusercontent.com">
-
-</label>
+    </div>
 
 
-<p>
-
-<small>
-For this GitHub Pages app, add your exact diary site origin to Authorized JavaScript origins in Google Cloud.
-Do not put a client secret in this app.
-</small>
-
-</p>
+    <input type="file"
+           id="cameraInput"
+           accept="image/*"
+           capture="environment"
+           onchange="addMemory(event,'camera')">
 
 
-<button
-class="btn primary"
-onclick="saveGoogleClientId()">
-Save Client ID
-</button>
+    <input type="file"
+           id="scanInput"
+           accept="image/*"
+           capture="environment"
+           onchange="addMemory(event,'scan')">
 
-</div>
+
+    <input type="file"
+           id="memoryInput"
+           accept="image/*"
+           onchange="addMemory(event,'photo')">
+
+
+    <input type="file"
+           id="documentInput"
+           onchange="addMemory(event,'document')">
 
 </div>
 
 
-<!-- PHOTO LIGHTBOX -->
+<!-- =====================================================
+     GALLERY MODAL
+===================================================== -->
 
-<div
-id="lightboxModal"
-class="modal lightbox hidden"
-onclick="if(event.target===this)closeLightbox()">
+<div id="galleryModal"
+     class="modal"
+     hidden>
 
-<div
-class="modal-card"
-style="text-align:center">
+    <div class="modal-box">
 
-<button
-class="btn"
-onclick="closeLightbox()">
-Close
-</button>
+        <h2>🖼 Memories</h2>
 
-<div
-id="lightboxContent"
-style="margin-top:10px">
+        <div id="gallery"
+             class="gallery">
+        </div>
+
+        <div class="modal-actions">
+
+            <button class="btn"
+                    onclick="closeGallery()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
+
+<!-- =====================================================
+     LIGHTBOX
+===================================================== -->
+
+<div id="lightboxModal"
+     class="modal"
+     hidden>
+
+    <div class="lightbox-content">
+
+        <img id="lightboxImage"
+             alt="Memory">
+
+        <br><br>
+
+        <button class="btn"
+                onclick="closeLightbox()">
+            Close
+        </button>
+
+    </div>
+
 </div>
 
+
+<!-- =====================================================
+     EVENT MODAL
+===================================================== -->
+
+<div id="eventModal"
+     class="modal"
+     hidden>
+
+    <div class="modal-box">
+
+        <h2>📅 Add Diary Event</h2>
+
+        <div class="form-row">
+
+            <label>
+                Event
+            </label>
+
+            <input id="eventTitle"
+                   placeholder="Example: Doctor appointment">
+
+        </div>
+
+
+        <div class="form-row">
+
+            <label>
+                Date
+            </label>
+
+            <input type="date"
+                   id="eventDate">
+
+        </div>
+
+
+        <div class="form-row">
+
+            <label>
+                Time
+            </label>
+
+            <input type="time"
+                   id="eventTime">
+
+        </div>
+
+
+        <div class="form-row">
+
+            <label>
+                Alert before
+            </label>
+
+            <select id="eventReminder">
+
+                <option value="0">
+                    At event time
+                </option>
+
+                <option value="5">
+                    5 minutes before
+                </option>
+
+                <option value="15">
+                    15 minutes before
+                </option>
+
+                <option value="30">
+                    30 minutes before
+                </option>
+
+                <option value="60">
+                    1 hour before
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button class="btn green"
+                    onclick="saveEvent()">
+                Save Event
+            </button>
+
+            <button class="btn secondary"
+                    onclick="closeEventModal()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     GOOGLE CALENDAR MODAL
+===================================================== -->
+
+<div id="googleModal"
+     class="modal"
+     hidden>
+
+    <div class="modal-box">
+
+        <h2>
+            🗓 Google Calendar
+        </h2>
+
+        <p>
+            Connect your Google Calendar using a
+            read-only Google OAuth connection.
+        </p>
+
+
+        <div class="form-row">
+
+            <label>
+                Google OAuth Client ID
+            </label>
+
+            <input id="googleClientId"
+                   placeholder="1234567890-xxxxx.apps.googleusercontent.com">
+
+        </div>
+
+
+        <p style="font-size:14px">
+
+            Your Google Client ID is not a password.
+            Do not enter a Google Client Secret here.
+
+        </p>
+
+
+        <div class="modal-actions">
+
+            <button class="btn green"
+                    onclick="connectGoogleCalendar()">
+                Connect Google Calendar
+            </button>
+
+            <button class="btn secondary"
+                    onclick="loadGoogleCalendarEvents()">
+                Refresh Calendar
+            </button>
+
+            <button class="btn secondary"
+                    onclick="closeGoogleModal()">
+                Close
+            </button>
+
+        </div>
+
+
+        <hr>
+
+        <h3>
+            Google Cloud configuration
+        </h3>
+
+        <ol>
+
+            <li>
+                Create/open a project in Google Cloud.
+            </li>
+
+            <li>
+                Enable <b>Google Calendar API</b>.
+            </li>
+
+            <li>
+                Configure OAuth consent screen.
+            </li>
+
+            <li>
+                Create an OAuth Client ID for
+                <b>Web application</b>.
+            </li>
+
+            <li>
+                Add your GitHub Pages origin under
+                <b>Authorized JavaScript origins</b>.
+            </li>
+
+            <li>
+                Enter the Client ID above.
+            </li>
+
+            <li>
+                Press Connect.
+            </li>
+
+        </ol>
+
+        <p>
+            Required Calendar permission:
+            <br>
+            <b>calendar.readonly</b>
+        </p>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+<div id="toast"
+     class="toast"
+     hidden>
 </div>
 
 
 <script>
 
-const STORAGE_KEY='myPersonalDiaryEntries';
+/* =========================================================
+   DATABASE
+========================================================= */
 
-const EVENT_KEY='myPersonalDiaryEvents';
+const DB_NAME = "myPersonalDiaryDB";
 
-const DB_NAME='myPersonalDiaryDB';
+const DB_VERSION = 2;
 
-const DB_VERSION=1;
+const PAGE_STORE = "pages";
 
-const STORE='attachments';
+const EVENT_STORE = "events";
 
+const ATTACHMENT_STORE = "attachments";
 
-let selectedDate=localDateString(new Date());
+const SETTING_STORE = "settings";
 
-let calendarDate=new Date();
 
-let dbPromise=openDB();
+let db = null;
 
+let selectedDate = todayString();
 
-const moods=[
-'😀 Happy',
-'😊 Good',
-'😌 Calm',
-'😐 Normal',
-'😔 Sad',
-'😡 Angry',
-'🙏 Grateful'
-];
+let currentPage = 0;
 
+let currentMood = "";
 
-function localDateString(d){
+let lastGoodHTML = "";
 
-return d.getFullYear()+
-'-'+
-String(d.getMonth()+1).padStart(2,'0')+
-'-'+
-String(d.getDate()).padStart(2,'0');
+let calendarDate = new Date();
 
-}
 
+/* =========================================================
+   GOOGLE
+========================================================= */
 
-function dateObj(s){
+let googleToken = null;
 
-const [y,m,d]=s.split('-').map(Number);
+let googleEvents = [];
 
-return new Date(y,m-1,d);
+const GOOGLE_CLIENT_KEY =
+    "myPersonalDiaryGoogleClientId";
 
-}
+const GOOGLE_TOKEN_KEY =
+    "myPersonalDiaryGoogleToken";
+
+
+/* =========================================================
+   BASIC HELPERS
+========================================================= */
 
+function todayString() {
 
-function formatDate(s){
+    const d = new Date();
 
-return dateObj(s).toLocaleDateString(
-undefined,
-{
-weekday:'long',
-day:'numeric',
-month:'long',
-year:'numeric'
+    return d.getFullYear() + "-" +
+        String(d.getMonth()+1).padStart(2,"0") + "-" +
+        String(d.getDate()).padStart(2,"0");
+
 }
-);
+
+
+function escapeHTML(value) {
 
+    return String(value || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
 }
 
 
-function getEntries(){
+function showToast(message) {
 
-try{
+    const t =
+        document.getElementById("toast");
 
-return JSON.parse(
-localStorage.getItem(STORAGE_KEY)||'{}'
-);
+    t.textContent = message;
 
-}catch{
+    t.hidden = false;
 
-return {};
+    clearTimeout(window.toastTimer);
 
-}
+    window.toastTimer =
+        setTimeout(() => {
+
+            t.hidden = true;
 
+        },3000);
+
 }
 
 
-function setEntries(x){
+function setStatus(message) {
 
-localStorage.setItem(
-STORAGE_KEY,
-JSON.stringify(x)
-);
+    document.getElementById("status")
+        .textContent = message;
 
 }
 
 
-function getEvents(){
+/* =========================================================
+   INDEXED DB OPEN
+========================================================= */
 
-try{
+function openDatabase() {
 
-return JSON.parse(
-localStorage.getItem(EVENT_KEY)||'{}'
-);
+    return new Promise((resolve,reject) => {
 
-}catch{
+        const request =
+            indexedDB.open(DB_NAME,DB_VERSION);
 
-return {};
 
-}
+        request.onupgradeneeded = event => {
 
-}
+            const database =
+                event.target.result;
 
 
-function setEvents(x){
+            if (!database.objectStoreNames
+                .contains(PAGE_STORE)) {
 
-localStorage.setItem(
-EVENT_KEY,
-JSON.stringify(x)
-);
+                const store =
+                    database.createObjectStore(
+                        PAGE_STORE,
+                        {keyPath:"id"}
+                    );
 
-}
+                store.createIndex(
+                    "date",
+                    "date",
+                    {unique:false}
+                );
 
+            }
 
-function openDB(){
 
-return new Promise(
-(resolve,reject)=>{
+            if (!database.objectStoreNames
+                .contains(EVENT_STORE)) {
 
-const r=indexedDB.open(
-DB_NAME,
-DB_VERSION
-);
+                const store =
+                    database.createObjectStore(
+                        EVENT_STORE,
+                        {keyPath:"id"}
+                    );
 
-r.onupgradeneeded=()=>{
+                store.createIndex(
+                    "date",
+                    "date",
+                    {unique:false}
+                );
 
-if(
-!r.result.objectStoreNames.contains(STORE)
-){
+            }
 
-r.result.createObjectStore(
-STORE,
-{
-keyPath:'id',
-autoIncrement:true
-}
-);
 
-}
+            if (!database.objectStoreNames
+                .contains(ATTACHMENT_STORE)) {
 
-};
+                const store =
+                    database.createObjectStore(
+                        ATTACHMENT_STORE,
+                        {keyPath:"id"}
+                    );
 
-r.onsuccess=()=>{
-resolve(r.result);
-};
+                store.createIndex(
+                    "date",
+                    "date",
+                    {unique:false}
+                );
 
-r.onerror=()=>{
-reject(r.error);
-};
+            }
 
-}
-);
 
-}
+            if (!database.objectStoreNames
+                .contains(SETTING_STORE)) {
 
+                database.createObjectStore(
+                    SETTING_STORE,
+                    {keyPath:"key"}
+                );
 
-async function dbAdd(file,date){
+            }
 
-const db=await dbPromise;
+        };
 
-return new Promise(
-(res,rej)=>{
 
-const tx=db.transaction(
-STORE,
-'readwrite'
-);
+        request.onsuccess = () => {
 
-const req=tx.objectStore(STORE).add(
-{
-date,
-name:file.name,
-type:file.type,
-size:file.size,
-blob:file
-}
-);
+            db = request.result;
 
-req.onsuccess=()=>{
-res(req.result);
-};
+            resolve(db);
 
-req.onerror=()=>{
-rej(req.error);
-};
+        };
 
-}
-);
 
-}
+        request.onerror = () => {
 
+            reject(request.error);
 
-async function dbGetByDate(date){
+        };
 
-const db=await dbPromise;
+    });
 
-return new Promise(
-(res,rej)=>{
+}
 
-const tx=db.transaction(
-STORE,
-'readonly'
-);
 
-const req=tx.objectStore(STORE).getAll();
+/* =========================================================
+   DATABASE OPERATIONS
+========================================================= */
 
-req.onsuccess=()=>{
+function putRecord(storeName,record) {
 
-res(
-req.result.filter(
-x=>x.date===date
-)
-);
+    return new Promise((resolve,reject) => {
 
-};
+        const tx =
+            db.transaction(storeName,"readwrite");
 
-req.onerror=()=>{
-rej(req.error);
-};
+        tx.objectStore(storeName)
+            .put(record);
 
-}
-);
+        tx.oncomplete = resolve;
+
+        tx.onerror = () =>
+            reject(tx.error);
 
+    });
+
 }
 
 
-async function dbDelete(id){
+function getRecord(storeName,key) {
 
-const db=await dbPromise;
+    return new Promise((resolve,reject) => {
 
-return new Promise(
-(res,rej)=>{
+        const tx =
+            db.transaction(storeName,"readonly");
 
-const tx=db.transaction(
-STORE,
-'readwrite'
-);
+        const request =
+            tx.objectStore(storeName).get(key);
 
-tx.objectStore(STORE).delete(id);
+        request.onsuccess = () =>
+            resolve(request.result);
 
-tx.oncomplete=()=>{
-res();
-};
+        request.onerror = () =>
+            reject(request.error);
 
-tx.onerror=()=>{
-rej(tx.error);
-};
+    });
 
 }
-);
 
-}
 
+function getAllRecords(storeName) {
 
-async function dbAll(){
+    return new Promise((resolve,reject) => {
 
-const db=await dbPromise;
+        const tx =
+            db.transaction(storeName,"readonly");
 
-return new Promise(
-(res,rej)=>{
+        const request =
+            tx.objectStore(storeName).getAll();
 
-const r=db
-.transaction(STORE,'readonly')
-.objectStore(STORE)
-.getAll();
+        request.onsuccess = () =>
+            resolve(request.result || []);
 
-r.onsuccess=()=>{
-res(r.result);
-};
+        request.onerror = () =>
+            reject(request.error);
 
-r.onerror=()=>{
-rej(r.error);
-};
+    });
 
 }
-);
 
-}
 
+function deleteRecord(storeName,key) {
 
-function renderMoods(){
+    return new Promise((resolve,reject) => {
 
-const box=document.getElementById('moods');
+        const tx =
+            db.transaction(storeName,"readwrite");
 
-box.innerHTML=moods.map(
-m=>`
-<button
-class="mood"
-data-mood="${m}"
-onclick="selectMood('${m.replace(/'/g,"\\'")}')">
-${m}
-</button>
-`
-).join('');
+        tx.objectStore(storeName)
+            .delete(key);
 
-}
+        tx.oncomplete = resolve;
 
+        tx.onerror = () =>
+            reject(tx.error);
 
-function selectMood(m){
+    });
 
-const e=getEntries();
+}
 
-e[selectedDate]=e[selectedDate]||{};
 
-e[selectedDate].mood=m;
+/* =========================================================
+   SETTINGS
+========================================================= */
 
-setEntries(e);
+async function saveSetting(key,value) {
 
-updateMoodButtons();
+    await putRecord(
+        SETTING_STORE,
+        {
+            key:key,
+            value:value
+        }
+    );
 
 }
 
 
-function updateMoodButtons(){
+async function getSetting(key) {
 
-const m=
-(getEntries()[selectedDate]||{}).mood;
+    const record =
+        await getRecord(
+            SETTING_STORE,
+            key
+        );
 
-document
-.querySelectorAll('.mood')
-.forEach(
-b=>b.classList.toggle(
-'selected',
-b.dataset.mood===m
-)
-);
+    return record
+        ? record.value
+        : null;
 
 }
 
 
-async function loadDate(
-date,
-animate=''
-){
+/* =========================================================
+   MIGRATE OLD V7 DATA
+========================================================= */
 
-if(animate){
+async function migrateOldDiary() {
 
-const p=document.getElementById('page');
+    const migrated =
+        await getSetting("v8MigrationComplete");
 
-p.classList.add(animate);
 
-setTimeout(
-()=>{
-p.classList.remove(animate);
-loadDateNow(date);
-},
-260
-);
+    if (migrated) {
+        return;
+    }
 
-}else{
 
-loadDateNow(date);
+    try {
 
-}
+        const oldEntries =
+            JSON.parse(
+                localStorage.getItem(
+                    "myPersonalDiaryEntries"
+                ) || "{}"
+            );
 
-}
 
+        for (const date of Object.keys(oldEntries)) {
 
-async function loadDateNow(date){
+            const old =
+                oldEntries[date];
 
-selectedDate=date;
 
-calendarDate=dateObj(date);
+            const page = {
 
-const e=getEntries()[date]||{};
+                id: date + "::0",
 
-document.getElementById(
-'dateTitle'
-).textContent=formatDate(date);
+                date: date,
 
+                page: 0,
 
-document.getElementById(
-'editor'
-).innerHTML=
-e.html||e.content||'';
+                html: old.html || "",
 
+                text: old.text || "",
 
-renderMoods();
+                mood: old.mood || "",
 
-updateMoodButtons();
+                updatedAt:
+                    old.updatedAt ||
+                    new Date().toISOString()
 
+            };
 
-document.getElementById(
-'status'
-).textContent=
-e.html||e.content
-?'Saved entry loaded.'
-:'New diary page.';
 
+            await putRecord(
+                PAGE_STORE,
+                page
+            );
 
-renderCalendar();
+        }
 
-renderEntries();
 
-renderEvents();
+        const oldEvents =
+            JSON.parse(
+                localStorage.getItem(
+                    "myPersonalDiaryEvents"
+                ) || "{}"
+            );
 
-renderAttachments();
 
-}
+        if (Array.isArray(oldEvents)) {
 
+            for (const event of oldEvents) {
 
-function saveEntry(show=true){
+                if (!event.id) {
 
-const html=
-document
-.getElementById('editor')
-.innerHTML
-.trim();
+                    event.id =
+                        "event-" +
+                        Date.now() +
+                        "-" +
+                        Math.random();
 
-const text=
-document
-.getElementById('editor')
-.innerText
-.trim();
+                }
 
-const e=getEntries();
+                await putRecord(
+                    EVENT_STORE,
+                    event
+                );
 
+            }
 
-if(
-!html &&
-!text &&
-!(
-e[selectedDate] &&
-e[selectedDate].mood
-)
-){
+        }
 
-delete e[selectedDate];
 
-setEntries(e);
+        await saveSetting(
+            "v8MigrationComplete",
+            true
+        );
 
-}else{
 
-e[selectedDate]={
-...(e[selectedDate]||{}),
-html,
-text,
-updatedAt:new Date().toISOString()
-};
+        showToast(
+            "Your previous diary entries were migrated to v8."
+        );
 
-setEntries(e);
+    } catch(error) {
 
-}
+        console.error(
+            "Migration error",
+            error
+        );
 
+    }
 
-if(show){
+}
 
-document.getElementById(
-'status'
-).textContent='Saved ✓';
 
-renderCalendar();
+/* =========================================================
+   PAGE ID
+========================================================= */
 
-renderEntries();
+function pageId(date,page) {
 
-}
+    return date + "::" + page;
 
 }
 
 
-let saveTimer;
+/* =========================================================
+   LOAD DATE
+========================================================= */
 
-function autoSave(){
+async function selectDate(date) {
 
-clearTimeout(saveTimer);
+    if (!date) return;
 
-saveTimer=setTimeout(
-()=>{
-saveEntry(false);
-},
-700
-);
+    await saveCurrentPage(false);
+
+    selectedDate = date;
 
-document.getElementById(
-'status'
-).textContent='Saving…';
+    currentPage = 0;
 
+    document.getElementById("datePicker")
+        .value = selectedDate;
+
+    calendarDate =
+        new Date(
+            selectedDate + "T12:00:00"
+        );
+
+    await loadCurrentPage();
+
+    renderCalendar();
+
 }
 
 
-function previousDay(){
+async function loadCurrentPage() {
 
-saveEntry(false);
+    const id =
+        pageId(
+            selectedDate,
+            currentPage
+        );
 
-const d=dateObj(selectedDate);
 
-d.setDate(
-d.getDate()-1
-);
+    const page =
+        await getRecord(
+            PAGE_STORE,
+            id
+        );
 
-loadDate(
-localDateString(d),
-'turn-prev'
-);
 
-}
+    document.getElementById("editor")
+        .innerHTML =
+            page
+                ? page.html || ""
+                : "";
 
 
-function nextDay(){
+    currentMood =
+        page
+            ? page.mood || ""
+            : "";
 
-saveEntry(false);
 
-const d=dateObj(selectedDate);
+    lastGoodHTML =
+        document.getElementById("editor")
+            .innerHTML;
 
-d.setDate(
-d.getDate()+1
-);
 
-loadDate(
-localDateString(d),
-'turn-next'
-);
+    updateMoodButtons();
+
+    updatePageNumber();
+
+    updateLineCounter();
+
+    renderEvents();
 
+    renderCalendar();
+
+    renderDateTitle();
+
+    renderAttachments();
+
 }
 
 
-function goToday(){
+/* =========================================================
+   DATE TITLE
+========================================================= */
 
-saveEntry(false);
+function renderDateTitle() {
 
-loadDate(
-localDateString(new Date())
-);
+    const d =
+        new Date(
+            selectedDate + "T12:00:00"
+        );
 
+
+    document.getElementById("pageDateTitle")
+        .textContent =
+            d.toLocaleDateString(
+                undefined,
+                {
+                    weekday:"long",
+                    day:"numeric",
+                    month:"long",
+                    year:"numeric"
+                }
+            );
+
 }
 
 
-function deleteEntry(){
+/* =========================================================
+   SAVE PAGE
+========================================================= */
 
-if(
-!confirm(
-'Delete this diary page and its text? Attachments must be removed separately.'
-)
-)return;
+async function saveCurrentPage(showMessage=true) {
 
-const e=getEntries();
+    if (!db) return;
 
-delete e[selectedDate];
 
-setEntries(e);
+    const editor =
+        document.getElementById("editor");
 
-loadDateNow(selectedDate);
 
-}
+    const html =
+        editor.innerHTML;
 
 
-function changeMonth(n){
+    const text =
+        editor.innerText.trim();
 
-calendarDate=
-new Date(
-calendarDate.getFullYear(),
-calendarDate.getMonth()+n,
-1
-);
 
-renderCalendar();
+    const record = {
 
-}
+        id:
+            pageId(
+                selectedDate,
+                currentPage
+            ),
 
+        date:
+            selectedDate,
 
-function renderCalendar(){
+        page:
+            currentPage,
 
-const y=calendarDate.getFullYear();
+        html:
+            html,
 
-const m=calendarDate.getMonth();
+        text:
+            text,
 
-const first=new Date(y,m,1);
+        mood:
+            currentMood,
 
-const last=new Date(y,m+1,0);
+        updatedAt:
+            new Date().toISOString()
 
-const entries=getEntries();
+    };
 
-const events=getEvents();
 
+    await putRecord(
+        PAGE_STORE,
+        record
+    );
 
-document.getElementById(
-'monthLabel'
-).textContent=
-calendarDate.toLocaleDateString(
-undefined,
-{
-month:'long',
-year:'numeric'
-}
-);
 
+    lastGoodHTML = html;
 
-let h=
-[
-'Sun',
-'Mon',
-'Tue',
-'Wed',
-'Thu',
-'Fri',
-'Sat'
-]
-.map(
-x=>`<div class="cal-week">${x}</div>`
-)
-.join('');
-
-
-for(
-let i=0;
-i<first.getDay();
-i++
-){
-
-h+='<div></div>';
 
-}
+    const time =
+        new Date()
+            .toLocaleTimeString(
+                [],
+                {
+                    hour:"2-digit",
+                    minute:"2-digit"
+                }
+            );
 
 
-for(
-let d=1;
-d<=last.getDate();
-d++
-){
+    document.getElementById("saveTime")
+        .textContent =
+            "Saved " + time;
 
-const s=
-localDateString(
-new Date(y,m,d)
-);
 
+    renderCalendar();
 
-h+=`
-<div
-class="cal-day
-${s===selectedDate?'selected ':''}
-${s===localDateString(new Date())?'today ':''}
-${entries[s]?'has-entry ':''}
-${(events[s]?.length||window.googleEvents?.[s]?.length)?'has-event':''}"
-onclick="loadDate('${s}')">
-${d}
-</div>
-`;
 
-}
+    if (showMessage) {
 
+        showToast(
+            "Page saved successfully."
+        );
 
-document.getElementById(
-'calendar'
-).innerHTML=h;
+    }
 
 }
 
 
-function renderEntries(){
+window.saveCurrentPage =
+    saveCurrentPage;
 
-const box=
-document.getElementById(
-'entriesList'
-);
+
+/* =========================================================
+   ALIAS
+========================================================= */
 
-const e=getEntries();
-
-const keys=
-Object.keys(e)
-.sort()
-.reverse();
-
-
-box.innerHTML=
-keys.length
-?
-keys.map(
-k=>`
-<div
-class="entry-item"
-onclick="loadDate('${k}')">
-
-<strong>${k}</strong>
-
-<span>
-${escapeHtml(
-(
-e[k].text||
-strip(e[k].html||'')
-).slice(0,70)
-)}
-</span>
-
-</div>
-`
-).join('')
-:
-'<small>No saved pages yet.</small>';
+async function saveEntry() {
 
+    await saveCurrentPage(true);
+
 }
 
 
-function strip(h){
+/* =========================================================
+   MOOD
+========================================================= */
 
-const d=document.createElement('div');
+async function setMood(mood) {
 
-d.innerHTML=h;
+    currentMood = mood;
 
-return d.innerText;
+    updateMoodButtons();
 
-}
+    await saveCurrentPage(false);
 
+    renderCalendar();
 
-function escapeHtml(s){
-
-return String(s).replace(
-/[&<>"']/g,
-c=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#39;'
-}[c])
-);
+    showToast(
+        "Mood saved: " + mood
+    );
 
 }
 
 
-function formatText(cmd){
+function updateMoodButtons() {
 
-document.execCommand(
-cmd,
-false,
-null
-);
+    document.querySelectorAll(".mood")
+        .forEach(button => {
 
-document
-.getElementById('editor')
-.focus();
+            button.classList.toggle(
+                "selected",
+                button.dataset.mood === currentMood
+            );
 
-autoSave();
+        });
 
 }
 
 
-function handlePaste(ev){
+/* =========================================================
+   LINE COUNT
+========================================================= */
 
-const items=
-ev.clipboardData?.items||[];
+function calculateLines() {
 
-for(
-const item of items
-){
+    const editor =
+        document.getElementById("editor");
 
-if(
-item.type.startsWith('image/')
-){
 
-ev.preventDefault();
+    const style =
+        getComputedStyle(editor);
 
-const file=item.getAsFile();
 
-if(file)
-addAttachmentFile(file);
+    let lineHeight =
+        parseFloat(
+            style.lineHeight
+        );
 
-return;
 
-}
+    if (!lineHeight ||
+        Number.isNaN(lineHeight)) {
 
-}
+        lineHeight = 32;
 
-}
+    }
+
+
+    const padding =
+        parseFloat(style.paddingTop) +
+        parseFloat(style.paddingBottom);
+
+
+    const height =
+        editor.scrollHeight;
+
 
+    let lines =
+        Math.ceil(
+            (height - padding) /
+            lineHeight
+        );
 
-async function addAttachments(ev){
 
-for(
-const f of ev.target.files||[]
-){
+    if (!editor.innerText.trim()) {
 
-await addAttachmentFile(f);
+        lines = 0;
 
+    }
+
+
+    return lines;
+
 }
+
 
-ev.target.value='';
+function updateLineCounter() {
 
-renderAttachments();
+    const lines =
+        calculateLines();
 
+
+    document.getElementById("lineCounter")
+        .textContent =
+            Math.min(lines,20) +
+            " / 20 lines";
+
 }
 
 
-async function addAttachmentFile(file){
+/* =========================================================
+   LIMIT 20 LINES
+========================================================= */
 
-try{
+document.getElementById("editor")
+    .addEventListener(
+        "input",
+        function() {
 
-await dbAdd(
-file,
-selectedDate
-);
+            const lines =
+                calculateLines();
 
-document.getElementById(
-'status'
-).textContent=
-'Memory attached ✓';
 
-await renderAttachments();
+            if (lines > 20) {
 
-}catch(err){
+                this.innerHTML =
+                    lastGoodHTML;
 
-alert(
-'Could not save attachment: '+
-err.message
-);
 
-}
+                placeCaretAtEnd(this);
 
-}
 
+                showToast(
+                    "20 lines reached. Turn to the next page."
+                );
 
-async function renderAttachments(){
+                updateLineCounter();
 
-const box=
-document.getElementById(
-'attachments'
-);
+                return;
 
-try{
+            }
 
-const arr=
-await dbGetByDate(
-selectedDate
-);
 
-box.innerHTML='';
+            lastGoodHTML =
+                this.innerHTML;
 
 
-for(
-const a of arr
-){
+            updateLineCounter();
 
-const url=
-URL.createObjectURL(
-a.blob
-);
+        }
+    );
 
-const isImg=
-a.type.startsWith('image/');
-
-
-const div=
-document.createElement('div');
-
-div.className='attachment';
-
-
-div.innerHTML=
-isImg
-?
-`
-<img
-src="${url}"
-alt="${escapeHtml(a.name)}">
-`
-:
-`
-<a
-href="${url}"
-target="_blank"
-rel="noopener">
-📄 ${escapeHtml(a.name)}
-</a>
-`;
-
-
-const b=
-document.createElement(
-'button'
-);
 
-b.textContent='✕';
+function placeCaretAtEnd(element) {
 
-b.title='Remove';
+    element.focus();
 
+    const range =
+        document.createRange();
 
-b.onclick=async()=>{
+    range.selectNodeContents(element);
 
-if(
-confirm(
-'Remove this attachment?'
-)
-){
+    range.collapse(false);
 
-await dbDelete(a.id);
+    const selection =
+        window.getSelection();
 
-renderAttachments();
+    selection.removeAllRanges();
 
+    selection.addRange(range);
+
 }
+
 
-};
+/* =========================================================
+   RICH TEXT
+========================================================= */
 
+function formatText(command) {
 
-div.appendChild(b);
+    document.execCommand(
+        command,
+        false,
+        null
+    );
 
-box.appendChild(div);
+    document.getElementById("editor")
+        .focus();
 
 }
 
-}catch{
 
-box.innerHTML=
-'<small>Attachment storage unavailable in this browser.</small>';
+function insertBullet() {
 
-}
+    document.execCommand(
+        "insertUnorderedList",
+        false,
+        null
+    );
 
 }
 
 
-function addEvent(){
+/* =========================================================
+   PAGE COUNT
+========================================================= */
 
-const text=
-document
-.getElementById('eventText')
-.value
-.trim();
+async function getPagesForDate(date) {
 
-if(!text)return;
+    const pages =
+        await getAllRecords(
+            PAGE_STORE
+        );
 
-const ev=getEvents();
 
-ev[selectedDate]=
-ev[selectedDate]||[];
+    return pages
+        .filter(
+            p => p.date === date
+        )
+        .sort(
+            (a,b) =>
+                a.page - b.page
+        );
 
-ev[selectedDate].push(
-{
-text,
-createdAt:new Date().toISOString()
 }
-);
+
+
+async function updatePageNumber() {
 
-setEvents(ev);
+    const pages =
+        await getPagesForDate(
+            selectedDate
+        );
 
-document.getElementById(
-'eventText'
-).value='';
 
-renderEvents();
+    const total =
+        Math.max(
+            pages.length,
+            currentPage + 1
+        );
 
-renderCalendar();
 
+    document.getElementById("pageNumber")
+        .textContent =
+            "Page " +
+            (currentPage + 1) +
+            " of " +
+            total;
+
 }
 
 
-function renderEvents(){
+/* =========================================================
+   NEW SAME DATE PAGE
+========================================================= */
 
-const ev=getEvents();
+async function newSameDatePage() {
 
-const arr=
-ev[selectedDate]||[];
+    await saveCurrentPage(false);
 
+    currentPage++;
 
-document.getElementById(
-'eventDateLabel'
-).textContent=
-dateObj(selectedDate)
-.toLocaleDateString(
-undefined,
-{
-day:'numeric',
-month:'short'
-}
-);
+    document.getElementById("editor")
+        .innerHTML = "";
+
+    currentMood = "";
 
+    lastGoodHTML = "";
 
-document.getElementById(
-'eventsList'
-).innerHTML=
-arr.length
-?
-arr.map(
-(x,i)=>`
-<div class="event-card">
-
-${escapeHtml(x.text)}
-
-<button
-class="btn"
-style="float:right;padding:2px 6px"
-onclick="deleteEvent(${i})">
-×
-</button>
-
-</div>
-`
-).join('')
-:
-'<small>No events.</small>';
-
-
-document.getElementById(
-'pageEvents'
-).innerHTML=
-arr.length
-?
-'<h4>📅 Today’s Events</h4>'+
-arr.map(
-x=>
-`<div class="event-card">
-${escapeHtml(x.text)}
-</div>`
-).join('')
-:
-'';
+    updateMoodButtons();
 
+    updateLineCounter();
+
+    updatePageNumber();
+
+    renderAttachments();
+
+    showToast(
+        "New page created for " +
+        selectedDate
+    );
+
 }
 
 
-function deleteEvent(i){
+/* =========================================================
+   NEXT PAGE
+========================================================= */
 
-const ev=getEvents();
+async function nextPage() {
 
-ev[selectedDate].splice(
-i,
-1
-);
+    await saveCurrentPage(false);
 
-if(
-!ev[selectedDate].length
-)
-delete ev[selectedDate];
 
-setEvents(ev);
+    const pages =
+        await getPagesForDate(
+            selectedDate
+        );
 
-renderEvents();
 
-renderCalendar();
+    if (currentPage < pages.length - 1) {
 
-}
+        await turnPageAnimation(
+            "next"
+        );
 
+        currentPage++;
 
-async function backupDiary(){
+        await loadCurrentPage();
 
-saveEntry(false);
+        return;
 
-const entries=getEntries();
+    }
 
-const events=getEvents();
 
-const attachments=await dbAll();
+    const answer =
+        confirm(
+            "Create another page for the same date?"
+        );
 
-const files=[];
 
+    if (answer) {
 
-for(
-const a of attachments
-){
+        await newSameDatePage();
 
-files.push(
-{
-id:a.id,
-date:a.date,
-name:a.name,
-type:a.type,
-size:a.size,
-data:await blobToDataURL(a.blob)
-}
-);
+    } else {
 
+        changeDate(1);
+
+    }
+
 }
 
 
-const data={
-version:2,
-exportedAt:new Date().toISOString(),
-entries,
-events,
-attachments:files
-};
+/* =========================================================
+   PREVIOUS PAGE
+========================================================= */
 
+async function previousPage() {
 
-const blob=
-new Blob(
-[JSON.stringify(data)],
-{
-type:'application/json'
-}
-);
+    await saveCurrentPage(false);
 
 
-const url=
-URL.createObjectURL(blob);
+    if (currentPage > 0) {
 
-const a=
-document.createElement('a');
+        await turnPageAnimation(
+            "prev"
+        );
 
-a.href=url;
+        currentPage--;
 
-a.download=
-'my-personal-diary-backup-'+
-localDateString(new Date())+
-'.json';
+        await loadCurrentPage();
 
-a.click();
+        return;
 
-URL.revokeObjectURL(url);
+    }
 
-document.getElementById(
-'status'
-).textContent=
-'Backup created ✓';
 
+    changeDate(-1);
+
 }
 
 
-function blobToDataURL(blob){
+/* =========================================================
+   PAGE ANIMATION
+========================================================= */
 
-return new Promise(
-(res,rej)=>{
+function turnPageAnimation(direction) {
 
-const r=new FileReader();
+    return new Promise(resolve => {
 
-r.onload=()=>{
-res(r.result);
-};
+        const page =
+            document.getElementById(
+                "diaryPage"
+            );
 
-r.onerror=()=>{
-rej(r.error);
-};
 
-r.readAsDataURL(blob);
+        page.classList.add(
+            direction === "next"
+                ? "turn-next"
+                : "turn-prev"
+        );
 
-}
-);
 
-}
+        setTimeout(() => {
 
+            page.classList.remove(
+                "turn-next",
+                "turn-prev"
+            );
 
-function dataURLToBlob(data){
+            resolve();
 
-const [
-head,
-b64
-]=data.split(',');
+        },550);
 
-const mime=
-(
-head.match(
-/:(.*?);/
-)||[]
-)[1]||
-'application/octet-stream';
+    });
 
+}
 
-const bin=atob(b64);
 
-const arr=
-new Uint8Array(
-bin.length
-);
+/* =========================================================
+   DATE CHANGE
+========================================================= */
 
+async function changeDate(days) {
 
-for(
-let i=0;
-i<bin.length;
-i++
-){
+    await saveCurrentPage(false);
 
-arr[i]=
-bin.charCodeAt(i);
 
-}
+    const d =
+        new Date(
+            selectedDate + "T12:00:00"
+        );
 
 
-return new Blob(
-[arr],
-{
-type:mime
-}
-);
+    d.setDate(
+        d.getDate() + days
+    );
 
-}
 
+    const newDate =
+        d.getFullYear() + "-" +
+        String(d.getMonth()+1)
+            .padStart(2,"0") + "-" +
+        String(d.getDate())
+            .padStart(2,"0");
 
-async function restoreDiary(ev){
 
-const file=
-ev.target.files[0];
+    await selectDate(newDate);
 
-if(!file)return;
+}
 
 
-try{
+/* =========================================================
+   CALENDAR
+========================================================= */
 
-const data=
-JSON.parse(
-await file.text()
-);
+async function changeMonth(amount) {
 
+    await saveCurrentPage(false);
 
-if(
-!data.entries &&
-!data.events
-)
-throw new Error(
-'Not a valid diary backup'
-);
+    calendarDate.setMonth(
+        calendarDate.getMonth() + amount
+    );
 
+    renderCalendar();
 
-const entries=getEntries();
+}
 
-Object.assign(
-entries,
-data.entries||{}
-);
 
-setEntries(entries);
+async function renderCalendar() {
 
+    if (!db) return;
 
-const events=getEvents();
 
-Object.assign(
-events,
-data.events||{}
-);
+    const pages =
+        await getAllRecords(
+            PAGE_STORE
+        );
 
-setEvents(events);
 
+    const events =
+        await getAllRecords(
+            EVENT_STORE
+        );
 
-for(
-const a of data.attachments||[]
-){
 
-if(a.data){
+    const year =
+        calendarDate.getFullYear();
 
-const blob=
-dataURLToBlob(
-a.data
-);
 
-await dbAdd(
-new File(
-[blob],
-a.name,
-{
-type:a.type
-}
-),
-a.date
-);
+    const month =
+        calendarDate.getMonth();
 
-}
 
-}
+    const firstDay =
+        new Date(
+            year,
+            month,
+            1
+        ).getDay();
 
 
-await loadDateNow(
-selectedDate
-);
+    const daysInMonth =
+        new Date(
+            year,
+            month + 1,
+            0
+        ).getDate();
 
 
-alert(
-'Diary restored successfully. Existing dates were kept unless the backup contained the same date.'
-);
+    document.getElementById("calendarTitle")
+        .textContent =
+            new Date(
+                year,
+                month,
+                1
+            ).toLocaleDateString(
+                undefined,
+                {
+                    month:"long",
+                    year:"numeric"
+                }
+            );
 
 
-}catch(e){
+    const grid =
+        document.getElementById(
+            "calendarGrid"
+        );
 
-alert(
-'Restore failed: '+
-e.message
-);
 
-}
+    grid.innerHTML = "";
 
 
-ev.target.value='';
+    [
+        "Sun",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat"
+    ].forEach(day => {
 
-}
+        const el =
+            document.createElement("div");
 
+        el.className =
+            "calendar-weekday";
 
-function printCurrentPage(){
+        el.textContent = day;
 
-saveEntry(false);
+        grid.appendChild(el);
 
-window.print();
+    });
 
-}
 
+    for (
+        let i=0;
+        i<firstDay;
+        i++
+    ) {
 
-function printAllPages(){
+        grid.appendChild(
+            document.createElement("div")
+        );
 
-saveEntry(false);
+    }
 
-const e=getEntries();
 
-const keys=
-Object.keys(e)
-.sort();
+    for (
+        let day=1;
+        day<=daysInMonth;
+        day++
+    ) {
 
+        const date =
+            year + "-" +
+            String(month+1).padStart(2,"0") +
+            "-" +
+            String(day).padStart(2,"0");
 
-if(!keys.length){
 
-alert(
-'No saved diary pages to print.'
-);
+        const cell =
+            document.createElement("div");
 
-return;
 
-}
+        cell.className = "day";
 
 
-const w=
-window.open(
-'',
-'_blank'
-);
+        if (date === todayString()) {
 
+            cell.classList.add(
+                "today"
+            );
 
-if(!w){
+        }
 
-alert(
-'Please allow pop-ups for your diary site to print all pages.'
-);
 
-return;
+        if (date === selectedDate) {
 
-}
+            cell.classList.add(
+                "selected"
+            );
 
+        }
 
-const css=
-`@page{size:auto;margin:12mm}
-body{font-family:Georgia,serif;color:#3e2a1f;margin:0}
-.print-page{min-height:260mm;padding:20mm 15mm 15mm 25mm;position:relative;page-break-after:always;background:linear-gradient(to bottom,transparent 0,transparent 31px,#89a1b955 32px);background-size:100% 32px}
-.print-page:before{content:"";position:absolute;left:18mm;top:0;bottom:0;border-left:2px solid #d87575}
-.print-page h2{border-bottom:1px solid #b98e65;padding-bottom:7px}
-.print-page img{max-width:100%;max-height:90mm}`;
-
-
-let html=
-'<!DOCTYPE html><html><head><meta charset="UTF-8"><title>My Personal Diary</title><style>'+
-css+
-'</style></head><body>';
-
-
-keys.forEach(
-k=>{
-
-const x=e[k]||{};
-
-
-html+=
-'<section class="print-page">'+
-'<h2>'+
-escapeHtml(formatDate(k))+
-'</h2>'+
-'<div>'+
-(x.html||escapeHtml(x.text||''))+
-'</div>'+
-(
-x.mood
-?
-'<p><b>Mood:</b> '+
-escapeHtml(x.mood)+
-'</p>'
-:
-''
-)+
-'</section>';
 
-}
-);
+        const datePages =
+            pages
+                .filter(
+                    p => p.date === date
+                )
+                .sort(
+                    (a,b) =>
+                        a.page-b.page
+                );
 
 
-html+=
-'</body></html>';
+        const mood =
+            datePages.find(
+                p => p.mood
+            );
 
 
-w.document.open();
+        const hasEvent =
+            events.some(
+                e => e.date === date
+            );
 
-w.document.write(html);
 
-w.document.close();
+        const googleHasEvent =
+            googleEvents.some(
+                e => {
 
-w.focus();
+                    const start =
+                        e.start &&
+                        (
+                            e.start.dateTime ||
+                            e.start.date
+                        );
 
+                    return start &&
+                        String(start)
+                            .startsWith(date);
 
-setTimeout(
-()=>{
-w.print();
-},
-500
-);
+                }
+            );
 
-}
 
+        cell.innerHTML =
 
-/* =====================================================
-   GOOGLE CALENDAR
-   ===================================================== */
+            '<span class="num">' +
+            day +
+            '</span>' +
 
+            (
+                hasEvent ||
+                googleHasEvent
+                ? '<span class="event-dot"></span>'
+                : ''
+            ) +
 
-const GOOGLE_CLIENT_KEY=
-'myPersonalDiaryGoogleClientId';
+            (
+                mood
+                ? '<span class="day-mood">' +
+                    escapeHTML(mood.mood) +
+                  '</span>'
+                : ''
+            );
 
-const GOOGLE_TOKEN_KEY=
-'myPersonalDiaryGoogleToken';
 
-let googleToken=null;
+        cell.onclick =
+            () => selectDate(date);
 
 
-function getGoogleClientId(){
+        grid.appendChild(cell);
 
-return localStorage.getItem(
-GOOGLE_CLIENT_KEY
-)||'';
+    }
 
 }
 
 
-/*
-   v7.1 FIX:
-   Only one modal is allowed to remain open.
-*/
+/* =========================================================
+   EVENTS
+========================================================= */
 
+function openEventModal() {
 
-function closeAllModals(){
+    document.getElementById("eventDate")
+        .value = selectedDate;
 
-[
-'galleryModal',
-'googleModal',
-'lightboxModal'
-]
-.forEach(
-id=>{
+    document.getElementById("eventTitle")
+        .value = "";
 
-const el=
-document.getElementById(id);
+    document.getElementById("eventTime")
+        .value = "09:00";
 
-if(el)
-el.classList.add('hidden');
+    document.getElementById("eventModal")
+        .hidden = false;
 
 }
-);
+
+
+function closeEventModal() {
+
+    document.getElementById("eventModal")
+        .hidden = true;
 
 }
 
 
-function openGoogleSettings(){
+async function saveEvent() {
 
-closeAllModals();
+    const title =
+        document.getElementById(
+            "eventTitle"
+        ).value.trim();
 
-document.getElementById(
-'googleClientId'
-).value=
-getGoogleClientId();
 
-document.getElementById(
-'googleModal'
-).classList.remove('hidden');
+    const date =
+        document.getElementById(
+            "eventDate"
+        ).value;
 
-}
 
+    const time =
+        document.getElementById(
+            "eventTime"
+        ).value;
 
-function closeGoogleSettings(){
 
-document.getElementById(
-'googleModal'
-).classList.add('hidden');
+    const reminder =
+        Number(
+            document.getElementById(
+                "eventReminder"
+            ).value
+        );
 
-}
 
+    if (!title || !date) {
 
-function saveGoogleClientId(){
+        alert(
+            "Please enter event and date."
+        );
 
-const id=
-document
-.getElementById('googleClientId')
-.value
-.trim();
+        return;
 
+    }
 
-if(!id){
 
-alert(
-'Please enter the Google OAuth Client ID.'
-);
+    const event = {
 
-return;
+        id:
+            "event-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .slice(2),
 
-}
+        title:title,
 
+        date:date,
 
-localStorage.setItem(
-GOOGLE_CLIENT_KEY,
-id
-);
+        time:time,
 
-closeGoogleSettings();
+        reminderMinutes:reminder,
 
-connectGoogleCalendar();
+        createdAt:
+            new Date().toISOString()
 
-}
+    };
 
 
-function disconnectGoogleCalendar(){
+    await putRecord(
+        EVENT_STORE,
+        event
+    );
 
-googleToken=null;
 
-sessionStorage.removeItem(
-GOOGLE_TOKEN_KEY
-);
+    closeEventModal();
 
-document.getElementById(
-'googleStatus'
-).textContent=
-'Disconnected';
-
-document
-.querySelectorAll('.google-event')
-.forEach(
-x=>x.remove()
-);
+    renderEvents();
 
+    renderCalendar();
+
+    scheduleEventAlert(event);
+
+    showToast(
+        "Event saved."
+    );
+
 }
 
 
-function connectGoogleCalendar(){
+async function renderEvents() {
 
-closeAllModals();
+    if (!db) return;
 
-const clientId=
-getGoogleClientId();
 
+    const events =
+        await getAllRecords(
+            EVENT_STORE
+        );
 
-if(!clientId){
 
-openGoogleSettings();
+    const list =
+        document.getElementById(
+            "eventList"
+        );
 
-return;
 
-}
+    list.innerHTML = "";
 
 
-if(
-!window.google?.accounts?.oauth2
-){
+    const ownEvents =
+        events
+            .filter(
+                e => e.date === selectedDate
+            )
+            .sort(
+                (a,b) =>
+                    (a.time || "")
+                    .localeCompare(
+                        b.time || ""
+                    )
+            );
 
-alert(
-'Google sign-in library is still loading. Please wait a moment and try again.'
-);
 
-return;
+    if (!ownEvents.length &&
+        !googleEventsForDate().length) {
 
-}
+        list.innerHTML =
+            "<p>No events for this date.</p>";
 
+        return;
 
-const client=
-google.accounts.oauth2.initTokenClient(
-{
-client_id:clientId,
+    }
 
-scope:
-'https://www.googleapis.com/auth/calendar.readonly',
 
-callback:
-async(resp)=>{
+    ownEvents.forEach(event => {
 
-if(resp.error){
+        const item =
+            document.createElement("div");
 
-document.getElementById(
-'googleStatus'
-).textContent=
-'Google connection failed';
+        item.className =
+            "event-item";
 
-alert(
-'Google Calendar authorization failed: '+
-resp.error
-);
 
-return;
+        item.innerHTML =
 
-}
+            "<b>📌 " +
+            escapeHTML(event.title) +
+            "</b>" +
 
+            (
+                event.time
+                ? "<br>⏰ " +
+                    escapeHTML(event.time)
+                : ""
+            ) +
 
-googleToken=
-resp.access_token;
+            "<br><small>Diary event</small>" +
 
+            '<br><button class="btn danger" ' +
+            'style="margin-top:6px" ' +
+            'onclick="deleteEvent(\'' +
+            event.id +
+            '\')">' +
+            'Delete</button>';
 
-sessionStorage.setItem(
-GOOGLE_TOKEN_KEY,
-googleToken
-);
 
+        list.appendChild(item);
 
-document.getElementById(
-'googleStatus'
-).textContent=
-'Connected ✓ Loading events…';
+    });
 
 
-await loadGoogleCalendarEvents();
+    googleEventsForDate()
+        .forEach(event => {
 
-}
-}
-);
+            const item =
+                document.createElement("div");
 
+            item.className =
+                "event-item google";
 
-client.requestAccessToken(
-{
-prompt:'consent'
-}
-);
 
-}
+            const title =
+                event.summary ||
+                "Google Calendar event";
 
 
-async function loadGoogleCalendarEvents(){
+            const start =
+                event.start &&
+                (
+                    event.start.dateTime ||
+                    event.start.date
+                );
 
-if(!googleToken)return;
 
+            let time = "";
 
-const y=
-calendarDate.getFullYear();
+            if (start &&
+                start.includes("T")) {
 
-const m=
-calendarDate.getMonth();
+                time =
+                    new Date(start)
+                        .toLocaleTimeString(
+                            [],
+                            {
+                                hour:"2-digit",
+                                minute:"2-digit"
+                            }
+                        );
 
+            }
 
-const timeMin=
-new Date(
-y,
-m,
-1
-).toISOString();
 
+            item.innerHTML =
 
-const timeMax=
-new Date(
-y,
-m+1,
-1
-).toISOString();
+                "<b>🗓 " +
+                escapeHTML(title) +
+                "</b>" +
 
+                (
+                    time
+                    ? "<br>⏰ " + time
+                    : ""
+                ) +
 
-try{
+                "<br><small>Google Calendar</small>";
 
 
-const url=
-'https://www.googleapis.com/calendar/v3/calendars/primary/events?singleEvents=true&orderBy=startTime&timeMin='+
-encodeURIComponent(timeMin)+
-'&timeMax='+
-encodeURIComponent(timeMax)+
-'&maxResults=250';
+            list.appendChild(item);
 
+        });
 
-const r=
-await fetch(
-url,
-{
-headers:
-{
-Authorization:
-'Bearer '+
-googleToken
-}
 }
-);
 
 
-if(!r.ok)
-throw new Error(
-'Calendar API '+
-r.status
-);
+async function deleteEvent(id) {
 
+    if (!confirm(
+        "Delete this event?"
+    )) {
 
-const data=
-await r.json();
+        return;
 
+    }
 
-window.googleEvents={};
 
+    await deleteRecord(
+        EVENT_STORE,
+        id
+    );
 
-(
-data.items||[]
-)
-.forEach(
-ev=>{
 
-const start=
-ev.start?.date||
-ev.start?.dateTime;
+    renderEvents();
 
+    renderCalendar();
 
-if(!start)return;
+    showToast(
+        "Event deleted."
+    );
 
+}
 
-const d=
-ev.start.date
-?
-start
-:
-new Date(start)
-.toISOString()
-.slice(0,10);
 
+/* =========================================================
+   GOOGLE EVENTS
+========================================================= */
 
-window.googleEvents[d]=
-window.googleEvents[d]||[];
+function googleEventsForDate() {
 
+    return googleEvents.filter(event => {
 
-window.googleEvents[d].push(
-{
-summary:
-ev.summary||
-'(No title)',
+        const start =
+            event.start &&
+            (
+                event.start.dateTime ||
+                event.start.date
+            );
 
-time:
-ev.start.date
-?
-'All day'
-:
-new Date(start)
-.toLocaleTimeString(
-[],
-{
-hour:'numeric',
-minute:'2-digit'
-}
-),
 
-htmlLink:
-ev.htmlLink
-}
-);
+        return start &&
+            String(start)
+                .startsWith(selectedDate);
 
+    });
+
 }
-);
 
 
-document.getElementById(
-'googleStatus'
-).textContent=
-'Connected ✓ '+
-(data.items||[]).length+
-' events this month';
+function openGoogleModal() {
 
+    getSetting(
+        GOOGLE_CLIENT_KEY
+    ).then(value => {
 
-renderCalendar();
+        if (value) {
 
-renderEvents();
+            document.getElementById(
+                "googleClientId"
+            ).value = value;
 
+        }
 
-}catch(e){
+    });
 
-document.getElementById(
-'googleStatus'
-).textContent=
-'Calendar load failed';
 
+    document.getElementById(
+        "googleModal"
+    ).hidden = false;
 
-console.error(e);
+}
 
 
-alert(
-'Could not load Google Calendar events. Check that Google Calendar API is enabled and the OAuth origin is configured.'
-);
+function closeGoogleModal() {
 
-}
+    document.getElementById(
+        "googleModal"
+    ).hidden = true;
 
 }
 
 
-window.googleEvents={};
+async function connectGoogleCalendar() {
 
+    const clientId =
+        document.getElementById(
+            "googleClientId"
+        ).value.trim();
 
-function renderGoogleEventsForDate(){
 
-const arr=
-window.googleEvents[selectedDate]||[];
+    if (!clientId) {
 
+        alert(
+            "Enter your Google OAuth Client ID."
+        );
 
-const target=
-document.getElementById(
-'pageEvents'
-);
+        return;
 
+    }
 
-if(!arr.length)return;
-
-
-const html=
-'<h4 class="google-event">🗓 Google Calendar</h4>'+
-arr.map(
-x=>
-`
-<div class="event-card google-event">
-
-<b>
-${escapeHtml(x.time)}
-</b>
-
-—
-
-${escapeHtml(x.summary)}
-
-${
-x.htmlLink
-?
-`
-<a
-href="${x.htmlLink}"
-target="_blank"
-rel="noopener">
-Open
-</a>
-`
-:
-''
-}
 
-</div>
-`
-).join('');
+    await saveSetting(
+        GOOGLE_CLIENT_KEY,
+        clientId
+    );
 
 
-target.insertAdjacentHTML(
-'beforeend',
-html
-);
+    if (!window.google ||
+        !google.accounts ||
+        !google.accounts.oauth2) {
 
-}
+        alert(
+            "Google Identity Services has not loaded yet. Check your internet connection and try again."
+        );
 
+        return;
 
-/*
-   Google events are added after normal diary events.
-*/
+    }
 
 
-const _renderEvents=
-renderEvents;
+    const client =
+        google.accounts.oauth2
+            .initTokenClient({
 
+                client_id:clientId,
 
-renderEvents=function(){
+                scope:
+                    "https://www.googleapis.com/auth/calendar.readonly",
 
-_renderEvents();
+                callback:
+                    async response => {
 
-renderGoogleEventsForDate();
+                        if (response.error) {
 
-};
+                            console.error(
+                                response
+                            );
 
+                            alert(
+                                "Google Calendar authorization failed."
+                            );
 
-const _changeMonth=
-changeMonth;
+                            return;
 
+                        }
 
-changeMonth=function(n){
 
-_changeMonth(n);
+                        googleToken =
+                            response.access_token;
 
-if(googleToken)
-loadGoogleCalendarEvents();
 
-};
+                        sessionStorage.setItem(
+                            GOOGLE_TOKEN_KEY,
+                            googleToken
+                        );
 
 
-/* =====================================================
-   MEMORY GALLERY / TIMELINE
-   ===================================================== */
+                        await loadGoogleCalendarEvents();
 
+                        showToast(
+                            "Google Calendar connected."
+                        );
 
-async function openGallery(){
+                    }
 
-closeAllModals();
+            });
 
-document.getElementById(
-'galleryModal'
-).classList.remove('hidden');
 
+    client.requestAccessToken({
+        prompt:"consent"
+    });
 
-const box=
-document.getElementById(
-'galleryContent'
-);
+}
 
 
-box.innerHTML=
-'<p>Loading memories…</p>';
+async function loadGoogleCalendarEvents() {
 
+    if (!googleToken) {
 
-try{
+        googleToken =
+            sessionStorage.getItem(
+                GOOGLE_TOKEN_KEY
+            );
 
-const arr=
-(
-await dbAll()
-)
-.sort(
-(a,b)=>
-(b.date||'')
-.localeCompare(
-a.date||''
-)
-);
+    }
 
 
-if(!arr.length){
+    if (!googleToken) {
 
-box.innerHTML=
-`
-<div class="gallery-empty">
+        alert(
+            "Connect Google Calendar first."
+        );
 
-No photos or documents yet.
+        return;
 
-Attach a memory from a diary page.
+    }
 
-</div>
-`;
 
-return;
+    const start =
+        new Date(
+            calendarDate.getFullYear(),
+            calendarDate.getMonth(),
+            1
+        );
 
-}
 
+    const end =
+        new Date(
+            calendarDate.getFullYear(),
+            calendarDate.getMonth()+1,
+            1
+        );
 
-const groups={};
 
+    const url =
+        "https://www.googleapis.com/calendar/v3/calendars/primary/events" +
+        "?singleEvents=true" +
+        "&orderBy=startTime" +
+        "&timeMin=" +
+        encodeURIComponent(
+            start.toISOString()
+        ) +
+        "&timeMax=" +
+        encodeURIComponent(
+            end.toISOString()
+        ) +
+        "&maxResults=250";
 
-arr.forEach(
-a=>
-(
-groups[a.date]=
-groups[a.date]||[]
-).push(a)
-);
 
+    try {
 
-let html='';
+        const response =
+            await fetch(
+                url,
+                {
+                    headers:{
+                        Authorization:
+                            "Bearer " +
+                            googleToken
+                    }
+                }
+            );
 
 
-for(
-const date of Object.keys(groups)
-.sort()
-.reverse()
-){
+        if (!response.ok) {
 
-html+=
-`
-<h4>
-📅 ${escapeHtml(formatDate(date))}
-</h4>
+            throw new Error(
+                "Google Calendar request failed."
+            );
 
-<div class="gallery-grid">
-`;
+        }
 
 
-for(
-const a of groups[date]
-){
+        const data =
+            await response.json();
 
-const url=
-URL.createObjectURL(
-a.blob
-);
 
-const isImg=
-a.type.startsWith('image/');
-
-
-html+=
-isImg
-?
-`
-<div
-class="gallery-card"
-onclick="openLightbox('${encodeURIComponent(url)}','${escapeHtml(a.name)}')">
-
-<img
-src="${url}"
-alt="${escapeHtml(a.name)}">
-
-<div class="cap">
-${escapeHtml(a.name)}
-</div>
-
-</div>
-`
-:
-`
-<div
-class="gallery-card"
-onclick="window.open('${url}','_blank')">
-
-<div
-style="height:120px;display:flex;align-items:center;justify-content:center;font-size:48px">
-📄
-</div>
-
-<div class="cap">
-${escapeHtml(a.name)}
-</div>
-
-</div>
-`;
+        googleEvents =
+            data.items || [];
 
-}
 
+        renderCalendar();
 
-html+=
-'</div>';
+        renderEvents();
 
-}
 
+        googleEvents.forEach(
+            scheduleGoogleEventAlert
+        );
 
-box.innerHTML=html;
 
+        showToast(
+            googleEvents.length +
+            " Google Calendar events loaded."
+        );
 
-}catch(e){
 
-box.innerHTML=
-'<p>Memory gallery unavailable.</p>';
+    } catch(error) {
 
-}
+        console.error(error);
 
+        alert(
+            "Could not load Google Calendar. You may need to reconnect."
+        );
+
+    }
+
 }
 
 
-function closeGallery(){
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
 
-document.getElementById(
-'galleryModal'
-).classList.add('hidden');
+async function enableAlerts() {
 
-}
+    if (!("Notification" in window)) {
 
+        alert(
+            "This browser does not support notifications."
+        );
 
-function openLightbox(
-encodedUrl,
-name
-){
+        return;
 
-closeAllModals();
+    }
 
 
-document.getElementById(
-'lightboxContent'
-).innerHTML=
-`
-<img
-src="${decodeURIComponent(encodedUrl)}"
-alt="${name}">
+    const permission =
+        await Notification.requestPermission();
 
-<div style="margin-top:8px">
-${name}
-</div>
-`;
 
+    if (permission !== "granted") {
 
-document.getElementById(
-'lightboxModal'
-).classList.remove('hidden');
+        alert(
+            "Notification permission was not granted."
+        );
 
-}
+        return;
 
+    }
 
-function closeLightbox(){
 
-document.getElementById(
-'lightboxModal'
-).classList.add('hidden');
+    showToast(
+        "Diary alerts enabled."
+    );
 
+
+    const events =
+        await getAllRecords(
+            EVENT_STORE
+        );
+
+
+    events.forEach(
+        scheduleEventAlert
+    );
+
+
+    googleEvents.forEach(
+        scheduleGoogleEventAlert
+    );
+
 }
 
 
-/* =====================================================
-   REALISTIC DRAG / SWIPE PAGE TURNING
-   ===================================================== */
+function scheduleEventAlert(event) {
 
+    if (!("Notification" in window) ||
+        Notification.permission !== "granted") {
 
-let dragStartX=0;
+        return;
 
-let dragStartY=0;
+    }
 
-let dragging=false;
 
-let dragMoved=false;
+    if (!event.date ||
+        !event.time) {
 
+        return;
 
-const pageEl=
-document.getElementById(
-'page'
-);
+    }
 
 
-pageEl.addEventListener(
-'pointerdown',
-e=>{
+    const target =
+        new Date(
+            event.date +
+            "T" +
+            event.time
+        );
 
-if(
-e.pointerType==='mouse' &&
-e.button!==0
-)
-return;
 
+    const reminder =
+        Number(
+            event.reminderMinutes || 0
+        );
 
-if(
-e.target.closest(
-'button,input,a,.editor,.memory-area'
-)
-)
-return;
 
+    const alertTime =
+        target.getTime() -
+        reminder * 60000;
 
-dragging=true;
 
-dragMoved=false;
+    const delay =
+        alertTime -
+        Date.now();
 
-dragStartX=e.clientX;
 
-dragStartY=e.clientY;
+    if (delay <= 0 ||
+        delay > 2147483647) {
 
+        return;
 
-pageEl.setPointerCapture?.(
-e.pointerId
-);
+    }
 
 
-pageEl.classList.add(
-'dragging'
-);
+    setTimeout(() => {
+
+        new Notification(
+            "📅 Diary Reminder",
+            {
+                body:
+                    event.title +
+                    " — " +
+                    event.date +
+                    " " +
+                    event.time
+            }
+        );
 
+    },delay);
+
 }
-);
 
 
-pageEl.addEventListener(
-'pointermove',
-e=>{
+function scheduleGoogleEventAlert(event) {
 
-if(!dragging)return;
+    if (!("Notification" in window) ||
+        Notification.permission !== "granted") {
 
+        return;
 
-const dx=
-e.clientX-dragStartX;
+    }
 
-const dy=
-e.clientY-dragStartY;
 
+    const start =
+        event.start &&
+        event.start.dateTime;
 
-if(
-Math.abs(dx)>8 &&
-Math.abs(dx)>Math.abs(dy)
-){
 
-dragMoved=true;
+    if (!start) return;
 
 
-pageEl.style.transform=
-`translateX(${dx}px) rotateY(${Math.max(-14,Math.min(14,-dx/10))}deg)`;
+    const target =
+        new Date(start);
 
-}
 
-}
-);
+    const delay =
+        target.getTime() -
+        Date.now();
 
 
-pageEl.addEventListener(
-'pointerup',
-e=>{
+    if (delay <= 0 ||
+        delay > 2147483647) {
 
-if(!dragging)return;
+        return;
 
+    }
 
-const dx=
-e.clientX-dragStartX;
 
+    setTimeout(() => {
 
-dragging=false;
+        new Notification(
+            "🗓 Google Calendar",
+            {
+                body:
+                    event.summary ||
+                    "Calendar event"
+            }
+        );
 
-pageEl.classList.remove(
-'dragging'
-);
+    },delay);
 
-pageEl.style.transform='';
+}
 
 
-if(
-dragMoved &&
-Math.abs(dx)>80
-){
+/* =========================================================
+   MEMORY / ATTACHMENTS
+========================================================= */
 
-if(dx<0){
+async function addMemory(event,type) {
 
-nextDay();
+    const file =
+        event.target.files &&
+        event.target.files[0];
 
-}else{
 
-previousDay();
+    if (!file) return;
 
-}
 
-}
+    const record = {
 
-}
-);
+        id:
+            "memory-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .slice(2),
 
+        date:
+            selectedDate,
 
-pageEl.addEventListener(
-'pointercancel',
-()=>{
+        page:
+            currentPage,
 
-dragging=false;
+        name:
+            file.name,
 
-pageEl.classList.remove(
-'dragging'
-);
+        type:
+            file.type || "application/octet-stream",
 
-pageEl.style.transform='';
+        size:
+            file.size,
 
-}
-);
+        blob:
+            file,
 
+        memoryType:
+            type,
 
-/* =====================================================
-   START APPLICATION
-   ===================================================== */
+        createdAt:
+            new Date().toISOString()
 
+    };
 
-if(
-'serviceWorker' in navigator
-){
 
-navigator.serviceWorker.register(
-'./service-worker.js'
-).catch(
-()=>{}
-);
+    await putRecord(
+        ATTACHMENT_STORE,
+        record
+    );
 
-}
 
+    event.target.value = "";
 
-renderMoods();
 
-loadDateNow(
-selectedDate
-);
+    renderAttachments();
+
+    showToast(
+        "Memory attached."
+    );
 
+}
 
-if(
-sessionStorage.getItem(
-GOOGLE_TOKEN_KEY
-)
-){
 
-googleToken=
-sessionStorage.getItem(
-GOOGLE_TOKEN_KEY
-);
+async function renderAttachments() {
 
-document.getElementById(
-'googleStatus'
-).textContent=
-'Connected ✓';
-
-loadGoogleCalendarEvents()
-.catch(
-()=>{}
-);
+    /* Attachments are displayed in Gallery.
+       This section can be extended later
+       to show them directly on the page. */
 
 }
+
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
+async function openGallery() {
+
+    document.getElementById(
+        "galleryModal"
+    ).hidden = false;
+
+
+    await renderGallery();
+
+}
+
+
+function closeGallery() {
+
+    document.getElementById(
+        "galleryModal"
+    ).hidden = true;
+
+}
+
+
+async function renderGallery() {
+
+    const gallery =
+        document.getElementById(
+            "gallery"
+        );
+
+
+    gallery.innerHTML =
+        "<p>Loading memories...</p>";
+
+
+    const memories =
+        await getAllRecords(
+            ATTACHMENT_STORE
+        );
+
+
+    memories.sort(
+        (a,b) =>
+            String(b.createdAt)
+                .localeCompare(
+                    String(a.createdAt)
+                )
+    );
+
+
+    gallery.innerHTML = "";
+
+
+    if (!memories.length) {
+
+        gallery.innerHTML =
+            "<p>No memories attached yet.</p>";
+
+        return;
+
+    }
+
+
+    for (const memory of memories) {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "memory-card";
+
+
+        if (
+            memory.type &&
+            memory.type.startsWith("image/")
+        ) {
+
+            const img =
+                document.createElement("img");
+
+
+            img.src =
+                URL.createObjectURL(
+                    memory.blob
+                );
+
+
+            img.onclick =
+                () => openLightbox(
+                    img.src
+                );
+
+
+            card.appendChild(img);
+
+        } else {
+
+            const icon =
+                document.createElement("div");
+
+            icon.style.fontSize = "55px";
+
+            icon.style.textAlign = "center";
+
+            icon.style.padding = "25px";
+
+            icon.textContent = "📄";
+
+            card.appendChild(icon);
+
+        }
+
+
+        const info =
+            document.createElement("div");
+
+        info.className =
+            "memory-info";
+
+
+        info.innerHTML =
+
+            "<b>" +
+            escapeHTML(memory.name) +
+            "</b>" +
+
+            "<br>" +
+
+            escapeHTML(memory.date) +
+
+            "<br>" +
+
+            "<small>" +
+            escapeHTML(
+                memory.memoryType || "memory"
+            ) +
+            "</small>";
+
+
+        card.appendChild(info);
+
+
+        const actions =
+            document.createElement("div");
+
+        actions.className =
+            "memory-actions";
+
+
+        if (
+            memory.type &&
+            memory.type.startsWith("image/")
+        ) {
+
+            const view =
+                document.createElement("button");
+
+            view.className =
+                "btn secondary";
+
+            view.textContent =
+                "View";
+
+            view.onclick =
+                () => {
+
+                    const url =
+                        URL.createObjectURL(
+                            memory.blob
+                        );
+
+                    openLightbox(url);
+
+                };
+
+            actions.appendChild(view);
+
+        }
+
+
+        const del =
+            document.createElement("button");
+
+        del.className =
+            "btn danger";
+
+        del.textContent =
+            "Delete";
+
+
+        del.onclick =
+            () => deleteMemory(
+                memory.id
+            );
+
+
+        actions.appendChild(del);
+
+
+        card.appendChild(actions);
+
+
+        gallery.appendChild(card);
+
+    }
+
+}
+
+
+/* =========================================================
+   DELETE MEMORY
+========================================================= */
+
+async function deleteMemory(id) {
+
+    if (!confirm(
+        "Delete this memory permanently?"
+    )) {
+
+        return;
+
+    }
+
+
+    await deleteRecord(
+        ATTACHMENT_STORE,
+        id
+    );
+
+
+    await renderGallery();
+
+    showToast(
+        "Memory deleted."
+    );
+
+}
+
+
+/* =========================================================
+   LIGHTBOX
+========================================================= */
+
+function openLightbox(url) {
+
+    document.getElementById(
+        "lightboxImage"
+    ).src = url;
+
+
+    document.getElementById(
+        "lightboxModal"
+    ).hidden = false;
+
+}
+
+
+function closeLightbox() {
+
+    document.getElementById(
+        "lightboxModal"
+    ).hidden = true;
+
+
+    document.getElementById(
+        "lightboxImage"
+    ).src = "";
+
+}
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+async function blobToDataURL(blob) {
+
+    return new Promise(
+        (resolve,reject) => {
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                () => resolve(
+                    reader.result
+                );
+
+
+            reader.onerror =
+                reject;
+
+
+            reader.readAsDataURL(blob);
+
+        }
+    );
+
+}
+
+
+async function backupDiary() {
+
+    await saveCurrentPage(false);
+
+
+    const pages =
+        await getAllRecords(
+            PAGE_STORE
+        );
+
+
+    const events =
+        await getAllRecords(
+            EVENT_STORE
+        );
+
+
+    const memories =
+        await getAllRecords(
+            ATTACHMENT_STORE
+        );
+
+
+    const exportedMemories = [];
+
+
+    for (
+        const memory of memories
+    ) {
+
+        exportedMemories.push({
+
+            id:memory.id,
+
+            date:memory.date,
+
+            page:memory.page,
+
+            name:memory.name,
+
+            type:memory.type,
+
+            size:memory.size,
+
+            memoryType:
+                memory.memoryType,
+
+            createdAt:
+                memory.createdAt,
+
+            data:
+                await blobToDataURL(
+                    memory.blob
+                )
+
+        });
+
+    }
+
+
+    const backup = {
+
+        app:"My Personal Diary",
+
+        version:"8",
+
+        createdAt:
+            new Date().toISOString(),
+
+        pages:pages,
+
+        events:events,
+
+        memories:
+            exportedMemories
+
+    };
+
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    backup,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+
+    a.href = url;
+
+    a.download =
+        "my-personal-diary-v8-backup-" +
+        todayString() +
+        ".json";
+
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+
+    showToast(
+        "Backup created."
+    );
+
+}
+
+
+/* =========================================================
+   RESTORE
+========================================================= */
+
+async function restoreDiary(event) {
+
+    const file =
+        event.target.files &&
+        event.target.files[0];
+
+
+    if (!file) return;
+
+
+    try {
+
+        const text =
+            await file.text();
+
+
+        const backup =
+            JSON.parse(text);
+
+
+        if (!backup.pages) {
+
+            throw new Error(
+                "Invalid diary backup."
+            );
+
+        }
+
+
+        for (
+            const page of backup.pages
+        ) {
+
+            await putRecord(
+                PAGE_STORE,
+                page
+            );
+
+        }
+
+
+        for (
+            const item of
+            (backup.events || [])
+        ) {
+
+            await putRecord(
+                EVENT_STORE,
+                item
+            );
+
+        }
+
+
+        for (
+            const memory of
+            (backup.memories || [])
+        ) {
+
+            const response =
+                await fetch(
+                    memory.data
+                );
+
+
+            const blob =
+                await response.blob();
+
+
+            await putRecord(
+                ATTACHMENT_STORE,
+                {
+                    id:memory.id,
+
+                    date:memory.date,
+
+                    page:memory.page,
+
+                    name:memory.name,
+
+                    type:memory.type,
+
+                    size:memory.size,
+
+                    memoryType:
+                        memory.memoryType,
+
+                    createdAt:
+                        memory.createdAt,
+
+                    blob:blob
+                }
+            );
+
+        }
+
+
+        await loadCurrentPage();
+
+        renderCalendar();
+
+
+        showToast(
+            "Diary restored successfully."
+        );
+
+
+    } catch(error) {
+
+        console.error(error);
+
+        alert(
+            "Could not restore this backup."
+        );
+
+    }
+
+
+    event.target.value = "";
+
+}
+
+
+/* =========================================================
+   PRINT CURRENT PAGE
+========================================================= */
+
+function printCurrentPage() {
+
+    const editor =
+        document.getElementById(
+            "editor"
+        );
+
+
+    const title =
+        document.getElementById(
+            "pageDateTitle"
+        ).textContent;
+
+
+    const mood =
+        currentMood
+            ? "<div style='font-size:25px'>" +
+              currentMood +
+              "</div>"
+            : "";
+
+
+    const win =
+        window.open(
+            "",
+            "_blank"
+        );
+
+
+    win.document.write(`
+
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+        <title>${escapeHTML(title)}</title>
+
+        <style>
+
+        body {
+            font-family: Georgia,serif;
+            padding:40px;
+        }
+
+        .lines {
+            line-height:32px;
+        }
+
+        </style>
+
+        </head>
+
+        <body>
+
+        <h1>${escapeHTML(title)}</h1>
+
+        ${mood}
+
+        <div class="lines">
+        ${editor.innerHTML}
+        </div>
+
+        <script>
+
+        window.onload=function(){
+            window.print();
+        }
+
+        <\/script>
+
+        </body>
+
+        </html>
+
+    `);
+
+
+    win.document.close();
+
+}
+
+
+/* =========================================================
+   PRINT ALL
+========================================================= */
+
+async function printAllPages() {
+
+    const pages =
+        await getAllRecords(
+            PAGE_STORE
+        );
+
+
+    pages.sort(
+        (a,b) =>
+            a.date.localeCompare(b.date) ||
+            a.page-b.page
+    );
+
+
+    if (!pages.length) {
+
+        alert(
+            "No diary pages found."
+        );
+
+        return;
+
+    }
+
+
+    const win =
+        window.open(
+            "",
+            "_blank"
+        );
+
+
+    let html = `
+
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+        <title>
+        My Personal Diary
+        </title>
+
+        <style>
+
+        body {
+            font-family:Georgia,serif;
+            padding:30px;
+        }
+
+        .page {
+            min-height:90vh;
+            padding:30px;
+            page-break-after:always;
+        }
+
+        </style>
+
+        </head>
+
+        <body>
+
+    `;
+
+
+    pages.forEach(page => {
+
+        html += `
+
+            <div class="page">
+
+                <h1>
+                ${escapeHTML(page.date)}
+                </h1>
+
+                <h3>
+                Page ${page.page + 1}
+                </h3>
+
+                <div>
+                ${page.mood || ""}
+                </div>
+
+                <div>
+                ${page.html || ""}
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+
+    html += `
+
+        </body>
+
+        </html>
+
+    `;
+
+
+    win.document.write(html);
+
+    win.document.close();
+
+    win.focus();
+
+    setTimeout(
+        () => win.print(),
+        500
+    );
+
+}
+
+
+/* =========================================================
+   SWIPE / DRAG PAGE TURNING
+========================================================= */
+
+let swipeStartX = 0;
+
+let swipeStartY = 0;
+
+
+const diaryPage =
+    document.getElementById(
+        "diaryPage"
+    );
+
+
+diaryPage.addEventListener(
+    "pointerdown",
+    event => {
+
+        swipeStartX =
+            event.clientX;
+
+        swipeStartY =
+            event.clientY;
+
+    }
+);
+
+
+diaryPage.addEventListener(
+    "pointerup",
+    event => {
+
+        const dx =
+            event.clientX -
+            swipeStartX;
+
+
+        const dy =
+            event.clientY -
+            swipeStartY;
+
+
+        if (
+            Math.abs(dx) > 80 &&
+            Math.abs(dx) > Math.abs(dy)
+        ) {
+
+            if (dx < 0) {
+
+                nextPage();
+
+            } else {
+
+                previousPage();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   STARTUP
+========================================================= */
+
+async function startDiary() {
+
+    try {
+
+        await openDatabase();
+
+        await migrateOldDiary();
+
+
+        document.getElementById(
+            "datePicker"
+        ).value =
+            selectedDate;
+
+
+        calendarDate =
+            new Date(
+                selectedDate +
+                "T12:00:00"
+            );
+
+
+        await loadCurrentPage();
+
+        renderCalendar();
+
+
+        const savedToken =
+            sessionStorage.getItem(
+                GOOGLE_TOKEN_KEY
+            );
+
+
+        if (savedToken) {
+
+            googleToken =
+                savedToken;
+
+        }
+
+
+        setStatus(
+            "Diary ready."
+        );
+
+
+    } catch(error) {
+
+        console.error(error);
+
+        setStatus(
+            "Database error. Please reload the diary."
+        );
+
+        alert(
+            "Diary storage could not be opened. Please reload the page."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE WHEN LEAVING PAGE
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        saveCurrentPage(false);
+
+    }
+);
+
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+                .register(
+                    "./service-worker.js"
+                )
+                .catch(
+                    error =>
+                        console.log(
+                            "Service worker:",
+                            error
+                        )
+                );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+startDiary();
 
 </script>
 

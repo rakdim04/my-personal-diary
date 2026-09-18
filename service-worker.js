@@ -1,203 +1,209 @@
-const CACHE_NAME = "my-personal-diary-v8-1";
+const CACHE_NAME = "my-personal-diary-v8-2";
 
-const FILES_TO_CACHE = [
+const CORE_FILES = [
   "./",
   "./index.html",
   "./manifest.json",
   "./service-worker.js"
 ];
 
-/* =========================
-   INSTALL
-========================= */
+/* INSTALL */
 
-self.addEventListener("install", event => {
+self.addEventListener(
+  "install",
+  event => {
 
-  event.waitUntil(
+    event.waitUntil(
 
-    caches.open(CACHE_NAME)
-      .then(cache => {
-
-        return cache.addAll(
-          FILES_TO_CACHE
-        );
-
-      })
-
-      .then(() => {
-
-        return self.skipWaiting();
-
-      })
-
-  );
-
-});
-
-/* =========================
-   ACTIVATE
-========================= */
-
-self.addEventListener("activate", event => {
-
-  event.waitUntil(
-
-    caches.keys()
-      .then(cacheNames => {
-
-        return Promise.all(
-
-          cacheNames
-            .filter(
-              name =>
-                name !== CACHE_NAME
-            )
-            .map(
-              name =>
-                caches.delete(name)
-            )
-
-        );
-
-      })
-
-      .then(() => {
-
-        return self.clients.claim();
-
-      })
-
-  );
-
-});
-
-/* =========================
-   FETCH
-========================= */
-
-self.addEventListener("fetch", event => {
-
-  /*
-    Only handle GET requests.
-  */
-
-  if(event.request.method !== "GET"){
-
-    return;
-
-  }
-
-  /*
-    Don't interfere with Google
-    Calendar / OAuth requests.
-  */
-
-  const url =
-    new URL(event.request.url);
-
-  if(
-    url.origin !== self.location.origin
-  ){
-
-    return;
-
-  }
-
-  /*
-    Network first for index.html.
-
-    This is important because when
-    you update your diary on GitHub,
-    the new version can be downloaded.
-  */
-
-  if(
-    event.request.destination === "document" ||
-    url.pathname.endsWith("index.html")
-  ){
-
-    event.respondWith(
-
-      fetch(event.request)
-
-        .then(response => {
-
-          const copy =
-            response.clone();
-
-          caches.open(CACHE_NAME)
-            .then(cache => {
-
-              cache.put(
-                event.request,
-                copy
-              );
-
-            });
-
-          return response;
-
-        })
-
-        .catch(() => {
-
-          return caches.match(
-            event.request
-          );
-
-        })
+      caches.open(
+        CACHE_NAME
+      )
+      .then(
+        cache =>
+          cache.addAll(
+            CORE_FILES
+          )
+      )
+      .then(
+        () =>
+          self.skipWaiting()
+      )
 
     );
 
-    return;
+  }
+);
+
+/* ACTIVATE */
+
+self.addEventListener(
+  "activate",
+  event => {
+
+    event.waitUntil(
+
+      caches.keys()
+      .then(
+        keys =>
+          Promise.all(
+
+            keys
+            .filter(
+              key =>
+                key !== CACHE_NAME
+            )
+            .map(
+              key =>
+                caches.delete(
+                  key
+                )
+            )
+
+          )
+      )
+      .then(
+        () =>
+          self.clients.claim()
+      )
+
+    );
 
   }
+);
 
-  /*
-    Cache first for other local files.
-  */
+/* FETCH */
 
-  event.respondWith(
+self.addEventListener(
+  "fetch",
+  event => {
 
-    caches.match(event.request)
+    if(
+      event.request.method !==
+      "GET"
+    ){
+      return;
+    }
 
-      .then(cached => {
+    const url=
+      new URL(
+        event.request.url
+      );
 
-        if(cached){
+    /* Only handle our own GitHub Pages files */
 
-          return cached;
+    if(
+      url.origin !==
+      self.location.origin
+    ){
+      return;
+    }
 
-        }
+    /*
+    HTML:
+    Network first.
+    This helps ensure that your
+    latest GitHub version appears.
+    */
 
-        return fetch(event.request)
-          .then(response => {
+    if(
+      event.request.mode ===
+      "navigate" ||
 
-            if(
-              response &&
-              response.status === 200
-            ){
+      event.request.destination ===
+      "document"
+    ){
 
-              const copy =
-                response.clone();
+      event.respondWith(
 
-              caches.open(CACHE_NAME)
-                .then(cache => {
+        fetch(
+          event.request
+        )
+        .then(
+          response => {
 
-                  cache.put(
-                    event.request,
-                    copy
-                  );
+            const copy=
+              response.clone();
 
-                });
-
-            }
+            caches.open(
+              CACHE_NAME
+            )
+            .then(
+              cache =>
+                cache.put(
+                  event.request,
+                  copy
+                )
+            );
 
             return response;
 
-          });
+          }
+        )
+        .catch(
+          () =>
+            caches.match(
+              "./index.html"
+            )
+        )
 
-      })
+      );
 
-  );
+      return;
+    }
 
-});
+    /*
+    Other local files:
+    Cache first, then network.
+    */
+
+    event.respondWith(
+
+      caches.match(
+        event.request
+      )
+      .then(
+        cached => {
+
+          if(cached){
+            return cached;
+          }
+
+          return fetch(
+            event.request
+          )
+          .then(
+            response => {
+
+              if(
+                response &&
+                response.ok
+              ){
+
+                const copy=
+                  response.clone();
+
+                caches.open(
+                  CACHE_NAME
+                )
+                .then(
+                  cache =>
+                    cache.put(
+                      event.request,
+                      copy
+                    )
+                );
+
+              }
+
+              return response;
+
+            }
+          );
+
+        }
+      )
+
+    );
+
+  }
+);

@@ -1,12 +1,16 @@
 {
   "name": "My Personal Diary",
   "short_name": "My Diary",
-  "description": "Personal diary, memories, events and journal",
+  "description": "Personal paper-style diary with memories, drawings, events, calendar and to-do list.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#d6c3a5",
   "theme_color": "#6b4226",
-  "icons": []
+  "lang": "en",
+  "categories": [
+    "lifestyle",
+    "productivity"
+  ]
 }

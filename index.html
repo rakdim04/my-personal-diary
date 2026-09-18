@@ -1,730 +1,658 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#6b4226">
 <link rel="manifest" href="./manifest.json">
 
-<title>My Personal Diary v8.1</title>
+<title>My Personal Diary</title>
 
 <style>
-*{
-  box-sizing:border-box;
+:root{
+  --ink:#3d2b1f;
+  --paper:#f7edcf;
+  --paper2:#f1dfb4;
+  --line:rgba(106,86,57,.28);
+  --accent:#6b4226;
+  --shadow:0 18px 45px rgba(54,35,18,.28);
 }
+
+*{box-sizing:border-box}
 
 html,body{
   margin:0;
-  padding:0;
   min-height:100%;
+  font-family:Georgia,"Times New Roman",serif;
+  color:var(--ink);
 }
 
 body{
-  background:#d6c3a5;
-  color:#3e2a1f;
-  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.25),transparent 30%),
+    linear-gradient(135deg,#b99a70,#d9c29b 48%,#ad8b62);
 }
 
-/* =========================
-   APP
-========================= */
-
-.app{
-  max-width:1100px;
-  margin:auto;
-  padding:12px;
-}
-
-header{
-  background:#6b4226;
-  color:white;
-  border-radius:16px;
-  padding:12px 16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  box-shadow:0 5px 15px #0003;
-}
-
-header h1{
-  margin:0;
-  font-size:22px;
-}
-
-.headerButtons{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-
-button,
-select,
-input{
-  font-family:inherit;
+button,input,select,textarea{
+  font:inherit;
 }
 
 button{
+  cursor:pointer;
+}
+
+.app{
+  max-width:1250px;
+  margin:auto;
+  padding:14px;
+}
+
+/* TOOLBAR */
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  padding:10px 12px;
+  background:rgba(64,38,20,.92);
+  color:white;
+  border-radius:14px;
+  box-shadow:0 8px 20px #0003;
+  position:sticky;
+  top:8px;
+  z-index:20;
+}
+
+.toolbar button{
+  border:1px solid #ffffff44;
+  background:#fff;
+  color:#4a3020;
+  border-radius:9px;
+  padding:8px 10px;
+}
+
+.toolbar .title{
+  font-weight:bold;
+  font-size:18px;
+  margin-right:auto;
+  color:white;
+}
+
+/* DATE */
+
+.datebar{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:12px 0;
+}
+
+.datebar button{
   border:0;
   border-radius:9px;
   padding:8px 12px;
-  background:#8a5a35;
-  color:white;
-  cursor:pointer;
-  font-size:14px;
+  background:#fff8e8;
+  color:var(--accent);
 }
 
-button:hover{
-  opacity:.9;
-}
-
-button.secondary{
-  background:#e6d4bb;
-  color:#4a3223;
-}
-
-button.danger{
-  background:#a33a32;
-}
-
-button.green{
-  background:#53764d;
-}
-
-/* =========================
-   CALENDAR
-========================= */
-
-.calendarBox{
-  margin-top:12px;
-  background:#f7eedf;
-  border-radius:15px;
-  padding:12px;
-  box-shadow:0 4px 12px #0002;
-}
-
-.calendarHead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.calendarGrid{
-  display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:4px;
-}
-
-.calWeek{
-  text-align:center;
-  font-weight:bold;
-  font-size:12px;
-  padding:5px;
-}
-
-.calCell{
-  min-height:42px;
-  background:#ead9c1;
-  color:#4b3426;
-  padding:4px;
+.datebar input{
+  padding:8px;
+  border:1px solid #8e7659;
   border-radius:8px;
-  position:relative;
+  background:#fff8e8;
 }
 
-.calCell.today{
-  outline:2px solid #8a5a35;
+/* CALENDAR */
+
+.calendar{
+  display:none;
+  background:#fff7e8;
+  border-radius:12px;
+  padding:12px;
+  margin:8px 0;
+  border:1px solid #b99a68;
 }
 
-.calCell.selected{
-  background:#b98757;
-  color:white;
+.calendar.show{
+  display:block;
 }
 
-.calCell .mood{
-  position:absolute;
-  bottom:2px;
-  right:3px;
-  font-size:13px;
-}
+/* DIARY */
 
-/* =========================
-   DIARY PAGE
-========================= */
-
-.diaryWrap{
-  margin-top:14px;
-  position:relative;
+.diary-stage{
   display:flex;
   justify-content:center;
+  position:relative;
+  padding:10px 8px 55px;
 }
 
 .page{
+  width:min(100%,1040px);
+
+  /* MUCH LONGER PAGE */
+  min-height:1100px;
+
   position:relative;
-  width:min(900px,100%);
-  min-height:760px;
-  padding:34px 38px 38px 72px;
-  border-radius:5px 18px 18px 5px;
-
-  background:#fffaf0;
-
-  box-shadow:
-    0 12px 30px #0003,
-    inset 0 0 25px #8b6b4322;
-
   overflow:hidden;
 
-  transition:
-    transform .35s ease,
-    opacity .35s ease;
-}
+  padding:60px 58px 90px 105px;
 
-/* =========================
-   SPIRAL / SPRINKLE BINDING
-========================= */
-
-.binding{
-  position:absolute;
-  left:0;
-  top:0;
-  bottom:0;
-  width:54px;
+  border-radius:7px 15px 15px 7px;
 
   background:
     linear-gradient(
       90deg,
-      #765238,
-      #a9825e 45%,
-      #62452f
-    );
-
-  border-right:2px solid #503522;
-}
-
-.ring{
-  position:absolute;
-  left:10px;
-  width:35px;
-  height:16px;
-
-  border:4px solid #5c5c5c;
-  border-left-color:#777;
-  border-radius:50%;
-
-  background:transparent;
-  box-shadow:inset 0 1px 2px #fff6;
-}
-
-.ring:nth-child(1){top:3%}
-.ring:nth-child(2){top:8%}
-.ring:nth-child(3){top:13%}
-.ring:nth-child(4){top:18%}
-.ring:nth-child(5){top:23%}
-.ring:nth-child(6){top:28%}
-.ring:nth-child(7){top:33%}
-.ring:nth-child(8){top:38%}
-.ring:nth-child(9){top:43%}
-.ring:nth-child(10){top:48%}
-.ring:nth-child(11){top:53%}
-.ring:nth-child(12){top:58%}
-.ring:nth-child(13){top:63%}
-.ring:nth-child(14){top:68%}
-.ring:nth-child(15){top:73%}
-.ring:nth-child(16){top:78%}
-.ring:nth-child(17){top:83%}
-.ring:nth-child(18){top:88%}
-.ring:nth-child(19){top:93%}
-
-/* =========================
-   DECORATIVE PAGE DESIGNS
-========================= */
-
-.design-classic{
-  background:
-    linear-gradient(#fffaf0,#fffaf0);
-}
-
-.design-vintage{
-  background:
-    radial-gradient(circle at 20% 20%,#ead6b4 0 2px,transparent 3px),
-    #f4e5c8;
-}
-
-.design-floral{
-  background:
-    radial-gradient(circle at 10% 10%,#f3d6dc 0 20px,transparent 21px),
-    radial-gradient(circle at 90% 20%,#d7e7cc 0 18px,transparent 19px),
-    #fffaf2;
-}
-
-.design-blue{
-  background:
+      rgba(126,89,46,.13),
+      transparent 5%
+    ),
     repeating-linear-gradient(
       to bottom,
-      #fff 0,
-      #fff 30px,
-      #c7d9e8 31px,
-      #fff 32px
+      transparent 0px,
+      transparent 31px,
+      var(--line) 32px,
+      transparent 33px
+    ),
+    linear-gradient(
+      100deg,
+      var(--paper),
+      #fbf1d5 55%,
+      var(--paper2)
     );
+
+  box-shadow:
+    var(--shadow),
+    inset 10px 0 20px rgba(91,58,26,.09);
+
+  border:1px solid #b89a68;
+
+  transform:rotate(-.12deg);
 }
 
-.design-dark{
-  background:#302923;
-  color:#f4e8d5;
-}
+/* Natural paper texture */
 
-.design-woodland{
+.page:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
   background:
-    radial-gradient(circle at 85% 15%,#dbe6cc 0 25px,transparent 26px),
-    radial-gradient(circle at 15% 80%,#c6d8b9 0 30px,transparent 31px),
-    #f2eadb;
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(100,70,35,.08) 0 1px,
+      transparent 2px
+    );
+
+  background-size:8px 8px;
+  opacity:.25;
 }
 
-.design-dark .editor{
-  color:#f7ead7;
+/* Soft paper edge */
+
+.page:after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:12px;
+
+  background:linear-gradient(
+    to left,
+    rgba(80,50,20,.13),
+    transparent
+  );
+
+  pointer-events:none;
 }
 
-.design-dark .todoBox,
-.design-dark .quoteBox{
-  color:#3e2a1f;
-}
+/* HEADER */
 
-/* =========================
-   TOP ROW
-========================= */
+.page-header{
+  position:relative;
+  z-index:6;
 
-.pageTop{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
+  align-items:flex-start;
+
+  margin-bottom:12px;
 }
 
-.dateTitle{
-  font-size:25px;
+.day-title{
+  font-size:28px;
   font-weight:bold;
 }
 
-.pageNumber{
+.small{
   font-size:13px;
   opacity:.75;
 }
 
-.moodRow{
-  margin-top:10px;
+/* NATURAL SPIRAL */
+
+.spiral{
+  position:absolute;
+
+  left:10px;
+  top:25px;
+  bottom:30px;
+
+  width:58px;
+
+  z-index:10;
+
   display:flex;
-  gap:5px;
+  flex-direction:column;
+  justify-content:space-around;
+
+  pointer-events:none;
+}
+
+.ring{
+  width:48px;
+  height:22px;
+
+  border:4px solid #59534b;
+  border-left-color:#302d29;
+
+  border-radius:50%;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #c5c1b9,
+      #66615a
+    );
+
+  box-shadow:
+    2px 3px 4px #0005,
+    inset 0 2px 2px #fff9;
+}
+
+/* SPIRAL HOLES */
+
+.hole{
+  position:absolute;
+
+  left:73px;
+
+  width:10px;
+  height:10px;
+
+  border-radius:50%;
+
+  background:#60472d66;
+
+  box-shadow:
+    inset 1px 2px 2px #0005;
+}
+
+/* EMOJI */
+
+.emoji-bar{
+  position:relative;
+  z-index:7;
+
+  display:flex;
+  gap:4px;
   flex-wrap:wrap;
+
+  padding:6px 8px;
+  margin-bottom:8px;
+
+  background:rgba(255,248,232,.82);
+
+  border:1px solid #c5a875;
+  border-radius:10px;
 }
 
-.moodBtn{
-  background:#eadbc7;
-  color:#3e2a1f;
-  font-size:20px;
-  padding:5px 9px;
+.emoji-bar button{
+  border:0;
+  background:transparent;
+
+  font-size:23px;
+
+  padding:3px 5px;
+
+  border-radius:6px;
 }
 
-.moodBtn.active{
-  background:#b98757;
-  color:white;
+.emoji-bar button:hover{
+  background:#ead9b8;
 }
 
-/* =========================
-   QUOTE
-========================= */
+/* QUOTE */
 
-.quoteBox{
-  margin-top:15px;
-  padding:14px 16px;
-  border-left:5px solid #8a5a35;
-  background:#f2e3cd;
-  border-radius:8px;
+#quote{
+  position:relative;
+  z-index:6;
+
+  margin-bottom:12px;
+
   font-style:italic;
 }
 
-.quoteTitle{
-  font-weight:bold;
-  font-style:normal;
-  margin-bottom:5px;
-}
+/* WRITING AREA */
 
-.quoteText{
-  line-height:1.5;
-}
-
-/* =========================
-   EDITOR
-========================= */
-
-.toolbar{
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-  margin-top:15px;
-  padding:8px;
-  background:#ead9c1;
-  border-radius:9px;
-}
-
-.toolbar button{
-  padding:7px 10px;
-}
-
-.editorWrap{
+#content{
   position:relative;
-  margin-top:8px;
-}
+  z-index:6;
 
-.editor{
-  min-height:360px;
-  padding:15px;
-  border:1px dashed #9d8062;
-  border-radius:8px;
-  background:#ffffff66;
-
-  font-size:18px;
-  line-height:1.6;
+  min-height:760px;
 
   outline:none;
+
+  font-size:20px;
+  line-height:32px;
+
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
 
-.editor:focus{
-  border-color:#8a5a35;
+#content:empty:before{
+  content:"Write your thoughts here…";
+  opacity:.38;
 }
 
-.editor ul{
-  padding-left:25px;
-}
+/* DRAWING */
 
-/* =========================
-   DRAWING
-========================= */
-
-.drawArea{
+#drawingCanvas{
   position:absolute;
-  inset:0;
-  pointer-events:none;
-}
 
-#drawCanvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
+  left:80px;
+  right:28px;
+
+  top:190px;
+  bottom:70px;
+
+  width:auto;
+  height:auto;
+
+  z-index:8;
+
   pointer-events:none;
+
   touch-action:none;
 }
 
-.drawArea.enabled{
+body.draw-active #drawingCanvas{
   pointer-events:auto;
 }
 
-.drawArea.enabled #drawCanvas{
-  pointer-events:auto;
-  cursor:crosshair;
+body.draw-active #content{
+  user-select:none;
 }
 
-.drawTools{
+/* DRAWING TOOLBAR */
+
+.drawing-panel{
+  position:fixed;
+
+  left:50%;
+  bottom:12px;
+
+  transform:translateX(-50%);
+
+  z-index:50;
+
   display:none;
-  margin-top:8px;
-  padding:8px;
-  background:#ead9c1;
-  border-radius:9px;
-  gap:5px;
+
+  gap:6px;
+  align-items:center;
   flex-wrap:wrap;
+
+  background:#fff9ed;
+
+  padding:9px;
+
+  border-radius:14px;
+
+  box-shadow:0 8px 30px #0005;
+
+  border:1px solid #b99a68;
 }
 
-.drawTools.show{
+.drawing-panel.show{
   display:flex;
 }
 
-.drawTools button.active{
-  background:#4f6f8f;
-}
+.drawing-panel button,
+.drawing-panel select{
+  padding:7px 9px;
 
-.drawExit{
-  background:#a33a32;
-}
+  border:1px solid #b99a68;
 
-/* =========================
-   TODO
-========================= */
-
-.todoBox{
-  margin-top:15px;
-  padding:12px;
-  border-radius:9px;
-  background:#f0e1cb;
-}
-
-.todoHead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.todoList{
-  margin-top:8px;
-}
-
-.todoItem{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:6px 0;
-  border-bottom:1px dotted #aa8c6c;
-}
-
-.todoItem.done .todoText{
-  text-decoration:line-through;
-  opacity:.55;
-}
-
-.todoText{
-  flex:1;
-}
-
-.todoAdd{
-  display:flex;
-  gap:5px;
-  margin-top:8px;
-}
-
-.todoAdd input{
-  flex:1;
-  padding:8px;
-  border:1px solid #b59a7b;
-  border-radius:7px;
-}
-
-/* =========================
-   MEMORIES
-========================= */
-
-.memoryBox{
-  margin-top:15px;
-  padding:12px;
-  background:#f0e1cb;
-  border-radius:9px;
-}
-
-.memoryGrid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-  gap:8px;
-  margin-top:8px;
-}
-
-.memoryCard{
-  background:#fff;
   border-radius:8px;
-  padding:5px;
-  box-shadow:0 2px 6px #0002;
+
+  background:#fff;
 }
 
-.memoryCard img{
-  width:100%;
-  height:90px;
-  object-fit:cover;
-  border-radius:5px;
+/* NEW PAGE */
+
+.new-page{
+  position:absolute;
+
+  right:24px;
+  bottom:18px;
+
+  z-index:12;
+
+  border:1px solid #8f704d;
+
+  background:#ead3a6;
+
+  border-radius:10px;
+
+  padding:11px 17px;
+
+  box-shadow:2px 3px 5px #0002;
+
+  font-weight:bold;
 }
 
-.memoryActions{
+/* TODO */
+
+.todo{
+  position:relative;
+  z-index:9;
+
+  margin:12px 0;
+
+  padding:12px;
+
+  border:1px solid #b99a68;
+
+  background:#fff8e866;
+
+  border-radius:10px;
+}
+
+.todo-item{
   display:flex;
-  gap:4px;
-  margin-top:4px;
-}
-
-.memoryActions button{
-  flex:1;
-  padding:5px;
-  font-size:12px;
-}
-
-/* =========================
-   BOTTOM CONTROLS
-========================= */
-
-.bottomBar{
-  margin-top:18px;
-  display:flex;
-  justify-content:space-between;
+  align-items:center;
   gap:8px;
-  flex-wrap:wrap;
+  margin:5px 0;
 }
 
-.bottomGroup{
-  display:flex;
-  gap:5px;
-  flex-wrap:wrap;
+.todo-item.done span{
+  text-decoration:line-through;
+  opacity:.5;
 }
 
-/* =========================
-   MODALS
-========================= */
+/* MODALS */
 
-[hidden]{
-  display:none !important;
+.modal[hidden]{
+  display:none!important;
 }
 
 .modal{
   position:fixed;
   inset:0;
-  background:#0008;
+
   z-index:100;
 
+  background:#0008;
+
   display:flex;
+
   align-items:center;
   justify-content:center;
 
-  padding:18px;
+  padding:15px;
 }
 
-.modalCard{
-  width:min(600px,100%);
+.modal-card{
+  width:min(94vw,520px);
+
   max-height:90vh;
+
   overflow:auto;
 
-  background:#fffaf0;
-  color:#3e2a1f;
+  background:#fff8e8;
+
+  padding:20px;
 
   border-radius:15px;
-  padding:18px;
 
-  box-shadow:0 15px 40px #0005;
+  box-shadow:0 20px 60px #0007;
 }
 
-.modalCard h2{
+.modal-card h2{
   margin-top:0;
 }
 
-.modalActions{
-  display:flex;
-  justify-content:flex-end;
-  gap:7px;
-  margin-top:12px;
-  flex-wrap:wrap;
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
 
-.formRow{
+.modal-card input,
+.modal-card textarea,
+.modal-card select{
+  width:100%;
+
+  padding:9px;
+
+  border:1px solid #a98a5d;
+
+  border-radius:8px;
+
+  background:#fffdf6;
+
+  margin:5px 0 10px;
+}
+
+.modal-actions{
+  display:flex;
+
+  gap:8px;
+
+  justify-content:flex-end;
+
   margin-top:10px;
 }
 
-.formRow label{
-  display:block;
-  font-weight:bold;
-  margin-bottom:4px;
+.modal-actions button{
+  padding:9px 13px;
+
+  border-radius:8px;
+
+  border:1px solid #9d8057;
 }
 
-.formRow input,
-.formRow select,
-.formRow textarea{
+/* MEMORIES */
+
+.memory-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fill,minmax(120px,1fr));
+
+  gap:10px;
+}
+
+.memory-grid img{
   width:100%;
-  padding:9px;
-  border:1px solid #b59a7b;
-  border-radius:7px;
+  height:120px;
+
+  object-fit:cover;
+
+  border-radius:8px;
 }
 
-/* =========================
-   PAGE ANIMATION
-========================= */
+/* STATUS */
 
-.page.turnNext{
-  animation:turnNext .4s ease;
+.status{
+  text-align:center;
+
+  font-size:12px;
+
+  opacity:.7;
+
+  margin-top:5px;
 }
 
-.page.turnPrev{
-  animation:turnPrev .4s ease;
-}
-
-@keyframes turnNext{
-  0%{
-    transform:translateX(0) rotateY(0);
-    opacity:1;
-  }
-  50%{
-    transform:translateX(-40px) rotateY(-8deg);
-    opacity:.5;
-  }
-  100%{
-    transform:translateX(0) rotateY(0);
-    opacity:1;
-  }
-}
-
-@keyframes turnPrev{
-  0%{
-    transform:translateX(0) rotateY(0);
-    opacity:1;
-  }
-  50%{
-    transform:translateX(40px) rotateY(8deg);
-    opacity:.5;
-  }
-  100%{
-    transform:translateX(0) rotateY(0);
-    opacity:1;
-  }
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
+/* MOBILE / TABLET */
 
 @media(max-width:700px){
 
   .app{
-    padding:7px;
+    padding:6px;
   }
 
-  header{
-    flex-direction:column;
-    align-items:stretch;
+  .toolbar{
+    position:static;
   }
 
-  header h1{
-    text-align:center;
-  }
-
-  .headerButtons{
-    justify-content:center;
+  .toolbar .title{
+    width:100%;
   }
 
   .page{
-    min-height:700px;
+
+    min-height:900px;
+
     padding:
+      45px
       25px
-      18px
-      30px
-      62px;
+      75px
+      78px;
   }
 
-  .binding{
-    width:45px;
+  .day-title{
+    font-size:23px;
+  }
+
+  #content{
+    font-size:18px;
+    line-height:30px;
+
+    min-height:650px;
+  }
+
+  .spiral{
+    left:6px;
+    width:43px;
   }
 
   .ring{
-    left:7px;
-    width:31px;
+    width:39px;
+    height:18px;
   }
 
-  .dateTitle{
-    font-size:21px;
+  #drawingCanvas{
+    left:65px;
+    right:15px;
+    top:165px;
+    bottom:60px;
   }
 
-  .editor{
-    min-height:330px;
-    font-size:17px;
-  }
-
-  .calendarGrid{
-    gap:2px;
-  }
-
-  .calCell{
-    min-height:38px;
-    font-size:12px;
+  .form-row{
+    grid-template-columns:1fr;
   }
 }
 </style>
@@ -734,461 +662,369 @@ button.green{
 
 <div class="app">
 
-<header>
-  <h1>📖 My Personal Diary</h1>
+<!-- TOOLBAR -->
 
-  <div class="headerButtons">
-    <button onclick="toggleCalendar()">📅 Calendar</button>
-    <button onclick="openEventModal()">🔔 Event</button>
-    <button onclick="openGallery()">🖼 Memories</button>
-    <button onclick="openSettings()">⚙️ Settings</button>
+<div class="toolbar">
+
+  <div class="title">
+    📖 My Personal Diary
   </div>
-</header>
+
+  <button id="calendarBtn">📅 Calendar</button>
+
+  <button id="eventBtn">🗓️ Event</button>
+
+  <button id="memoryBtn">🖼️ Memories</button>
+
+  <button id="todoBtn">☑️ To-do</button>
+
+  <button id="drawBtn">✏️ Draw</button>
+
+  <button id="printBtn">🖨️ Print</button>
+
+  <button id="backupBtn">💾 Backup</button>
+
+  <button id="restoreBtn">↩️ Restore</button>
+
+  <input
+    id="restoreFile"
+    type="file"
+    accept=".json"
+    hidden
+  >
+
+</div>
 
 <!-- CALENDAR -->
-<section id="calendarBox" class="calendarBox" hidden>
 
-  <div class="calendarHead">
-    <button class="secondary" onclick="previousMonth()">◀</button>
+<div id="calendar" class="calendar">
 
-    <strong id="calendarTitle"></strong>
+  <input id="calendarDate" type="date">
 
-    <button class="secondary" onclick="nextMonth()">▶</button>
-  </div>
+  <button id="openDateBtn">
+    Open Date
+  </button>
 
-  <div class="calendarGrid" id="calendarGrid"></div>
+  <button id="todayBtn">
+    Today
+  </button>
 
-</section>
+  <div id="calendarInfo" class="small"></div>
+
+</div>
+
+<!-- DATE -->
+
+<div class="datebar">
+
+  <button id="prevBtn">
+    ‹ Previous
+  </button>
+
+  <input
+    id="dateInput"
+    type="date"
+  >
+
+  <button id="nextBtn">
+    Next ›
+  </button>
+
+</div>
 
 <!-- DIARY -->
-<div class="diaryWrap">
 
-<section id="page" class="page design-classic">
+<div class="diary-stage">
+
+<article class="page" id="page">
 
   <!-- SPIRAL -->
-  <div class="binding">
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
-    <div class="ring"></div>
+
+  <div
+    class="spiral"
+    id="spiral">
   </div>
 
-  <div class="pageTop">
+  <!-- HEADER -->
+
+  <div class="page-header">
 
     <div>
-      <div class="dateTitle" id="dateTitle"></div>
-      <div class="pageNumber" id="pageNumber"></div>
+
+      <div
+        class="day-title"
+        id="dayTitle">
+      </div>
+
+      <div
+        class="small"
+        id="pageNo">
+      </div>
+
     </div>
 
-    <div>
-      <button onclick="newPage()">➕ New Page</button>
-    </div>
+    <button
+      id="quoteBtn"
+      title="Change quote">
+      💬 Quote
+    </button>
 
   </div>
 
-  <!-- MOOD -->
-  <div class="moodRow">
+  <!-- EMOJIS -->
 
-    <button class="moodBtn" data-mood="😊" onclick="setMood('😊')">😊</button>
-
-    <button class="moodBtn" data-mood="😄" onclick="setMood('😄')">😄</button>
-
-    <button class="moodBtn" data-mood="😍" onclick="setMood('😍')">😍</button>
-
-    <button class="moodBtn" data-mood="😐" onclick="setMood('😐')">😐</button>
-
-    <button class="moodBtn" data-mood="😔" onclick="setMood('😔')">😔</button>
-
-    <button class="moodBtn" data-mood="😡" onclick="setMood('😡')">😡</button>
-
-    <button class="moodBtn" data-mood="🙏" onclick="setMood('🙏')">🙏</button>
-
+  <div
+    class="emoji-bar"
+    id="emojiBar">
   </div>
 
   <!-- QUOTE -->
-  <div id="quoteBox" class="quoteBox" hidden>
 
-    <div class="quoteTitle">
-      ✨ Quote of the Day
-    </div>
-
-    <div id="quoteText" class="quoteText"></div>
-
-    <button class="secondary" onclick="changeQuote()">
-      🔄 Change Quote
-    </button>
-
+  <div
+    id="quote"
+    class="small">
   </div>
 
-  <!-- EDITOR TOOLBAR -->
-  <div class="toolbar">
+  <!-- WRITING -->
 
-    <button onclick="formatText('bold')">
-      <b>B</b>
-    </button>
-
-    <button onclick="formatText('underline')">
-      <u>U</u>
-    </button>
-
-    <button onclick="formatText('italic')">
-      <i>I</i>
-    </button>
-
-    <button onclick="formatText('insertUnorderedList')">
-      • List
-    </button>
-
-    <button onclick="toggleDrawing()">
-      ✏️ Draw
-    </button>
-
-  </div>
-
-  <!-- DRAWING TOOLBAR -->
-  <div id="drawTools" class="drawTools">
-
-    <button onclick="setDrawTool('pen')" id="toolPen">
-      ✏️ Pen
-    </button>
-
-    <button onclick="setDrawTool('line')" id="toolLine">
-      ╱ Line
-    </button>
-
-    <button onclick="setDrawTool('circle')" id="toolCircle">
-      ◯ Circle
-    </button>
-
-    <button onclick="setDrawTool('eraser')" id="toolEraser">
-      🧽 Eraser
-    </button>
-
-    <button onclick="setDrawColor('#222')">
-      ⚫
-    </button>
-
-    <button onclick="setDrawColor('#d33')">
-      🔴
-    </button>
-
-    <button onclick="setDrawColor('#2864a8')">
-      🔵
-    </button>
-
-    <button onclick="setDrawColor('#3d7a3d')">
-      🟢
-    </button>
-
-    <button onclick="undoDrawing()">
-      ↩ Undo
-    </button>
-
-    <button onclick="redoDrawing()">
-      ↪ Redo
-    </button>
-
-    <button onclick="clearDrawing()" class="danger">
-      🗑 Clear
-    </button>
-
-    <button onclick="toggleDrawing()" class="drawExit">
-      ✖ Done
-    </button>
-
-  </div>
-
-  <!-- EDITOR -->
-  <div class="editorWrap">
-
-    <div
-      id="editor"
-      class="editor"
-      contenteditable="true"
-      spellcheck="true"
-      oninput="scheduleAutoSave()">
-    </div>
-
-    <!-- DRAWING CANVAS -->
-    <div id="drawArea" class="drawArea">
-      <canvas id="drawCanvas"></canvas>
-    </div>
-
+  <div
+    id="content"
+    contenteditable="true"
+    spellcheck="true">
   </div>
 
   <!-- TODO -->
-  <div class="todoBox">
 
-    <div class="todoHead">
-      <strong>☑️ To-Do List</strong>
-      <span id="todoCount"></span>
-    </div>
+  <div
+    class="todo"
+    id="todoBox"
+    hidden>
 
-    <div id="todoList" class="todoList"></div>
+    <strong>☑️ To-do</strong>
 
-    <div class="todoAdd">
+    <div id="todoList"></div>
+
+    <div
+      style="
+      display:flex;
+      gap:6px;
+      margin-top:8px">
+
       <input
         id="todoInput"
-        type="text"
-        placeholder="Add task..."
-        onkeydown="if(event.key==='Enter') addTodo()">
+        placeholder="Add a task…"
+        style="
+        flex:1;
+        padding:8px;
+        border:1px solid #b99a68;
+        border-radius:8px">
 
-      <button onclick="addTodo()">＋</button>
-    </div>
-
-  </div>
-
-  <!-- MEMORIES -->
-  <div class="memoryBox">
-
-    <strong>📎 Memories</strong>
-
-    <div style="margin-top:8px;display:flex;gap:5px;flex-wrap:wrap">
-
-      <button onclick="openMemoryInput()">
-        📷 Camera / Photo
-      </button>
-
-      <button onclick="document.getElementById('documentInput').click()">
-        📄 Scan / Document
-      </button>
-
-    </div>
-
-    <input
-      id="memoryInput"
-      type="file"
-      accept="image/*"
-      capture="environment"
-      hidden
-      onchange="addMemoryFile(event)">
-
-    <input
-      id="documentInput"
-      type="file"
-      accept="image/*,.pdf,.doc,.docx"
-      capture="environment"
-      hidden
-      onchange="addMemoryFile(event)">
-
-    <div id="memoryGrid" class="memoryGrid"></div>
-
-  </div>
-
-  <!-- BOTTOM -->
-  <div class="bottomBar">
-
-    <div class="bottomGroup">
-
-      <button onclick="previousPage()">
-        ◀ Previous
-      </button>
-
-      <button onclick="nextPage()">
-        Next ▶
-      </button>
-
-    </div>
-
-    <div class="bottomGroup">
-
-      <button class="green" onclick="savePage(true)">
-        💾 Save
-      </button>
-
-      <button onclick="printPage()">
-        🖨 Print
+      <button id="addTodo">
+        Add
       </button>
 
     </div>
 
   </div>
 
-</section>
+  <!-- DRAWING -->
+
+  <canvas id="drawingCanvas"></canvas>
+
+  <!-- NEW PAGE ON RIGHT -->
+
+  <button
+    class="new-page"
+    id="newPage">
+    ＋ New Page →
+  </button>
+
+</article>
 
 </div>
+
+<div
+  class="status"
+  id="status">
+  Saved locally
+</div>
+
+</div>
+
+<!-- DRAWING PANEL -->
+
+<div
+  class="drawing-panel"
+  id="drawingPanel">
+
+  <strong>Drawing:</strong>
+
+  <button data-tool="pen">
+    Pen
+  </button>
+
+  <button data-tool="line">
+    Line
+  </button>
+
+  <button data-tool="circle">
+    Circle
+  </button>
+
+  <button data-tool="eraser">
+    Eraser
+  </button>
+
+  <select id="drawColor">
+
+    <option value="#222">
+      Black
+    </option>
+
+    <option value="#b3261e">
+      Red
+    </option>
+
+    <option value="#174ea6">
+      Blue
+    </option>
+
+    <option value="#18794e">
+      Green
+    </option>
+
+  </select>
+
+  <select id="drawSize">
+
+    <option value="2">
+      Fine
+    </option>
+
+    <option value="4" selected>
+      Medium
+    </option>
+
+    <option value="8">
+      Thick
+    </option>
+
+  </select>
+
+  <button id="undoDraw">
+    ↶
+  </button>
+
+  <button id="redoDraw">
+    ↷
+  </button>
+
+  <button id="clearDraw">
+    Clear
+  </button>
+
+  <button id="closeDraw">
+    Close
+  </button>
 
 </div>
 
 <!-- EVENT MODAL -->
-<div id="eventModal" class="modal" hidden>
 
-  <div class="modalCard">
+<div
+  class="modal"
+  id="eventModal"
+  hidden>
 
-    <h2>🔔 Diary Event</h2>
+  <div class="modal-card">
 
-    <div class="formRow">
-      <label>Event</label>
-      <input id="eventTitle" type="text">
+    <h2>
+      🗓️ Add Diary Event
+    </h2>
+
+    <label>
+      Event title
+
+      <input
+        id="eventTitle"
+        placeholder="Birthday, appointment, reminder…">
+    </label>
+
+    <div class="form-row">
+
+      <label>
+        Date
+
+        <input
+          id="eventDate"
+          type="date">
+      </label>
+
+      <label>
+        Time
+
+        <input
+          id="eventTime"
+          type="time">
+      </label>
+
     </div>
 
-    <div class="formRow">
-      <label>Date</label>
-      <input id="eventDate" type="date">
-    </div>
+    <label>
+      Notes
 
-    <div class="formRow">
-      <label>Time</label>
-      <input id="eventTime" type="time">
-    </div>
+      <textarea
+        id="eventNotes"
+        rows="3">
+      </textarea>
 
-    <div class="formRow">
-      <label>Reminder minutes before</label>
-      <input id="eventReminder" type="number" value="10">
-    </div>
+    </label>
 
-    <div class="modalActions">
+    <div class="modal-actions">
 
-      <button
-        class="secondary"
-        onclick="closeEventModal()">
-        Cancel
+      <!-- CLOSE, NOT CANCEL -->
+
+      <button id="closeEvent">
+        Close
       </button>
 
-      <button onclick="saveEvent()">
+      <button id="saveEvent">
         Save Event
       </button>
 
     </div>
 
-    <hr>
-
-    <h3>Events for this date</h3>
-
-    <div id="eventList"></div>
-
   </div>
 
 </div>
 
-<!-- SETTINGS -->
-<div id="settingsModal" class="modal" hidden>
+<!-- MEMORY MODAL -->
 
-  <div class="modalCard">
+<div
+  class="modal"
+  id="memoryModal"
+  hidden>
 
-    <h2>⚙️ Diary Settings</h2>
+  <div class="modal-card">
 
-    <div class="formRow">
+    <h2>
+      🖼️ Memories
+    </h2>
 
-      <label>Diary Page Design</label>
+    <input
+      id="memoryFile"
+      type="file"
+      accept="image/*,application/pdf"
+      capture="environment">
 
-      <select id="designSelect" onchange="changeDesign(this.value)">
-
-        <option value="classic">Classic Cream</option>
-        <option value="vintage">Vintage</option>
-        <option value="floral">Floral</option>
-        <option value="blue">Blue Lines</option>
-        <option value="dark">Dark</option>
-        <option value="woodland">Woodland</option>
-
-      </select>
-
+    <div
+      id="memoryGrid"
+      class="memory-grid">
     </div>
 
-    <hr>
+    <div class="modal-actions">
 
-    <h3>Google Calendar</h3>
-
-    <div class="formRow">
-
-      <label>Google OAuth Client ID</label>
-
-      <input
-        id="googleClientId"
-        type="text"
-        placeholder="Enter Google OAuth Client ID">
-
-    </div>
-
-    <button onclick="connectGoogleCalendar()">
-      🔗 Connect Google Calendar
-    </button>
-
-    <hr>
-
-    <div style="display:flex;gap:5px;flex-wrap:wrap">
-
-      <button onclick="backupDiary()">
-        💾 Backup
-      </button>
-
-      <button onclick="document.getElementById('restoreInput').click()">
-        ♻️ Restore
-      </button>
-
-      <input
-        id="restoreInput"
-        type="file"
-        accept=".json"
-        hidden
-        onchange="restoreDiary(event)">
-
-    </div>
-
-    <div class="modalActions">
-
-      <button
-        class="secondary"
-        onclick="closeSettings()">
-        Close
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<!-- GALLERY -->
-<div id="galleryModal" class="modal" hidden>
-
-  <div class="modalCard">
-
-    <h2>🖼 Memory Gallery</h2>
-
-    <div id="galleryGrid" class="memoryGrid"></div>
-
-    <div class="modalActions">
-
-      <button
-        class="secondary"
-        onclick="closeGallery()">
-        Close
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-<!-- LIGHTBOX -->
-<div id="lightboxModal" class="modal" hidden>
-
-  <div class="modalCard">
-
-    <img
-      id="lightboxImage"
-      style="width:100%;max-height:75vh;object-fit:contain">
-
-    <div class="modalActions">
-
-      <button onclick="closeLightbox()">
+      <button id="closeMemory">
         Close
       </button>
 
@@ -1199,1590 +1035,763 @@ button.green{
 </div>
 
 <script>
-/* ================================
-   DATABASE
-================================ */
 
-const DB_NAME = "myPersonalDiaryDB";
-const DB_VERSION = 3;
+/* DATABASE */
 
-const PAGE_STORE = "pages";
-const EVENT_STORE = "events";
-const ATTACH_STORE = "attachments";
-const SETTINGS_STORE = "settings";
-const TODO_STORE = "todos";
+const DB="myPersonalDiaryDB";
+const VER=4;
 
 let db;
 
-function uid(){
-  return Date.now().toString(36) +
-    Math.random().toString(36).slice(2);
+let currentDate=localDate();
+
+let currentPage=1;
+
+let pageRec=null;
+
+/* QUOTES */
+
+const quotes=[
+  "The best time to write about your life is while you are living it.",
+  "Small moments become precious memories.",
+  "A quiet page can hold a very loud story.",
+  "Today is a page that will never come again.",
+  "Write what you want to remember.",
+  "Every page is a piece of your story.",
+  "Life is made beautiful by ordinary moments."
+];
+
+/* EMOJIS */
+
+const emojis=[
+  "😀","😊","😂","❤️","🙏","🌸","🌿",
+  "✨","⭐","🎉","🎂","🎁","☀️","🌙",
+  "☕","🍀","📌","💡","👍","👏",
+  "🤗","😍","😄","😌","🕉️","🪔"
+];
+
+/* DATE */
+
+function localDate(d=new Date()){
+
+  let x=new Date(d);
+
+  return new Date(
+    x.getTime() -
+    x.getTimezoneOffset()*60000
+  ).toISOString().slice(0,10);
 }
+
+/* DATABASE OPEN */
 
 function openDB(){
 
   return new Promise((resolve,reject)=>{
 
-    const request =
-      indexedDB.open(DB_NAME,DB_VERSION);
+    const r=indexedDB.open(DB,VER);
 
-    request.onupgradeneeded = e => {
+    r.onupgradeneeded=e=>{
 
-      const database = e.target.result;
+      let d=e.target.result;
 
-      if(!database.objectStoreNames.contains(PAGE_STORE)){
-        database.createObjectStore(
-          PAGE_STORE,
-          {keyPath:"id"}
-        );
-      }
+      const stores=[
+        "pages",
+        "events",
+        "attachments",
+        "settings",
+        "todos"
+      ];
 
-      if(!database.objectStoreNames.contains(EVENT_STORE)){
-        database.createObjectStore(
-          EVENT_STORE,
-          {keyPath:"id"}
-        );
-      }
+      stores.forEach(s=>{
 
-      if(!database.objectStoreNames.contains(ATTACH_STORE)){
-        database.createObjectStore(
-          ATTACH_STORE,
-          {keyPath:"id"}
-        );
-      }
+        if(!d.objectStoreNames.contains(s)){
 
-      if(!database.objectStoreNames.contains(SETTINGS_STORE)){
-        database.createObjectStore(
-          SETTINGS_STORE,
-          {keyPath:"key"}
-        );
-      }
+          let key=
+            s==="pages" ? "id" :
+            s==="events" ? "id" :
+            s==="attachments" ? "id" :
+            s==="settings" ? "key" :
+            "id";
 
-      if(!database.objectStoreNames.contains(TODO_STORE)){
-        database.createObjectStore(
-          TODO_STORE,
-          {keyPath:"id"}
-        );
-      }
+          let st=d.createObjectStore(
+            s,
+            {
+              keyPath:key,
+              autoIncrement:key==="id"
+            }
+          );
+
+          if(s==="pages"){
+            st.createIndex(
+              "date",
+              "date"
+            );
+          }
+
+          if(s==="todos"){
+            st.createIndex(
+              "date",
+              "date"
+            );
+          }
+
+        }
+
+      });
 
     };
 
-    request.onsuccess = e => {
-
-      db = e.target.result;
-
+    r.onsuccess=()=>{
+      db=r.result;
       resolve(db);
-
     };
 
-    request.onerror = () => reject(request.error);
-
-  });
-
-}
-
-function dbPut(store,value){
-
-  return new Promise((resolve,reject)=>{
-
-    const tx=db.transaction(store,"readwrite");
-
-    tx.objectStore(store).put(value);
-
-    tx.oncomplete=()=>resolve();
-
-    tx.onerror=()=>reject(tx.error);
-
-  });
-
-}
-
-function dbGet(store,key){
-
-  return new Promise((resolve,reject)=>{
-
-    const tx=db.transaction(store,"readonly");
-
-    const request=
-      tx.objectStore(store).get(key);
-
-    request.onsuccess=()=>resolve(request.result);
-
-    request.onerror=()=>reject(request.error);
-
-  });
-
-}
-
-function dbGetAll(store){
-
-  return new Promise((resolve,reject)=>{
-
-    const tx=db.transaction(store,"readonly");
-
-    const request=
-      tx.objectStore(store).getAll();
-
-    request.onsuccess=()=>resolve(request.result);
-
-    request.onerror=()=>reject(request.error);
-
-  });
-
-}
-
-function dbDelete(store,key){
-
-  return new Promise((resolve,reject)=>{
-
-    const tx=db.transaction(store,"readwrite");
-
-    tx.objectStore(store).delete(key);
-
-    tx.oncomplete=()=>resolve();
-
-    tx.onerror=()=>reject(tx.error);
-
-  });
-
-}
-
-/* ================================
-   DATE
-================================ */
-
-let selectedDate =
-  new Date().toISOString().slice(0,10);
-
-let currentPage = 1;
-
-let currentPages = [];
-
-let calendarDate = new Date();
-
-/* ================================
-   QUOTES
-================================ */
-
-const quotes = [
-
-  "Every day is a new page in the story of your life.",
-
-  "Small steps every day create big changes.",
-
-  "The best way to predict your future is to create it.",
-
-  "Write today so tomorrow remembers.",
-
-  "Gratitude turns ordinary days into beautiful memories.",
-
-  "Do something today that your future self will thank you for.",
-
-  "Life is made of moments. Treasure them.",
-
-  "A peaceful mind creates a meaningful life.",
-
-  "Keep going. Your story is still being written.",
-
-  "The simplest memories often become the most precious."
-
-];
-
-function quoteForDate(date){
-
-  let sum=0;
-
-  for(let i=0;i<date.length;i++){
-    sum+=date.charCodeAt(i)*(i+1);
-  }
-
-  return quotes[sum%quotes.length];
-
-}
-
-async function loadQuote(){
-
-  const quoteBox =
-    document.getElementById("quoteBox");
-
-  if(currentPage!==1){
-
-    quoteBox.hidden=true;
-    return;
-
-  }
-
-  quoteBox.hidden=false;
-
-  let setting =
-    await dbGet(
-      SETTINGS_STORE,
-      "quote-"+selectedDate
-    );
-
-  if(!setting){
-
-    setting={
-      key:"quote-"+selectedDate,
-      value:quoteForDate(selectedDate)
+    r.onerror=()=>{
+      reject(r.error);
     };
 
-    await dbPut(
-      SETTINGS_STORE,
-      setting
-    );
+  });
+
+}
+
+/* DB HELPERS */
+
+function tx(store,mode="readonly"){
+  return db.transaction(
+    store,
+    mode
+  ).objectStore(store);
+}
+
+function get(store,key){
+
+  return new Promise((res,rej)=>{
+
+    let r=tx(store).get(key);
+
+    r.onsuccess=()=>{
+      res(r.result);
+    };
+
+    r.onerror=()=>{
+      rej(r.error);
+    };
+
+  });
+
+}
+
+function put(store,obj){
+
+  return new Promise((res,rej)=>{
+
+    let r=tx(
+      store,
+      "readwrite"
+    ).put(obj);
+
+    r.onsuccess=()=>{
+      res(r.result);
+    };
+
+    r.onerror=()=>{
+      rej(r.error);
+    };
+
+  });
+
+}
+
+function all(store){
+
+  return new Promise((res,rej)=>{
+
+    let r=tx(store).getAll();
+
+    r.onsuccess=()=>{
+      res(r.result);
+    };
+
+    r.onerror=()=>{
+      rej(r.error);
+    };
+
+  });
+
+}
+
+function del(store,key){
+
+  return new Promise((res,rej)=>{
+
+    let r=tx(
+      store,
+      "readwrite"
+    ).delete(key);
+
+    r.onsuccess=()=>{
+      res();
+    };
+
+    r.onerror=()=>{
+      rej(r.error);
+    };
+
+  });
+
+}
+
+/* PAGE ID */
+
+function pageId(){
+
+  return currentDate+"-"+currentPage;
+
+}
+
+/* QUOTE */
+
+function deterministicQuote(date){
+
+  let n=0;
+
+  for(
+    const c of date
+  ){
+
+    n=
+      (n+
+       c.charCodeAt(0)*31)
+      %quotes.length;
 
   }
 
-  document.getElementById(
-    "quoteText"
-  ).textContent=setting.value;
+  return quotes[n];
 
 }
 
-async function changeQuote(){
+/* LOAD PAGE */
 
-  const current =
-    document.getElementById(
-      "quoteText"
-    ).textContent;
+async function loadPage(){
 
-  let available =
-    quotes.filter(q=>q!==current);
+  pageRec=
+    await get(
+      "pages",
+      pageId()
+    );
 
-  const quote =
-    available[
-      Math.floor(
-        Math.random()*available.length
-      )
-    ];
+  if(!pageRec){
 
-  await dbPut(
-    SETTINGS_STORE,
-    {
-      key:"quote-"+selectedDate,
-      value:quote
-    }
-  );
-
-  document.getElementById(
-    "quoteText"
-  ).textContent=quote;
-
-}
-
-/* ================================
-   PAGE LOADING
-================================ */
-
-async function loadDate(date){
-
-  selectedDate=date;
-
-  currentPage=1;
-
-  const all =
-    await dbGetAll(PAGE_STORE);
-
-  currentPages =
-    all
-      .filter(p=>p.date===date)
-      .sort((a,b)=>a.page-b.page);
-
-  if(!currentPages.length){
-
-    currentPages=[{
-      id:uid(),
-      date:date,
-      page:1,
+    pageRec={
+      id:pageId(),
+      date:currentDate,
+      page:currentPage,
       html:"",
-      mood:"",
-      design:"classic",
-      drawing:null,
-      updatedAt:Date.now()
-    }];
+      drawing:"",
+      quote:
+        deterministicQuote(
+          currentDate
+        ),
+      design:"natural"
+    };
+
+    await put(
+      "pages",
+      pageRec
+    );
 
   }
 
-  renderPage();
-
-  await loadQuote();
-
-  await loadTodos();
-
-  await loadMemories();
-
-  renderCalendar();
-
-}
-
-/* ================================
-   RENDER PAGE
-================================ */
-
-async function renderPage(){
-
-  const page =
-    currentPages[currentPage-1];
-
-  if(!page)return;
+  document.getElementById(
+    "content"
+  ).innerHTML=
+    pageRec.html || "";
 
   document.getElementById(
-    "dateTitle"
+    "quote"
+  ).textContent=
+    currentPage===1
+      ? "“"+
+        (
+          pageRec.quote ||
+          deterministicQuote(
+            currentDate
+          )
+        )+
+        "”"
+      : "";
+
+  document.getElementById(
+    "dayTitle"
   ).textContent=
     new Date(
-      selectedDate+"T00:00:00"
+      currentDate+"T00:00:00"
     ).toLocaleDateString(
       undefined,
       {
         weekday:"long",
-        year:"numeric",
-        month:"long",
-        day:"numeric"
-      }
-    );
-
-  document.getElementById(
-    "pageNumber"
-  ).textContent=
-    "Page "+
-    currentPage+
-    " of "+
-    currentPages.length;
-
-  document.getElementById(
-    "editor"
-  ).innerHTML=page.html||"";
-
-  document.getElementById(
-    "page"
-  ).className=
-    "page design-"+(page.design||"classic");
-
-  document.getElementById(
-    "designSelect"
-  ).value=page.design||"classic";
-
-  document.querySelectorAll(
-    ".moodBtn"
-  ).forEach(btn=>{
-
-    btn.classList.toggle(
-      "active",
-      btn.dataset.mood===
-      (page.mood||"")
-    );
-
-  });
-
-  await loadDrawing();
-
-}
-
-/* ================================
-   SAVE PAGE
-================================ */
-
-let saveTimer;
-
-function scheduleAutoSave(){
-
-  clearTimeout(saveTimer);
-
-  saveTimer=setTimeout(
-    ()=>savePage(false),
-    700
-  );
-
-}
-
-async function savePage(showMessage=false){
-
-  const page =
-    currentPages[currentPage-1];
-
-  if(!page)return;
-
-  page.html=
-    document.getElementById(
-      "editor"
-    ).innerHTML;
-
-  page.updatedAt=Date.now();
-
-  page.drawing=
-    savedDrawing||null;
-
-  await dbPut(
-    PAGE_STORE,
-    page
-  );
-
-  if(showMessage){
-
-    alert("Diary page saved.");
-
-  }
-
-}
-
-/* ================================
-   MOOD
-================================ */
-
-async function setMood(mood){
-
-  const page =
-    currentPages[currentPage-1];
-
-  if(!page)return;
-
-  page.mood=mood;
-
-  await dbPut(
-    PAGE_STORE,
-    page
-  );
-
-  document.querySelectorAll(
-    ".moodBtn"
-  ).forEach(btn=>{
-
-    btn.classList.toggle(
-      "active",
-      btn.dataset.mood===mood
-    );
-
-  });
-
-  renderCalendar();
-
-}
-
-/* ================================
-   PAGE DESIGN
-================================ */
-
-async function changeDesign(design){
-
-  const page =
-    currentPages[currentPage-1];
-
-  if(!page)return;
-
-  page.design=design;
-
-  await dbPut(
-    PAGE_STORE,
-    page
-  );
-
-  document.getElementById(
-    "page"
-  ).className=
-    "page design-"+design;
-
-}
-
-/* ================================
-   NEW PAGE
-================================ */
-
-async function newPage(){
-
-  await savePage(false);
-
-  const newPageNumber =
-    currentPages.length+1;
-
-  const page={
-    id:uid(),
-    date:selectedDate,
-    page:newPageNumber,
-    html:"",
-    mood:"",
-    design:"classic",
-    drawing:null,
-    updatedAt:Date.now()
-  };
-
-  currentPages.push(page);
-
-  currentPage=
-    currentPages.length;
-
-  await dbPut(
-    PAGE_STORE,
-    page
-  );
-
-  renderPage();
-
-  await loadQuote();
-
-}
-
-/* ================================
-   PAGE NAVIGATION
-================================ */
-
-async function goPage(number,direction){
-
-  if(number<1){
-    return;
-  }
-
-  if(number>currentPages.length){
-
-    return;
-
-  }
-
-  await savePage(false);
-
-  currentPage=number;
-
-  const page =
-    document.getElementById("page");
-
-  page.classList.remove(
-    "turnNext",
-    "turnPrev"
-  );
-
-  void page.offsetWidth;
-
-  page.classList.add(
-    direction==="next"
-      ?"turnNext"
-      :"turnPrev"
-  );
-
-  renderPage();
-
-  loadQuote();
-
-  loadTodos();
-
-  loadMemories();
-
-}
-
-function nextPage(){
-
-  if(currentPage<currentPages.length){
-
-    goPage(
-      currentPage+1,
-      "next"
-    );
-
-  }
-
-}
-
-function previousPage(){
-
-  if(currentPage>1){
-
-    goPage(
-      currentPage-1,
-      "prev"
-    );
-
-  }
-
-}
-
-/* ================================
-   TEXT FORMATTING
-================================ */
-
-function formatText(command){
-
-  document.execCommand(
-    command,
-    false,
-    null
-  );
-
-  document.getElementById(
-    "editor"
-  ).focus();
-
-  scheduleAutoSave();
-
-}
-
-/* ================================
-   20 LINE LIMIT
-================================ */
-
-function countLines(){
-
-  const editor=
-    document.getElementById("editor");
-
-  const style=
-    getComputedStyle(editor);
-
-  const lineHeight=
-    parseFloat(style.lineHeight);
-
-  return Math.ceil(
-    editor.scrollHeight/lineHeight
-  );
-
-}
-
-document
-  .getElementById("editor")
-  .addEventListener(
-    "input",
-    function(){
-
-      if(countLines()>20){
-
-        alert(
-          "This diary page is limited to 20 lines. Turn to the next page to continue."
-        );
-
-      }
-
-    }
-  );
-
-/* ================================
-   TODO
-================================ */
-
-async function loadTodos(){
-
-  const all =
-    await dbGetAll(TODO_STORE);
-
-  const todos =
-    all
-      .filter(t=>t.date===selectedDate)
-      .sort(
-        (a,b)=>
-          a.createdAt-b.createdAt
-      );
-
-  const list =
-    document.getElementById(
-      "todoList"
-    );
-
-  list.innerHTML="";
-
-  todos.forEach(todo=>{
-
-    const row=
-      document.createElement("div");
-
-    row.className=
-      "todoItem "+
-      (todo.done?"done":"");
-
-    row.innerHTML=`
-
-      <input
-        type="checkbox"
-        ${todo.done?"checked":""}
-        onchange="toggleTodo('${todo.id}',this.checked)">
-
-      <span class="todoText">
-        ${escapeHtml(todo.text)}
-      </span>
-
-      <button
-        class="danger"
-        onclick="deleteTodo('${todo.id}')">
-        ×
-      </button>
-
-    `;
-
-    list.appendChild(row);
-
-  });
-
-  const pending =
-    todos.filter(t=>!t.done).length;
-
-  document.getElementById(
-    "todoCount"
-  ).textContent=
-    pending+
-    " pending";
-
-}
-
-async function addTodo(){
-
-  const input =
-    document.getElementById(
-      "todoInput"
-    );
-
-  const text=
-    input.value.trim();
-
-  if(!text)return;
-
-  const todo={
-    id:uid(),
-    date:selectedDate,
-    text:text,
-    done:false,
-    createdAt:Date.now()
-  };
-
-  await dbPut(
-    TODO_STORE,
-    todo
-  );
-
-  input.value="";
-
-  await loadTodos();
-
-}
-
-async function toggleTodo(id,done){
-
-  const todo=
-    await dbGet(
-      TODO_STORE,
-      id
-    );
-
-  if(!todo)return;
-
-  todo.done=done;
-
-  await dbPut(
-    TODO_STORE,
-    todo
-  );
-
-  /*
-    If completed, it stays completed.
-    If unfinished, carry it forward.
-  */
-
-  if(!done){
-
-    const next=
-      new Date(
-        selectedDate+"T00:00:00"
-      );
-
-    next.setDate(
-      next.getDate()+1
-    );
-
-    const nextDate=
-      next.toISOString().slice(0,10);
-
-    const existing=
-      await dbGetAll(TODO_STORE);
-
-    const already=
-      existing.some(
-        t=>
-          t.date===nextDate &&
-          t.text===todo.text &&
-          t.carriedFrom===todo.id &&
-          !t.done
-      );
-
-    if(!already){
-
-      await dbPut(
-        TODO_STORE,
-        {
-          id:uid(),
-          date:nextDate,
-          text:todo.text,
-          done:false,
-          carriedFrom:todo.id,
-          createdAt:Date.now()
-        }
-      );
-
-    }
-
-  }
-
-  await loadTodos();
-
-}
-
-async function deleteTodo(id){
-
-  await dbDelete(
-    TODO_STORE,
-    id
-  );
-
-  await loadTodos();
-
-}
-
-/* ================================
-   ESCAPE HTML
-================================ */
-
-function escapeHtml(text){
-
-  return text
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-/* ================================
-   CALENDAR
-================================ */
-
-function toggleCalendar(){
-
-  const box=
-    document.getElementById(
-      "calendarBox"
-    );
-
-  box.hidden=!box.hidden;
-
-  if(!box.hidden){
-
-    calendarDate=
-      new Date(
-        selectedDate+"T00:00:00"
-      );
-
-    renderCalendar();
-
-  }
-
-}
-
-function previousMonth(){
-
-  calendarDate.setMonth(
-    calendarDate.getMonth()-1
-  );
-
-  renderCalendar();
-
-}
-
-function nextMonth(){
-
-  calendarDate.setMonth(
-    calendarDate.getMonth()+1
-  );
-
-  renderCalendar();
-
-}
-
-async function renderCalendar(){
-
-  const year=
-    calendarDate.getFullYear();
-
-  const month=
-    calendarDate.getMonth();
-
-  document.getElementById(
-    "calendarTitle"
-  ).textContent=
-    calendarDate.toLocaleDateString(
-      undefined,
-      {
+        day:"numeric",
         month:"long",
         year:"numeric"
       }
     );
 
-  const grid=
-    document.getElementById(
-      "calendarGrid"
-    );
+  document.getElementById(
+    "dateInput"
+  ).value=currentDate;
 
-  grid.innerHTML="";
+  document.getElementById(
+    "calendarDate"
+  ).value=currentDate;
 
-  const days=[
-    "Sun","Mon","Tue",
-    "Wed","Thu","Fri","Sat"
-  ];
+  document.getElementById(
+    "pageNo"
+  ).textContent=
+    "Page "+currentPage;
 
-  days.forEach(day=>{
+  restoreDrawing(
+    pageRec.drawing
+  );
 
-    const el=
-      document.createElement("div");
+  await renderTodos();
 
-    el.className="calWeek";
+  await checkEvents();
 
-    el.textContent=day;
+  document.getElementById(
+    "status"
+  ).textContent=
+    "Saved locally";
 
-    grid.appendChild(el);
+}
 
-  });
+/* SAVE */
 
-  const first=
-    new Date(year,month,1);
+let saveTimer;
 
-  const start=
-    first.getDay();
+function savePage(){
 
-  const total=
-    new Date(
-      year,
-      month+1,
-      0
-    ).getDate();
+  clearTimeout(saveTimer);
 
-  const allPages=
-    await dbGetAll(PAGE_STORE);
+  saveTimer=setTimeout(
+    async()=>{
 
-  for(let i=0;i<start;i++){
+      if(!pageRec)return;
 
-    const blank=
-      document.createElement("div");
+      pageRec.html=
+        document.getElementById(
+          "content"
+        ).innerHTML;
 
-    grid.appendChild(blank);
-
-  }
-
-  for(let day=1;day<=total;day++){
-
-    const date=
-      year+
-      "-"+
-      String(month+1).padStart(2,"0")+
-      "-"+
-      String(day).padStart(2,"0");
-
-    const cell=
-      document.createElement("button");
-
-    cell.className="calCell";
-
-    if(date===selectedDate){
-
-      cell.classList.add("selected");
-
-    }
-
-    const today=
-      new Date()
-        .toISOString()
-        .slice(0,10);
-
-    if(date===today){
-
-      cell.classList.add("today");
-
-    }
-
-    cell.innerHTML=
-      `<span>${day}</span>`;
-
-    const moods=
-      allPages
-        .filter(
-          p=>
-            p.date===date &&
-            p.mood
+      pageRec.drawing=
+        drawCanvas.toDataURL(
+          "image/png"
         );
 
-    if(moods.length){
-
-      const mood=
-        document.createElement("span");
-
-      mood.className="mood";
-
-      mood.textContent=
-        moods[0].mood;
-
-      cell.appendChild(mood);
-
-    }
-
-    cell.onclick=()=>{
-
-      loadDate(date);
+      await put(
+        "pages",
+        pageRec
+      );
 
       document.getElementById(
-        "calendarBox"
-      ).hidden=true;
+        "status"
+      ).textContent=
+        "Saved ✓";
 
-    };
-
-    grid.appendChild(cell);
-
-  }
-
-}
-
-/* ================================
-   MEMORIES
-================================ */
-
-function openMemoryInput(){
-
-  const choice=
-    confirm(
-      "Press OK for camera/photo.\nPress Cancel for document/scan."
-    );
-
-  if(choice){
-
-    document
-      .getElementById("memoryInput")
-      .click();
-
-  }else{
-
-    document
-      .getElementById("documentInput")
-      .click();
-
-  }
+    },
+    250
+  );
 
 }
 
-async function addMemoryFile(event){
+document.getElementById(
+  "content"
+).addEventListener(
+  "input",
+  savePage
+);
 
-  const file=
-    event.target.files[0];
+/* SPIRAL */
 
-  if(!file)return;
+function buildSpiral(){
 
-  const reader=
-    new FileReader();
-
-  reader.onload=async()=>{
-
-    const attachment={
-      id:uid(),
-      date:selectedDate,
-      page:currentPage,
-      name:file.name,
-      type:file.type,
-      data:reader.result,
-      createdAt:Date.now()
-    };
-
-    await dbPut(
-      ATTACH_STORE,
-      attachment
-    );
-
-    event.target.value="";
-
-    await loadMemories();
-
-  };
-
-  reader.readAsDataURL(file);
-
-}
-
-async function loadMemories(){
-
-  const all=
-    await dbGetAll(
-      ATTACH_STORE
-    );
-
-  const memories=
-    all.filter(
-      m=>
-        m.date===selectedDate &&
-        m.page===currentPage
-    );
-
-  const grid=
+  let s=
     document.getElementById(
-      "memoryGrid"
+      "spiral"
     );
 
-  grid.innerHTML="";
+  for(
+    let i=0;
+    i<20;
+    i++
+  ){
 
-  memories.forEach(memory=>{
+    let r=
+      document.createElement(
+        "div"
+      );
 
-    const card=
-      document.createElement("div");
+    r.className="ring";
 
-    card.className="memoryCard";
+    s.appendChild(r);
 
-    if(memory.type.startsWith("image/")){
+    let h=
+      document.createElement(
+        "i"
+      );
 
-      card.innerHTML=`
+    h.className="hole";
 
-        <img
-          src="${memory.data}"
-          onclick="openLightbox('${memory.id}')">
+    h.style.top=
+      (30+i*4.7)+"%";
 
-        <div style="font-size:11px">
-          ${escapeHtml(memory.name)}
-        </div>
+    document.getElementById(
+      "page"
+    ).appendChild(h);
 
-        <div class="memoryActions">
+  }
 
-          <button
-            class="danger"
-            onclick="deleteMemory('${memory.id}')">
-            Delete
-          </button>
+}
 
-        </div>
+/* EMOJIS */
 
-      `;
+function buildEmojis(){
 
-    }else{
+  let b=
+    document.getElementById(
+      "emojiBar"
+    );
 
-      card.innerHTML=`
+  emojis.forEach(e=>{
 
-        <div style="padding:15px">
-          📄 ${escapeHtml(memory.name)}
-        </div>
+    let x=
+      document.createElement(
+        "button"
+      );
 
-        <div class="memoryActions">
+    x.textContent=e;
 
-          <button
-            onclick="window.open('${memory.data}')">
-            Open
-          </button>
+    x.title=
+      "Insert "+e;
 
-          <button
-            class="danger"
-            onclick="deleteMemory('${memory.id}')">
-            Delete
-          </button>
+    x.onclick=()=>{
 
-        </div>
+      let editor=
+        document.getElementById(
+          "content"
+        );
 
-      `;
+      editor.focus();
 
-    }
+      document.execCommand(
+        "insertText",
+        false,
+        e
+      );
 
-    grid.appendChild(card);
+      savePage();
+
+    };
+
+    b.appendChild(x);
 
   });
 
 }
 
-async function deleteMemory(id){
+/* DRAWING */
 
-  if(!confirm(
-    "Delete this memory?"
-  ))return;
-
-  await dbDelete(
-    ATTACH_STORE,
-    id
+const drawCanvas=
+  document.getElementById(
+    "drawingCanvas"
   );
 
-  await loadMemories();
-
-}
-
-async function openGallery(){
-
-  const all=
-    await dbGetAll(
-      ATTACH_STORE
-    );
-
-  const grid=
-    document.getElementById(
-      "galleryGrid"
-    );
-
-  grid.innerHTML="";
-
-  all
-    .sort(
-      (a,b)=>
-        b.createdAt-a.createdAt
-    )
-    .forEach(memory=>{
-
-      const card=
-        document.createElement("div");
-
-      card.className="memoryCard";
-
-      if(memory.type.startsWith("image/")){
-
-        card.innerHTML=`
-
-          <img
-            src="${memory.data}"
-            onclick="openLightbox('${memory.id}')">
-
-          <small>
-            ${memory.date}
-          </small>
-
-          <button
-            class="danger"
-            onclick="deleteGalleryMemory('${memory.id}')">
-            Delete
-          </button>
-
-        `;
-
-      }else{
-
-        card.innerHTML=`
-
-          <div style="padding:15px">
-            📄 ${escapeHtml(memory.name)}
-          </div>
-
-          <small>
-            ${memory.date}
-          </small>
-
-          <button
-            class="danger"
-            onclick="deleteGalleryMemory('${memory.id}')">
-            Delete
-          </button>
-
-        `;
-
-      }
-
-      grid.appendChild(card);
-
-    });
-
-  document.getElementById(
-    "galleryModal"
-  ).hidden=false;
-
-}
-
-async function deleteGalleryMemory(id){
-
-  if(!confirm(
-    "Delete this memory permanently?"
-  ))return;
-
-  await dbDelete(
-    ATTACH_STORE,
-    id
+const ctx=
+  drawCanvas.getContext(
+    "2d"
   );
-
-  openGallery();
-
-  loadMemories();
-
-}
-
-function closeGallery(){
-
-  document.getElementById(
-    "galleryModal"
-  ).hidden=true;
-
-}
-
-async function openLightbox(id){
-
-  const memory=
-    await dbGet(
-      ATTACH_STORE,
-      id
-    );
-
-  if(!memory)return;
-
-  if(!memory.type.startsWith("image/"))
-    return;
-
-  document.getElementById(
-    "lightboxImage"
-  ).src=memory.data;
-
-  document.getElementById(
-    "lightboxModal"
-  ).hidden=false;
-
-}
-
-function closeLightbox(){
-
-  document.getElementById(
-    "lightboxModal"
-  ).hidden=true;
-
-}
-
-/* ================================
-   DRAWING
-================================ */
-
-let drawingEnabled=false;
 
 let drawTool="pen";
 
 let drawColor="#222";
 
+let drawSize=4;
+
 let drawing=false;
 
 let startX=0;
-
 let startY=0;
 
-let savedDrawing=null;
+let lastX=0;
+let lastY=0;
 
-let undoStack=[];
+let history=[];
+let redo=[];
 
-let redoStack=[];
+/* RESIZE */
 
-const canvas=
-  document.getElementById(
-    "drawCanvas"
-  );
+function resizeCanvas(
+  preserve=true
+){
 
-const ctx=
-  canvas.getContext("2d");
+  let old=
+    document.createElement(
+      "canvas"
+    );
 
-function resizeDrawCanvas(){
+  if(
+    preserve &&
+    drawCanvas.width
+  ){
 
-  const rect=
-    document
-      .getElementById("editorWrap")
-      ?.getBoundingClientRect();
+    old.width=
+      drawCanvas.width;
 
-  const editor=
-    document.getElementById("editor");
+    old.height=
+      drawCanvas.height;
 
-  if(!editor)return;
+    old.getContext(
+      "2d"
+    ).drawImage(
+      drawCanvas,
+      0,
+      0
+    );
 
-  const width=
-    editor.clientWidth;
+  }
 
-  const height=
-    editor.clientHeight;
+  let r=
+    drawCanvas.getBoundingClientRect();
 
-  canvas.width=
-    width*devicePixelRatio;
+  let d=
+    window.devicePixelRatio || 1;
 
-  canvas.height=
-    height*devicePixelRatio;
+  drawCanvas.width=
+    Math.max(
+      1,
+      r.width*d
+    );
 
-  canvas.style.width=
-    width+"px";
-
-  canvas.style.height=
-    height+"px";
+  drawCanvas.height=
+    Math.max(
+      1,
+      r.height*d
+    );
 
   ctx.setTransform(
-    devicePixelRatio,
+    d,
     0,
     0,
-    devicePixelRatio,
+    d,
     0,
     0
   );
 
-  if(savedDrawing){
+  if(
+    preserve &&
+    old.width
+  ){
 
-    const img=
-      new Image();
-
-    img.onload=()=>{
-
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        width,
-        height
-      );
-
-    };
-
-    img.src=savedDrawing;
-
-  }
-
-}
-
-function toggleDrawing(){
-
-  drawingEnabled=
-    !drawingEnabled;
-
-  const area=
-    document.getElementById(
-      "drawArea"
+    ctx.drawImage(
+      old,
+      0,
+      0,
+      old.width,
+      old.height,
+      0,
+      0,
+      r.width,
+      r.height
     );
 
-  const tools=
-    document.getElementById(
-      "drawTools"
-    );
-
-  area.classList.toggle(
-    "enabled",
-    drawingEnabled
-  );
-
-  tools.classList.toggle(
-    "show",
-    drawingEnabled
-  );
-
-  if(drawingEnabled){
-
-    resizeDrawCanvas();
-
   }
 
 }
 
-function setDrawTool(tool){
+/* COORDINATES */
 
-  drawTool=tool;
+function xy(e){
 
-  document
-    .querySelectorAll(
-      ".drawTools button"
-    )
-    .forEach(b=>
-      b.classList.remove("active")
-    );
+  let r=
+    drawCanvas.getBoundingClientRect();
 
-  const id=
-    "tool"+
-    tool.charAt(0).toUpperCase()+
-    tool.slice(1);
-
-  const button=
-    document.getElementById(id);
-
-  if(button){
-
-    button.classList.add("active");
-
-  }
-
-}
-
-function setDrawColor(color){
-
-  drawColor=color;
-
-  if(drawTool==="eraser"){
-
-    drawTool="pen";
-
-  }
-
-  setDrawTool(drawTool);
-
-}
-
-function pointerPosition(e){
-
-  const rect=
-    canvas.getBoundingClientRect();
-
-  return {
-
-    x:e.clientX-rect.left,
-
-    y:e.clientY-rect.top
-
+  return{
+    x:e.clientX-r.left,
+    y:e.clientY-r.top
   };
 
 }
 
-function saveCanvasState(){
+/* SNAPSHOT */
 
-  undoStack.push(
-    canvas.toDataURL("image/png")
+function snapshot(){
+
+  history.push(
+    drawCanvas.toDataURL()
   );
 
-  if(undoStack.length>30){
-
-    undoStack.shift();
-
+  if(
+    history.length>30
+  ){
+    history.shift();
   }
 
-  redoStack=[];
+  redo=[];
 
 }
 
-canvas.addEventListener(
+/* RESTORE */
+
+function restoreData(url){
+
+  let im=
+    new Image();
+
+  im.onload=()=>{
+
+    ctx.clearRect(
+      0,
+      0,
+      drawCanvas.clientWidth,
+      drawCanvas.clientHeight
+    );
+
+    ctx.globalCompositeOperation=
+      "source-over";
+
+    ctx.drawImage(
+      im,
+      0,
+      0,
+      drawCanvas.clientWidth,
+      drawCanvas.clientHeight
+    );
+
+  };
+
+  im.src=url;
+
+}
+
+/* RESTORE DRAWING */
+
+function restoreDrawing(data){
+
+  resizeCanvas(false);
+
+  if(
+    data &&
+    data.length>20
+  ){
+
+    restoreData(data);
+
+  }
+
+}
+
+/*
+DRAWING DOWN
+*/
+
+drawCanvas.addEventListener(
   "pointerdown",
   e=>{
 
-    if(!drawingEnabled)return;
+    snapshot();
 
     drawing=true;
 
-    canvas.setPointerCapture(
+    drawCanvas.setPointerCapture(
       e.pointerId
     );
 
-    const p=
-      pointerPosition(e);
+    let p=xy(e);
 
-    startX=p.x;
+    startX=
+      lastX=p.x;
 
-    startY=p.y;
+    startY=
+      lastY=p.y;
 
-    saveCanvasState();
+    /*
+    ERASER FIX
+    */
 
-    ctx.beginPath();
-
-    ctx.moveTo(
-      startX,
-      startY
-    );
-
-    ctx.strokeStyle=
+    if(
       drawTool==="eraser"
-        ?"rgba(0,0,0,1)"
-        :drawColor;
+    ){
 
-    ctx.lineWidth=
-      drawTool==="eraser"
-        ?18
-        :2.5;
+      ctx.globalCompositeOperation=
+        "destination-out";
+
+      ctx.lineWidth=
+        Math.max(
+          15,
+          drawSize*6
+        );
+
+    }else{
+
+      ctx.globalCompositeOperation=
+        "source-over";
+
+      ctx.strokeStyle=
+        drawColor;
+
+      ctx.lineWidth=
+        drawSize;
+
+    }
 
     ctx.lineCap="round";
+    ctx.lineJoin="round";
+
+    if(
+      drawTool==="pen"
+    ){
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        p.x,
+        p.y
+      );
+
+      ctx.lineTo(
+        p.x+.1,
+        p.y+.1
+      );
+
+      ctx.stroke();
+
+    }
 
   }
 );
 
-canvas.addEventListener(
+/*
+DRAWING MOVE
+*/
+
+drawCanvas.addEventListener(
   "pointermove",
   e=>{
 
     if(!drawing)return;
 
-    const p=
-      pointerPosition(e);
+    let p=xy(e);
 
-    if(drawTool==="pen"||
-       drawTool==="eraser"){
+    if(
+      drawTool==="pen" ||
+      drawTool==="eraser"
+    ){
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        lastX,
+        lastY
+      );
 
       ctx.lineTo(
         p.x,
@@ -2791,778 +1800,945 @@ canvas.addEventListener(
 
       ctx.stroke();
 
-      return;
-
-    }
-
-    /*
-      For line/circle we restore the
-      previous snapshot before drawing
-      the preview.
-    */
-
-    if(
-      drawTool==="line"||
-      drawTool==="circle"
-    ){
-
-      const previous=
-        undoStack[
-          undoStack.length-1
-        ];
-
-      if(previous){
-
-        const img=
-          new Image();
-
-        img.onload=()=>{
-
-          ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
-
-          const rect=
-            canvas.getBoundingClientRect();
-
-          ctx.drawImage(
-            img,
-            0,
-            0,
-            rect.width,
-            rect.height
-          );
-
-          ctx.strokeStyle=
-            drawColor;
-
-          ctx.lineWidth=2.5;
-
-          ctx.beginPath();
-
-          if(drawTool==="line"){
-
-            ctx.moveTo(
-              startX,
-              startY
-            );
-
-            ctx.lineTo(
-              p.x,
-              p.y
-            );
-
-          }else{
-
-            const rx=
-              Math.abs(
-                p.x-startX
-              );
-
-            const ry=
-              Math.abs(
-                p.y-startY
-              );
-
-            const radius=
-              Math.sqrt(
-                rx*rx+
-                ry*ry
-              );
-
-            ctx.arc(
-              startX,
-              startY,
-              radius,
-              0,
-              Math.PI*2
-            );
-
-          }
-
-          ctx.stroke();
-
-        };
-
-        img.src=previous;
-
-      }
+      lastX=p.x;
+      lastY=p.y;
 
     }
 
   }
 );
 
-canvas.addEventListener(
+/*
+DRAWING UP
+*/
+
+drawCanvas.addEventListener(
   "pointerup",
   e=>{
 
-    if(!drawing)return;
-
     drawing=false;
 
-    savedDrawing=
-      canvas.toDataURL(
-        "image/png"
+    try{
+      drawCanvas.releasePointerCapture(
+        e.pointerId
       );
+    }catch(err){}
 
-    scheduleAutoSave();
+    ctx.globalCompositeOperation=
+      "source-over";
+
+    savePage();
 
   }
 );
 
-canvas.addEventListener(
+drawCanvas.addEventListener(
   "pointercancel",
   ()=>{
     drawing=false;
+
+    ctx.globalCompositeOperation=
+      "source-over";
+
+    savePage();
   }
 );
 
-function restoreSnapshot(data){
+/* DRAW TOOL */
 
-  if(!data)return;
+document.querySelectorAll(
+  "[data-tool]"
+).forEach(
+  b=>{
 
-  const img=
-    new Image();
+    b.onclick=()=>{
 
-  img.onload=()=>{
+      drawTool=
+        b.dataset.tool;
 
-    const rect=
-      canvas.getBoundingClientRect();
+    };
 
-    ctx.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
+  }
+);
+
+/* DRAW COLOR */
+
+document.getElementById(
+  "drawColor"
+).onchange=e=>{
+
+  drawColor=
+    e.target.value;
+
+};
+
+/* DRAW SIZE */
+
+document.getElementById(
+  "drawSize"
+).onchange=e=>{
+
+  drawSize=
+    Number(e.target.value);
+
+};
+
+/* UNDO */
+
+document.getElementById(
+  "undoDraw"
+).onclick=()=>{
+
+  if(history.length){
+
+    redo.push(
+      drawCanvas.toDataURL()
     );
 
-    ctx.drawImage(
-      img,
-      0,
-      0,
-      rect.width,
-      rect.height
+    restoreData(
+      history.pop()
     );
 
-    savedDrawing=
-      canvas.toDataURL(
-        "image/png"
-      );
+    savePage();
 
-    scheduleAutoSave();
+  }
 
-  };
+};
 
-  img.src=data;
+/* REDO */
 
-}
+document.getElementById(
+  "redoDraw"
+).onclick=()=>{
 
-function undoDrawing(){
+  if(redo.length){
 
-  if(!undoStack.length)return;
+    history.push(
+      drawCanvas.toDataURL()
+    );
 
-  const current=
-    canvas.toDataURL("image/png");
+    restoreData(
+      redo.pop()
+    );
 
-  redoStack.push(current);
+    savePage();
 
-  const previous=
-    undoStack.pop();
+  }
 
-  restoreSnapshot(previous);
+};
 
-}
+/* CLEAR */
 
-function redoDrawing(){
+document.getElementById(
+  "clearDraw"
+).onclick=()=>{
 
-  if(!redoStack.length)return;
-
-  const current=
-    canvas.toDataURL("image/png");
-
-  undoStack.push(current);
-
-  const next=
-    redoStack.pop();
-
-  restoreSnapshot(next);
-
-}
-
-function clearDrawing(){
-
-  if(!confirm(
-    "Clear all drawings on this page?"
-  ))return;
-
-  saveCanvasState();
+  snapshot();
 
   ctx.clearRect(
     0,
     0,
-    canvas.width,
-    canvas.height
+    drawCanvas.clientWidth,
+    drawCanvas.clientHeight
   );
 
-  savedDrawing=null;
+  savePage();
 
-  scheduleAutoSave();
+};
+
+/* CLOSE DRAW */
+
+document.getElementById(
+  "closeDraw"
+).onclick=()=>{
+
+  document.body.classList.remove(
+    "draw-active"
+  );
+
+  document.getElementById(
+    "drawingPanel"
+  ).classList.remove(
+    "show"
+  );
+
+};
+
+/* DRAW BUTTON */
+
+document.getElementById(
+  "drawBtn"
+).onclick=()=>{
+
+  document.body.classList.toggle(
+    "draw-active"
+  );
+
+  document.getElementById(
+    "drawingPanel"
+  ).classList.toggle(
+    "show"
+  );
+
+};
+
+/* RESIZE */
+
+window.addEventListener(
+  "resize",
+  ()=>{
+    resizeCanvas(true);
+  }
+);
+
+/* NEW PAGE */
+
+async function nextPage(){
+
+  await savePage();
+
+  currentPage++;
+
+  await loadPage();
+
+  document.querySelector(
+    ".page"
+  ).animate(
+    [
+      {
+        transform:
+          "translateX(40px) rotate(.2deg)",
+        opacity:.3
+      },
+      {
+        transform:
+          "translateX(0) rotate(-.12deg)",
+        opacity:1
+      }
+    ],
+    {
+      duration:280
+    }
+  );
 
 }
 
-async function loadDrawing(){
+document.getElementById(
+  "newPage"
+).onclick=nextPage;
 
-  const page=
-    currentPages[currentPage-1];
+/* DATE */
 
-  savedDrawing=
-    page?.drawing||null;
+async function changeDate(
+  delta
+){
 
-  undoStack=[];
+  await savePage();
 
-  redoStack=[];
+  let d=
+    new Date(
+      currentDate+
+      "T00:00:00"
+    );
 
-  setTimeout(
-    resizeDrawCanvas,
-    50
+  d.setDate(
+    d.getDate()+delta
   );
+
+  currentDate=
+    localDate(d);
+
+  currentPage=1;
+
+  await carryTodos(
+    currentDate
+  );
+
+  await loadPage();
 
 }
 
-/* ================================
-   EVENTS
-================================ */
+document.getElementById(
+  "prevBtn"
+).onclick=
+  ()=>changeDate(-1);
 
-async function openEventModal(){
+document.getElementById(
+  "nextBtn"
+).onclick=
+  ()=>changeDate(1);
+
+/* DATE INPUT */
+
+document.getElementById(
+  "dateInput"
+).onchange=
+async e=>{
+
+  await savePage();
+
+  currentDate=
+    e.target.value;
+
+  currentPage=1;
+
+  await carryTodos(
+    currentDate
+  );
+
+  await loadPage();
+
+};
+
+/* CALENDAR */
+
+document.getElementById(
+  "calendarBtn"
+).onclick=()=>{
+
+  document.getElementById(
+    "calendar"
+  ).classList.toggle(
+    "show"
+  );
+
+};
+
+document.getElementById(
+  "openDateBtn"
+).onclick=async()=>{
+
+  let d=
+    document.getElementById(
+      "calendarDate"
+    ).value;
+
+  if(d){
+
+    await savePage();
+
+    currentDate=d;
+
+    currentPage=1;
+
+    await carryTodos(
+      currentDate
+    );
+
+    await loadPage();
+
+  }
+
+};
+
+document.getElementById(
+  "todayBtn"
+).onclick=async()=>{
+
+  await savePage();
+
+  currentDate=
+    localDate();
+
+  currentPage=1;
+
+  await loadPage();
+
+};
+
+/* QUOTE */
+
+document.getElementById(
+  "quoteBtn"
+).onclick=
+async()=>{
+
+  if(
+    currentPage!==1
+  )return;
+
+  let index=
+    quotes.indexOf(
+      pageRec.quote
+    );
+
+  pageRec.quote=
+    quotes[
+      (index+1)%
+      quotes.length
+    ];
+
+  await put(
+    "pages",
+    pageRec
+  );
+
+  await loadPage();
+
+};
+
+/* EVENT */
+
+document.getElementById(
+  "eventBtn"
+).onclick=()=>{
 
   document.getElementById(
     "eventDate"
-  ).value=selectedDate;
+  ).value=
+    currentDate;
+
+  document.getElementById(
+    "eventModal"
+  ).hidden=false;
+
+};
+
+/* CLOSE EVENT */
+
+document.getElementById(
+  "closeEvent"
+).onclick=()=>{
+
+  document.getElementById(
+    "eventModal"
+  ).hidden=true;
+
+};
+
+/* SAVE EVENT */
+
+document.getElementById(
+  "saveEvent"
+).onclick=
+async()=>{
+
+  let title=
+    document.getElementById(
+      "eventTitle"
+    ).value.trim();
+
+  if(!title){
+
+    alert(
+      "Please enter an event title."
+    );
+
+    return;
+
+  }
+
+  await put(
+    "events",
+    {
+      title:title,
+
+      date:
+        document.getElementById(
+          "eventDate"
+        ).value,
+
+      time:
+        document.getElementById(
+          "eventTime"
+        ).value,
+
+      notes:
+        document.getElementById(
+          "eventNotes"
+        ).value,
+
+      created:Date.now(),
+
+      alerted:false
+    }
+  );
+
+  document.getElementById(
+    "eventModal"
+  ).hidden=true;
+
+  alert(
+    "Event saved."
+  );
 
   document.getElementById(
     "eventTitle"
   ).value="";
 
   document.getElementById(
-    "eventTime"
+    "eventNotes"
   ).value="";
 
-  document.getElementById(
-    "eventReminder"
-  ).value=10;
+};
 
-  await renderEvents();
+/* EVENTS */
 
-  document.getElementById(
-    "eventModal"
-  ).hidden=false;
+async function checkEvents(){
 
-}
+  let es=
+    await all("events");
 
-function closeEventModal(){
-
-  document.getElementById(
-    "eventModal"
-  ).hidden=true;
-
-}
-
-async function saveEvent(){
-
-  const title=
-    document.getElementById(
-      "eventTitle"
-    ).value.trim();
-
-  const date=
-    document.getElementById(
-      "eventDate"
-    ).value;
-
-  const time=
-    document.getElementById(
-      "eventTime"
-    ).value;
-
-  const reminder=
-    Number(
-      document.getElementById(
-        "eventReminder"
-      ).value
-    )||0;
-
-  if(!title||!date){
-
-    alert(
-      "Please enter event and date."
+  let today=
+    es.filter(
+      e=>e.date===currentDate
     );
 
-    return;
+  if(today.length){
+
+    document.getElementById(
+      "calendarInfo"
+    ).textContent=
+      "Events today: "+
+      today.map(
+        e=>
+          e.time
+          ? e.time+" "+e.title
+          : e.title
+      ).join(" • ");
+
+  }else{
+
+    document.getElementById(
+      "calendarInfo"
+    ).textContent="";
 
   }
 
-  await dbPut(
-    EVENT_STORE,
-    {
-      id:uid(),
-      title,
-      date,
-      time,
-      reminder,
-      createdAt:Date.now()
-    }
-  );
-
-  if(date===selectedDate){
-
-    await renderEvents();
-
-  }
-
-  renderCalendar();
-
-  alert("Event saved.");
-
 }
 
-async function renderEvents(){
+/* EVENT ALERT */
 
-  const all=
-    await dbGetAll(
-      EVENT_STORE
-    );
+setInterval(
+  async()=>{
 
-  const events=
-    all
-      .filter(
-        e=>e.date===selectedDate
-      )
-      .sort(
-        (a,b)=>
-          (a.time||"")
-          .localeCompare(
-            b.time||""
-          )
-      );
+    let now=
+      new Date();
 
-  const list=
-    document.getElementById(
-      "eventList"
-    );
+    let ds=
+      localDate(now);
 
-  list.innerHTML="";
+    let tm=
+      now.toTimeString()
+        .slice(0,5);
 
-  if(!events.length){
+    let es=
+      await all("events");
 
-    list.innerHTML=
-      "<p>No events for this date.</p>";
-
-    return;
-
-  }
-
-  events.forEach(event=>{
-
-    const row=
-      document.createElement("div");
-
-    row.style.padding="8px";
-
-    row.style.borderBottom=
-      "1px dotted #aaa";
-
-    row.innerHTML=`
-
-      🔔 <strong>
-      ${escapeHtml(event.title)}
-      </strong>
-
-      ${event.time
-        ?" — "+event.time
-        :""}
-
-      <button
-        class="danger"
-        style="float:right"
-        onclick="deleteEvent('${event.id}')">
-        Delete
-      </button>
-
-    `;
-
-    list.appendChild(row);
-
-  });
-
-}
-
-async function deleteEvent(id){
-
-  await dbDelete(
-    EVENT_STORE,
-    id
-  );
-
-  await renderEvents();
-
-}
-
-/* ================================
-   EVENT REMINDER
-================================ */
-
-async function checkReminders(){
-
-  const events=
-    await dbGetAll(
-      EVENT_STORE
-    );
-
-  const now=
-    new Date();
-
-  events.forEach(event=>{
-
-    if(!event.date||!event.time)
-      return;
-
-    const eventDate=
-      new Date(
-        event.date+
-        "T"+
-        event.time
-      );
-
-    const reminderTime=
-      eventDate.getTime()-
-      (event.reminder||0)*60000;
-
-    const difference=
-      Math.abs(
-        now.getTime()-
-        reminderTime
-      );
-
-    if(
-      difference<60000 &&
-      now.getTime()<=eventDate.getTime()
+    for(
+      let e of es
     ){
 
-      showEventPopup(
-        event
-      );
+      if(
+        e.date===ds &&
+        e.time===tm &&
+        !e.alerted
+      ){
+
+        e.alerted=true;
+
+        await put(
+          "events",
+          e
+        );
+
+        alert(
+          "📅 Diary event: "+
+          e.title+
+          (
+            e.notes
+            ? "\n"+e.notes
+            : ""
+          )
+        );
+
+      }
 
     }
 
-  });
+  },
+  30000
+);
 
-}
+/* TODO */
 
-function showEventPopup(event){
+document.getElementById(
+  "todoBtn"
+).onclick=()=>{
 
-  alert(
-    "🔔 Reminder\n\n"+
-    event.title+
-    (event.time
-      ?"\nTime: "+event.time
-      :"")
-  );
-
-}
-
-/* ================================
-   GOOGLE CALENDAR
-================================ */
-
-const GOOGLE_CLIENT_KEY=
-  "googleCalendarClientId";
-
-async function connectGoogleCalendar(){
-
-  const input=
+  let b=
     document.getElementById(
-      "googleClientId"
+      "todoBox"
+    );
+
+  b.hidden=!b.hidden;
+
+};
+
+/* ADD TODO */
+
+document.getElementById(
+  "addTodo"
+).onclick=
+async()=>{
+
+  let v=
+    document.getElementById(
+      "todoInput"
     ).value.trim();
 
-  if(!input){
+  if(!v)return;
 
-    alert(
-      "Please enter your Google OAuth Client ID."
-    );
-
-    return;
-
-  }
-
-  await dbPut(
-    SETTINGS_STORE,
+  await put(
+    "todos",
     {
-      key:GOOGLE_CLIENT_KEY,
-      value:input
+      date:currentDate,
+      text:v,
+      done:false,
+      created:Date.now()
     }
   );
 
-  if(
-    !window.google||
-    !google.accounts||
-    !google.accounts.oauth2
-  ){
+  document.getElementById(
+    "todoInput"
+  ).value="";
 
-    alert(
-      "Google Calendar service is still loading. Please try again."
+  await renderTodos();
+
+};
+
+/* RENDER TODO */
+
+async function renderTodos(){
+
+  let box=
+    document.getElementById(
+      "todoList"
     );
 
-    return;
+  box.innerHTML="";
 
-  }
+  let ts=
+    (
+      await all("todos")
+    ).filter(
+      x=>x.date===currentDate
+    );
 
-  const client=
-    google.accounts.oauth2.initTokenClient({
+  ts.forEach(t=>{
 
-      client_id:input,
+    let row=
+      document.createElement(
+        "div"
+      );
 
-      scope:
-        "https://www.googleapis.com/auth/calendar.readonly",
+    row.className=
+      "todo-item"+
+      (
+        t.done
+        ? " done"
+        : ""
+      );
 
-      callback:response=>{
+    let c=
+      document.createElement(
+        "input"
+      );
 
-        if(response.access_token){
+    c.type="checkbox";
 
-          sessionStorage.setItem(
-            "googleCalendarToken",
-            response.access_token
-          );
+    c.checked=t.done;
 
-          alert(
-            "Google Calendar connected."
+    c.onchange=
+      async()=>{
+
+        t.done=
+          c.checked;
+
+        await put(
+          "todos",
+          t
+        );
+
+        if(!t.done){
+
+          await carryTodos(
+            nextDate(
+              currentDate
+            )
           );
 
         }
 
-      }
+        await renderTodos();
 
-    });
+      };
 
-  client.requestAccessToken();
+    let s=
+      document.createElement(
+        "span"
+      );
+
+    s.textContent=t.text;
+
+    row.append(
+      c,
+      s
+    );
+
+    box.appendChild(
+      row
+    );
+
+  });
 
 }
 
-/* ================================
-   SETTINGS
-================================ */
+/* NEXT DATE */
 
-async function openSettings(){
+function nextDate(s){
 
-  const setting=
-    await dbGet(
-      SETTINGS_STORE,
-      GOOGLE_CLIENT_KEY
+  let d=
+    new Date(
+      s+"T00:00:00"
     );
 
-  document.getElementById(
-    "googleClientId"
-  ).value=
-    setting?.value||"";
+  d.setDate(
+    d.getDate()+1
+  );
 
-  const page=
-    currentPages[currentPage-1];
-
-  document.getElementById(
-    "designSelect"
-  ).value=
-    page?.design||"classic";
-
-  document.getElementById(
-    "settingsModal"
-  ).hidden=false;
+  return localDate(d);
 
 }
 
-function closeSettings(){
+/* PREVIOUS DATE */
 
-  document.getElementById(
-    "settingsModal"
-  ).hidden=true;
+function previousDate(s){
+
+  let d=
+    new Date(
+      s+"T00:00:00"
+    );
+
+  d.setDate(
+    d.getDate()-1
+  );
+
+  return localDate(d);
 
 }
 
-/* ================================
-   BACKUP
-================================ */
+/* CARRY TODO */
 
-async function backupDiary(){
+async function carryTodos(
+  date
+){
 
-  const pages=
-    await dbGetAll(PAGE_STORE);
+  let prev=
+    previousDate(date);
 
-  const events=
-    await dbGetAll(EVENT_STORE);
-
-  const attachments=
-    await dbGetAll(ATTACH_STORE);
-
-  const todos=
-    await dbGetAll(TODO_STORE);
-
-  const settings=
-    await dbGetAll(SETTINGS_STORE);
-
-  const backup={
-    version:"8.1",
-    createdAt:new Date().toISOString(),
-    pages,
-    events,
-    attachments,
-    todos,
-    settings
-  };
-
-  const blob=
-    new Blob(
-      [
-        JSON.stringify(
-          backup
-        )
-      ],
-      {
-        type:"application/json"
-      }
+  let ts=
+    (
+      await all("todos")
+    ).filter(
+      x=>
+        x.date===prev &&
+        !x.done
     );
 
-  const url=
-    URL.createObjectURL(blob);
+  let allTodos=
+    await all("todos");
 
-  const a=
-    document.createElement("a");
+  for(
+    const t of ts
+  ){
 
-  a.href=url;
+    let exists=
+      allTodos.some(
+        x=>
+          x.date===date &&
+          x.text===t.text &&
+          !x.done
+      );
 
-  a.download=
-    "my-personal-diary-backup.json";
+    if(!exists){
 
-  a.click();
-
-  URL.revokeObjectURL(url);
-
-}
-
-async function restoreDiary(event){
-
-  const file=
-    event.target.files[0];
-
-  if(!file)return;
-
-  const text=
-    await file.text();
-
-  try{
-
-    const backup=
-      JSON.parse(text);
-
-    for(
-      const page
-      of (backup.pages||[])
-    ){
-
-      await dbPut(
-        PAGE_STORE,
-        page
+      await put(
+        "todos",
+        {
+          date:date,
+          text:t.text,
+          done:false,
+          created:Date.now(),
+          carriedFrom:prev
+        }
       );
 
     }
-
-    for(
-      const item
-      of (backup.events||[])
-    ){
-
-      await dbPut(
-        EVENT_STORE,
-        item
-      );
-
-    }
-
-    for(
-      const item
-      of (backup.attachments||[])
-    ){
-
-      await dbPut(
-        ATTACH_STORE,
-        item
-      );
-
-    }
-
-    for(
-      const item
-      of (backup.todos||[])
-    ){
-
-      await dbPut(
-        TODO_STORE,
-        item
-      );
-
-    }
-
-    for(
-      const item
-      of (backup.settings||[])
-    ){
-
-      await dbPut(
-        SETTINGS_STORE,
-        item
-      );
-
-    }
-
-    alert(
-      "Diary backup restored successfully."
-    );
-
-    await loadDate(
-      selectedDate
-    );
-
-  }catch(error){
-
-    alert(
-      "Invalid diary backup file."
-    );
 
   }
 
-  event.target.value="";
+}
+
+/* MEMORIES */
+
+document.getElementById(
+  "memoryBtn"
+).onclick=
+async()=>{
+
+  document.getElementById(
+    "memoryModal"
+  ).hidden=false;
+
+  await renderMemories();
+
+};
+
+document.getElementById(
+  "closeMemory"
+).onclick=()=>{
+
+  document.getElementById(
+    "memoryModal"
+  ).hidden=true;
+
+};
+
+/* MEMORY FILE */
+
+document.getElementById(
+  "memoryFile"
+).onchange=
+async e=>{
+
+  let f=e.target.files[0];
+
+  if(!f)return;
+
+  let reader=
+    new FileReader();
+
+  reader.onload=
+    async()=>{
+
+      await put(
+        "attachments",
+        {
+          date:currentDate,
+          name:f.name,
+          type:f.type,
+          data:reader.result,
+          created:Date.now()
+        }
+      );
+
+      await renderMemories();
+
+    };
+
+  reader.readAsDataURL(f);
+
+  e.target.value="";
+
+};
+
+/* MEMORY LIST */
+
+async function renderMemories(){
+
+  let g=
+    document.getElementById(
+      "memoryGrid"
+    );
+
+  g.innerHTML="";
+
+  let as=
+    (
+      await all(
+        "attachments"
+      )
+    ).filter(
+      x=>x.date===currentDate
+    );
+
+  as.forEach(a=>{
+
+    let wrap=
+      document.createElement(
+        "div"
+      );
+
+    if(
+      a.type &&
+      a.type.startsWith(
+        "image/"
+      )
+    ){
+
+      let im=
+        document.createElement(
+          "img"
+        );
+
+      im.src=a.data;
+
+      wrap.appendChild(im);
+
+    }else{
+
+      wrap.textContent=
+        "📄 "+a.name;
+
+    }
+
+    let b=
+      document.createElement(
+        "button"
+      );
+
+    b.textContent=
+      "Delete";
+
+    b.onclick=
+      async()=>{
+
+        await del(
+          "attachments",
+          a.id
+        );
+
+        await renderMemories();
+
+      };
+
+    wrap.appendChild(b);
+
+    g.appendChild(
+      wrap
+    );
+
+  });
 
 }
 
-/* ================================
-   PRINT
-================================ */
+/* PRINT */
 
-async function printPage(){
+document.getElementById(
+  "printBtn"
+).onclick=
+async()=>{
 
-  await savePage(false);
+  await savePage();
 
-  const page=
-    currentPages[currentPage-1];
-
-  const win=
+  let w=
     window.open(
       "",
       "_blank"
     );
 
-  if(!win){
+  if(!w){
 
     alert(
       "Please allow pop-ups for printing."
@@ -3572,150 +2748,246 @@ async function printPage(){
 
   }
 
-  win.document.write(`
-
-    <!DOCTYPE html>
-
+  w.document.write(
+    `
     <html>
-
     <head>
+    <title>Diary</title>
 
-      <title>Diary ${selectedDate}</title>
+    <style>
 
-      <style>
+    body{
+      font-family:Georgia;
+      padding:35px;
+      background:#f7edcf;
+      line-height:2;
+    }
 
-        body{
-          font-family:Georgia,serif;
-          padding:30px;
-        }
+    h1{
+      font-size:26px;
+    }
 
-        h1{
-          text-align:center;
-        }
+    .quote{
+      font-style:italic;
+    }
 
-        .content{
-          font-size:18px;
-          line-height:1.7;
-        }
+    .content{
+      font-size:18px;
+      white-space:pre-wrap;
+    }
 
-      </style>
+    </style>
 
     </head>
 
     <body>
 
-      <h1>
-        ${selectedDate}
-      </h1>
+    <h1>
+      ${document.getElementById("dayTitle").textContent}
+      — Page ${currentPage}
+    </h1>
 
-      <div class="content">
-        ${page.html||""}
-      </div>
+    <div class="quote">
+      ${document.getElementById("quote").textContent}
+    </div>
+
+    <div class="content">
+      ${document.getElementById("content").innerHTML}
+    </div>
 
     </body>
 
     </html>
-
-  `);
-
-  win.document.close();
-
-  win.focus();
-
-  setTimeout(
-    ()=>win.print(),
-    300
+    `
   );
 
-}
+  w.document.close();
 
-/* ================================
-   SWIPE
-================================ */
+  w.focus();
 
-let swipeStartX=0;
-let swipeStartY=0;
+  w.print();
 
-const diaryPage=
-  document.getElementById("page");
+};
 
-diaryPage.addEventListener(
-  "pointerdown",
-  e=>{
+/* BACKUP */
 
-    if(
-      drawingEnabled
-    )return;
+document.getElementById(
+  "backupBtn"
+).onclick=
+async()=>{
 
-    swipeStartX=e.clientX;
-    swipeStartY=e.clientY;
+  await savePage();
 
-  }
-);
+  let data={
+    version:4,
 
-diaryPage.addEventListener(
-  "pointerup",
-  e=>{
+    pages:
+      await all("pages"),
 
-    if(
-      drawingEnabled
-    )return;
+    events:
+      await all("events"),
 
-    const dx=
-      e.clientX-swipeStartX;
+    attachments:
+      await all("attachments"),
 
-    const dy=
-      e.clientY-swipeStartY;
+    todos:
+      await all("todos")
+  };
 
-    if(
-      Math.abs(dx)>80 &&
-      Math.abs(dx)>Math.abs(dy)
-    ){
+  let blob=
+    new Blob(
+      [
+        JSON.stringify(
+          data
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
 
-      if(dx<0){
+  let a=
+    document.createElement(
+      "a"
+    );
 
-        nextPage();
+  a.href=
+    URL.createObjectURL(
+      blob
+    );
 
-      }else{
+  a.download=
+    "my-personal-diary-backup.json";
 
-        previousPage();
+  a.click();
+
+  URL.revokeObjectURL(
+    a.href
+  );
+
+};
+
+/* RESTORE */
+
+document.getElementById(
+  "restoreBtn"
+).onclick=()=>{
+
+  document.getElementById(
+    "restoreFile"
+  ).click();
+
+};
+
+document.getElementById(
+  "restoreFile"
+).onchange=
+e=>{
+
+  let f=e.target.files[0];
+
+  if(!f)return;
+
+  let r=
+    new FileReader();
+
+  r.onload=
+    async()=>{
+
+      try{
+
+        let d=
+          JSON.parse(
+            r.result
+          );
+
+        for(
+          const p of
+          (d.pages||[])
+        ){
+
+          await put(
+            "pages",
+            p
+          );
+
+        }
+
+        for(
+          const x of
+          (d.events||[])
+        ){
+
+          await put(
+            "events",
+            x
+          );
+
+        }
+
+        for(
+          const x of
+          (d.attachments||[])
+        ){
+
+          await put(
+            "attachments",
+            x
+          );
+
+        }
+
+        for(
+          const x of
+          (d.todos||[])
+        ){
+
+          await put(
+            "todos",
+            x
+          );
+
+        }
+
+        alert(
+          "Backup restored."
+        );
+
+        await loadPage();
+
+      }catch(err){
+
+        alert(
+          "Invalid backup file."
+        );
 
       }
 
-    }
+    };
+
+  r.readAsText(f);
+
+};
+
+/* START */
+
+openDB()
+.then(
+  async()=>{
+
+    buildSpiral();
+
+    buildEmojis();
+
+    await carryTodos(
+      currentDate
+    );
+
+    await loadPage();
 
   }
 );
-
-/* ================================
-   STARTUP
-================================ */
-
-async function startDiary(){
-
-  await openDB();
-
-  await loadDate(
-    selectedDate
-  );
-
-  setInterval(
-    checkReminders,
-    60000
-  );
-
-}
-
-window.addEventListener(
-  "resize",
-  ()=>{
-    if(drawingEnabled){
-      resizeDrawCanvas();
-    }
-  }
-);
-
-startDiary();
 
 </script>
 

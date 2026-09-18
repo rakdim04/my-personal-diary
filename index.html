@@ -1,4463 +1,3719 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#6b4226">
-
 <link rel="manifest" href="./manifest.json">
 
-<title>My Personal Diary v8</title>
-
-<script src="https://accounts.google.com/gsi/client"
-        async
-        defer></script>
+<title>My Personal Diary v8.1</title>
 
 <style>
-
-/* =========================================================
-   BASIC
-========================================================= */
-
-* {
-    box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
 }
 
-body {
-    background:
-        linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.15)),
-        #d6c3a5;
-
-    color: #3e2a1f;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
+body{
+  background:#d6c3a5;
+  color:#3e2a1f;
+  font-family:Georgia,"Times New Roman",serif;
 }
 
-/* IMPORTANT:
-   hidden attribute always wins over modal display */
-[hidden] {
-    display: none !important;
+/* =========================
+   APP
+========================= */
+
+.app{
+  max-width:1100px;
+  margin:auto;
+  padding:12px;
+}
+
+header{
+  background:#6b4226;
+  color:white;
+  border-radius:16px;
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  box-shadow:0 5px 15px #0003;
+}
+
+header h1{
+  margin:0;
+  font-size:22px;
+}
+
+.headerButtons{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
 }
 
 button,
-input,
-textarea,
-select {
-    font: inherit;
+select,
+input{
+  font-family:inherit;
 }
 
-button {
-    cursor: pointer;
+button{
+  border:0;
+  border-radius:9px;
+  padding:8px 12px;
+  background:#8a5a35;
+  color:white;
+  cursor:pointer;
+  font-size:14px;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
-
-.header {
-    background: #5a351f;
-    color: white;
-
-    padding: 14px;
-
-    text-align: center;
-
-    position: sticky;
-    top: 0;
-
-    z-index: 20;
-
-    box-shadow:
-        0 3px 10px rgba(0,0,0,.25);
+button:hover{
+  opacity:.9;
 }
 
-.header h1 {
-    margin: 0;
-    font-size: 23px;
+button.secondary{
+  background:#e6d4bb;
+  color:#4a3223;
 }
 
-.header small {
-    opacity: .85;
+button.danger{
+  background:#a33a32;
 }
 
-/* =========================================================
-   MAIN APP
-========================================================= */
-
-.app {
-    max-width: 1100px;
-
-    margin: auto;
-
-    padding: 12px;
+button.green{
+  background:#53764d;
 }
 
-/* =========================================================
-   TOOLBAR
-========================================================= */
-
-.toolbar {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 7px;
-
-    margin-bottom: 12px;
-
-    justify-content: center;
-}
-
-.btn {
-    border: 0;
-
-    border-radius: 8px;
-
-    padding: 9px 13px;
-
-    background: #6b4226;
-
-    color: white;
-
-    box-shadow:
-        0 2px 5px rgba(0,0,0,.2);
-}
-
-.btn:active {
-    transform: translateY(1px);
-}
-
-.btn.secondary {
-    background: #8b6a4a;
-}
-
-.btn.danger {
-    background: #8b2f2f;
-}
-
-.btn.green {
-    background: #456b43;
-}
-
-/* =========================================================
-   DATE AREA
-========================================================= */
-
-.datebar {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 8px;
-
-    margin-bottom: 10px;
-
-    flex-wrap: wrap;
-}
-
-.datebar input {
-    padding: 8px;
-
-    border: 1px solid #9d8060;
-
-    border-radius: 7px;
-
-    background: #fffaf0;
-}
-
-/* =========================================================
-   DIARY BOOK
-========================================================= */
-
-.book {
-    perspective: 1500px;
-
-    width: 100%;
-
-    margin: auto;
-}
-
-.page {
-    background:
-        linear-gradient(
-            to right,
-            rgba(90,50,20,.08),
-            transparent 30px
-        ),
-        #fffdf4;
-
-    min-height: 700px;
-
-    padding: 32px 35px;
-
-    border-radius: 5px 15px 15px 5px;
-
-    box-shadow:
-        0 8px 22px rgba(0,0,0,.30);
-
-    position: relative;
-
-    transform-origin: left center;
-
-    transition:
-        transform .55s ease,
-        opacity .3s ease;
-}
-
-.page.turn-next {
-    transform:
-        rotateY(-90deg);
-
-    opacity: .2;
-}
-
-.page.turn-prev {
-    transform:
-        rotateY(90deg);
-
-    opacity: .2;
-}
-
-/* paper lines */
-
-.editor {
-    min-height: 640px;
-
-    line-height: 32px;
-
-    font-size: 19px;
-
-    outline: none;
-
-    padding: 5px 10px;
-
-    background:
-        repeating-linear-gradient(
-            to bottom,
-            transparent 0,
-            transparent 31px,
-            rgba(80,110,140,.25) 32px
-        );
-
-    overflow: hidden;
-}
-
-/* =========================================================
-   PAGE TITLE
-========================================================= */
-
-.page-title {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    border-bottom: 1px solid #b99b78;
-
-    padding-bottom: 8px;
-
-    margin-bottom: 10px;
-}
-
-.page-title h2 {
-    margin: 0;
-
-    font-size: 22px;
-}
-
-.page-number {
-    font-size: 14px;
-
-    color: #79583d;
-}
-
-/* =========================================================
-   EDITOR TOOLBAR
-========================================================= */
-
-.editor-toolbar {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 5px;
-
-    margin-bottom: 8px;
-}
-
-.format-btn {
-    border: 1px solid #a58a6a;
-
-    background: #f4ead7;
-
-    border-radius: 6px;
-
-    min-width: 40px;
-
-    min-height: 35px;
-}
-
-/* =========================================================
-   MOODS
-========================================================= */
-
-.moods {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 7px;
-
-    margin: 10px 0;
-}
-
-.mood {
-    border: 1px solid #b99b78;
-
-    background: #fffaf0;
-
-    border-radius: 20px;
-
-    padding: 6px 9px;
-
-    font-size: 21px;
-}
-
-.mood.selected {
-    background: #ead2a7;
-
-    border: 2px solid #6b4226;
-}
-
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
-
-.page-nav {
-    display: flex;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    margin-top: 12px;
-}
-
-.page-nav button {
-    flex: 1;
-}
-
-/* =========================================================
-   MEMORY AREA
-========================================================= */
-
-.section {
-    background: rgba(255,250,240,.85);
-
-    padding: 15px;
-
-    border-radius: 10px;
-
-    margin-top: 15px;
-
-    box-shadow:
-        0 3px 10px rgba(0,0,0,.12);
-}
-
-.section h3 {
-    margin-top: 0;
-}
-
-.memory-buttons {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 7px;
-}
-
-input[type="file"] {
-    display: none;
-}
-
-/* =========================================================
-   MEMORY GALLERY
-========================================================= */
-
-.gallery {
-    display: grid;
-
-    grid-template-columns:
-        repeat(auto-fill,minmax(130px,1fr));
-
-    gap: 10px;
-}
-
-.memory-card {
-    background: white;
-
-    border-radius: 8px;
-
-    overflow: hidden;
-
-    box-shadow:
-        0 2px 7px rgba(0,0,0,.2);
-}
-
-.memory-card img {
-    width: 100%;
-
-    height: 120px;
-
-    object-fit: cover;
-}
-
-.memory-card .memory-info {
-    padding: 7px;
-
-    font-size: 13px;
-}
-
-.memory-actions {
-    display: flex;
-
-    gap: 5px;
-
-    padding: 5px;
-}
-
-/* =========================================================
+/* =========================
    CALENDAR
-========================================================= */
+========================= */
 
-.calendar {
-    background: #fffaf0;
-
-    border-radius: 10px;
-
-    padding: 10px;
-
-    margin-top: 15px;
+.calendarBox{
+  margin-top:12px;
+  background:#f7eedf;
+  border-radius:15px;
+  padding:12px;
+  box-shadow:0 4px 12px #0002;
 }
 
-.calendar-head {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 8px;
+.calendarHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
 }
 
-.calendar-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(7,1fr);
-
-    gap: 3px;
+.calendarGrid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
 }
 
-.calendar-weekday {
-    text-align: center;
-
-    font-size: 12px;
-
-    font-weight: bold;
-
-    padding: 5px;
+.calWeek{
+  text-align:center;
+  font-weight:bold;
+  font-size:12px;
+  padding:5px;
 }
 
-.day {
-    min-height: 55px;
-
-    border: 1px solid #d5c2a5;
-
-    background: #fffdf6;
-
-    border-radius: 5px;
-
-    padding: 4px;
-
-    position: relative;
-
-    cursor: pointer;
+.calCell{
+  min-height:42px;
+  background:#ead9c1;
+  color:#4b3426;
+  padding:4px;
+  border-radius:8px;
+  position:relative;
 }
 
-.day:hover {
-    background: #f2e5cc;
+.calCell.today{
+  outline:2px solid #8a5a35;
 }
 
-.day.today {
-    border: 2px solid #6b4226;
+.calCell.selected{
+  background:#b98757;
+  color:white;
 }
 
-.day.selected {
-    background: #ead2a7;
+.calCell .mood{
+  position:absolute;
+  bottom:2px;
+  right:3px;
+  font-size:13px;
 }
 
-.day .num {
-    font-size: 13px;
+/* =========================
+   DIARY PAGE
+========================= */
+
+.diaryWrap{
+  margin-top:14px;
+  position:relative;
+  display:flex;
+  justify-content:center;
 }
 
-.day .day-mood {
-    position: absolute;
+.page{
+  position:relative;
+  width:min(900px,100%);
+  min-height:760px;
+  padding:34px 38px 38px 72px;
+  border-radius:5px 18px 18px 5px;
 
-    right: 4px;
+  background:#fffaf0;
 
-    bottom: 3px;
+  box-shadow:
+    0 12px 30px #0003,
+    inset 0 0 25px #8b6b4322;
 
-    font-size: 17px;
+  overflow:hidden;
+
+  transition:
+    transform .35s ease,
+    opacity .35s ease;
 }
 
-.day .event-dot {
-    width: 7px;
+/* =========================
+   SPIRAL / SPRINKLE BINDING
+========================= */
 
-    height: 7px;
+.binding{
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:54px;
 
-    background: #a23b3b;
+  background:
+    linear-gradient(
+      90deg,
+      #765238,
+      #a9825e 45%,
+      #62452f
+    );
 
-    border-radius: 50%;
-
-    display: inline-block;
-
-    margin-left: 3px;
+  border-right:2px solid #503522;
 }
 
-/* =========================================================
-   EVENTS
-========================================================= */
+.ring{
+  position:absolute;
+  left:10px;
+  width:35px;
+  height:16px;
 
-.event-list {
-    margin-top: 10px;
+  border:4px solid #5c5c5c;
+  border-left-color:#777;
+  border-radius:50%;
+
+  background:transparent;
+  box-shadow:inset 0 1px 2px #fff6;
 }
 
-.event-item {
-    background: #fffdf6;
+.ring:nth-child(1){top:3%}
+.ring:nth-child(2){top:8%}
+.ring:nth-child(3){top:13%}
+.ring:nth-child(4){top:18%}
+.ring:nth-child(5){top:23%}
+.ring:nth-child(6){top:28%}
+.ring:nth-child(7){top:33%}
+.ring:nth-child(8){top:38%}
+.ring:nth-child(9){top:43%}
+.ring:nth-child(10){top:48%}
+.ring:nth-child(11){top:53%}
+.ring:nth-child(12){top:58%}
+.ring:nth-child(13){top:63%}
+.ring:nth-child(14){top:68%}
+.ring:nth-child(15){top:73%}
+.ring:nth-child(16){top:78%}
+.ring:nth-child(17){top:83%}
+.ring:nth-child(18){top:88%}
+.ring:nth-child(19){top:93%}
 
-    border-left: 4px solid #6b4226;
+/* =========================
+   DECORATIVE PAGE DESIGNS
+========================= */
 
-    padding: 9px;
-
-    margin-bottom: 7px;
-
-    border-radius: 5px;
+.design-classic{
+  background:
+    linear-gradient(#fffaf0,#fffaf0);
 }
 
-.event-item.google {
-    border-left-color: #4b6ca7;
+.design-vintage{
+  background:
+    radial-gradient(circle at 20% 20%,#ead6b4 0 2px,transparent 3px),
+    #f4e5c8;
 }
 
-/* =========================================================
+.design-floral{
+  background:
+    radial-gradient(circle at 10% 10%,#f3d6dc 0 20px,transparent 21px),
+    radial-gradient(circle at 90% 20%,#d7e7cc 0 18px,transparent 19px),
+    #fffaf2;
+}
+
+.design-blue{
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      #fff 0,
+      #fff 30px,
+      #c7d9e8 31px,
+      #fff 32px
+    );
+}
+
+.design-dark{
+  background:#302923;
+  color:#f4e8d5;
+}
+
+.design-woodland{
+  background:
+    radial-gradient(circle at 85% 15%,#dbe6cc 0 25px,transparent 26px),
+    radial-gradient(circle at 15% 80%,#c6d8b9 0 30px,transparent 31px),
+    #f2eadb;
+}
+
+.design-dark .editor{
+  color:#f7ead7;
+}
+
+.design-dark .todoBox,
+.design-dark .quoteBox{
+  color:#3e2a1f;
+}
+
+/* =========================
+   TOP ROW
+========================= */
+
+.pageTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.dateTitle{
+  font-size:25px;
+  font-weight:bold;
+}
+
+.pageNumber{
+  font-size:13px;
+  opacity:.75;
+}
+
+.moodRow{
+  margin-top:10px;
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.moodBtn{
+  background:#eadbc7;
+  color:#3e2a1f;
+  font-size:20px;
+  padding:5px 9px;
+}
+
+.moodBtn.active{
+  background:#b98757;
+  color:white;
+}
+
+/* =========================
+   QUOTE
+========================= */
+
+.quoteBox{
+  margin-top:15px;
+  padding:14px 16px;
+  border-left:5px solid #8a5a35;
+  background:#f2e3cd;
+  border-radius:8px;
+  font-style:italic;
+}
+
+.quoteTitle{
+  font-weight:bold;
+  font-style:normal;
+  margin-bottom:5px;
+}
+
+.quoteText{
+  line-height:1.5;
+}
+
+/* =========================
+   EDITOR
+========================= */
+
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin-top:15px;
+  padding:8px;
+  background:#ead9c1;
+  border-radius:9px;
+}
+
+.toolbar button{
+  padding:7px 10px;
+}
+
+.editorWrap{
+  position:relative;
+  margin-top:8px;
+}
+
+.editor{
+  min-height:360px;
+  padding:15px;
+  border:1px dashed #9d8062;
+  border-radius:8px;
+  background:#ffffff66;
+
+  font-size:18px;
+  line-height:1.6;
+
+  outline:none;
+}
+
+.editor:focus{
+  border-color:#8a5a35;
+}
+
+.editor ul{
+  padding-left:25px;
+}
+
+/* =========================
+   DRAWING
+========================= */
+
+.drawArea{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+#drawCanvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  touch-action:none;
+}
+
+.drawArea.enabled{
+  pointer-events:auto;
+}
+
+.drawArea.enabled #drawCanvas{
+  pointer-events:auto;
+  cursor:crosshair;
+}
+
+.drawTools{
+  display:none;
+  margin-top:8px;
+  padding:8px;
+  background:#ead9c1;
+  border-radius:9px;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.drawTools.show{
+  display:flex;
+}
+
+.drawTools button.active{
+  background:#4f6f8f;
+}
+
+.drawExit{
+  background:#a33a32;
+}
+
+/* =========================
+   TODO
+========================= */
+
+.todoBox{
+  margin-top:15px;
+  padding:12px;
+  border-radius:9px;
+  background:#f0e1cb;
+}
+
+.todoHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.todoList{
+  margin-top:8px;
+}
+
+.todoItem{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 0;
+  border-bottom:1px dotted #aa8c6c;
+}
+
+.todoItem.done .todoText{
+  text-decoration:line-through;
+  opacity:.55;
+}
+
+.todoText{
+  flex:1;
+}
+
+.todoAdd{
+  display:flex;
+  gap:5px;
+  margin-top:8px;
+}
+
+.todoAdd input{
+  flex:1;
+  padding:8px;
+  border:1px solid #b59a7b;
+  border-radius:7px;
+}
+
+/* =========================
+   MEMORIES
+========================= */
+
+.memoryBox{
+  margin-top:15px;
+  padding:12px;
+  background:#f0e1cb;
+  border-radius:9px;
+}
+
+.memoryGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:8px;
+  margin-top:8px;
+}
+
+.memoryCard{
+  background:#fff;
+  border-radius:8px;
+  padding:5px;
+  box-shadow:0 2px 6px #0002;
+}
+
+.memoryCard img{
+  width:100%;
+  height:90px;
+  object-fit:cover;
+  border-radius:5px;
+}
+
+.memoryActions{
+  display:flex;
+  gap:4px;
+  margin-top:4px;
+}
+
+.memoryActions button{
+  flex:1;
+  padding:5px;
+  font-size:12px;
+}
+
+/* =========================
+   BOTTOM CONTROLS
+========================= */
+
+.bottomBar{
+  margin-top:18px;
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.bottomGroup{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+/* =========================
    MODALS
-========================================================= */
+========================= */
 
-.modal {
-    position: fixed;
-
-    inset: 0;
-
-    background: rgba(0,0,0,.62);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 15px;
-
-    z-index: 100;
+[hidden]{
+  display:none !important;
 }
 
-.modal-box {
-    background: #fffaf0;
+.modal{
+  position:fixed;
+  inset:0;
+  background:#0008;
+  z-index:100;
 
-    width: min(700px,100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
-    max-height: 90vh;
-
-    overflow: auto;
-
-    border-radius: 12px;
-
-    padding: 20px;
-
-    box-shadow:
-        0 10px 40px rgba(0,0,0,.4);
+  padding:18px;
 }
 
-.modal-box h2 {
-    margin-top: 0;
+.modalCard{
+  width:min(600px,100%);
+  max-height:90vh;
+  overflow:auto;
+
+  background:#fffaf0;
+  color:#3e2a1f;
+
+  border-radius:15px;
+  padding:18px;
+
+  box-shadow:0 15px 40px #0005;
 }
 
-.modal-actions {
-    display: flex;
-
-    gap: 7px;
-
-    flex-wrap: wrap;
-
-    margin-top: 15px;
+.modalCard h2{
+  margin-top:0;
 }
 
-/* =========================================================
-   LIGHTBOX
-========================================================= */
-
-.lightbox-content {
-    max-width: 95vw;
-
-    max-height: 85vh;
-
-    text-align: center;
+.modalActions{
+  display:flex;
+  justify-content:flex-end;
+  gap:7px;
+  margin-top:12px;
+  flex-wrap:wrap;
 }
 
-.lightbox-content img {
-    max-width: 95vw;
-
-    max-height: 80vh;
-
-    object-fit: contain;
+.formRow{
+  margin-top:10px;
 }
 
-/* =========================================================
-   FORMS
-========================================================= */
-
-.form-row {
-    margin-bottom: 10px;
+.formRow label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:4px;
 }
 
-.form-row label {
-    display: block;
-
-    font-weight: bold;
-
-    margin-bottom: 4px;
+.formRow input,
+.formRow select,
+.formRow textarea{
+  width:100%;
+  padding:9px;
+  border:1px solid #b59a7b;
+  border-radius:7px;
 }
 
-.form-row input,
-.form-row textarea,
-.form-row select {
-    width: 100%;
+/* =========================
+   PAGE ANIMATION
+========================= */
 
-    padding: 9px;
-
-    border: 1px solid #b59a79;
-
-    border-radius: 7px;
-
-    background: white;
+.page.turnNext{
+  animation:turnNext .4s ease;
 }
 
-/* =========================================================
-   STATUS
-========================================================= */
-
-.status {
-    text-align: center;
-
-    min-height: 22px;
-
-    color: #65482f;
-
-    font-size: 14px;
+.page.turnPrev{
+  animation:turnPrev .4s ease;
 }
 
-.toast {
-    position: fixed;
-
-    left: 50%;
-
-    bottom: 20px;
-
-    transform: translateX(-50%);
-
-    background: #3e2a1f;
-
-    color: white;
-
-    padding: 10px 16px;
-
-    border-radius: 20px;
-
-    z-index: 300;
-
-    box-shadow:
-        0 4px 15px rgba(0,0,0,.3);
+@keyframes turnNext{
+  0%{
+    transform:translateX(0) rotateY(0);
+    opacity:1;
+  }
+  50%{
+    transform:translateX(-40px) rotateY(-8deg);
+    opacity:.5;
+  }
+  100%{
+    transform:translateX(0) rotateY(0);
+    opacity:1;
+  }
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:650px) {
-
-    .app {
-        padding: 7px;
-    }
-
-    .page {
-        padding: 22px 17px;
-
-        min-height: 620px;
-    }
-
-    .editor {
-        min-height: 560px;
-
-        font-size: 17px;
-
-        line-height: 28px;
-
-        background:
-            repeating-linear-gradient(
-                to bottom,
-                transparent 0,
-                transparent 27px,
-                rgba(80,110,140,.25) 28px
-            );
-    }
-
-    .day {
-        min-height: 48px;
-    }
+@keyframes turnPrev{
+  0%{
+    transform:translateX(0) rotateY(0);
+    opacity:1;
+  }
+  50%{
+    transform:translateX(40px) rotateY(8deg);
+    opacity:.5;
+  }
+  100%{
+    transform:translateX(0) rotateY(0);
+    opacity:1;
+  }
 }
 
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:700px){
+
+  .app{
+    padding:7px;
+  }
+
+  header{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  header h1{
+    text-align:center;
+  }
+
+  .headerButtons{
+    justify-content:center;
+  }
+
+  .page{
+    min-height:700px;
+    padding:
+      25px
+      18px
+      30px
+      62px;
+  }
+
+  .binding{
+    width:45px;
+  }
+
+  .ring{
+    left:7px;
+    width:31px;
+  }
+
+  .dateTitle{
+    font-size:21px;
+  }
+
+  .editor{
+    min-height:330px;
+    font-size:17px;
+  }
+
+  .calendarGrid{
+    gap:2px;
+  }
+
+  .calCell{
+    min-height:38px;
+    font-size:12px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
-<div class="header">
-
-    <h1>📖 My Personal Diary</h1>
-
-    <small>Version 8</small>
-
-</div>
-
-
 <div class="app">
 
-<!-- =====================================================
-     MAIN TOOLBAR
-===================================================== -->
+<header>
+  <h1>📖 My Personal Diary</h1>
 
-<div class="toolbar">
+  <div class="headerButtons">
+    <button onclick="toggleCalendar()">📅 Calendar</button>
+    <button onclick="openEventModal()">🔔 Event</button>
+    <button onclick="openGallery()">🖼 Memories</button>
+    <button onclick="openSettings()">⚙️ Settings</button>
+  </div>
+</header>
 
-    <button class="btn"
-            onclick="saveCurrentPage()">
+<!-- CALENDAR -->
+<section id="calendarBox" class="calendarBox" hidden>
+
+  <div class="calendarHead">
+    <button class="secondary" onclick="previousMonth()">◀</button>
+
+    <strong id="calendarTitle"></strong>
+
+    <button class="secondary" onclick="nextMonth()">▶</button>
+  </div>
+
+  <div class="calendarGrid" id="calendarGrid"></div>
+
+</section>
+
+<!-- DIARY -->
+<div class="diaryWrap">
+
+<section id="page" class="page design-classic">
+
+  <!-- SPIRAL -->
+  <div class="binding">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+
+  <div class="pageTop">
+
+    <div>
+      <div class="dateTitle" id="dateTitle"></div>
+      <div class="pageNumber" id="pageNumber"></div>
+    </div>
+
+    <div>
+      <button onclick="newPage()">➕ New Page</button>
+    </div>
+
+  </div>
+
+  <!-- MOOD -->
+  <div class="moodRow">
+
+    <button class="moodBtn" data-mood="😊" onclick="setMood('😊')">😊</button>
+
+    <button class="moodBtn" data-mood="😄" onclick="setMood('😄')">😄</button>
+
+    <button class="moodBtn" data-mood="😍" onclick="setMood('😍')">😍</button>
+
+    <button class="moodBtn" data-mood="😐" onclick="setMood('😐')">😐</button>
+
+    <button class="moodBtn" data-mood="😔" onclick="setMood('😔')">😔</button>
+
+    <button class="moodBtn" data-mood="😡" onclick="setMood('😡')">😡</button>
+
+    <button class="moodBtn" data-mood="🙏" onclick="setMood('🙏')">🙏</button>
+
+  </div>
+
+  <!-- QUOTE -->
+  <div id="quoteBox" class="quoteBox" hidden>
+
+    <div class="quoteTitle">
+      ✨ Quote of the Day
+    </div>
+
+    <div id="quoteText" class="quoteText"></div>
+
+    <button class="secondary" onclick="changeQuote()">
+      🔄 Change Quote
+    </button>
+
+  </div>
+
+  <!-- EDITOR TOOLBAR -->
+  <div class="toolbar">
+
+    <button onclick="formatText('bold')">
+      <b>B</b>
+    </button>
+
+    <button onclick="formatText('underline')">
+      <u>U</u>
+    </button>
+
+    <button onclick="formatText('italic')">
+      <i>I</i>
+    </button>
+
+    <button onclick="formatText('insertUnorderedList')">
+      • List
+    </button>
+
+    <button onclick="toggleDrawing()">
+      ✏️ Draw
+    </button>
+
+  </div>
+
+  <!-- DRAWING TOOLBAR -->
+  <div id="drawTools" class="drawTools">
+
+    <button onclick="setDrawTool('pen')" id="toolPen">
+      ✏️ Pen
+    </button>
+
+    <button onclick="setDrawTool('line')" id="toolLine">
+      ╱ Line
+    </button>
+
+    <button onclick="setDrawTool('circle')" id="toolCircle">
+      ◯ Circle
+    </button>
+
+    <button onclick="setDrawTool('eraser')" id="toolEraser">
+      🧽 Eraser
+    </button>
+
+    <button onclick="setDrawColor('#222')">
+      ⚫
+    </button>
+
+    <button onclick="setDrawColor('#d33')">
+      🔴
+    </button>
+
+    <button onclick="setDrawColor('#2864a8')">
+      🔵
+    </button>
+
+    <button onclick="setDrawColor('#3d7a3d')">
+      🟢
+    </button>
+
+    <button onclick="undoDrawing()">
+      ↩ Undo
+    </button>
+
+    <button onclick="redoDrawing()">
+      ↪ Redo
+    </button>
+
+    <button onclick="clearDrawing()" class="danger">
+      🗑 Clear
+    </button>
+
+    <button onclick="toggleDrawing()" class="drawExit">
+      ✖ Done
+    </button>
+
+  </div>
+
+  <!-- EDITOR -->
+  <div class="editorWrap">
+
+    <div
+      id="editor"
+      class="editor"
+      contenteditable="true"
+      spellcheck="true"
+      oninput="scheduleAutoSave()">
+    </div>
+
+    <!-- DRAWING CANVAS -->
+    <div id="drawArea" class="drawArea">
+      <canvas id="drawCanvas"></canvas>
+    </div>
+
+  </div>
+
+  <!-- TODO -->
+  <div class="todoBox">
+
+    <div class="todoHead">
+      <strong>☑️ To-Do List</strong>
+      <span id="todoCount"></span>
+    </div>
+
+    <div id="todoList" class="todoList"></div>
+
+    <div class="todoAdd">
+      <input
+        id="todoInput"
+        type="text"
+        placeholder="Add task..."
+        onkeydown="if(event.key==='Enter') addTodo()">
+
+      <button onclick="addTodo()">＋</button>
+    </div>
+
+  </div>
+
+  <!-- MEMORIES -->
+  <div class="memoryBox">
+
+    <strong>📎 Memories</strong>
+
+    <div style="margin-top:8px;display:flex;gap:5px;flex-wrap:wrap">
+
+      <button onclick="openMemoryInput()">
+        📷 Camera / Photo
+      </button>
+
+      <button onclick="document.getElementById('documentInput').click()">
+        📄 Scan / Document
+      </button>
+
+    </div>
+
+    <input
+      id="memoryInput"
+      type="file"
+      accept="image/*"
+      capture="environment"
+      hidden
+      onchange="addMemoryFile(event)">
+
+    <input
+      id="documentInput"
+      type="file"
+      accept="image/*,.pdf,.doc,.docx"
+      capture="environment"
+      hidden
+      onchange="addMemoryFile(event)">
+
+    <div id="memoryGrid" class="memoryGrid"></div>
+
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="bottomBar">
+
+    <div class="bottomGroup">
+
+      <button onclick="previousPage()">
+        ◀ Previous
+      </button>
+
+      <button onclick="nextPage()">
+        Next ▶
+      </button>
+
+    </div>
+
+    <div class="bottomGroup">
+
+      <button class="green" onclick="savePage(true)">
         💾 Save
-    </button>
+      </button>
 
-    <button class="btn secondary"
-            onclick="openGallery()">
-        🖼 Memories
-    </button>
-
-    <button class="btn secondary"
-            onclick="openEventModal()">
-        📅 Add Event
-    </button>
-
-    <button class="btn secondary"
-            onclick="openGoogleModal()">
-        🗓 Google Calendar
-    </button>
-
-    <button class="btn secondary"
-            onclick="enableAlerts()">
-        🔔 Alerts
-    </button>
-
-    <button class="btn secondary"
-            onclick="backupDiary()">
-        💾 Backup
-    </button>
-
-    <button class="btn secondary"
-            onclick="document.getElementById('restoreInput').click()">
-        ♻ Restore
-    </button>
-
-    <button class="btn secondary"
-            onclick="printCurrentPage()">
+      <button onclick="printPage()">
         🖨 Print
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+</div>
+
+</div>
+
+<!-- EVENT MODAL -->
+<div id="eventModal" class="modal" hidden>
+
+  <div class="modalCard">
+
+    <h2>🔔 Diary Event</h2>
+
+    <div class="formRow">
+      <label>Event</label>
+      <input id="eventTitle" type="text">
+    </div>
+
+    <div class="formRow">
+      <label>Date</label>
+      <input id="eventDate" type="date">
+    </div>
+
+    <div class="formRow">
+      <label>Time</label>
+      <input id="eventTime" type="time">
+    </div>
+
+    <div class="formRow">
+      <label>Reminder minutes before</label>
+      <input id="eventReminder" type="number" value="10">
+    </div>
+
+    <div class="modalActions">
+
+      <button
+        class="secondary"
+        onclick="closeEventModal()">
+        Cancel
+      </button>
+
+      <button onclick="saveEvent()">
+        Save Event
+      </button>
+
+    </div>
+
+    <hr>
+
+    <h3>Events for this date</h3>
+
+    <div id="eventList"></div>
+
+  </div>
+
+</div>
+
+<!-- SETTINGS -->
+<div id="settingsModal" class="modal" hidden>
+
+  <div class="modalCard">
+
+    <h2>⚙️ Diary Settings</h2>
+
+    <div class="formRow">
+
+      <label>Diary Page Design</label>
+
+      <select id="designSelect" onchange="changeDesign(this.value)">
+
+        <option value="classic">Classic Cream</option>
+        <option value="vintage">Vintage</option>
+        <option value="floral">Floral</option>
+        <option value="blue">Blue Lines</option>
+        <option value="dark">Dark</option>
+        <option value="woodland">Woodland</option>
+
+      </select>
+
+    </div>
+
+    <hr>
+
+    <h3>Google Calendar</h3>
+
+    <div class="formRow">
+
+      <label>Google OAuth Client ID</label>
+
+      <input
+        id="googleClientId"
+        type="text"
+        placeholder="Enter Google OAuth Client ID">
+
+    </div>
+
+    <button onclick="connectGoogleCalendar()">
+      🔗 Connect Google Calendar
     </button>
 
-    <button class="btn secondary"
-            onclick="printAllPages()">
-        🖨 All Pages
-    </button>
+    <hr>
 
-</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">
 
+      <button onclick="backupDiary()">
+        💾 Backup
+      </button>
 
-<input type="file"
-       id="restoreInput"
-       accept=".json"
-       onchange="restoreDiary(event)">
+      <button onclick="document.getElementById('restoreInput').click()">
+        ♻️ Restore
+      </button>
 
-
-<!-- =====================================================
-     DATE
-===================================================== -->
-
-<div class="datebar">
-
-    <button class="btn"
-            onclick="changeDate(-1)">
-        ◀ Day
-    </button>
-
-    <input type="date"
-           id="datePicker"
-           onchange="selectDate(this.value)">
-
-    <button class="btn"
-            onclick="changeDate(1)">
-        Day ▶
-    </button>
-
-</div>
-
-
-<div class="status"
-     id="status">
-</div>
-
-
-<!-- =====================================================
-     CALENDAR
-===================================================== -->
-
-<div class="calendar">
-
-    <div class="calendar-head">
-
-        <button class="btn"
-                onclick="changeMonth(-1)">
-            ◀
-        </button>
-
-        <strong id="calendarTitle"></strong>
-
-        <button class="btn"
-                onclick="changeMonth(1)">
-            ▶
-        </button>
+      <input
+        id="restoreInput"
+        type="file"
+        accept=".json"
+        hidden
+        onchange="restoreDiary(event)">
 
     </div>
 
-    <div class="calendar-grid"
-         id="calendarGrid">
+    <div class="modalActions">
+
+      <button
+        class="secondary"
+        onclick="closeSettings()">
+        Close
+      </button>
+
     </div>
+
+  </div>
 
 </div>
 
+<!-- GALLERY -->
+<div id="galleryModal" class="modal" hidden>
 
-<!-- =====================================================
-     DIARY BOOK
-===================================================== -->
+  <div class="modalCard">
 
-<div class="book">
+    <h2>🖼 Memory Gallery</h2>
 
-<div class="page"
-     id="diaryPage">
+    <div id="galleryGrid" class="memoryGrid"></div>
 
-    <div class="page-title">
+    <div class="modalActions">
 
-        <h2 id="pageDateTitle">
-            My Diary
-        </h2>
-
-        <div class="page-number"
-             id="pageNumber">
-        </div>
+      <button
+        class="secondary"
+        onclick="closeGallery()">
+        Close
+      </button>
 
     </div>
 
-
-    <!-- FORMAT BUTTONS -->
-
-    <div class="editor-toolbar">
-
-        <button class="format-btn"
-                onclick="formatText('bold')">
-            <b>B</b>
-        </button>
-
-        <button class="format-btn"
-                onclick="formatText('underline')">
-            <u>U</u>
-        </button>
-
-        <button class="format-btn"
-                onclick="formatText('italic')">
-            <i>I</i>
-        </button>
-
-        <button class="format-btn"
-                onclick="insertBullet()">
-            • List
-        </button>
-
-    </div>
-
-
-    <!-- MOODS -->
-
-    <div class="moods"
-         id="moods">
-
-        <button class="mood"
-                data-mood="😊"
-                onclick="setMood('😊')">
-            😊
-        </button>
-
-        <button class="mood"
-                data-mood="😍"
-                onclick="setMood('😍')">
-            😍
-        </button>
-
-        <button class="mood"
-                data-mood="😄"
-                onclick="setMood('😄')">
-            😄
-        </button>
-
-        <button class="mood"
-                data-mood="😐"
-                onclick="setMood('😐')">
-            😐
-        </button>
-
-        <button class="mood"
-                data-mood="😔"
-                onclick="setMood('😔')">
-            😔
-        </button>
-
-        <button class="mood"
-                data-mood="😡"
-                onclick="setMood('😡')">
-            😡
-        </button>
-
-        <button class="mood"
-                data-mood="🙏"
-                onclick="setMood('🙏')">
-            🙏
-        </button>
-
-        <button class="mood"
-                data-mood="❤️"
-                onclick="setMood('❤️')">
-            ❤️
-        </button>
-
-    </div>
-
-
-    <!-- WRITING AREA -->
-
-    <div id="editor"
-         class="editor"
-         contenteditable="true"
-         spellcheck="true"
-         aria-label="Diary writing area">
-    </div>
-
-
-    <div style="margin-top:8px;font-size:13px">
-
-        <span id="lineCounter">
-            0 / 20 lines
-        </span>
-
-        &nbsp; | &nbsp;
-
-        <span id="saveTime">
-        </span>
-
-    </div>
-
-
-    <!-- PAGE NAVIGATION -->
-
-    <div class="page-nav">
-
-        <button class="btn secondary"
-                onclick="previousPage()">
-            ← Previous Page
-        </button>
-
-        <button class="btn green"
-                onclick="newSameDatePage()">
-            + New Page
-        </button>
-
-        <button class="btn"
-                onclick="nextPage()">
-            Next Page →
-        </button>
-
-    </div>
-
+  </div>
 
 </div>
 
-</div>
+<!-- LIGHTBOX -->
+<div id="lightboxModal" class="modal" hidden>
 
+  <div class="modalCard">
 
-<!-- =====================================================
-     EVENTS
-===================================================== -->
+    <img
+      id="lightboxImage"
+      style="width:100%;max-height:75vh;object-fit:contain">
 
-<div class="section">
+    <div class="modalActions">
 
-    <h3>
-        📅 Events for this date
-    </h3>
-
-    <div id="eventList"
-         class="event-list">
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     MEMORIES
-===================================================== -->
-
-<div class="section">
-
-    <h3>
-        📸 Add Memory
-    </h3>
-
-    <div class="memory-buttons">
-
-        <button class="btn"
-                onclick="document.getElementById('cameraInput').click()">
-            📷 Take Photo
-        </button>
-
-        <button class="btn"
-                onclick="document.getElementById('scanInput').click()">
-            📄 Scan Document
-        </button>
-
-        <button class="btn secondary"
-                onclick="document.getElementById('memoryInput').click()">
-            🖼 Choose Photo
-        </button>
-
-        <button class="btn secondary"
-                onclick="document.getElementById('documentInput').click()">
-            📎 Attach Document
-        </button>
+      <button onclick="closeLightbox()">
+        Close
+      </button>
 
     </div>
 
-
-    <input type="file"
-           id="cameraInput"
-           accept="image/*"
-           capture="environment"
-           onchange="addMemory(event,'camera')">
-
-
-    <input type="file"
-           id="scanInput"
-           accept="image/*"
-           capture="environment"
-           onchange="addMemory(event,'scan')">
-
-
-    <input type="file"
-           id="memoryInput"
-           accept="image/*"
-           onchange="addMemory(event,'photo')">
-
-
-    <input type="file"
-           id="documentInput"
-           onchange="addMemory(event,'document')">
+  </div>
 
 </div>
-
-
-<!-- =====================================================
-     GALLERY MODAL
-===================================================== -->
-
-<div id="galleryModal"
-     class="modal"
-     hidden>
-
-    <div class="modal-box">
-
-        <h2>🖼 Memories</h2>
-
-        <div id="gallery"
-             class="gallery">
-        </div>
-
-        <div class="modal-actions">
-
-            <button class="btn"
-                    onclick="closeGallery()">
-                Close
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     LIGHTBOX
-===================================================== -->
-
-<div id="lightboxModal"
-     class="modal"
-     hidden>
-
-    <div class="lightbox-content">
-
-        <img id="lightboxImage"
-             alt="Memory">
-
-        <br><br>
-
-        <button class="btn"
-                onclick="closeLightbox()">
-            Close
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     EVENT MODAL
-===================================================== -->
-
-<div id="eventModal"
-     class="modal"
-     hidden>
-
-    <div class="modal-box">
-
-        <h2>📅 Add Diary Event</h2>
-
-        <div class="form-row">
-
-            <label>
-                Event
-            </label>
-
-            <input id="eventTitle"
-                   placeholder="Example: Doctor appointment">
-
-        </div>
-
-
-        <div class="form-row">
-
-            <label>
-                Date
-            </label>
-
-            <input type="date"
-                   id="eventDate">
-
-        </div>
-
-
-        <div class="form-row">
-
-            <label>
-                Time
-            </label>
-
-            <input type="time"
-                   id="eventTime">
-
-        </div>
-
-
-        <div class="form-row">
-
-            <label>
-                Alert before
-            </label>
-
-            <select id="eventReminder">
-
-                <option value="0">
-                    At event time
-                </option>
-
-                <option value="5">
-                    5 minutes before
-                </option>
-
-                <option value="15">
-                    15 minutes before
-                </option>
-
-                <option value="30">
-                    30 minutes before
-                </option>
-
-                <option value="60">
-                    1 hour before
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div class="modal-actions">
-
-            <button class="btn green"
-                    onclick="saveEvent()">
-                Save Event
-            </button>
-
-            <button class="btn secondary"
-                    onclick="closeEventModal()">
-                Cancel
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     GOOGLE CALENDAR MODAL
-===================================================== -->
-
-<div id="googleModal"
-     class="modal"
-     hidden>
-
-    <div class="modal-box">
-
-        <h2>
-            🗓 Google Calendar
-        </h2>
-
-        <p>
-            Connect your Google Calendar using a
-            read-only Google OAuth connection.
-        </p>
-
-
-        <div class="form-row">
-
-            <label>
-                Google OAuth Client ID
-            </label>
-
-            <input id="googleClientId"
-                   placeholder="1234567890-xxxxx.apps.googleusercontent.com">
-
-        </div>
-
-
-        <p style="font-size:14px">
-
-            Your Google Client ID is not a password.
-            Do not enter a Google Client Secret here.
-
-        </p>
-
-
-        <div class="modal-actions">
-
-            <button class="btn green"
-                    onclick="connectGoogleCalendar()">
-                Connect Google Calendar
-            </button>
-
-            <button class="btn secondary"
-                    onclick="loadGoogleCalendarEvents()">
-                Refresh Calendar
-            </button>
-
-            <button class="btn secondary"
-                    onclick="closeGoogleModal()">
-                Close
-            </button>
-
-        </div>
-
-
-        <hr>
-
-        <h3>
-            Google Cloud configuration
-        </h3>
-
-        <ol>
-
-            <li>
-                Create/open a project in Google Cloud.
-            </li>
-
-            <li>
-                Enable <b>Google Calendar API</b>.
-            </li>
-
-            <li>
-                Configure OAuth consent screen.
-            </li>
-
-            <li>
-                Create an OAuth Client ID for
-                <b>Web application</b>.
-            </li>
-
-            <li>
-                Add your GitHub Pages origin under
-                <b>Authorized JavaScript origins</b>.
-            </li>
-
-            <li>
-                Enter the Client ID above.
-            </li>
-
-            <li>
-                Press Connect.
-            </li>
-
-        </ol>
-
-        <p>
-            Required Calendar permission:
-            <br>
-            <b>calendar.readonly</b>
-        </p>
-
-    </div>
-
-</div>
-
-
-</div>
-
-
-<div id="toast"
-     class="toast"
-     hidden>
-</div>
-
 
 <script>
-
-/* =========================================================
+/* ================================
    DATABASE
-========================================================= */
+================================ */
 
 const DB_NAME = "myPersonalDiaryDB";
-
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 const PAGE_STORE = "pages";
-
 const EVENT_STORE = "events";
+const ATTACH_STORE = "attachments";
+const SETTINGS_STORE = "settings";
+const TODO_STORE = "todos";
 
-const ATTACHMENT_STORE = "attachments";
+let db;
 
-const SETTING_STORE = "settings";
+function uid(){
+  return Date.now().toString(36) +
+    Math.random().toString(36).slice(2);
+}
 
+function openDB(){
 
-let db = null;
+  return new Promise((resolve,reject)=>{
 
-let selectedDate = todayString();
+    const request =
+      indexedDB.open(DB_NAME,DB_VERSION);
 
-let currentPage = 0;
+    request.onupgradeneeded = e => {
 
-let currentMood = "";
+      const database = e.target.result;
 
-let lastGoodHTML = "";
+      if(!database.objectStoreNames.contains(PAGE_STORE)){
+        database.createObjectStore(
+          PAGE_STORE,
+          {keyPath:"id"}
+        );
+      }
+
+      if(!database.objectStoreNames.contains(EVENT_STORE)){
+        database.createObjectStore(
+          EVENT_STORE,
+          {keyPath:"id"}
+        );
+      }
+
+      if(!database.objectStoreNames.contains(ATTACH_STORE)){
+        database.createObjectStore(
+          ATTACH_STORE,
+          {keyPath:"id"}
+        );
+      }
+
+      if(!database.objectStoreNames.contains(SETTINGS_STORE)){
+        database.createObjectStore(
+          SETTINGS_STORE,
+          {keyPath:"key"}
+        );
+      }
+
+      if(!database.objectStoreNames.contains(TODO_STORE)){
+        database.createObjectStore(
+          TODO_STORE,
+          {keyPath:"id"}
+        );
+      }
+
+    };
+
+    request.onsuccess = e => {
+
+      db = e.target.result;
+
+      resolve(db);
+
+    };
+
+    request.onerror = () => reject(request.error);
+
+  });
+
+}
+
+function dbPut(store,value){
+
+  return new Promise((resolve,reject)=>{
+
+    const tx=db.transaction(store,"readwrite");
+
+    tx.objectStore(store).put(value);
+
+    tx.oncomplete=()=>resolve();
+
+    tx.onerror=()=>reject(tx.error);
+
+  });
+
+}
+
+function dbGet(store,key){
+
+  return new Promise((resolve,reject)=>{
+
+    const tx=db.transaction(store,"readonly");
+
+    const request=
+      tx.objectStore(store).get(key);
+
+    request.onsuccess=()=>resolve(request.result);
+
+    request.onerror=()=>reject(request.error);
+
+  });
+
+}
+
+function dbGetAll(store){
+
+  return new Promise((resolve,reject)=>{
+
+    const tx=db.transaction(store,"readonly");
+
+    const request=
+      tx.objectStore(store).getAll();
+
+    request.onsuccess=()=>resolve(request.result);
+
+    request.onerror=()=>reject(request.error);
+
+  });
+
+}
+
+function dbDelete(store,key){
+
+  return new Promise((resolve,reject)=>{
+
+    const tx=db.transaction(store,"readwrite");
+
+    tx.objectStore(store).delete(key);
+
+    tx.oncomplete=()=>resolve();
+
+    tx.onerror=()=>reject(tx.error);
+
+  });
+
+}
+
+/* ================================
+   DATE
+================================ */
+
+let selectedDate =
+  new Date().toISOString().slice(0,10);
+
+let currentPage = 1;
+
+let currentPages = [];
 
 let calendarDate = new Date();
 
+/* ================================
+   QUOTES
+================================ */
 
-/* =========================================================
-   GOOGLE
-========================================================= */
+const quotes = [
 
-let googleToken = null;
+  "Every day is a new page in the story of your life.",
 
-let googleEvents = [];
+  "Small steps every day create big changes.",
 
-const GOOGLE_CLIENT_KEY =
-    "myPersonalDiaryGoogleClientId";
+  "The best way to predict your future is to create it.",
 
-const GOOGLE_TOKEN_KEY =
-    "myPersonalDiaryGoogleToken";
+  "Write today so tomorrow remembers.",
 
+  "Gratitude turns ordinary days into beautiful memories.",
 
-/* =========================================================
-   BASIC HELPERS
-========================================================= */
+  "Do something today that your future self will thank you for.",
 
-function todayString() {
+  "Life is made of moments. Treasure them.",
 
-    const d = new Date();
+  "A peaceful mind creates a meaningful life.",
 
-    return d.getFullYear() + "-" +
-        String(d.getMonth()+1).padStart(2,"0") + "-" +
-        String(d.getDate()).padStart(2,"0");
+  "Keep going. Your story is still being written.",
 
-}
+  "The simplest memories often become the most precious."
 
+];
 
-function escapeHTML(value) {
+function quoteForDate(date){
 
-    return String(value || "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+  let sum=0;
+
+  for(let i=0;i<date.length;i++){
+    sum+=date.charCodeAt(i)*(i+1);
+  }
+
+  return quotes[sum%quotes.length];
 
 }
 
+async function loadQuote(){
 
-function showToast(message) {
+  const quoteBox =
+    document.getElementById("quoteBox");
 
-    const t =
-        document.getElementById("toast");
+  if(currentPage!==1){
 
-    t.textContent = message;
+    quoteBox.hidden=true;
+    return;
 
-    t.hidden = false;
+  }
 
-    clearTimeout(window.toastTimer);
+  quoteBox.hidden=false;
 
-    window.toastTimer =
-        setTimeout(() => {
-
-            t.hidden = true;
-
-        },3000);
-
-}
-
-
-function setStatus(message) {
-
-    document.getElementById("status")
-        .textContent = message;
-
-}
-
-
-/* =========================================================
-   INDEXED DB OPEN
-========================================================= */
-
-function openDatabase() {
-
-    return new Promise((resolve,reject) => {
-
-        const request =
-            indexedDB.open(DB_NAME,DB_VERSION);
-
-
-        request.onupgradeneeded = event => {
-
-            const database =
-                event.target.result;
-
-
-            if (!database.objectStoreNames
-                .contains(PAGE_STORE)) {
-
-                const store =
-                    database.createObjectStore(
-                        PAGE_STORE,
-                        {keyPath:"id"}
-                    );
-
-                store.createIndex(
-                    "date",
-                    "date",
-                    {unique:false}
-                );
-
-            }
-
-
-            if (!database.objectStoreNames
-                .contains(EVENT_STORE)) {
-
-                const store =
-                    database.createObjectStore(
-                        EVENT_STORE,
-                        {keyPath:"id"}
-                    );
-
-                store.createIndex(
-                    "date",
-                    "date",
-                    {unique:false}
-                );
-
-            }
-
-
-            if (!database.objectStoreNames
-                .contains(ATTACHMENT_STORE)) {
-
-                const store =
-                    database.createObjectStore(
-                        ATTACHMENT_STORE,
-                        {keyPath:"id"}
-                    );
-
-                store.createIndex(
-                    "date",
-                    "date",
-                    {unique:false}
-                );
-
-            }
-
-
-            if (!database.objectStoreNames
-                .contains(SETTING_STORE)) {
-
-                database.createObjectStore(
-                    SETTING_STORE,
-                    {keyPath:"key"}
-                );
-
-            }
-
-        };
-
-
-        request.onsuccess = () => {
-
-            db = request.result;
-
-            resolve(db);
-
-        };
-
-
-        request.onerror = () => {
-
-            reject(request.error);
-
-        };
-
-    });
-
-}
-
-
-/* =========================================================
-   DATABASE OPERATIONS
-========================================================= */
-
-function putRecord(storeName,record) {
-
-    return new Promise((resolve,reject) => {
-
-        const tx =
-            db.transaction(storeName,"readwrite");
-
-        tx.objectStore(storeName)
-            .put(record);
-
-        tx.oncomplete = resolve;
-
-        tx.onerror = () =>
-            reject(tx.error);
-
-    });
-
-}
-
-
-function getRecord(storeName,key) {
-
-    return new Promise((resolve,reject) => {
-
-        const tx =
-            db.transaction(storeName,"readonly");
-
-        const request =
-            tx.objectStore(storeName).get(key);
-
-        request.onsuccess = () =>
-            resolve(request.result);
-
-        request.onerror = () =>
-            reject(request.error);
-
-    });
-
-}
-
-
-function getAllRecords(storeName) {
-
-    return new Promise((resolve,reject) => {
-
-        const tx =
-            db.transaction(storeName,"readonly");
-
-        const request =
-            tx.objectStore(storeName).getAll();
-
-        request.onsuccess = () =>
-            resolve(request.result || []);
-
-        request.onerror = () =>
-            reject(request.error);
-
-    });
-
-}
-
-
-function deleteRecord(storeName,key) {
-
-    return new Promise((resolve,reject) => {
-
-        const tx =
-            db.transaction(storeName,"readwrite");
-
-        tx.objectStore(storeName)
-            .delete(key);
-
-        tx.oncomplete = resolve;
-
-        tx.onerror = () =>
-            reject(tx.error);
-
-    });
-
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-async function saveSetting(key,value) {
-
-    await putRecord(
-        SETTING_STORE,
-        {
-            key:key,
-            value:value
-        }
+  let setting =
+    await dbGet(
+      SETTINGS_STORE,
+      "quote-"+selectedDate
     );
 
+  if(!setting){
+
+    setting={
+      key:"quote-"+selectedDate,
+      value:quoteForDate(selectedDate)
+    };
+
+    await dbPut(
+      SETTINGS_STORE,
+      setting
+    );
+
+  }
+
+  document.getElementById(
+    "quoteText"
+  ).textContent=setting.value;
+
 }
 
+async function changeQuote(){
 
-async function getSetting(key) {
+  const current =
+    document.getElementById(
+      "quoteText"
+    ).textContent;
 
-    const record =
-        await getRecord(
-            SETTING_STORE,
-            key
-        );
+  let available =
+    quotes.filter(q=>q!==current);
 
-    return record
-        ? record.value
-        : null;
+  const quote =
+    available[
+      Math.floor(
+        Math.random()*available.length
+      )
+    ];
 
-}
-
-
-/* =========================================================
-   MIGRATE OLD V7 DATA
-========================================================= */
-
-async function migrateOldDiary() {
-
-    const migrated =
-        await getSetting("v8MigrationComplete");
-
-
-    if (migrated) {
-        return;
+  await dbPut(
+    SETTINGS_STORE,
+    {
+      key:"quote-"+selectedDate,
+      value:quote
     }
+  );
 
-
-    try {
-
-        const oldEntries =
-            JSON.parse(
-                localStorage.getItem(
-                    "myPersonalDiaryEntries"
-                ) || "{}"
-            );
-
-
-        for (const date of Object.keys(oldEntries)) {
-
-            const old =
-                oldEntries[date];
-
-
-            const page = {
-
-                id: date + "::0",
-
-                date: date,
-
-                page: 0,
-
-                html: old.html || "",
-
-                text: old.text || "",
-
-                mood: old.mood || "",
-
-                updatedAt:
-                    old.updatedAt ||
-                    new Date().toISOString()
-
-            };
-
-
-            await putRecord(
-                PAGE_STORE,
-                page
-            );
-
-        }
-
-
-        const oldEvents =
-            JSON.parse(
-                localStorage.getItem(
-                    "myPersonalDiaryEvents"
-                ) || "{}"
-            );
-
-
-        if (Array.isArray(oldEvents)) {
-
-            for (const event of oldEvents) {
-
-                if (!event.id) {
-
-                    event.id =
-                        "event-" +
-                        Date.now() +
-                        "-" +
-                        Math.random();
-
-                }
-
-                await putRecord(
-                    EVENT_STORE,
-                    event
-                );
-
-            }
-
-        }
-
-
-        await saveSetting(
-            "v8MigrationComplete",
-            true
-        );
-
-
-        showToast(
-            "Your previous diary entries were migrated to v8."
-        );
-
-    } catch(error) {
-
-        console.error(
-            "Migration error",
-            error
-        );
-
-    }
+  document.getElementById(
+    "quoteText"
+  ).textContent=quote;
 
 }
 
+/* ================================
+   PAGE LOADING
+================================ */
 
-/* =========================================================
-   PAGE ID
-========================================================= */
+async function loadDate(date){
 
-function pageId(date,page) {
+  selectedDate=date;
 
-    return date + "::" + page;
+  currentPage=1;
 
-}
+  const all =
+    await dbGetAll(PAGE_STORE);
 
+  currentPages =
+    all
+      .filter(p=>p.date===date)
+      .sort((a,b)=>a.page-b.page);
 
-/* =========================================================
-   LOAD DATE
-========================================================= */
+  if(!currentPages.length){
 
-async function selectDate(date) {
+    currentPages=[{
+      id:uid(),
+      date:date,
+      page:1,
+      html:"",
+      mood:"",
+      design:"classic",
+      drawing:null,
+      updatedAt:Date.now()
+    }];
 
-    if (!date) return;
+  }
 
-    await saveCurrentPage(false);
+  renderPage();
 
-    selectedDate = date;
+  await loadQuote();
 
-    currentPage = 0;
+  await loadTodos();
 
-    document.getElementById("datePicker")
-        .value = selectedDate;
+  await loadMemories();
 
-    calendarDate =
-        new Date(
-            selectedDate + "T12:00:00"
-        );
-
-    await loadCurrentPage();
-
-    renderCalendar();
-
-}
-
-
-async function loadCurrentPage() {
-
-    const id =
-        pageId(
-            selectedDate,
-            currentPage
-        );
-
-
-    const page =
-        await getRecord(
-            PAGE_STORE,
-            id
-        );
-
-
-    document.getElementById("editor")
-        .innerHTML =
-            page
-                ? page.html || ""
-                : "";
-
-
-    currentMood =
-        page
-            ? page.mood || ""
-            : "";
-
-
-    lastGoodHTML =
-        document.getElementById("editor")
-            .innerHTML;
-
-
-    updateMoodButtons();
-
-    updatePageNumber();
-
-    updateLineCounter();
-
-    renderEvents();
-
-    renderCalendar();
-
-    renderDateTitle();
-
-    renderAttachments();
+  renderCalendar();
 
 }
 
+/* ================================
+   RENDER PAGE
+================================ */
 
-/* =========================================================
-   DATE TITLE
-========================================================= */
+async function renderPage(){
 
-function renderDateTitle() {
+  const page =
+    currentPages[currentPage-1];
 
-    const d =
-        new Date(
-            selectedDate + "T12:00:00"
-        );
+  if(!page)return;
 
+  document.getElementById(
+    "dateTitle"
+  ).textContent=
+    new Date(
+      selectedDate+"T00:00:00"
+    ).toLocaleDateString(
+      undefined,
+      {
+        weekday:"long",
+        year:"numeric",
+        month:"long",
+        day:"numeric"
+      }
+    );
 
-    document.getElementById("pageDateTitle")
-        .textContent =
-            d.toLocaleDateString(
-                undefined,
-                {
-                    weekday:"long",
-                    day:"numeric",
-                    month:"long",
-                    year:"numeric"
-                }
-            );
+  document.getElementById(
+    "pageNumber"
+  ).textContent=
+    "Page "+
+    currentPage+
+    " of "+
+    currentPages.length;
+
+  document.getElementById(
+    "editor"
+  ).innerHTML=page.html||"";
+
+  document.getElementById(
+    "page"
+  ).className=
+    "page design-"+(page.design||"classic");
+
+  document.getElementById(
+    "designSelect"
+  ).value=page.design||"classic";
+
+  document.querySelectorAll(
+    ".moodBtn"
+  ).forEach(btn=>{
+
+    btn.classList.toggle(
+      "active",
+      btn.dataset.mood===
+      (page.mood||"")
+    );
+
+  });
+
+  await loadDrawing();
 
 }
 
-
-/* =========================================================
+/* ================================
    SAVE PAGE
-========================================================= */
+================================ */
 
-async function saveCurrentPage(showMessage=true) {
+let saveTimer;
 
-    if (!db) return;
+function scheduleAutoSave(){
 
+  clearTimeout(saveTimer);
 
-    const editor =
-        document.getElementById("editor");
-
-
-    const html =
-        editor.innerHTML;
-
-
-    const text =
-        editor.innerText.trim();
-
-
-    const record = {
-
-        id:
-            pageId(
-                selectedDate,
-                currentPage
-            ),
-
-        date:
-            selectedDate,
-
-        page:
-            currentPage,
-
-        html:
-            html,
-
-        text:
-            text,
-
-        mood:
-            currentMood,
-
-        updatedAt:
-            new Date().toISOString()
-
-    };
-
-
-    await putRecord(
-        PAGE_STORE,
-        record
-    );
-
-
-    lastGoodHTML = html;
-
-
-    const time =
-        new Date()
-            .toLocaleTimeString(
-                [],
-                {
-                    hour:"2-digit",
-                    minute:"2-digit"
-                }
-            );
-
-
-    document.getElementById("saveTime")
-        .textContent =
-            "Saved " + time;
-
-
-    renderCalendar();
-
-
-    if (showMessage) {
-
-        showToast(
-            "Page saved successfully."
-        );
-
-    }
+  saveTimer=setTimeout(
+    ()=>savePage(false),
+    700
+  );
 
 }
 
+async function savePage(showMessage=false){
 
-window.saveCurrentPage =
-    saveCurrentPage;
+  const page =
+    currentPages[currentPage-1];
 
+  if(!page)return;
 
-/* =========================================================
-   ALIAS
-========================================================= */
+  page.html=
+    document.getElementById(
+      "editor"
+    ).innerHTML;
 
-async function saveEntry() {
+  page.updatedAt=Date.now();
 
-    await saveCurrentPage(true);
+  page.drawing=
+    savedDrawing||null;
+
+  await dbPut(
+    PAGE_STORE,
+    page
+  );
+
+  if(showMessage){
+
+    alert("Diary page saved.");
+
+  }
 
 }
 
-
-/* =========================================================
+/* ================================
    MOOD
-========================================================= */
+================================ */
 
-async function setMood(mood) {
+async function setMood(mood){
 
-    currentMood = mood;
+  const page =
+    currentPages[currentPage-1];
 
-    updateMoodButtons();
+  if(!page)return;
 
-    await saveCurrentPage(false);
+  page.mood=mood;
 
-    renderCalendar();
+  await dbPut(
+    PAGE_STORE,
+    page
+  );
 
-    showToast(
-        "Mood saved: " + mood
+  document.querySelectorAll(
+    ".moodBtn"
+  ).forEach(btn=>{
+
+    btn.classList.toggle(
+      "active",
+      btn.dataset.mood===mood
     );
 
-}
+  });
 
-
-function updateMoodButtons() {
-
-    document.querySelectorAll(".mood")
-        .forEach(button => {
-
-            button.classList.toggle(
-                "selected",
-                button.dataset.mood === currentMood
-            );
-
-        });
+  renderCalendar();
 
 }
 
+/* ================================
+   PAGE DESIGN
+================================ */
 
-/* =========================================================
-   LINE COUNT
-========================================================= */
+async function changeDesign(design){
 
-function calculateLines() {
+  const page =
+    currentPages[currentPage-1];
 
-    const editor =
-        document.getElementById("editor");
+  if(!page)return;
 
+  page.design=design;
 
-    const style =
-        getComputedStyle(editor);
+  await dbPut(
+    PAGE_STORE,
+    page
+  );
 
-
-    let lineHeight =
-        parseFloat(
-            style.lineHeight
-        );
-
-
-    if (!lineHeight ||
-        Number.isNaN(lineHeight)) {
-
-        lineHeight = 32;
-
-    }
-
-
-    const padding =
-        parseFloat(style.paddingTop) +
-        parseFloat(style.paddingBottom);
-
-
-    const height =
-        editor.scrollHeight;
-
-
-    let lines =
-        Math.ceil(
-            (height - padding) /
-            lineHeight
-        );
-
-
-    if (!editor.innerText.trim()) {
-
-        lines = 0;
-
-    }
-
-
-    return lines;
+  document.getElementById(
+    "page"
+  ).className=
+    "page design-"+design;
 
 }
 
+/* ================================
+   NEW PAGE
+================================ */
 
-function updateLineCounter() {
+async function newPage(){
 
-    const lines =
-        calculateLines();
+  await savePage(false);
 
+  const newPageNumber =
+    currentPages.length+1;
 
-    document.getElementById("lineCounter")
-        .textContent =
-            Math.min(lines,20) +
-            " / 20 lines";
+  const page={
+    id:uid(),
+    date:selectedDate,
+    page:newPageNumber,
+    html:"",
+    mood:"",
+    design:"classic",
+    drawing:null,
+    updatedAt:Date.now()
+  };
+
+  currentPages.push(page);
+
+  currentPage=
+    currentPages.length;
+
+  await dbPut(
+    PAGE_STORE,
+    page
+  );
+
+  renderPage();
+
+  await loadQuote();
 
 }
 
+/* ================================
+   PAGE NAVIGATION
+================================ */
 
-/* =========================================================
-   LIMIT 20 LINES
-========================================================= */
+async function goPage(number,direction){
 
-document.getElementById("editor")
-    .addEventListener(
-        "input",
-        function() {
+  if(number<1){
+    return;
+  }
 
-            const lines =
-                calculateLines();
+  if(number>currentPages.length){
 
+    return;
 
-            if (lines > 20) {
+  }
 
-                this.innerHTML =
-                    lastGoodHTML;
+  await savePage(false);
 
+  currentPage=number;
 
-                placeCaretAtEnd(this);
+  const page =
+    document.getElementById("page");
 
+  page.classList.remove(
+    "turnNext",
+    "turnPrev"
+  );
 
-                showToast(
-                    "20 lines reached. Turn to the next page."
-                );
+  void page.offsetWidth;
 
-                updateLineCounter();
+  page.classList.add(
+    direction==="next"
+      ?"turnNext"
+      :"turnPrev"
+  );
 
-                return;
+  renderPage();
 
-            }
+  loadQuote();
 
+  loadTodos();
 
-            lastGoodHTML =
-                this.innerHTML;
+  loadMemories();
 
+}
 
-            updateLineCounter();
+function nextPage(){
 
-        }
+  if(currentPage<currentPages.length){
+
+    goPage(
+      currentPage+1,
+      "next"
     );
 
-
-function placeCaretAtEnd(element) {
-
-    element.focus();
-
-    const range =
-        document.createRange();
-
-    range.selectNodeContents(element);
-
-    range.collapse(false);
-
-    const selection =
-        window.getSelection();
-
-    selection.removeAllRanges();
-
-    selection.addRange(range);
+  }
 
 }
 
+function previousPage(){
 
-/* =========================================================
-   RICH TEXT
-========================================================= */
+  if(currentPage>1){
 
-function formatText(command) {
-
-    document.execCommand(
-        command,
-        false,
-        null
+    goPage(
+      currentPage-1,
+      "prev"
     );
 
-    document.getElementById("editor")
-        .focus();
+  }
 
 }
 
+/* ================================
+   TEXT FORMATTING
+================================ */
 
-function insertBullet() {
+function formatText(command){
 
-    document.execCommand(
-        "insertUnorderedList",
-        false,
-        null
-    );
+  document.execCommand(
+    command,
+    false,
+    null
+  );
 
-}
+  document.getElementById(
+    "editor"
+  ).focus();
 
-
-/* =========================================================
-   PAGE COUNT
-========================================================= */
-
-async function getPagesForDate(date) {
-
-    const pages =
-        await getAllRecords(
-            PAGE_STORE
-        );
-
-
-    return pages
-        .filter(
-            p => p.date === date
-        )
-        .sort(
-            (a,b) =>
-                a.page - b.page
-        );
+  scheduleAutoSave();
 
 }
 
+/* ================================
+   20 LINE LIMIT
+================================ */
 
-async function updatePageNumber() {
+function countLines(){
 
-    const pages =
-        await getPagesForDate(
-            selectedDate
-        );
+  const editor=
+    document.getElementById("editor");
 
+  const style=
+    getComputedStyle(editor);
 
-    const total =
-        Math.max(
-            pages.length,
-            currentPage + 1
-        );
+  const lineHeight=
+    parseFloat(style.lineHeight);
 
-
-    document.getElementById("pageNumber")
-        .textContent =
-            "Page " +
-            (currentPage + 1) +
-            " of " +
-            total;
+  return Math.ceil(
+    editor.scrollHeight/lineHeight
+  );
 
 }
 
-
-/* =========================================================
-   NEW SAME DATE PAGE
-========================================================= */
-
-async function newSameDatePage() {
-
-    await saveCurrentPage(false);
-
-    currentPage++;
-
-    document.getElementById("editor")
-        .innerHTML = "";
-
-    currentMood = "";
-
-    lastGoodHTML = "";
-
-    updateMoodButtons();
-
-    updateLineCounter();
-
-    updatePageNumber();
-
-    renderAttachments();
-
-    showToast(
-        "New page created for " +
-        selectedDate
-    );
-
-}
-
-
-/* =========================================================
-   NEXT PAGE
-========================================================= */
-
-async function nextPage() {
-
-    await saveCurrentPage(false);
-
-
-    const pages =
-        await getPagesForDate(
-            selectedDate
-        );
-
-
-    if (currentPage < pages.length - 1) {
-
-        await turnPageAnimation(
-            "next"
-        );
-
-        currentPage++;
-
-        await loadCurrentPage();
-
-        return;
-
-    }
-
-
-    const answer =
-        confirm(
-            "Create another page for the same date?"
-        );
-
-
-    if (answer) {
-
-        await newSameDatePage();
-
-    } else {
-
-        changeDate(1);
-
-    }
-
-}
-
-
-/* =========================================================
-   PREVIOUS PAGE
-========================================================= */
-
-async function previousPage() {
-
-    await saveCurrentPage(false);
-
-
-    if (currentPage > 0) {
-
-        await turnPageAnimation(
-            "prev"
-        );
-
-        currentPage--;
-
-        await loadCurrentPage();
-
-        return;
-
-    }
-
-
-    changeDate(-1);
-
-}
-
-
-/* =========================================================
-   PAGE ANIMATION
-========================================================= */
-
-function turnPageAnimation(direction) {
-
-    return new Promise(resolve => {
-
-        const page =
-            document.getElementById(
-                "diaryPage"
-            );
-
-
-        page.classList.add(
-            direction === "next"
-                ? "turn-next"
-                : "turn-prev"
-        );
-
-
-        setTimeout(() => {
-
-            page.classList.remove(
-                "turn-next",
-                "turn-prev"
-            );
-
-            resolve();
-
-        },550);
-
-    });
-
-}
-
-
-/* =========================================================
-   DATE CHANGE
-========================================================= */
-
-async function changeDate(days) {
-
-    await saveCurrentPage(false);
-
-
-    const d =
-        new Date(
-            selectedDate + "T12:00:00"
-        );
-
-
-    d.setDate(
-        d.getDate() + days
-    );
-
-
-    const newDate =
-        d.getFullYear() + "-" +
-        String(d.getMonth()+1)
-            .padStart(2,"0") + "-" +
-        String(d.getDate())
-            .padStart(2,"0");
-
-
-    await selectDate(newDate);
-
-}
-
-
-/* =========================================================
-   CALENDAR
-========================================================= */
-
-async function changeMonth(amount) {
-
-    await saveCurrentPage(false);
-
-    calendarDate.setMonth(
-        calendarDate.getMonth() + amount
-    );
-
-    renderCalendar();
-
-}
-
-
-async function renderCalendar() {
-
-    if (!db) return;
-
-
-    const pages =
-        await getAllRecords(
-            PAGE_STORE
-        );
-
-
-    const events =
-        await getAllRecords(
-            EVENT_STORE
-        );
-
-
-    const year =
-        calendarDate.getFullYear();
-
-
-    const month =
-        calendarDate.getMonth();
-
-
-    const firstDay =
-        new Date(
-            year,
-            month,
-            1
-        ).getDay();
-
-
-    const daysInMonth =
-        new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
-
-
-    document.getElementById("calendarTitle")
-        .textContent =
-            new Date(
-                year,
-                month,
-                1
-            ).toLocaleDateString(
-                undefined,
-                {
-                    month:"long",
-                    year:"numeric"
-                }
-            );
-
-
-    const grid =
-        document.getElementById(
-            "calendarGrid"
-        );
-
-
-    grid.innerHTML = "";
-
-
-    [
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat"
-    ].forEach(day => {
-
-        const el =
-            document.createElement("div");
-
-        el.className =
-            "calendar-weekday";
-
-        el.textContent = day;
-
-        grid.appendChild(el);
-
-    });
-
-
-    for (
-        let i=0;
-        i<firstDay;
-        i++
-    ) {
-
-        grid.appendChild(
-            document.createElement("div")
-        );
-
-    }
-
-
-    for (
-        let day=1;
-        day<=daysInMonth;
-        day++
-    ) {
-
-        const date =
-            year + "-" +
-            String(month+1).padStart(2,"0") +
-            "-" +
-            String(day).padStart(2,"0");
-
-
-        const cell =
-            document.createElement("div");
-
-
-        cell.className = "day";
-
-
-        if (date === todayString()) {
-
-            cell.classList.add(
-                "today"
-            );
-
-        }
-
-
-        if (date === selectedDate) {
-
-            cell.classList.add(
-                "selected"
-            );
-
-        }
-
-
-        const datePages =
-            pages
-                .filter(
-                    p => p.date === date
-                )
-                .sort(
-                    (a,b) =>
-                        a.page-b.page
-                );
-
-
-        const mood =
-            datePages.find(
-                p => p.mood
-            );
-
-
-        const hasEvent =
-            events.some(
-                e => e.date === date
-            );
-
-
-        const googleHasEvent =
-            googleEvents.some(
-                e => {
-
-                    const start =
-                        e.start &&
-                        (
-                            e.start.dateTime ||
-                            e.start.date
-                        );
-
-                    return start &&
-                        String(start)
-                            .startsWith(date);
-
-                }
-            );
-
-
-        cell.innerHTML =
-
-            '<span class="num">' +
-            day +
-            '</span>' +
-
-            (
-                hasEvent ||
-                googleHasEvent
-                ? '<span class="event-dot"></span>'
-                : ''
-            ) +
-
-            (
-                mood
-                ? '<span class="day-mood">' +
-                    escapeHTML(mood.mood) +
-                  '</span>'
-                : ''
-            );
-
-
-        cell.onclick =
-            () => selectDate(date);
-
-
-        grid.appendChild(cell);
-
-    }
-
-}
-
-
-/* =========================================================
-   EVENTS
-========================================================= */
-
-function openEventModal() {
-
-    document.getElementById("eventDate")
-        .value = selectedDate;
-
-    document.getElementById("eventTitle")
-        .value = "";
-
-    document.getElementById("eventTime")
-        .value = "09:00";
-
-    document.getElementById("eventModal")
-        .hidden = false;
-
-}
-
-
-function closeEventModal() {
-
-    document.getElementById("eventModal")
-        .hidden = true;
-
-}
-
-
-async function saveEvent() {
-
-    const title =
-        document.getElementById(
-            "eventTitle"
-        ).value.trim();
-
-
-    const date =
-        document.getElementById(
-            "eventDate"
-        ).value;
-
-
-    const time =
-        document.getElementById(
-            "eventTime"
-        ).value;
-
-
-    const reminder =
-        Number(
-            document.getElementById(
-                "eventReminder"
-            ).value
-        );
-
-
-    if (!title || !date) {
+document
+  .getElementById("editor")
+  .addEventListener(
+    "input",
+    function(){
+
+      if(countLines()>20){
 
         alert(
-            "Please enter event and date."
+          "This diary page is limited to 20 lines. Turn to the next page to continue."
         );
 
-        return;
+      }
 
     }
+  );
 
+/* ================================
+   TODO
+================================ */
 
-    const event = {
+async function loadTodos(){
 
-        id:
-            "event-" +
-            Date.now() +
-            "-" +
-            Math.random()
-                .toString(36)
-                .slice(2),
+  const all =
+    await dbGetAll(TODO_STORE);
 
-        title:title,
+  const todos =
+    all
+      .filter(t=>t.date===selectedDate)
+      .sort(
+        (a,b)=>
+          a.createdAt-b.createdAt
+      );
 
-        date:date,
-
-        time:time,
-
-        reminderMinutes:reminder,
-
-        createdAt:
-            new Date().toISOString()
-
-    };
-
-
-    await putRecord(
-        EVENT_STORE,
-        event
-    );
-
-
-    closeEventModal();
-
-    renderEvents();
-
-    renderCalendar();
-
-    scheduleEventAlert(event);
-
-    showToast(
-        "Event saved."
-    );
-
-}
-
-
-async function renderEvents() {
-
-    if (!db) return;
-
-
-    const events =
-        await getAllRecords(
-            EVENT_STORE
-        );
-
-
-    const list =
-        document.getElementById(
-            "eventList"
-        );
-
-
-    list.innerHTML = "";
-
-
-    const ownEvents =
-        events
-            .filter(
-                e => e.date === selectedDate
-            )
-            .sort(
-                (a,b) =>
-                    (a.time || "")
-                    .localeCompare(
-                        b.time || ""
-                    )
-            );
-
-
-    if (!ownEvents.length &&
-        !googleEventsForDate().length) {
-
-        list.innerHTML =
-            "<p>No events for this date.</p>";
-
-        return;
-
-    }
-
-
-    ownEvents.forEach(event => {
-
-        const item =
-            document.createElement("div");
-
-        item.className =
-            "event-item";
-
-
-        item.innerHTML =
-
-            "<b>📌 " +
-            escapeHTML(event.title) +
-            "</b>" +
-
-            (
-                event.time
-                ? "<br>⏰ " +
-                    escapeHTML(event.time)
-                : ""
-            ) +
-
-            "<br><small>Diary event</small>" +
-
-            '<br><button class="btn danger" ' +
-            'style="margin-top:6px" ' +
-            'onclick="deleteEvent(\'' +
-            event.id +
-            '\')">' +
-            'Delete</button>';
-
-
-        list.appendChild(item);
-
-    });
-
-
-    googleEventsForDate()
-        .forEach(event => {
-
-            const item =
-                document.createElement("div");
-
-            item.className =
-                "event-item google";
-
-
-            const title =
-                event.summary ||
-                "Google Calendar event";
-
-
-            const start =
-                event.start &&
-                (
-                    event.start.dateTime ||
-                    event.start.date
-                );
-
-
-            let time = "";
-
-            if (start &&
-                start.includes("T")) {
-
-                time =
-                    new Date(start)
-                        .toLocaleTimeString(
-                            [],
-                            {
-                                hour:"2-digit",
-                                minute:"2-digit"
-                            }
-                        );
-
-            }
-
-
-            item.innerHTML =
-
-                "<b>🗓 " +
-                escapeHTML(title) +
-                "</b>" +
-
-                (
-                    time
-                    ? "<br>⏰ " + time
-                    : ""
-                ) +
-
-                "<br><small>Google Calendar</small>";
-
-
-            list.appendChild(item);
-
-        });
-
-}
-
-
-async function deleteEvent(id) {
-
-    if (!confirm(
-        "Delete this event?"
-    )) {
-
-        return;
-
-    }
-
-
-    await deleteRecord(
-        EVENT_STORE,
-        id
-    );
-
-
-    renderEvents();
-
-    renderCalendar();
-
-    showToast(
-        "Event deleted."
-    );
-
-}
-
-
-/* =========================================================
-   GOOGLE EVENTS
-========================================================= */
-
-function googleEventsForDate() {
-
-    return googleEvents.filter(event => {
-
-        const start =
-            event.start &&
-            (
-                event.start.dateTime ||
-                event.start.date
-            );
-
-
-        return start &&
-            String(start)
-                .startsWith(selectedDate);
-
-    });
-
-}
-
-
-function openGoogleModal() {
-
-    getSetting(
-        GOOGLE_CLIENT_KEY
-    ).then(value => {
-
-        if (value) {
-
-            document.getElementById(
-                "googleClientId"
-            ).value = value;
-
-        }
-
-    });
-
-
+  const list =
     document.getElementById(
-        "googleModal"
-    ).hidden = false;
-
-}
-
-
-function closeGoogleModal() {
-
-    document.getElementById(
-        "googleModal"
-    ).hidden = true;
-
-}
-
-
-async function connectGoogleCalendar() {
-
-    const clientId =
-        document.getElementById(
-            "googleClientId"
-        ).value.trim();
-
-
-    if (!clientId) {
-
-        alert(
-            "Enter your Google OAuth Client ID."
-        );
-
-        return;
-
-    }
-
-
-    await saveSetting(
-        GOOGLE_CLIENT_KEY,
-        clientId
+      "todoList"
     );
 
+  list.innerHTML="";
 
-    if (!window.google ||
-        !google.accounts ||
-        !google.accounts.oauth2) {
+  todos.forEach(todo=>{
 
-        alert(
-            "Google Identity Services has not loaded yet. Check your internet connection and try again."
-        );
+    const row=
+      document.createElement("div");
 
-        return;
+    row.className=
+      "todoItem "+
+      (todo.done?"done":"");
 
-    }
+    row.innerHTML=`
 
+      <input
+        type="checkbox"
+        ${todo.done?"checked":""}
+        onchange="toggleTodo('${todo.id}',this.checked)">
 
-    const client =
-        google.accounts.oauth2
-            .initTokenClient({
+      <span class="todoText">
+        ${escapeHtml(todo.text)}
+      </span>
 
-                client_id:clientId,
-
-                scope:
-                    "https://www.googleapis.com/auth/calendar.readonly",
-
-                callback:
-                    async response => {
-
-                        if (response.error) {
-
-                            console.error(
-                                response
-                            );
-
-                            alert(
-                                "Google Calendar authorization failed."
-                            );
-
-                            return;
-
-                        }
-
-
-                        googleToken =
-                            response.access_token;
-
-
-                        sessionStorage.setItem(
-                            GOOGLE_TOKEN_KEY,
-                            googleToken
-                        );
-
-
-                        await loadGoogleCalendarEvents();
-
-                        showToast(
-                            "Google Calendar connected."
-                        );
-
-                    }
-
-            });
-
-
-    client.requestAccessToken({
-        prompt:"consent"
-    });
-
-}
-
-
-async function loadGoogleCalendarEvents() {
-
-    if (!googleToken) {
-
-        googleToken =
-            sessionStorage.getItem(
-                GOOGLE_TOKEN_KEY
-            );
-
-    }
-
-
-    if (!googleToken) {
-
-        alert(
-            "Connect Google Calendar first."
-        );
-
-        return;
-
-    }
-
-
-    const start =
-        new Date(
-            calendarDate.getFullYear(),
-            calendarDate.getMonth(),
-            1
-        );
-
-
-    const end =
-        new Date(
-            calendarDate.getFullYear(),
-            calendarDate.getMonth()+1,
-            1
-        );
-
-
-    const url =
-        "https://www.googleapis.com/calendar/v3/calendars/primary/events" +
-        "?singleEvents=true" +
-        "&orderBy=startTime" +
-        "&timeMin=" +
-        encodeURIComponent(
-            start.toISOString()
-        ) +
-        "&timeMax=" +
-        encodeURIComponent(
-            end.toISOString()
-        ) +
-        "&maxResults=250";
-
-
-    try {
-
-        const response =
-            await fetch(
-                url,
-                {
-                    headers:{
-                        Authorization:
-                            "Bearer " +
-                            googleToken
-                    }
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Google Calendar request failed."
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        googleEvents =
-            data.items || [];
-
-
-        renderCalendar();
-
-        renderEvents();
-
-
-        googleEvents.forEach(
-            scheduleGoogleEventAlert
-        );
-
-
-        showToast(
-            googleEvents.length +
-            " Google Calendar events loaded."
-        );
-
-
-    } catch(error) {
-
-        console.error(error);
-
-        alert(
-            "Could not load Google Calendar. You may need to reconnect."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   NOTIFICATIONS
-========================================================= */
-
-async function enableAlerts() {
-
-    if (!("Notification" in window)) {
-
-        alert(
-            "This browser does not support notifications."
-        );
-
-        return;
-
-    }
-
-
-    const permission =
-        await Notification.requestPermission();
-
-
-    if (permission !== "granted") {
-
-        alert(
-            "Notification permission was not granted."
-        );
-
-        return;
-
-    }
-
-
-    showToast(
-        "Diary alerts enabled."
-    );
-
-
-    const events =
-        await getAllRecords(
-            EVENT_STORE
-        );
-
-
-    events.forEach(
-        scheduleEventAlert
-    );
-
-
-    googleEvents.forEach(
-        scheduleGoogleEventAlert
-    );
-
-}
-
-
-function scheduleEventAlert(event) {
-
-    if (!("Notification" in window) ||
-        Notification.permission !== "granted") {
-
-        return;
-
-    }
-
-
-    if (!event.date ||
-        !event.time) {
-
-        return;
-
-    }
-
-
-    const target =
-        new Date(
-            event.date +
-            "T" +
-            event.time
-        );
-
-
-    const reminder =
-        Number(
-            event.reminderMinutes || 0
-        );
-
-
-    const alertTime =
-        target.getTime() -
-        reminder * 60000;
-
-
-    const delay =
-        alertTime -
-        Date.now();
-
-
-    if (delay <= 0 ||
-        delay > 2147483647) {
-
-        return;
-
-    }
-
-
-    setTimeout(() => {
-
-        new Notification(
-            "📅 Diary Reminder",
-            {
-                body:
-                    event.title +
-                    " — " +
-                    event.date +
-                    " " +
-                    event.time
-            }
-        );
-
-    },delay);
-
-}
-
-
-function scheduleGoogleEventAlert(event) {
-
-    if (!("Notification" in window) ||
-        Notification.permission !== "granted") {
-
-        return;
-
-    }
-
-
-    const start =
-        event.start &&
-        event.start.dateTime;
-
-
-    if (!start) return;
-
-
-    const target =
-        new Date(start);
-
-
-    const delay =
-        target.getTime() -
-        Date.now();
-
-
-    if (delay <= 0 ||
-        delay > 2147483647) {
-
-        return;
-
-    }
-
-
-    setTimeout(() => {
-
-        new Notification(
-            "🗓 Google Calendar",
-            {
-                body:
-                    event.summary ||
-                    "Calendar event"
-            }
-        );
-
-    },delay);
-
-}
-
-
-/* =========================================================
-   MEMORY / ATTACHMENTS
-========================================================= */
-
-async function addMemory(event,type) {
-
-    const file =
-        event.target.files &&
-        event.target.files[0];
-
-
-    if (!file) return;
-
-
-    const record = {
-
-        id:
-            "memory-" +
-            Date.now() +
-            "-" +
-            Math.random()
-                .toString(36)
-                .slice(2),
-
-        date:
-            selectedDate,
-
-        page:
-            currentPage,
-
-        name:
-            file.name,
-
-        type:
-            file.type || "application/octet-stream",
-
-        size:
-            file.size,
-
-        blob:
-            file,
-
-        memoryType:
-            type,
-
-        createdAt:
-            new Date().toISOString()
-
-    };
-
-
-    await putRecord(
-        ATTACHMENT_STORE,
-        record
-    );
-
-
-    event.target.value = "";
-
-
-    renderAttachments();
-
-    showToast(
-        "Memory attached."
-    );
-
-}
-
-
-async function renderAttachments() {
-
-    /* Attachments are displayed in Gallery.
-       This section can be extended later
-       to show them directly on the page. */
-
-}
-
-
-/* =========================================================
-   GALLERY
-========================================================= */
-
-async function openGallery() {
-
-    document.getElementById(
-        "galleryModal"
-    ).hidden = false;
-
-
-    await renderGallery();
-
-}
-
-
-function closeGallery() {
-
-    document.getElementById(
-        "galleryModal"
-    ).hidden = true;
-
-}
-
-
-async function renderGallery() {
-
-    const gallery =
-        document.getElementById(
-            "gallery"
-        );
-
-
-    gallery.innerHTML =
-        "<p>Loading memories...</p>";
-
-
-    const memories =
-        await getAllRecords(
-            ATTACHMENT_STORE
-        );
-
-
-    memories.sort(
-        (a,b) =>
-            String(b.createdAt)
-                .localeCompare(
-                    String(a.createdAt)
-                )
-    );
-
-
-    gallery.innerHTML = "";
-
-
-    if (!memories.length) {
-
-        gallery.innerHTML =
-            "<p>No memories attached yet.</p>";
-
-        return;
-
-    }
-
-
-    for (const memory of memories) {
-
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "memory-card";
-
-
-        if (
-            memory.type &&
-            memory.type.startsWith("image/")
-        ) {
-
-            const img =
-                document.createElement("img");
-
-
-            img.src =
-                URL.createObjectURL(
-                    memory.blob
-                );
-
-
-            img.onclick =
-                () => openLightbox(
-                    img.src
-                );
-
-
-            card.appendChild(img);
-
-        } else {
-
-            const icon =
-                document.createElement("div");
-
-            icon.style.fontSize = "55px";
-
-            icon.style.textAlign = "center";
-
-            icon.style.padding = "25px";
-
-            icon.textContent = "📄";
-
-            card.appendChild(icon);
-
-        }
-
-
-        const info =
-            document.createElement("div");
-
-        info.className =
-            "memory-info";
-
-
-        info.innerHTML =
-
-            "<b>" +
-            escapeHTML(memory.name) +
-            "</b>" +
-
-            "<br>" +
-
-            escapeHTML(memory.date) +
-
-            "<br>" +
-
-            "<small>" +
-            escapeHTML(
-                memory.memoryType || "memory"
-            ) +
-            "</small>";
-
-
-        card.appendChild(info);
-
-
-        const actions =
-            document.createElement("div");
-
-        actions.className =
-            "memory-actions";
-
-
-        if (
-            memory.type &&
-            memory.type.startsWith("image/")
-        ) {
-
-            const view =
-                document.createElement("button");
-
-            view.className =
-                "btn secondary";
-
-            view.textContent =
-                "View";
-
-            view.onclick =
-                () => {
-
-                    const url =
-                        URL.createObjectURL(
-                            memory.blob
-                        );
-
-                    openLightbox(url);
-
-                };
-
-            actions.appendChild(view);
-
-        }
-
-
-        const del =
-            document.createElement("button");
-
-        del.className =
-            "btn danger";
-
-        del.textContent =
-            "Delete";
-
-
-        del.onclick =
-            () => deleteMemory(
-                memory.id
-            );
-
-
-        actions.appendChild(del);
-
-
-        card.appendChild(actions);
-
-
-        gallery.appendChild(card);
-
-    }
-
-}
-
-
-/* =========================================================
-   DELETE MEMORY
-========================================================= */
-
-async function deleteMemory(id) {
-
-    if (!confirm(
-        "Delete this memory permanently?"
-    )) {
-
-        return;
-
-    }
-
-
-    await deleteRecord(
-        ATTACHMENT_STORE,
-        id
-    );
-
-
-    await renderGallery();
-
-    showToast(
-        "Memory deleted."
-    );
-
-}
-
-
-/* =========================================================
-   LIGHTBOX
-========================================================= */
-
-function openLightbox(url) {
-
-    document.getElementById(
-        "lightboxImage"
-    ).src = url;
-
-
-    document.getElementById(
-        "lightboxModal"
-    ).hidden = false;
-
-}
-
-
-function closeLightbox() {
-
-    document.getElementById(
-        "lightboxModal"
-    ).hidden = true;
-
-
-    document.getElementById(
-        "lightboxImage"
-    ).src = "";
-
-}
-
-
-/* =========================================================
-   BACKUP
-========================================================= */
-
-async function blobToDataURL(blob) {
-
-    return new Promise(
-        (resolve,reject) => {
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload =
-                () => resolve(
-                    reader.result
-                );
-
-
-            reader.onerror =
-                reject;
-
-
-            reader.readAsDataURL(blob);
-
-        }
-    );
-
-}
-
-
-async function backupDiary() {
-
-    await saveCurrentPage(false);
-
-
-    const pages =
-        await getAllRecords(
-            PAGE_STORE
-        );
-
-
-    const events =
-        await getAllRecords(
-            EVENT_STORE
-        );
-
-
-    const memories =
-        await getAllRecords(
-            ATTACHMENT_STORE
-        );
-
-
-    const exportedMemories = [];
-
-
-    for (
-        const memory of memories
-    ) {
-
-        exportedMemories.push({
-
-            id:memory.id,
-
-            date:memory.date,
-
-            page:memory.page,
-
-            name:memory.name,
-
-            type:memory.type,
-
-            size:memory.size,
-
-            memoryType:
-                memory.memoryType,
-
-            createdAt:
-                memory.createdAt,
-
-            data:
-                await blobToDataURL(
-                    memory.blob
-                )
-
-        });
-
-    }
-
-
-    const backup = {
-
-        app:"My Personal Diary",
-
-        version:"8",
-
-        createdAt:
-            new Date().toISOString(),
-
-        pages:pages,
-
-        events:events,
-
-        memories:
-            exportedMemories
-
-    };
-
-
-    const blob =
-        new Blob(
-            [
-                JSON.stringify(
-                    backup,
-                    null,
-                    2
-                )
-            ],
-            {
-                type:"application/json"
-            }
-        );
-
-
-    const url =
-        URL.createObjectURL(blob);
-
-
-    const a =
-        document.createElement("a");
-
-
-    a.href = url;
-
-    a.download =
-        "my-personal-diary-v8-backup-" +
-        todayString() +
-        ".json";
-
-
-    a.click();
-
-
-    URL.revokeObjectURL(url);
-
-
-    showToast(
-        "Backup created."
-    );
-
-}
-
-
-/* =========================================================
-   RESTORE
-========================================================= */
-
-async function restoreDiary(event) {
-
-    const file =
-        event.target.files &&
-        event.target.files[0];
-
-
-    if (!file) return;
-
-
-    try {
-
-        const text =
-            await file.text();
-
-
-        const backup =
-            JSON.parse(text);
-
-
-        if (!backup.pages) {
-
-            throw new Error(
-                "Invalid diary backup."
-            );
-
-        }
-
-
-        for (
-            const page of backup.pages
-        ) {
-
-            await putRecord(
-                PAGE_STORE,
-                page
-            );
-
-        }
-
-
-        for (
-            const item of
-            (backup.events || [])
-        ) {
-
-            await putRecord(
-                EVENT_STORE,
-                item
-            );
-
-        }
-
-
-        for (
-            const memory of
-            (backup.memories || [])
-        ) {
-
-            const response =
-                await fetch(
-                    memory.data
-                );
-
-
-            const blob =
-                await response.blob();
-
-
-            await putRecord(
-                ATTACHMENT_STORE,
-                {
-                    id:memory.id,
-
-                    date:memory.date,
-
-                    page:memory.page,
-
-                    name:memory.name,
-
-                    type:memory.type,
-
-                    size:memory.size,
-
-                    memoryType:
-                        memory.memoryType,
-
-                    createdAt:
-                        memory.createdAt,
-
-                    blob:blob
-                }
-            );
-
-        }
-
-
-        await loadCurrentPage();
-
-        renderCalendar();
-
-
-        showToast(
-            "Diary restored successfully."
-        );
-
-
-    } catch(error) {
-
-        console.error(error);
-
-        alert(
-            "Could not restore this backup."
-        );
-
-    }
-
-
-    event.target.value = "";
-
-}
-
-
-/* =========================================================
-   PRINT CURRENT PAGE
-========================================================= */
-
-function printCurrentPage() {
-
-    const editor =
-        document.getElementById(
-            "editor"
-        );
-
-
-    const title =
-        document.getElementById(
-            "pageDateTitle"
-        ).textContent;
-
-
-    const mood =
-        currentMood
-            ? "<div style='font-size:25px'>" +
-              currentMood +
-              "</div>"
-            : "";
-
-
-    const win =
-        window.open(
-            "",
-            "_blank"
-        );
-
-
-    win.document.write(`
-
-        <!DOCTYPE html>
-
-        <html>
-
-        <head>
-
-        <title>${escapeHTML(title)}</title>
-
-        <style>
-
-        body {
-            font-family: Georgia,serif;
-            padding:40px;
-        }
-
-        .lines {
-            line-height:32px;
-        }
-
-        </style>
-
-        </head>
-
-        <body>
-
-        <h1>${escapeHTML(title)}</h1>
-
-        ${mood}
-
-        <div class="lines">
-        ${editor.innerHTML}
-        </div>
-
-        <script>
-
-        window.onload=function(){
-            window.print();
-        }
-
-        <\/script>
-
-        </body>
-
-        </html>
-
-    `);
-
-
-    win.document.close();
-
-}
-
-
-/* =========================================================
-   PRINT ALL
-========================================================= */
-
-async function printAllPages() {
-
-    const pages =
-        await getAllRecords(
-            PAGE_STORE
-        );
-
-
-    pages.sort(
-        (a,b) =>
-            a.date.localeCompare(b.date) ||
-            a.page-b.page
-    );
-
-
-    if (!pages.length) {
-
-        alert(
-            "No diary pages found."
-        );
-
-        return;
-
-    }
-
-
-    const win =
-        window.open(
-            "",
-            "_blank"
-        );
-
-
-    let html = `
-
-        <!DOCTYPE html>
-
-        <html>
-
-        <head>
-
-        <title>
-        My Personal Diary
-        </title>
-
-        <style>
-
-        body {
-            font-family:Georgia,serif;
-            padding:30px;
-        }
-
-        .page {
-            min-height:90vh;
-            padding:30px;
-            page-break-after:always;
-        }
-
-        </style>
-
-        </head>
-
-        <body>
+      <button
+        class="danger"
+        onclick="deleteTodo('${todo.id}')">
+        ×
+      </button>
 
     `;
 
+    list.appendChild(row);
 
-    pages.forEach(page => {
+  });
 
-        html += `
+  const pending =
+    todos.filter(t=>!t.done).length;
 
-            <div class="page">
+  document.getElementById(
+    "todoCount"
+  ).textContent=
+    pending+
+    " pending";
 
-                <h1>
-                ${escapeHTML(page.date)}
-                </h1>
+}
 
-                <h3>
-                Page ${page.page + 1}
-                </h3>
+async function addTodo(){
 
-                <div>
-                ${page.mood || ""}
-                </div>
+  const input =
+    document.getElementById(
+      "todoInput"
+    );
 
-                <div>
-                ${page.html || ""}
-                </div>
+  const text=
+    input.value.trim();
 
-            </div>
+  if(!text)return;
+
+  const todo={
+    id:uid(),
+    date:selectedDate,
+    text:text,
+    done:false,
+    createdAt:Date.now()
+  };
+
+  await dbPut(
+    TODO_STORE,
+    todo
+  );
+
+  input.value="";
+
+  await loadTodos();
+
+}
+
+async function toggleTodo(id,done){
+
+  const todo=
+    await dbGet(
+      TODO_STORE,
+      id
+    );
+
+  if(!todo)return;
+
+  todo.done=done;
+
+  await dbPut(
+    TODO_STORE,
+    todo
+  );
+
+  /*
+    If completed, it stays completed.
+    If unfinished, carry it forward.
+  */
+
+  if(!done){
+
+    const next=
+      new Date(
+        selectedDate+"T00:00:00"
+      );
+
+    next.setDate(
+      next.getDate()+1
+    );
+
+    const nextDate=
+      next.toISOString().slice(0,10);
+
+    const existing=
+      await dbGetAll(TODO_STORE);
+
+    const already=
+      existing.some(
+        t=>
+          t.date===nextDate &&
+          t.text===todo.text &&
+          t.carriedFrom===todo.id &&
+          !t.done
+      );
+
+    if(!already){
+
+      await dbPut(
+        TODO_STORE,
+        {
+          id:uid(),
+          date:nextDate,
+          text:todo.text,
+          done:false,
+          carriedFrom:todo.id,
+          createdAt:Date.now()
+        }
+      );
+
+    }
+
+  }
+
+  await loadTodos();
+
+}
+
+async function deleteTodo(id){
+
+  await dbDelete(
+    TODO_STORE,
+    id
+  );
+
+  await loadTodos();
+
+}
+
+/* ================================
+   ESCAPE HTML
+================================ */
+
+function escapeHtml(text){
+
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+/* ================================
+   CALENDAR
+================================ */
+
+function toggleCalendar(){
+
+  const box=
+    document.getElementById(
+      "calendarBox"
+    );
+
+  box.hidden=!box.hidden;
+
+  if(!box.hidden){
+
+    calendarDate=
+      new Date(
+        selectedDate+"T00:00:00"
+      );
+
+    renderCalendar();
+
+  }
+
+}
+
+function previousMonth(){
+
+  calendarDate.setMonth(
+    calendarDate.getMonth()-1
+  );
+
+  renderCalendar();
+
+}
+
+function nextMonth(){
+
+  calendarDate.setMonth(
+    calendarDate.getMonth()+1
+  );
+
+  renderCalendar();
+
+}
+
+async function renderCalendar(){
+
+  const year=
+    calendarDate.getFullYear();
+
+  const month=
+    calendarDate.getMonth();
+
+  document.getElementById(
+    "calendarTitle"
+  ).textContent=
+    calendarDate.toLocaleDateString(
+      undefined,
+      {
+        month:"long",
+        year:"numeric"
+      }
+    );
+
+  const grid=
+    document.getElementById(
+      "calendarGrid"
+    );
+
+  grid.innerHTML="";
+
+  const days=[
+    "Sun","Mon","Tue",
+    "Wed","Thu","Fri","Sat"
+  ];
+
+  days.forEach(day=>{
+
+    const el=
+      document.createElement("div");
+
+    el.className="calWeek";
+
+    el.textContent=day;
+
+    grid.appendChild(el);
+
+  });
+
+  const first=
+    new Date(year,month,1);
+
+  const start=
+    first.getDay();
+
+  const total=
+    new Date(
+      year,
+      month+1,
+      0
+    ).getDate();
+
+  const allPages=
+    await dbGetAll(PAGE_STORE);
+
+  for(let i=0;i<start;i++){
+
+    const blank=
+      document.createElement("div");
+
+    grid.appendChild(blank);
+
+  }
+
+  for(let day=1;day<=total;day++){
+
+    const date=
+      year+
+      "-"+
+      String(month+1).padStart(2,"0")+
+      "-"+
+      String(day).padStart(2,"0");
+
+    const cell=
+      document.createElement("button");
+
+    cell.className="calCell";
+
+    if(date===selectedDate){
+
+      cell.classList.add("selected");
+
+    }
+
+    const today=
+      new Date()
+        .toISOString()
+        .slice(0,10);
+
+    if(date===today){
+
+      cell.classList.add("today");
+
+    }
+
+    cell.innerHTML=
+      `<span>${day}</span>`;
+
+    const moods=
+      allPages
+        .filter(
+          p=>
+            p.date===date &&
+            p.mood
+        );
+
+    if(moods.length){
+
+      const mood=
+        document.createElement("span");
+
+      mood.className="mood";
+
+      mood.textContent=
+        moods[0].mood;
+
+      cell.appendChild(mood);
+
+    }
+
+    cell.onclick=()=>{
+
+      loadDate(date);
+
+      document.getElementById(
+        "calendarBox"
+      ).hidden=true;
+
+    };
+
+    grid.appendChild(cell);
+
+  }
+
+}
+
+/* ================================
+   MEMORIES
+================================ */
+
+function openMemoryInput(){
+
+  const choice=
+    confirm(
+      "Press OK for camera/photo.\nPress Cancel for document/scan."
+    );
+
+  if(choice){
+
+    document
+      .getElementById("memoryInput")
+      .click();
+
+  }else{
+
+    document
+      .getElementById("documentInput")
+      .click();
+
+  }
+
+}
+
+async function addMemoryFile(event){
+
+  const file=
+    event.target.files[0];
+
+  if(!file)return;
+
+  const reader=
+    new FileReader();
+
+  reader.onload=async()=>{
+
+    const attachment={
+      id:uid(),
+      date:selectedDate,
+      page:currentPage,
+      name:file.name,
+      type:file.type,
+      data:reader.result,
+      createdAt:Date.now()
+    };
+
+    await dbPut(
+      ATTACH_STORE,
+      attachment
+    );
+
+    event.target.value="";
+
+    await loadMemories();
+
+  };
+
+  reader.readAsDataURL(file);
+
+}
+
+async function loadMemories(){
+
+  const all=
+    await dbGetAll(
+      ATTACH_STORE
+    );
+
+  const memories=
+    all.filter(
+      m=>
+        m.date===selectedDate &&
+        m.page===currentPage
+    );
+
+  const grid=
+    document.getElementById(
+      "memoryGrid"
+    );
+
+  grid.innerHTML="";
+
+  memories.forEach(memory=>{
+
+    const card=
+      document.createElement("div");
+
+    card.className="memoryCard";
+
+    if(memory.type.startsWith("image/")){
+
+      card.innerHTML=`
+
+        <img
+          src="${memory.data}"
+          onclick="openLightbox('${memory.id}')">
+
+        <div style="font-size:11px">
+          ${escapeHtml(memory.name)}
+        </div>
+
+        <div class="memoryActions">
+
+          <button
+            class="danger"
+            onclick="deleteMemory('${memory.id}')">
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+    }else{
+
+      card.innerHTML=`
+
+        <div style="padding:15px">
+          📄 ${escapeHtml(memory.name)}
+        </div>
+
+        <div class="memoryActions">
+
+          <button
+            onclick="window.open('${memory.data}')">
+            Open
+          </button>
+
+          <button
+            class="danger"
+            onclick="deleteMemory('${memory.id}')">
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+    }
+
+    grid.appendChild(card);
+
+  });
+
+}
+
+async function deleteMemory(id){
+
+  if(!confirm(
+    "Delete this memory?"
+  ))return;
+
+  await dbDelete(
+    ATTACH_STORE,
+    id
+  );
+
+  await loadMemories();
+
+}
+
+async function openGallery(){
+
+  const all=
+    await dbGetAll(
+      ATTACH_STORE
+    );
+
+  const grid=
+    document.getElementById(
+      "galleryGrid"
+    );
+
+  grid.innerHTML="";
+
+  all
+    .sort(
+      (a,b)=>
+        b.createdAt-a.createdAt
+    )
+    .forEach(memory=>{
+
+      const card=
+        document.createElement("div");
+
+      card.className="memoryCard";
+
+      if(memory.type.startsWith("image/")){
+
+        card.innerHTML=`
+
+          <img
+            src="${memory.data}"
+            onclick="openLightbox('${memory.id}')">
+
+          <small>
+            ${memory.date}
+          </small>
+
+          <button
+            class="danger"
+            onclick="deleteGalleryMemory('${memory.id}')">
+            Delete
+          </button>
 
         `;
 
+      }else{
+
+        card.innerHTML=`
+
+          <div style="padding:15px">
+            📄 ${escapeHtml(memory.name)}
+          </div>
+
+          <small>
+            ${memory.date}
+          </small>
+
+          <button
+            class="danger"
+            onclick="deleteGalleryMemory('${memory.id}')">
+            Delete
+          </button>
+
+        `;
+
+      }
+
+      grid.appendChild(card);
+
     });
 
+  document.getElementById(
+    "galleryModal"
+  ).hidden=false;
 
-    html += `
+}
 
-        </body>
+async function deleteGalleryMemory(id){
 
-        </html>
+  if(!confirm(
+    "Delete this memory permanently?"
+  ))return;
+
+  await dbDelete(
+    ATTACH_STORE,
+    id
+  );
+
+  openGallery();
+
+  loadMemories();
+
+}
+
+function closeGallery(){
+
+  document.getElementById(
+    "galleryModal"
+  ).hidden=true;
+
+}
+
+async function openLightbox(id){
+
+  const memory=
+    await dbGet(
+      ATTACH_STORE,
+      id
+    );
+
+  if(!memory)return;
+
+  if(!memory.type.startsWith("image/"))
+    return;
+
+  document.getElementById(
+    "lightboxImage"
+  ).src=memory.data;
+
+  document.getElementById(
+    "lightboxModal"
+  ).hidden=false;
+
+}
+
+function closeLightbox(){
+
+  document.getElementById(
+    "lightboxModal"
+  ).hidden=true;
+
+}
+
+/* ================================
+   DRAWING
+================================ */
+
+let drawingEnabled=false;
+
+let drawTool="pen";
+
+let drawColor="#222";
+
+let drawing=false;
+
+let startX=0;
+
+let startY=0;
+
+let savedDrawing=null;
+
+let undoStack=[];
+
+let redoStack=[];
+
+const canvas=
+  document.getElementById(
+    "drawCanvas"
+  );
+
+const ctx=
+  canvas.getContext("2d");
+
+function resizeDrawCanvas(){
+
+  const rect=
+    document
+      .getElementById("editorWrap")
+      ?.getBoundingClientRect();
+
+  const editor=
+    document.getElementById("editor");
+
+  if(!editor)return;
+
+  const width=
+    editor.clientWidth;
+
+  const height=
+    editor.clientHeight;
+
+  canvas.width=
+    width*devicePixelRatio;
+
+  canvas.height=
+    height*devicePixelRatio;
+
+  canvas.style.width=
+    width+"px";
+
+  canvas.style.height=
+    height+"px";
+
+  ctx.setTransform(
+    devicePixelRatio,
+    0,
+    0,
+    devicePixelRatio,
+    0,
+    0
+  );
+
+  if(savedDrawing){
+
+    const img=
+      new Image();
+
+    img.onload=()=>{
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        width,
+        height
+      );
+
+    };
+
+    img.src=savedDrawing;
+
+  }
+
+}
+
+function toggleDrawing(){
+
+  drawingEnabled=
+    !drawingEnabled;
+
+  const area=
+    document.getElementById(
+      "drawArea"
+    );
+
+  const tools=
+    document.getElementById(
+      "drawTools"
+    );
+
+  area.classList.toggle(
+    "enabled",
+    drawingEnabled
+  );
+
+  tools.classList.toggle(
+    "show",
+    drawingEnabled
+  );
+
+  if(drawingEnabled){
+
+    resizeDrawCanvas();
+
+  }
+
+}
+
+function setDrawTool(tool){
+
+  drawTool=tool;
+
+  document
+    .querySelectorAll(
+      ".drawTools button"
+    )
+    .forEach(b=>
+      b.classList.remove("active")
+    );
+
+  const id=
+    "tool"+
+    tool.charAt(0).toUpperCase()+
+    tool.slice(1);
+
+  const button=
+    document.getElementById(id);
+
+  if(button){
+
+    button.classList.add("active");
+
+  }
+
+}
+
+function setDrawColor(color){
+
+  drawColor=color;
+
+  if(drawTool==="eraser"){
+
+    drawTool="pen";
+
+  }
+
+  setDrawTool(drawTool);
+
+}
+
+function pointerPosition(e){
+
+  const rect=
+    canvas.getBoundingClientRect();
+
+  return {
+
+    x:e.clientX-rect.left,
+
+    y:e.clientY-rect.top
+
+  };
+
+}
+
+function saveCanvasState(){
+
+  undoStack.push(
+    canvas.toDataURL("image/png")
+  );
+
+  if(undoStack.length>30){
+
+    undoStack.shift();
+
+  }
+
+  redoStack=[];
+
+}
+
+canvas.addEventListener(
+  "pointerdown",
+  e=>{
+
+    if(!drawingEnabled)return;
+
+    drawing=true;
+
+    canvas.setPointerCapture(
+      e.pointerId
+    );
+
+    const p=
+      pointerPosition(e);
+
+    startX=p.x;
+
+    startY=p.y;
+
+    saveCanvasState();
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      startX,
+      startY
+    );
+
+    ctx.strokeStyle=
+      drawTool==="eraser"
+        ?"rgba(0,0,0,1)"
+        :drawColor;
+
+    ctx.lineWidth=
+      drawTool==="eraser"
+        ?18
+        :2.5;
+
+    ctx.lineCap="round";
+
+  }
+);
+
+canvas.addEventListener(
+  "pointermove",
+  e=>{
+
+    if(!drawing)return;
+
+    const p=
+      pointerPosition(e);
+
+    if(drawTool==="pen"||
+       drawTool==="eraser"){
+
+      ctx.lineTo(
+        p.x,
+        p.y
+      );
+
+      ctx.stroke();
+
+      return;
+
+    }
+
+    /*
+      For line/circle we restore the
+      previous snapshot before drawing
+      the preview.
+    */
+
+    if(
+      drawTool==="line"||
+      drawTool==="circle"
+    ){
+
+      const previous=
+        undoStack[
+          undoStack.length-1
+        ];
+
+      if(previous){
+
+        const img=
+          new Image();
+
+        img.onload=()=>{
+
+          ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+          );
+
+          const rect=
+            canvas.getBoundingClientRect();
+
+          ctx.drawImage(
+            img,
+            0,
+            0,
+            rect.width,
+            rect.height
+          );
+
+          ctx.strokeStyle=
+            drawColor;
+
+          ctx.lineWidth=2.5;
+
+          ctx.beginPath();
+
+          if(drawTool==="line"){
+
+            ctx.moveTo(
+              startX,
+              startY
+            );
+
+            ctx.lineTo(
+              p.x,
+              p.y
+            );
+
+          }else{
+
+            const rx=
+              Math.abs(
+                p.x-startX
+              );
+
+            const ry=
+              Math.abs(
+                p.y-startY
+              );
+
+            const radius=
+              Math.sqrt(
+                rx*rx+
+                ry*ry
+              );
+
+            ctx.arc(
+              startX,
+              startY,
+              radius,
+              0,
+              Math.PI*2
+            );
+
+          }
+
+          ctx.stroke();
+
+        };
+
+        img.src=previous;
+
+      }
+
+    }
+
+  }
+);
+
+canvas.addEventListener(
+  "pointerup",
+  e=>{
+
+    if(!drawing)return;
+
+    drawing=false;
+
+    savedDrawing=
+      canvas.toDataURL(
+        "image/png"
+      );
+
+    scheduleAutoSave();
+
+  }
+);
+
+canvas.addEventListener(
+  "pointercancel",
+  ()=>{
+    drawing=false;
+  }
+);
+
+function restoreSnapshot(data){
+
+  if(!data)return;
+
+  const img=
+    new Image();
+
+  img.onload=()=>{
+
+    const rect=
+      canvas.getBoundingClientRect();
+
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    ctx.drawImage(
+      img,
+      0,
+      0,
+      rect.width,
+      rect.height
+    );
+
+    savedDrawing=
+      canvas.toDataURL(
+        "image/png"
+      );
+
+    scheduleAutoSave();
+
+  };
+
+  img.src=data;
+
+}
+
+function undoDrawing(){
+
+  if(!undoStack.length)return;
+
+  const current=
+    canvas.toDataURL("image/png");
+
+  redoStack.push(current);
+
+  const previous=
+    undoStack.pop();
+
+  restoreSnapshot(previous);
+
+}
+
+function redoDrawing(){
+
+  if(!redoStack.length)return;
+
+  const current=
+    canvas.toDataURL("image/png");
+
+  undoStack.push(current);
+
+  const next=
+    redoStack.pop();
+
+  restoreSnapshot(next);
+
+}
+
+function clearDrawing(){
+
+  if(!confirm(
+    "Clear all drawings on this page?"
+  ))return;
+
+  saveCanvasState();
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  savedDrawing=null;
+
+  scheduleAutoSave();
+
+}
+
+async function loadDrawing(){
+
+  const page=
+    currentPages[currentPage-1];
+
+  savedDrawing=
+    page?.drawing||null;
+
+  undoStack=[];
+
+  redoStack=[];
+
+  setTimeout(
+    resizeDrawCanvas,
+    50
+  );
+
+}
+
+/* ================================
+   EVENTS
+================================ */
+
+async function openEventModal(){
+
+  document.getElementById(
+    "eventDate"
+  ).value=selectedDate;
+
+  document.getElementById(
+    "eventTitle"
+  ).value="";
+
+  document.getElementById(
+    "eventTime"
+  ).value="";
+
+  document.getElementById(
+    "eventReminder"
+  ).value=10;
+
+  await renderEvents();
+
+  document.getElementById(
+    "eventModal"
+  ).hidden=false;
+
+}
+
+function closeEventModal(){
+
+  document.getElementById(
+    "eventModal"
+  ).hidden=true;
+
+}
+
+async function saveEvent(){
+
+  const title=
+    document.getElementById(
+      "eventTitle"
+    ).value.trim();
+
+  const date=
+    document.getElementById(
+      "eventDate"
+    ).value;
+
+  const time=
+    document.getElementById(
+      "eventTime"
+    ).value;
+
+  const reminder=
+    Number(
+      document.getElementById(
+        "eventReminder"
+      ).value
+    )||0;
+
+  if(!title||!date){
+
+    alert(
+      "Please enter event and date."
+    );
+
+    return;
+
+  }
+
+  await dbPut(
+    EVENT_STORE,
+    {
+      id:uid(),
+      title,
+      date,
+      time,
+      reminder,
+      createdAt:Date.now()
+    }
+  );
+
+  if(date===selectedDate){
+
+    await renderEvents();
+
+  }
+
+  renderCalendar();
+
+  alert("Event saved.");
+
+}
+
+async function renderEvents(){
+
+  const all=
+    await dbGetAll(
+      EVENT_STORE
+    );
+
+  const events=
+    all
+      .filter(
+        e=>e.date===selectedDate
+      )
+      .sort(
+        (a,b)=>
+          (a.time||"")
+          .localeCompare(
+            b.time||""
+          )
+      );
+
+  const list=
+    document.getElementById(
+      "eventList"
+    );
+
+  list.innerHTML="";
+
+  if(!events.length){
+
+    list.innerHTML=
+      "<p>No events for this date.</p>";
+
+    return;
+
+  }
+
+  events.forEach(event=>{
+
+    const row=
+      document.createElement("div");
+
+    row.style.padding="8px";
+
+    row.style.borderBottom=
+      "1px dotted #aaa";
+
+    row.innerHTML=`
+
+      🔔 <strong>
+      ${escapeHtml(event.title)}
+      </strong>
+
+      ${event.time
+        ?" — "+event.time
+        :""}
+
+      <button
+        class="danger"
+        style="float:right"
+        onclick="deleteEvent('${event.id}')">
+        Delete
+      </button>
 
     `;
 
+    list.appendChild(row);
 
-    win.document.write(html);
-
-    win.document.close();
-
-    win.focus();
-
-    setTimeout(
-        () => win.print(),
-        500
-    );
+  });
 
 }
 
+async function deleteEvent(id){
 
-/* =========================================================
-   SWIPE / DRAG PAGE TURNING
-========================================================= */
+  await dbDelete(
+    EVENT_STORE,
+    id
+  );
 
-let swipeStartX = 0;
+  await renderEvents();
 
-let swipeStartY = 0;
+}
 
+/* ================================
+   EVENT REMINDER
+================================ */
 
-const diaryPage =
+async function checkReminders(){
+
+  const events=
+    await dbGetAll(
+      EVENT_STORE
+    );
+
+  const now=
+    new Date();
+
+  events.forEach(event=>{
+
+    if(!event.date||!event.time)
+      return;
+
+    const eventDate=
+      new Date(
+        event.date+
+        "T"+
+        event.time
+      );
+
+    const reminderTime=
+      eventDate.getTime()-
+      (event.reminder||0)*60000;
+
+    const difference=
+      Math.abs(
+        now.getTime()-
+        reminderTime
+      );
+
+    if(
+      difference<60000 &&
+      now.getTime()<=eventDate.getTime()
+    ){
+
+      showEventPopup(
+        event
+      );
+
+    }
+
+  });
+
+}
+
+function showEventPopup(event){
+
+  alert(
+    "🔔 Reminder\n\n"+
+    event.title+
+    (event.time
+      ?"\nTime: "+event.time
+      :"")
+  );
+
+}
+
+/* ================================
+   GOOGLE CALENDAR
+================================ */
+
+const GOOGLE_CLIENT_KEY=
+  "googleCalendarClientId";
+
+async function connectGoogleCalendar(){
+
+  const input=
     document.getElementById(
-        "diaryPage"
+      "googleClientId"
+    ).value.trim();
+
+  if(!input){
+
+    alert(
+      "Please enter your Google OAuth Client ID."
     );
 
+    return;
 
-diaryPage.addEventListener(
-    "pointerdown",
-    event => {
+  }
 
-        swipeStartX =
-            event.clientX;
-
-        swipeStartY =
-            event.clientY;
-
+  await dbPut(
+    SETTINGS_STORE,
+    {
+      key:GOOGLE_CLIENT_KEY,
+      value:input
     }
-);
+  );
 
+  if(
+    !window.google||
+    !google.accounts||
+    !google.accounts.oauth2
+  ){
 
-diaryPage.addEventListener(
-    "pointerup",
-    event => {
+    alert(
+      "Google Calendar service is still loading. Please try again."
+    );
 
-        const dx =
-            event.clientX -
-            swipeStartX;
+    return;
 
+  }
 
-        const dy =
-            event.clientY -
-            swipeStartY;
+  const client=
+    google.accounts.oauth2.initTokenClient({
 
+      client_id:input,
 
-        if (
-            Math.abs(dx) > 80 &&
-            Math.abs(dx) > Math.abs(dy)
-        ) {
+      scope:
+        "https://www.googleapis.com/auth/calendar.readonly",
 
-            if (dx < 0) {
+      callback:response=>{
 
-                nextPage();
+        if(response.access_token){
 
-            } else {
+          sessionStorage.setItem(
+            "googleCalendarToken",
+            response.access_token
+          );
 
-                previousPage();
-
-            }
+          alert(
+            "Google Calendar connected."
+          );
 
         }
 
-    }
-);
+      }
 
+    });
 
-/* =========================================================
-   STARTUP
-========================================================= */
-
-async function startDiary() {
-
-    try {
-
-        await openDatabase();
-
-        await migrateOldDiary();
-
-
-        document.getElementById(
-            "datePicker"
-        ).value =
-            selectedDate;
-
-
-        calendarDate =
-            new Date(
-                selectedDate +
-                "T12:00:00"
-            );
-
-
-        await loadCurrentPage();
-
-        renderCalendar();
-
-
-        const savedToken =
-            sessionStorage.getItem(
-                GOOGLE_TOKEN_KEY
-            );
-
-
-        if (savedToken) {
-
-            googleToken =
-                savedToken;
-
-        }
-
-
-        setStatus(
-            "Diary ready."
-        );
-
-
-    } catch(error) {
-
-        console.error(error);
-
-        setStatus(
-            "Database error. Please reload the diary."
-        );
-
-        alert(
-            "Diary storage could not be opened. Please reload the page."
-        );
-
-    }
+  client.requestAccessToken();
 
 }
 
+/* ================================
+   SETTINGS
+================================ */
 
-/* =========================================================
-   SAVE WHEN LEAVING PAGE
-========================================================= */
+async function openSettings(){
+
+  const setting=
+    await dbGet(
+      SETTINGS_STORE,
+      GOOGLE_CLIENT_KEY
+    );
+
+  document.getElementById(
+    "googleClientId"
+  ).value=
+    setting?.value||"";
+
+  const page=
+    currentPages[currentPage-1];
+
+  document.getElementById(
+    "designSelect"
+  ).value=
+    page?.design||"classic";
+
+  document.getElementById(
+    "settingsModal"
+  ).hidden=false;
+
+}
+
+function closeSettings(){
+
+  document.getElementById(
+    "settingsModal"
+  ).hidden=true;
+
+}
+
+/* ================================
+   BACKUP
+================================ */
+
+async function backupDiary(){
+
+  const pages=
+    await dbGetAll(PAGE_STORE);
+
+  const events=
+    await dbGetAll(EVENT_STORE);
+
+  const attachments=
+    await dbGetAll(ATTACH_STORE);
+
+  const todos=
+    await dbGetAll(TODO_STORE);
+
+  const settings=
+    await dbGetAll(SETTINGS_STORE);
+
+  const backup={
+    version:"8.1",
+    createdAt:new Date().toISOString(),
+    pages,
+    events,
+    attachments,
+    todos,
+    settings
+  };
+
+  const blob=
+    new Blob(
+      [
+        JSON.stringify(
+          backup
+        )
+      ],
+      {
+        type:"application/json"
+      }
+    );
+
+  const url=
+    URL.createObjectURL(blob);
+
+  const a=
+    document.createElement("a");
+
+  a.href=url;
+
+  a.download=
+    "my-personal-diary-backup.json";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+}
+
+async function restoreDiary(event){
+
+  const file=
+    event.target.files[0];
+
+  if(!file)return;
+
+  const text=
+    await file.text();
+
+  try{
+
+    const backup=
+      JSON.parse(text);
+
+    for(
+      const page
+      of (backup.pages||[])
+    ){
+
+      await dbPut(
+        PAGE_STORE,
+        page
+      );
+
+    }
+
+    for(
+      const item
+      of (backup.events||[])
+    ){
+
+      await dbPut(
+        EVENT_STORE,
+        item
+      );
+
+    }
+
+    for(
+      const item
+      of (backup.attachments||[])
+    ){
+
+      await dbPut(
+        ATTACH_STORE,
+        item
+      );
+
+    }
+
+    for(
+      const item
+      of (backup.todos||[])
+    ){
+
+      await dbPut(
+        TODO_STORE,
+        item
+      );
+
+    }
+
+    for(
+      const item
+      of (backup.settings||[])
+    ){
+
+      await dbPut(
+        SETTINGS_STORE,
+        item
+      );
+
+    }
+
+    alert(
+      "Diary backup restored successfully."
+    );
+
+    await loadDate(
+      selectedDate
+    );
+
+  }catch(error){
+
+    alert(
+      "Invalid diary backup file."
+    );
+
+  }
+
+  event.target.value="";
+
+}
+
+/* ================================
+   PRINT
+================================ */
+
+async function printPage(){
+
+  await savePage(false);
+
+  const page=
+    currentPages[currentPage-1];
+
+  const win=
+    window.open(
+      "",
+      "_blank"
+    );
+
+  if(!win){
+
+    alert(
+      "Please allow pop-ups for printing."
+    );
+
+    return;
+
+  }
+
+  win.document.write(`
+
+    <!DOCTYPE html>
+
+    <html>
+
+    <head>
+
+      <title>Diary ${selectedDate}</title>
+
+      <style>
+
+        body{
+          font-family:Georgia,serif;
+          padding:30px;
+        }
+
+        h1{
+          text-align:center;
+        }
+
+        .content{
+          font-size:18px;
+          line-height:1.7;
+        }
+
+      </style>
+
+    </head>
+
+    <body>
+
+      <h1>
+        ${selectedDate}
+      </h1>
+
+      <div class="content">
+        ${page.html||""}
+      </div>
+
+    </body>
+
+    </html>
+
+  `);
+
+  win.document.close();
+
+  win.focus();
+
+  setTimeout(
+    ()=>win.print(),
+    300
+  );
+
+}
+
+/* ================================
+   SWIPE
+================================ */
+
+let swipeStartX=0;
+let swipeStartY=0;
+
+const diaryPage=
+  document.getElementById("page");
+
+diaryPage.addEventListener(
+  "pointerdown",
+  e=>{
+
+    if(
+      drawingEnabled
+    )return;
+
+    swipeStartX=e.clientX;
+    swipeStartY=e.clientY;
+
+  }
+);
+
+diaryPage.addEventListener(
+  "pointerup",
+  e=>{
+
+    if(
+      drawingEnabled
+    )return;
+
+    const dx=
+      e.clientX-swipeStartX;
+
+    const dy=
+      e.clientY-swipeStartY;
+
+    if(
+      Math.abs(dx)>80 &&
+      Math.abs(dx)>Math.abs(dy)
+    ){
+
+      if(dx<0){
+
+        nextPage();
+
+      }else{
+
+        previousPage();
+
+      }
+
+    }
+
+  }
+);
+
+/* ================================
+   STARTUP
+================================ */
+
+async function startDiary(){
+
+  await openDB();
+
+  await loadDate(
+    selectedDate
+  );
+
+  setInterval(
+    checkReminders,
+    60000
+  );
+
+}
 
 window.addEventListener(
-    "beforeunload",
-    () => {
-
-        saveCurrentPage(false);
-
+  "resize",
+  ()=>{
+    if(drawingEnabled){
+      resizeDrawCanvas();
     }
+  }
 );
-
-
-/* =========================================================
-   SERVICE WORKER
-========================================================= */
-
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener(
-        "load",
-        () => {
-
-            navigator.serviceWorker
-                .register(
-                    "./service-worker.js"
-                )
-                .catch(
-                    error =>
-                        console.log(
-                            "Service worker:",
-                            error
-                        )
-                );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   START
-========================================================= */
 
 startDiary();
 

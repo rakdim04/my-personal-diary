@@ -1,129 +1,203 @@
-const CACHE_NAME = "my-personal-diary-v8";
+const CACHE_NAME = "my-personal-diary-v8-1";
 
-const ASSETS = [
-    "./",
-    "./index.html",
-    "./manifest.json"
+const FILES_TO_CACHE = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./service-worker.js"
 ];
 
+/* =========================
+   INSTALL
+========================= */
 
-/* INSTALL */
+self.addEventListener("install", event => {
 
-self.addEventListener(
-    "install",
-    event => {
+  event.waitUntil(
 
-        self.skipWaiting();
+    caches.open(CACHE_NAME)
+      .then(cache => {
 
-        event.waitUntil(
+        return cache.addAll(
+          FILES_TO_CACHE
+        );
 
-            caches.open(
-                CACHE_NAME
-            ).then(
-                cache =>
-                    cache.addAll(
-                        ASSETS
-                    )
+      })
+
+      .then(() => {
+
+        return self.skipWaiting();
+
+      })
+
+  );
+
+});
+
+/* =========================
+   ACTIVATE
+========================= */
+
+self.addEventListener("activate", event => {
+
+  event.waitUntil(
+
+    caches.keys()
+      .then(cacheNames => {
+
+        return Promise.all(
+
+          cacheNames
+            .filter(
+              name =>
+                name !== CACHE_NAME
+            )
+            .map(
+              name =>
+                caches.delete(name)
             )
 
         );
 
-    }
-);
+      })
 
+      .then(() => {
 
-/* ACTIVATE */
+        return self.clients.claim();
 
-self.addEventListener(
-    "activate",
-    event => {
+      })
 
-        event.waitUntil(
+  );
 
-            caches.keys()
-                .then(keys =>
+});
 
-                    Promise.all(
+/* =========================
+   FETCH
+========================= */
 
-                        keys
-                            .filter(
-                                key =>
-                                    key !== CACHE_NAME
-                            )
-                            .map(
-                                key =>
-                                    caches.delete(
-                                        key
-                                    )
-                            )
+self.addEventListener("fetch", event => {
 
-                    )
+  /*
+    Only handle GET requests.
+  */
 
-                )
-                .then(
-                    () =>
-                        self.clients.claim()
-                )
+  if(event.request.method !== "GET"){
 
-        );
+    return;
 
-    }
-);
+  }
 
+  /*
+    Don't interfere with Google
+    Calendar / OAuth requests.
+  */
 
-/* FETCH */
+  const url =
+    new URL(event.request.url);
 
-self.addEventListener(
-    "fetch",
-    event => {
+  if(
+    url.origin !== self.location.origin
+  ){
 
-        if (
-            event.request.method !== "GET"
-        ) {
-            return;
+    return;
+
+  }
+
+  /*
+    Network first for index.html.
+
+    This is important because when
+    you update your diary on GitHub,
+    the new version can be downloaded.
+  */
+
+  if(
+    event.request.destination === "document" ||
+    url.pathname.endsWith("index.html")
+  ){
+
+    event.respondWith(
+
+      fetch(event.request)
+
+        .then(response => {
+
+          const copy =
+            response.clone();
+
+          caches.open(CACHE_NAME)
+            .then(cache => {
+
+              cache.put(
+                event.request,
+                copy
+              );
+
+            });
+
+          return response;
+
+        })
+
+        .catch(() => {
+
+          return caches.match(
+            event.request
+          );
+
+        })
+
+    );
+
+    return;
+
+  }
+
+  /*
+    Cache first for other local files.
+  */
+
+  event.respondWith(
+
+    caches.match(event.request)
+
+      .then(cached => {
+
+        if(cached){
+
+          return cached;
+
         }
 
+        return fetch(event.request)
+          .then(response => {
 
-        event.respondWith(
+            if(
+              response &&
+              response.status === 200
+            ){
 
-            fetch(
-                event.request
-            )
-            .then(response => {
+              const copy =
+                response.clone();
 
-                const copy =
-                    response.clone();
+              caches.open(CACHE_NAME)
+                .then(cache => {
 
+                  cache.put(
+                    event.request,
+                    copy
+                  );
 
-                caches.open(
-                    CACHE_NAME
-                ).then(
-                    cache =>
-                        cache.put(
-                            event.request,
-                            copy
-                        )
-                );
+                });
 
+            }
 
-                return response;
+            return response;
 
-            })
-            .catch(
-                () =>
-                    caches.match(
-                        event.request
-                    )
-                    .then(
-                        cached =>
-                            cached ||
-                            caches.match(
-                                "./index.html"
-                            )
-                    )
-            )
+          });
 
-        );
+      })
 
-    }
-);
+  );
+
+});

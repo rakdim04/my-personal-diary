@@ -1,2994 +1,1928 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#6b4226">
-<link rel="manifest" href="./manifest.json">
-
+<meta name="theme-color" content="#654321">
+<link rel="manifest" href="manifest.json">
 <title>My Personal Diary</title>
 
 <style>
-:root{
-  --ink:#3d2b1f;
-  --paper:#f7edcf;
-  --paper2:#f1dfb4;
-  --line:rgba(106,86,57,.28);
-  --accent:#6b4226;
-  --shadow:0 18px 45px rgba(54,35,18,.28);
-}
-
 *{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  min-height:100%;
-  font-family:Georgia,"Times New Roman",serif;
-  color:var(--ink);
-}
-
+html,body{margin:0;padding:0;min-height:100%;font-family:Georgia,"Times New Roman",serif}
 body{
   background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.25),transparent 30%),
-    linear-gradient(135deg,#b99a70,#d9c29b 48%,#ad8b62);
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.35),transparent 28%),
+    linear-gradient(135deg,#d9c09a,#b89568 50%,#d4b98c);
+  color:#3b281b;
 }
 
-button,input,select,textarea{
-  font:inherit;
-}
-
+button,input,select,textarea{font:inherit}
 button{
+  border:1px solid #b99b73;
+  border-radius:10px;
+  background:#fffdf8;
+  color:#4a3220;
+  padding:9px 14px;
   cursor:pointer;
+  box-shadow:0 2px 4px rgba(0,0,0,.12);
 }
+button:hover{background:#f5ead8}
+button:active{transform:translateY(1px)}
 
-.app{
-  max-width:1250px;
-  margin:auto;
-  padding:14px;
-}
+[hidden]{display:none!important}
 
-/* TOOLBAR */
-
-.toolbar{
+/* TOP BAR */
+.topbar{
+  margin:16px auto 12px;
+  width:96%;
+  background:linear-gradient(#5a351e,#3f2515);
+  color:#fff8eb;
+  border-radius:18px;
+  padding:10px 14px;
   display:flex;
+  align-items:center;
   gap:8px;
-  align-items:center;
   flex-wrap:wrap;
-  padding:10px 12px;
-  background:rgba(64,38,20,.92);
-  color:white;
-  border-radius:14px;
-  box-shadow:0 8px 20px #0003;
-  position:sticky;
-  top:8px;
-  z-index:20;
+  box-shadow:0 7px 18px rgba(60,35,15,.25);
 }
-
-.toolbar button{
-  border:1px solid #ffffff44;
-  background:#fff;
-  color:#4a3020;
-  border-radius:9px;
-  padding:8px 10px;
-}
-
-.toolbar .title{
+.brand{
+  font-size:24px;
   font-weight:bold;
-  font-size:18px;
   margin-right:auto;
-  color:white;
+  white-space:nowrap;
 }
+.topbar button{font-size:16px}
 
-/* DATE */
-
+/* DATE BAR */
 .datebar{
+  width:96%;
+  margin:0 auto 18px;
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
   gap:10px;
-  margin:12px 0;
+  flex-wrap:wrap;
 }
-
-.datebar button{
-  border:0;
-  border-radius:9px;
-  padding:8px 12px;
-  background:#fff8e8;
-  color:var(--accent);
-}
-
 .datebar input{
-  padding:8px;
-  border:1px solid #8e7659;
-  border-radius:8px;
-  background:#fff8e8;
-}
-
-/* CALENDAR */
-
-.calendar{
-  display:none;
-  background:#fff7e8;
-  border-radius:12px;
-  padding:12px;
-  margin:8px 0;
-  border:1px solid #b99a68;
-}
-
-.calendar.show{
-  display:block;
+  width:205px;
+  padding:10px;
+  border:1px solid #b99b73;
+  border-radius:9px;
+  background:#fffdf7;
+  color:#493321;
 }
 
 /* DIARY */
-
-.diary-stage{
-  display:flex;
-  justify-content:center;
+.diary{
+  width:94%;
+  max-width:1450px;
+  margin:0 auto 40px;
   position:relative;
-  padding:10px 8px 55px;
+  padding:0 0 30px 78px;
 }
 
-.page{
-  width:min(100%,1040px);
-
-  /* MUCH LONGER PAGE */
-  min-height:1100px;
-
-  position:relative;
-  overflow:hidden;
-
-  padding:60px 58px 90px 105px;
-
-  border-radius:7px 15px 15px 7px;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(126,89,46,.13),
-      transparent 5%
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 31px,
-      var(--line) 32px,
-      transparent 33px
-    ),
-    linear-gradient(
-      100deg,
-      var(--paper),
-      #fbf1d5 55%,
-      var(--paper2)
-    );
-
-  box-shadow:
-    var(--shadow),
-    inset 10px 0 20px rgba(91,58,26,.09);
-
-  border:1px solid #b89a68;
-
-  transform:rotate(-.12deg);
-}
-
-/* Natural paper texture */
-
-.page:before{
-  content:"";
+/* natural holes */
+.binding{
   position:absolute;
-  inset:0;
-  pointer-events:none;
-
-  background:
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(100,70,35,.08) 0 1px,
-      transparent 2px
-    );
-
-  background-size:8px 8px;
-  opacity:.25;
-}
-
-/* Soft paper edge */
-
-.page:after{
-  content:"";
-  position:absolute;
-  right:0;
-  top:0;
-  bottom:0;
-  width:12px;
-
-  background:linear-gradient(
-    to left,
-    rgba(80,50,20,.13),
-    transparent
-  );
-
-  pointer-events:none;
-}
-
-/* HEADER */
-
-.page-header{
-  position:relative;
-  z-index:6;
-
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-
-  margin-bottom:12px;
-}
-
-.day-title{
-  font-size:28px;
-  font-weight:bold;
-}
-
-.small{
-  font-size:13px;
-  opacity:.75;
-}
-
-/* NATURAL SPIRAL */
-
-.spiral{
-  position:absolute;
-
-  left:10px;
-  top:25px;
-  bottom:30px;
-
+  left:12px;
+  top:22px;
+  bottom:22px;
   width:58px;
-
-  z-index:10;
-
-  display:flex;
-  flex-direction:column;
-  justify-content:space-around;
-
+  z-index:5;
   pointer-events:none;
 }
-
-.ring{
-  width:48px;
-  height:22px;
-
-  border:4px solid #59534b;
-  border-left-color:#302d29;
-
-  border-radius:50%;
-
-  background:
-    linear-gradient(
-      to bottom,
-      #c5c1b9,
-      #66615a
-    );
-
-  box-shadow:
-    2px 3px 4px #0005,
-    inset 0 2px 2px #fff9;
-}
-
-/* SPIRAL HOLES */
-
 .hole{
   position:absolute;
-
-  left:73px;
-
-  width:10px;
-  height:10px;
-
+  left:0;
+  width:45px;
+  height:27px;
   border-radius:50%;
-
-  background:#60472d66;
-
+  background:
+    radial-gradient(ellipse at 45% 35%,#e8e8e8 0,#999 38%,#444 62%,#ddd 70%,#777 100%);
   box-shadow:
-    inset 1px 2px 2px #0005;
+    inset 2px 2px 4px rgba(0,0,0,.65),
+    2px 4px 4px rgba(0,0,0,.25);
 }
+.hole:after{
+  content:"";
+  position:absolute;
+  left:8px;
+  top:10px;
+  width:30px;
+  height:5px;
+  border-radius:50%;
+  background:rgba(40,30,20,.45);
+  filter:blur(1px);
+}
+.hole:nth-child(1){top:0}
+.hole:nth-child(2){top:9%}
+.hole:nth-child(3){top:18%}
+.hole:nth-child(4){top:27%}
+.hole:nth-child(5){top:36%}
+.hole:nth-child(6){top:45%}
+.hole:nth-child(7){top:54%}
+.hole:nth-child(8){top:63%}
+.hole:nth-child(9){top:72%}
+.hole:nth-child(10){top:81%}
+.hole:nth-child(11){top:90%}
 
-/* EMOJI */
-
-.emoji-bar{
+.page{
   position:relative;
-  z-index:7;
-
-  display:flex;
-  gap:4px;
-  flex-wrap:wrap;
-
-  padding:6px 8px;
-  margin-bottom:8px;
-
-  background:rgba(255,248,232,.82);
-
-  border:1px solid #c5a875;
-  border-radius:10px;
+  min-height:1180px;
+  padding:72px 70px 90px 95px;
+  overflow:hidden;
+  border:1px solid #b99768;
+  border-radius:6px 18px 18px 6px;
+  box-shadow:
+    0 14px 25px rgba(61,38,18,.30),
+    inset 0 0 25px rgba(139,95,45,.12);
+  background-color:#fff9df;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 39px,
+      rgba(108,145,150,.25) 40px,
+      transparent 41px
+    ),
+    radial-gradient(circle at 30% 20%,rgba(130,90,40,.05),transparent 40%);
 }
 
-.emoji-bar button{
+/* different diary designs */
+.page.classic{
+  background-color:#fff9df;
+}
+.page.vintage{
+  background-color:#f2dfb9;
+  background-image:
+    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(120,90,50,.22) 40px,transparent 41px),
+    radial-gradient(circle at 80% 30%,rgba(90,55,20,.08),transparent 35%);
+}
+.page.floral{
+  background-color:#fff7e7;
+  background-image:
+    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(126,145,110,.20) 40px,transparent 41px);
+}
+.page.blue{
+  background-color:#edf5f3;
+  background-image:
+    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(77,119,130,.22) 40px,transparent 41px);
+}
+.page.dark{
+  background-color:#27231e;
+  color:#eee3cc;
+  background-image:
+    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(220,190,130,.15) 40px,transparent 41px);
+}
+
+/* page top */
+.pagehead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  position:relative;
+  z-index:4;
+}
+.pagehead h1{
+  margin:0 0 3px;
+  font-size:32px;
+}
+.pageNo{
+  font-size:15px;
+  opacity:.75;
+}
+.quote{
+  font-size:14px;
+  padding:8px 12px;
+  margin-top:4px;
+}
+
+/* emoji strip */
+.emojiBar{
+  position:relative;
+  z-index:5;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  padding:9px 12px;
+  margin:15px 0 10px;
+  border:1px solid #d1b487;
+  border-radius:13px;
+  background:rgba(255,252,239,.86);
+  box-shadow:inset 0 1px 5px rgba(100,60,20,.08);
+}
+.emojiBar button{
   border:0;
   background:transparent;
-
-  font-size:23px;
-
-  padding:3px 5px;
-
-  border-radius:6px;
+  box-shadow:none;
+  padding:2px 4px;
+  font-size:25px;
+  line-height:1;
 }
 
-.emoji-bar button:hover{
-  background:#ead9b8;
-}
-
-/* QUOTE */
-
-#quote{
+/* writing area */
+.editorWrap{
   position:relative;
-  z-index:6;
-
-  margin-bottom:12px;
-
-  font-style:italic;
+  min-height:790px;
 }
-
-/* WRITING AREA */
-
-#content{
+.editor{
   position:relative;
-  z-index:6;
-
-  min-height:760px;
-
+  z-index:2;
+  min-height:790px;
   outline:none;
-
   font-size:20px;
-  line-height:32px;
-
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
+  line-height:40px;
+  white-space:normal;
+  padding:2px 5px;
 }
-
-#content:empty:before{
-  content:"Write your thoughts here…";
-  opacity:.38;
-}
-
-/* DRAWING */
-
-#drawingCanvas{
-  position:absolute;
-
-  left:80px;
-  right:28px;
-
-  top:190px;
-  bottom:70px;
-
-  width:auto;
-  height:auto;
-
-  z-index:8;
-
+.editor:empty:before{
+  content:"Start writing here...";
+  color:rgba(100,70,40,.35);
   pointer-events:none;
+}
 
+/* DRAW CANVAS
+   It covers the entire writing/page area but is invisible until draw mode. */
+#drawCanvas{
+  position:absolute;
+  z-index:8;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:none;
+  background:transparent;
   touch-action:none;
 }
-
-body.draw-active #drawingCanvas{
-  pointer-events:auto;
+.draw-active #drawCanvas{
+  display:block;
+  cursor:crosshair;
 }
 
-body.draw-active #content{
-  user-select:none;
-}
-
-/* DRAWING TOOLBAR */
-
-.drawing-panel{
+/* draw controls */
+.drawTools{
   position:fixed;
-
+  z-index:1000;
   left:50%;
-  bottom:12px;
-
+  bottom:15px;
   transform:translateX(-50%);
-
-  z-index:50;
-
-  display:none;
-
-  gap:6px;
-  align-items:center;
-  flex-wrap:wrap;
-
-  background:#fff9ed;
-
-  padding:9px;
-
+  background:rgba(60,38,23,.97);
+  color:white;
+  padding:10px;
   border-radius:14px;
-
-  box-shadow:0 8px 30px #0005;
-
-  border:1px solid #b99a68;
-}
-
-.drawing-panel.show{
   display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  justify-content:center;
+  max-width:96%;
+  box-shadow:0 8px 30px rgba(0,0,0,.35);
+}
+.drawTools button{
+  padding:7px 10px;
+  font-size:14px;
+}
+.drawTools button.active{
+  background:#d9b878;
+  color:#2d1c10;
+  font-weight:bold;
+}
+.drawTools input[type=color]{
+  width:38px;
+  height:34px;
+  padding:2px;
 }
 
-.drawing-panel button,
-.drawing-panel select{
-  padding:7px 9px;
-
-  border:1px solid #b99a68;
-
-  border-radius:8px;
-
-  background:#fff;
-}
-
-/* NEW PAGE */
-
-.new-page{
+/* New page tab */
+.newPage{
   position:absolute;
-
-  right:24px;
-  bottom:18px;
-
-  z-index:12;
-
-  border:1px solid #8f704d;
-
-  background:#ead3a6;
-
-  border-radius:10px;
-
-  padding:11px 17px;
-
-  box-shadow:2px 3px 5px #0002;
-
+  right:-1px;
+  bottom:25px;
+  z-index:10;
+  border-radius:12px 0 0 12px;
+  background:#ead2a5;
   font-weight:bold;
 }
 
-/* TODO */
-
-.todo{
-  position:relative;
-  z-index:9;
-
-  margin:12px 0;
-
-  padding:12px;
-
-  border:1px solid #b99a68;
-
-  background:#fff8e866;
-
-  border-radius:10px;
-}
-
-.todo-item{
+/* footer */
+.pageFooter{
+  position:absolute;
+  left:95px;
+  right:70px;
+  bottom:25px;
+  z-index:4;
   display:flex;
-  align-items:center;
-  gap:8px;
-  margin:5px 0;
-}
-
-.todo-item.done span{
-  text-decoration:line-through;
-  opacity:.5;
+  justify-content:space-between;
+  font-size:13px;
+  opacity:.65;
 }
 
 /* MODALS */
-
-.modal[hidden]{
-  display:none!important;
-}
-
 .modal{
   position:fixed;
   inset:0;
-
-  z-index:100;
-
-  background:#0008;
-
+  z-index:2000;
+  background:rgba(25,15,8,.55);
   display:flex;
-
-  align-items:center;
   justify-content:center;
-
+  align-items:center;
   padding:15px;
 }
-
-.modal-card{
-  width:min(94vw,520px);
-
-  max-height:90vh;
-
+.modalBox{
+  width:min(720px,96vw);
+  max-height:92vh;
   overflow:auto;
-
-  background:#fff8e8;
-
-  padding:20px;
-
-  border-radius:15px;
-
-  box-shadow:0 20px 60px #0007;
+  background:#fffaf0;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
 }
-
-.modal-card h2{
+.modalBox h2{
   margin-top:0;
+  color:#59381f;
 }
-
-.form-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.modal-card input,
-.modal-card textarea,
-.modal-card select{
-  width:100%;
-
-  padding:9px;
-
-  border:1px solid #a98a5d;
-
-  border-radius:8px;
-
-  background:#fffdf6;
-
-  margin:5px 0 10px;
-}
-
-.modal-actions{
+.formRow{
   display:flex;
-
-  gap:8px;
-
-  justify-content:flex-end;
-
-  margin-top:10px;
+  gap:10px;
+  margin:10px 0;
+  flex-wrap:wrap;
 }
-
-.modal-actions button{
-  padding:9px 13px;
-
+.formRow>*{flex:1}
+.modal input,.modal textarea,.modal select{
+  width:100%;
+  padding:10px;
+  border:1px solid #c5aa80;
   border-radius:8px;
-
-  border:1px solid #9d8057;
+  background:white;
+}
+.modal textarea{min-height:100px}
+.modalActions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:15px;
 }
 
-/* MEMORIES */
-
-.memory-grid{
+/* calendar */
+.calendarTitle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.calendarGrid{
   display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
+}
+.calHead{
+  text-align:center;
+  font-weight:bold;
+  padding:7px 2px;
+}
+.calDay{
+  min-height:70px;
+  background:#fff;
+  border:1px solid #ddc7a2;
+  border-radius:7px;
+  padding:5px;
+  cursor:pointer;
+}
+.calDay:hover{background:#f7ecd9}
+.calDay.today{border:2px solid #7c4e28}
+.calDay.selected{background:#ead5b0}
+.calDay .num{font-weight:bold}
+.calEvent{
+  font-size:11px;
+  margin-top:4px;
+  background:#e6d2aa;
+  border-radius:4px;
+  padding:2px;
+  overflow:hidden;
+  white-space:nowrap;
+}
 
-  grid-template-columns:
-    repeat(auto-fill,minmax(120px,1fr));
+/* events */
+.eventItem,.todoItem,.memoryItem{
+  padding:9px;
+  margin:6px 0;
+  border:1px solid #dcc39b;
+  border-radius:8px;
+  background:#fff;
+}
+.eventItem strong{display:block}
+.todoItem{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.todoItem.done span{
+  text-decoration:line-through;
+  opacity:.55;
+}
+.todoItem span{flex:1}
 
+/* memories */
+.memoryGrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
   gap:10px;
 }
-
-.memory-grid img{
+.memoryCard img{
   width:100%;
   height:120px;
-
   object-fit:cover;
-
   border-radius:8px;
 }
 
-/* STATUS */
-
-.status{
-  text-align:center;
-
-  font-size:12px;
-
-  opacity:.7;
-
-  margin-top:5px;
+/* toast */
+#status{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  z-index:3000;
+  background:#3d291b;
+  color:white;
+  padding:10px 14px;
+  border-radius:9px;
+  display:none;
 }
 
-/* MOBILE / TABLET */
-
+/* mobile */
 @media(max-width:700px){
-
-  .app{
-    padding:6px;
-  }
-
-  .toolbar{
-    position:static;
-  }
-
-  .toolbar .title{
-    width:100%;
-  }
-
-  .page{
-
-    min-height:900px;
-
-    padding:
-      45px
-      25px
-      75px
-      78px;
-  }
-
-  .day-title{
-    font-size:23px;
-  }
-
-  #content{
-    font-size:18px;
-    line-height:30px;
-
-    min-height:650px;
-  }
-
-  .spiral{
-    left:6px;
-    width:43px;
-  }
-
-  .ring{
-    width:39px;
-    height:18px;
-  }
-
-  #drawingCanvas{
-    left:65px;
-    right:15px;
-    top:165px;
-    bottom:60px;
-  }
-
-  .form-row{
-    grid-template-columns:1fr;
-  }
+  .topbar{width:98%;justify-content:center}
+  .brand{width:100%;text-align:center;margin-bottom:4px}
+  .topbar button{font-size:14px;padding:7px 9px}
+  .diary{width:98%;padding-left:43px}
+  .binding{left:3px;width:38px}
+  .hole{width:31px;height:21px}
+  .page{padding:55px 25px 80px 50px;min-height:1050px}
+  .pagehead h1{font-size:24px}
+  .editor,.editorWrap{min-height:730px}
+  .editor{font-size:18px;line-height:40px}
+  .pageFooter{left:50px;right:25px}
+  .newPage{font-size:13px;padding:7px 10px}
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
-
-<!-- TOOLBAR -->
-
-<div class="toolbar">
-
-  <div class="title">
-    📖 My Personal Diary
-  </div>
-
+<header class="topbar">
+  <div class="brand">📖 My Personal Diary</div>
   <button id="calendarBtn">📅 Calendar</button>
-
-  <button id="eventBtn">🗓️ Event</button>
-
+  <button id="eventBtn">🗓️ Events</button>
   <button id="memoryBtn">🖼️ Memories</button>
-
   <button id="todoBtn">☑️ To-do</button>
-
   <button id="drawBtn">✏️ Draw</button>
-
+  <button id="settingsBtn">⚙️ Settings</button>
   <button id="printBtn">🖨️ Print</button>
-
   <button id="backupBtn">💾 Backup</button>
-
   <button id="restoreBtn">↩️ Restore</button>
-
-  <input
-    id="restoreFile"
-    type="file"
-    accept=".json"
-    hidden
-  >
-
-</div>
-
-<!-- CALENDAR -->
-
-<div id="calendar" class="calendar">
-
-  <input id="calendarDate" type="date">
-
-  <button id="openDateBtn">
-    Open Date
-  </button>
-
-  <button id="todayBtn">
-    Today
-  </button>
-
-  <div id="calendarInfo" class="small"></div>
-
-</div>
-
-<!-- DATE -->
+  <input id="restoreInput" type="file" accept=".json,application/json" hidden>
+</header>
 
 <div class="datebar">
-
-  <button id="prevBtn">
-    ‹ Previous
-  </button>
-
-  <input
-    id="dateInput"
-    type="date"
-  >
-
-  <button id="nextBtn">
-    Next ›
-  </button>
-
+  <button id="prevBtn">‹ Previous</button>
+  <input id="datePicker" type="date">
+  <button id="nextBtn">Next ›</button>
 </div>
 
-<!-- DIARY -->
+<main class="diary" id="diary">
 
-<div class="diary-stage">
-
-<article class="page" id="page">
-
-  <!-- SPIRAL -->
-
-  <div
-    class="spiral"
-    id="spiral">
+  <div class="binding" aria-hidden="true">
+    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+    <div class="hole"></div><div class="hole"></div>
   </div>
 
-  <!-- HEADER -->
+  <section class="page classic" id="page">
 
-  <div class="page-header">
-
-    <div>
-
-      <div
-        class="day-title"
-        id="dayTitle">
+    <div class="pagehead">
+      <div>
+        <h1 id="pageTitle">Friday, 18 September 2026</h1>
+        <div class="pageNo" id="pageNo">Page 1</div>
       </div>
-
-      <div
-        class="small"
-        id="pageNo">
+      <div>
+        <select id="mood" title="Mood">
+          <option value="">Mood</option>
+          <option>😊 Happy</option>
+          <option>😌 Peaceful</option>
+          <option>😍 Excited</option>
+          <option>🙏 Grateful</option>
+          <option>😐 Normal</option>
+          <option>😔 Sad</option>
+          <option>😡 Angry</option>
+          <option>😴 Tired</option>
+        </select>
+        <button class="quote" id="quoteBtn">💬 Quote</button>
       </div>
-
     </div>
 
-    <button
-      id="quoteBtn"
-      title="Change quote">
-      💬 Quote
-    </button>
-
-  </div>
-
-  <!-- EMOJIS -->
-
-  <div
-    class="emoji-bar"
-    id="emojiBar">
-  </div>
-
-  <!-- QUOTE -->
-
-  <div
-    id="quote"
-    class="small">
-  </div>
-
-  <!-- WRITING -->
-
-  <div
-    id="content"
-    contenteditable="true"
-    spellcheck="true">
-  </div>
-
-  <!-- TODO -->
-
-  <div
-    class="todo"
-    id="todoBox"
-    hidden>
-
-    <strong>☑️ To-do</strong>
-
-    <div id="todoList"></div>
-
-    <div
-      style="
-      display:flex;
-      gap:6px;
-      margin-top:8px">
-
-      <input
-        id="todoInput"
-        placeholder="Add a task…"
-        style="
-        flex:1;
-        padding:8px;
-        border:1px solid #b99a68;
-        border-radius:8px">
-
-      <button id="addTodo">
-        Add
-      </button>
-
+    <div class="emojiBar" id="emojiBar">
+      <button>😀</button><button>😊</button><button>😂</button><button>❤️</button>
+      <button>🙏</button><button>🌸</button><button>🌿</button><button>✨</button>
+      <button>⭐</button><button>🎉</button><button>🎂</button><button>🎁</button>
+      <button>☀️</button><button>🌙</button><button>☕</button><button>🍀</button>
+      <button>📌</button><button>💡</button><button>👍</button><button>👏</button>
+      <button>😍</button><button>🥰</button><button>😁</button><button>😌</button>
+      <button>🕉️</button><button>🪔</button><button>🎵</button><button>📚</button>
     </div>
 
+    <div class="editorWrap" id="editorWrap">
+      <div id="editor" class="editor" contenteditable="true" spellcheck="true"></div>
+      <canvas id="drawCanvas"></canvas>
+    </div>
+
+    <button class="newPage" id="newPageBtn">＋ New Page</button>
+
+    <div class="pageFooter">
+      <span id="saveStatus">Ready</span>
+      <span>My Personal Diary</span>
+    </div>
+  </section>
+</main>
+
+<!-- DRAW TOOLBAR -->
+<div class="drawTools" id="drawTools" hidden>
+  <button id="penTool" class="active">✏️ Pen</button>
+  <button id="lineTool">╱ Line</button>
+  <button id="circleTool">◯ Circle</button>
+  <button id="eraserTool">⌫ Eraser</button>
+  <input type="color" id="drawColor" value="#222222" title="Pen colour">
+  <button id="undoDraw">↶ Undo</button>
+  <button id="redoDraw">↷ Redo</button>
+  <button id="clearDraw">🗑 Clear</button>
+  <button id="closeDraw">✕ Close Draw</button>
+</div>
+
+<!-- CALENDAR MODAL -->
+<div class="modal" id="calendarModal" hidden>
+  <div class="modalBox">
+    <div class="calendarTitle">
+      <button id="calPrev">‹</button>
+      <h2 id="calendarMonth">Calendar</h2>
+      <button id="calNext">›</button>
+    </div>
+
+    <div class="calendarGrid" id="calendarGrid"></div>
+
+    <div class="modalActions">
+      <button id="calendarClose">Close</button>
+    </div>
   </div>
-
-  <!-- DRAWING -->
-
-  <canvas id="drawingCanvas"></canvas>
-
-  <!-- NEW PAGE ON RIGHT -->
-
-  <button
-    class="new-page"
-    id="newPage">
-    ＋ New Page →
-  </button>
-
-</article>
-
-</div>
-
-<div
-  class="status"
-  id="status">
-  Saved locally
-</div>
-
-</div>
-
-<!-- DRAWING PANEL -->
-
-<div
-  class="drawing-panel"
-  id="drawingPanel">
-
-  <strong>Drawing:</strong>
-
-  <button data-tool="pen">
-    Pen
-  </button>
-
-  <button data-tool="line">
-    Line
-  </button>
-
-  <button data-tool="circle">
-    Circle
-  </button>
-
-  <button data-tool="eraser">
-    Eraser
-  </button>
-
-  <select id="drawColor">
-
-    <option value="#222">
-      Black
-    </option>
-
-    <option value="#b3261e">
-      Red
-    </option>
-
-    <option value="#174ea6">
-      Blue
-    </option>
-
-    <option value="#18794e">
-      Green
-    </option>
-
-  </select>
-
-  <select id="drawSize">
-
-    <option value="2">
-      Fine
-    </option>
-
-    <option value="4" selected>
-      Medium
-    </option>
-
-    <option value="8">
-      Thick
-    </option>
-
-  </select>
-
-  <button id="undoDraw">
-    ↶
-  </button>
-
-  <button id="redoDraw">
-    ↷
-  </button>
-
-  <button id="clearDraw">
-    Clear
-  </button>
-
-  <button id="closeDraw">
-    Close
-  </button>
-
 </div>
 
 <!-- EVENT MODAL -->
+<div class="modal" id="eventModal" hidden>
+  <div class="modalBox">
+    <h2>🗓️ Diary Events</h2>
 
-<div
-  class="modal"
-  id="eventModal"
-  hidden>
-
-  <div class="modal-card">
-
-    <h2>
-      🗓️ Add Diary Event
-    </h2>
-
-    <label>
-      Event title
-
-      <input
-        id="eventTitle"
-        placeholder="Birthday, appointment, reminder…">
-    </label>
-
-    <div class="form-row">
-
-      <label>
-        Date
-
-        <input
-          id="eventDate"
-          type="date">
-      </label>
-
-      <label>
-        Time
-
-        <input
-          id="eventTime"
-          type="time">
-      </label>
-
+    <div class="formRow">
+      <div>
+        <label>Date</label>
+        <input type="date" id="eventDate">
+      </div>
+      <div>
+        <label>Time</label>
+        <input type="time" id="eventTime">
+      </div>
     </div>
 
-    <label>
-      Notes
+    <label>Event title</label>
+    <input id="eventTitle" placeholder="Example: Doctor appointment">
 
-      <textarea
-        id="eventNotes"
-        rows="3">
-      </textarea>
+    <label>Notes</label>
+    <textarea id="eventNotes" placeholder="Event details..."></textarea>
 
-    </label>
-
-    <div class="modal-actions">
-
-      <!-- CLOSE, NOT CANCEL -->
-
-      <button id="closeEvent">
-        Close
-      </button>
-
-      <button id="saveEvent">
-        Save Event
-      </button>
-
+    <div class="modalActions">
+      <button id="eventClose">Close</button>
+      <button id="eventSave">💾 Save Event</button>
     </div>
 
+    <hr>
+    <h3>Saved Events</h3>
+    <div id="eventList"></div>
   </div>
-
 </div>
 
-<!-- MEMORY MODAL -->
+<!-- TODO MODAL -->
+<div class="modal" id="todoModal" hidden>
+  <div class="modalBox">
+    <h2>☑️ To-do List</h2>
 
-<div
-  class="modal"
-  id="memoryModal"
-  hidden>
-
-  <div class="modal-card">
-
-    <h2>
-      🖼️ Memories
-    </h2>
-
-    <input
-      id="memoryFile"
-      type="file"
-      accept="image/*,application/pdf"
-      capture="environment">
-
-    <div
-      id="memoryGrid"
-      class="memory-grid">
+    <div class="formRow">
+      <input id="todoText" placeholder="Write a task...">
+      <button id="todoAdd">＋ Add</button>
     </div>
 
-    <div class="modal-actions">
+    <div id="todoList"></div>
 
-      <button id="closeMemory">
-        Close
-      </button>
-
+    <div class="modalActions">
+      <button id="todoClose">Close</button>
     </div>
-
   </div>
-
 </div>
+
+<!-- MEMORIES MODAL -->
+<div class="modal" id="memoryModal" hidden>
+  <div class="modalBox">
+    <h2>🖼️ Memories</h2>
+
+    <div class="formRow">
+      <label>
+        📷 Camera / Photo
+        <input id="memoryCamera" type="file" accept="image/*" capture="environment">
+      </label>
+      <label>
+        📄 Document / Scan
+        <input id="memoryFile" type="file" accept="image/*,.pdf,.jpg,.jpeg,.png">
+      </label>
+    </div>
+
+    <div class="memoryGrid" id="memoryGrid"></div>
+
+    <div class="modalActions">
+      <button id="memoryClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="modal" id="settingsModal" hidden>
+  <div class="modalBox">
+    <h2>⚙️ Diary Settings</h2>
+
+    <label>Diary page design</label>
+    <select id="designSelect">
+      <option value="classic">Classic Cream</option>
+      <option value="vintage">Vintage Paper</option>
+      <option value="floral">Natural Floral</option>
+      <option value="blue">Soft Blue</option>
+      <option value="dark">Night Diary</option>
+    </select>
+
+    <br><br>
+
+    <label>Writing size</label>
+    <select id="fontSizeSelect">
+      <option value="18">18</option>
+      <option value="20">20</option>
+      <option value="22">22</option>
+      <option value="24">24</option>
+      <option value="26">26</option>
+    </select>
+
+    <br><br>
+
+    <button id="boldBtn"><b>B</b> Bold</button>
+    <button id="underlineBtn"><u>U</u> Underline</button>
+    <button id="italicBtn"><i>I</i> Italic</button>
+
+    <hr>
+
+    <button id="clearPageBtn">🗑 Clear Current Page</button>
+
+    <div class="modalActions">
+      <button id="settingsClose">Close</button>
+      <button id="settingsSave">💾 Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<div id="status"></div>
 
 <script>
+"use strict";
 
-/* DATABASE */
+/* =========================================================
+   DATABASE
+========================================================= */
 
-const DB="myPersonalDiaryDB";
-const VER=4;
+const DB_NAME = "myPersonalDiaryDB";
+const DB_VERSION = 8;
 
-let db;
-
-let currentDate=localDate();
-
-let currentPage=1;
-
-let pageRec=null;
-
-/* QUOTES */
-
-const quotes=[
-  "The best time to write about your life is while you are living it.",
-  "Small moments become precious memories.",
-  "A quiet page can hold a very loud story.",
-  "Today is a page that will never come again.",
-  "Write what you want to remember.",
-  "Every page is a piece of your story.",
-  "Life is made beautiful by ordinary moments."
-];
-
-/* EMOJIS */
-
-const emojis=[
-  "😀","😊","😂","❤️","🙏","🌸","🌿",
-  "✨","⭐","🎉","🎂","🎁","☀️","🌙",
-  "☕","🍀","📌","💡","👍","👏",
-  "🤗","😍","😄","😌","🕉️","🪔"
-];
-
-/* DATE */
-
-function localDate(d=new Date()){
-
-  let x=new Date(d);
-
-  return new Date(
-    x.getTime() -
-    x.getTimezoneOffset()*60000
-  ).toISOString().slice(0,10);
-}
-
-/* DATABASE OPEN */
+let db = null;
 
 function openDB(){
-
   return new Promise((resolve,reject)=>{
+    const request=indexedDB.open(DB_NAME,DB_VERSION);
 
-    const r=indexedDB.open(DB,VER);
+    request.onupgradeneeded=e=>{
+      const d=e.target.result;
 
-    r.onupgradeneeded=e=>{
+      if(!d.objectStoreNames.contains("pages")){
+        const s=d.createObjectStore("pages",{keyPath:"id"});
+        s.createIndex("date","date",{unique:false});
+      }
 
-      let d=e.target.result;
+      if(!d.objectStoreNames.contains("events")){
+        const s=d.createObjectStore("events",{keyPath:"id",autoIncrement:true});
+        s.createIndex("date","date",{unique:false});
+      }
 
-      const stores=[
-        "pages",
-        "events",
-        "attachments",
-        "settings",
-        "todos"
-      ];
+      if(!d.objectStoreNames.contains("todos")){
+        const s=d.createObjectStore("todos",{keyPath:"id",autoIncrement:true});
+        s.createIndex("date","date",{unique:false});
+      }
 
-      stores.forEach(s=>{
+      if(!d.objectStoreNames.contains("attachments")){
+        const s=d.createObjectStore("attachments",{keyPath:"id",autoIncrement:true});
+        s.createIndex("date","date",{unique:false});
+      }
 
-        if(!d.objectStoreNames.contains(s)){
-
-          let key=
-            s==="pages" ? "id" :
-            s==="events" ? "id" :
-            s==="attachments" ? "id" :
-            s==="settings" ? "key" :
-            "id";
-
-          let st=d.createObjectStore(
-            s,
-            {
-              keyPath:key,
-              autoIncrement:key==="id"
-            }
-          );
-
-          if(s==="pages"){
-            st.createIndex(
-              "date",
-              "date"
-            );
-          }
-
-          if(s==="todos"){
-            st.createIndex(
-              "date",
-              "date"
-            );
-          }
-
-        }
-
-      });
-
+      if(!d.objectStoreNames.contains("settings")){
+        d.createObjectStore("settings",{keyPath:"key"});
+      }
     };
 
-    r.onsuccess=()=>{
-      db=r.result;
+    request.onsuccess=()=>{
+      db=request.result;
       resolve(db);
     };
 
-    r.onerror=()=>{
-      reject(r.error);
-    };
-
+    request.onerror=()=>reject(request.error);
   });
-
 }
-
-/* DB HELPERS */
 
 function tx(store,mode="readonly"){
-  return db.transaction(
-    store,
-    mode
-  ).objectStore(store);
+  return db.transaction(store,mode).objectStore(store);
 }
 
-function get(store,key){
-
-  return new Promise((res,rej)=>{
-
-    let r=tx(store).get(key);
-
-    r.onsuccess=()=>{
-      res(r.result);
-    };
-
-    r.onerror=()=>{
-      rej(r.error);
-    };
-
+function dbGet(store,key){
+  return new Promise((resolve,reject)=>{
+    const r=tx(store).get(key);
+    r.onsuccess=()=>resolve(r.result);
+    r.onerror=()=>reject(r.error);
   });
-
 }
 
-function put(store,obj){
-
-  return new Promise((res,rej)=>{
-
-    let r=tx(
-      store,
-      "readwrite"
-    ).put(obj);
-
-    r.onsuccess=()=>{
-      res(r.result);
-    };
-
-    r.onerror=()=>{
-      rej(r.error);
-    };
-
+function dbPut(store,value){
+  return new Promise((resolve,reject)=>{
+    const r=tx(store,"readwrite").put(value);
+    r.onsuccess=()=>resolve(r.result);
+    r.onerror=()=>reject(r.error);
   });
-
 }
 
-function all(store){
-
-  return new Promise((res,rej)=>{
-
-    let r=tx(store).getAll();
-
-    r.onsuccess=()=>{
-      res(r.result);
-    };
-
-    r.onerror=()=>{
-      rej(r.error);
-    };
-
+function dbDelete(store,key){
+  return new Promise((resolve,reject)=>{
+    const r=tx(store,"readwrite").delete(key);
+    r.onsuccess=()=>resolve();
+    r.onerror=()=>reject(r.error);
   });
-
 }
 
-function del(store,key){
-
-  return new Promise((res,rej)=>{
-
-    let r=tx(
-      store,
-      "readwrite"
-    ).delete(key);
-
-    r.onsuccess=()=>{
-      res();
-    };
-
-    r.onerror=()=>{
-      rej(r.error);
-    };
-
+function dbAll(store){
+  return new Promise((resolve,reject)=>{
+    const r=tx(store).getAll();
+    r.onsuccess=()=>resolve(r.result||[]);
+    r.onerror=()=>reject(r.error);
   });
-
 }
 
-/* PAGE ID */
-
-function pageId(){
-
-  return currentDate+"-"+currentPage;
-
+function dbAdd(store,value){
+  return new Promise((resolve,reject)=>{
+    const r=tx(store,"readwrite").add(value);
+    r.onsuccess=()=>resolve(r.result);
+    r.onerror=()=>reject(r.error);
+  });
 }
 
-/* QUOTE */
+/* =========================================================
+   APP STATE
+========================================================= */
 
-function deterministicQuote(date){
+let currentDate = "";
+let currentPage = 1;
+let pageRecord = null;
 
-  let n=0;
+let drawMode = false;
+let drawTool = "pen";
+let drawing = false;
+let startX=0,startY=0;
+let lastX=0,lastY=0;
 
-  for(
-    const c of date
-  ){
+let undoStack=[];
+let redoStack=[];
 
-    n=
-      (n+
-       c.charCodeAt(0)*31)
-      %quotes.length;
+let calendarDate = new Date();
 
-  }
+/* =========================================================
+   HELPERS
+========================================================= */
 
-  return quotes[n];
+const $=id=>document.getElementById(id);
 
+function todayISO(){
+  const d=new Date();
+  return localISO(d);
 }
 
-/* LOAD PAGE */
+function localISO(d){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function displayDate(iso){
+  const d=new Date(iso+"T00:00:00");
+  return d.toLocaleDateString("en-IN",{
+    weekday:"long",
+    day:"numeric",
+    month:"long",
+    year:"numeric"
+  });
+}
+
+function dateChange(days){
+  const d=new Date(currentDate+"T00:00:00");
+  d.setDate(d.getDate()+days);
+  return localISO(d);
+}
+
+function pageID(){
+  return `${currentDate}-${currentPage}`;
+}
+
+function showStatus(message){
+  const s=$("status");
+  s.textContent=message;
+  s.style.display="block";
+  clearTimeout(showStatus.timer);
+  showStatus.timer=setTimeout(()=>s.style.display="none",1800);
+}
+
+function escapeHTML(s){
+  return String(s||"")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* =========================================================
+   PAGE LOADING / SAVING
+========================================================= */
 
 async function loadPage(){
+  $("pageTitle").textContent=displayDate(currentDate);
+  $("datePicker").value=currentDate;
 
-  pageRec=
-    await get(
-      "pages",
-      pageId()
-    );
+  const rec=await dbGet("pages",pageID());
 
-  if(!pageRec){
+  pageRecord=rec || {
+    id:pageID(),
+    date:currentDate,
+    page:currentPage,
+    content:"",
+    drawing:"",
+    mood:"",
+    quote:getQuote(currentDate)
+  };
 
-    pageRec={
-      id:pageId(),
-      date:currentDate,
-      page:currentPage,
-      html:"",
-      drawing:"",
-      quote:
-        deterministicQuote(
-          currentDate
-        ),
-      design:"natural"
-    };
+  $("editor").innerHTML=pageRecord.content||"";
+  $("mood").value=pageRecord.mood||"";
+  $("pageNo").textContent="Page "+currentPage;
 
-    await put(
-      "pages",
-      pageRec
-    );
+  applyDesign();
+  applyFontSize();
+  loadDrawing(pageRecord.drawing);
 
-  }
+  await carryForwardTodos();
 
-  document.getElementById(
-    "content"
-  ).innerHTML=
-    pageRec.html || "";
-
-  document.getElementById(
-    "quote"
-  ).textContent=
-    currentPage===1
-      ? "“"+
-        (
-          pageRec.quote ||
-          deterministicQuote(
-            currentDate
-          )
-        )+
-        "”"
-      : "";
-
-  document.getElementById(
-    "dayTitle"
-  ).textContent=
-    new Date(
-      currentDate+"T00:00:00"
-    ).toLocaleDateString(
-      undefined,
-      {
-        weekday:"long",
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    );
-
-  document.getElementById(
-    "dateInput"
-  ).value=currentDate;
-
-  document.getElementById(
-    "calendarDate"
-  ).value=currentDate;
-
-  document.getElementById(
-    "pageNo"
-  ).textContent=
-    "Page "+currentPage;
-
-  restoreDrawing(
-    pageRec.drawing
-  );
-
-  await renderTodos();
-
-  await checkEvents();
-
-  document.getElementById(
-    "status"
-  ).textContent=
-    "Saved locally";
-
+  $("saveStatus").textContent="Saved";
 }
 
-/* SAVE */
+let saveTimer=null;
 
-let saveTimer;
-
-function savePage(){
-
+function scheduleSave(){
+  $("saveStatus").textContent="Saving...";
   clearTimeout(saveTimer);
-
-  saveTimer=setTimeout(
-    async()=>{
-
-      if(!pageRec)return;
-
-      pageRec.html=
-        document.getElementById(
-          "content"
-        ).innerHTML;
-
-      pageRec.drawing=
-        drawCanvas.toDataURL(
-          "image/png"
-        );
-
-      await put(
-        "pages",
-        pageRec
-      );
-
-      document.getElementById(
-        "status"
-      ).textContent=
-        "Saved ✓";
-
-    },
-    250
-  );
-
+  saveTimer=setTimeout(savePage,400);
 }
 
-document.getElementById(
-  "content"
-).addEventListener(
-  "input",
-  savePage
-);
+async function savePage(){
+  if(!db || !pageRecord)return;
 
-/* SPIRAL */
+  pageRecord.id=pageID();
+  pageRecord.date=currentDate;
+  pageRecord.page=currentPage;
+  pageRecord.content=$("editor").innerHTML;
+  pageRecord.mood=$("mood").value;
 
-function buildSpiral(){
-
-  let s=
-    document.getElementById(
-      "spiral"
-    );
-
-  for(
-    let i=0;
-    i<20;
-    i++
-  ){
-
-    let r=
-      document.createElement(
-        "div"
-      );
-
-    r.className="ring";
-
-    s.appendChild(r);
-
-    let h=
-      document.createElement(
-        "i"
-      );
-
-    h.className="hole";
-
-    h.style.top=
-      (30+i*4.7)+"%";
-
-    document.getElementById(
-      "page"
-    ).appendChild(h);
-
+  try{
+    await dbPut("pages",pageRecord);
+    $("saveStatus").textContent="Saved";
+  }catch(e){
+    console.error(e);
+    $("saveStatus").textContent="Save error";
   }
-
 }
 
-/* EMOJIS */
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
 
-function buildEmojis(){
+async function goToDate(date){
+  await savePage();
+  currentDate=date;
+  currentPage=1;
+  calendarDate=new Date(currentDate+"T00:00:00");
+  await loadPage();
+}
 
-  let b=
-    document.getElementById(
-      "emojiBar"
-    );
+$("prevBtn").onclick=()=>goToDate(dateChange(-1));
+$("nextBtn").onclick=()=>goToDate(dateChange(1));
 
-  emojis.forEach(e=>{
+$("datePicker").onchange=()=>{
+  if($("datePicker").value)goToDate($("datePicker").value);
+};
 
-    let x=
-      document.createElement(
-        "button"
-      );
+$("newPageBtn").onclick=async()=>{
+  await savePage();
+  currentPage++;
+  await loadPage();
+  window.scrollTo({top:0,behavior:"smooth"});
+  showStatus("New diary page opened");
+};
 
-    x.textContent=e;
+/* =========================================================
+   WRITING
+========================================================= */
 
-    x.title=
-      "Insert "+e;
+$("editor").addEventListener("input",()=>{
+  scheduleSave();
+});
 
-    x.onclick=()=>{
+$("mood").onchange=()=>scheduleSave();
 
-      let editor=
-        document.getElementById(
-          "content"
-        );
+$("boldBtn").onclick=()=>{
+  $("editor").focus();
+  document.execCommand("bold");
+  scheduleSave();
+};
 
-      editor.focus();
+$("underlineBtn").onclick=()=>{
+  $("editor").focus();
+  document.execCommand("underline");
+  scheduleSave();
+};
 
-      document.execCommand(
-        "insertText",
-        false,
-        e
-      );
+$("italicBtn").onclick=()=>{
+  $("editor").focus();
+  document.execCommand("italic");
+  scheduleSave();
+};
 
-      savePage();
+/* =========================================================
+   EMOJIS
+========================================================= */
 
+document.querySelectorAll("#emojiBar button").forEach(btn=>{
+  btn.onclick=()=>{
+    $("editor").focus();
+    document.execCommand("insertText",false,btn.textContent);
+    scheduleSave();
+  };
+});
+
+/* =========================================================
+   QUOTES
+========================================================= */
+
+const quotes=[
+  "The best time to start is today.",
+  "Small steps every day create big changes.",
+  "Gratitude turns ordinary days into meaningful memories.",
+  "Life is made of moments. Preserve the beautiful ones.",
+  "Peace begins with a calm mind.",
+  "Every new day is a fresh page.",
+  "What you write today becomes tomorrow's memory.",
+  "Enjoy the simple things.",
+  "Be present. Be grateful. Be kind.",
+  "A beautiful life is a collection of beautiful moments."
+];
+
+function getQuote(date){
+  let n=0;
+  for(let i=0;i<date.length;i++)n+=date.charCodeAt(i);
+  return quotes[n%quotes.length];
+}
+
+$("quoteBtn").onclick=()=>{
+  alert("💬 "+(pageRecord?.quote||getQuote(currentDate)));
+};
+
+/* =========================================================
+   DRAWING
+========================================================= */
+
+const canvas=$("drawCanvas");
+const ctx=canvas.getContext("2d");
+
+function resizeCanvas(preserve=true){
+  const old=preserve && canvas.width>0 ? canvas.toDataURL() : null;
+  const r=$("editorWrap").getBoundingClientRect();
+
+  canvas.width=Math.max(1,Math.floor(r.width*devicePixelRatio));
+  canvas.height=Math.max(1,Math.floor(r.height*devicePixelRatio));
+  canvas.style.width=r.width+"px";
+  canvas.style.height=r.height+"px";
+
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+
+  if(old){
+    const img=new Image();
+    img.onload=()=>{
+      ctx.drawImage(img,0,0,r.width,r.height);
     };
-
-    b.appendChild(x);
-
-  });
-
+    img.src=old;
+  }
 }
 
-/* DRAWING */
+function loadDrawing(data){
+  resizeCanvas(false);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
 
-const drawCanvas=
-  document.getElementById(
-    "drawingCanvas"
-  );
+  undoStack=[];
+  redoStack=[];
 
-const ctx=
-  drawCanvas.getContext(
-    "2d"
-  );
+  if(!data)return;
 
-let drawTool="pen";
-
-let drawColor="#222";
-
-let drawSize=4;
-
-let drawing=false;
-
-let startX=0;
-let startY=0;
-
-let lastX=0;
-let lastY=0;
-
-let history=[];
-let redo=[];
-
-/* RESIZE */
-
-function resizeCanvas(
-  preserve=true
-){
-
-  let old=
-    document.createElement(
-      "canvas"
-    );
-
-  if(
-    preserve &&
-    drawCanvas.width
-  ){
-
-    old.width=
-      drawCanvas.width;
-
-    old.height=
-      drawCanvas.height;
-
-    old.getContext(
-      "2d"
-    ).drawImage(
-      drawCanvas,
-      0,
-      0
-    );
-
-  }
-
-  let r=
-    drawCanvas.getBoundingClientRect();
-
-  let d=
-    window.devicePixelRatio || 1;
-
-  drawCanvas.width=
-    Math.max(
-      1,
-      r.width*d
-    );
-
-  drawCanvas.height=
-    Math.max(
-      1,
-      r.height*d
-    );
-
-  ctx.setTransform(
-    d,
-    0,
-    0,
-    d,
-    0,
-    0
-  );
-
-  if(
-    preserve &&
-    old.width
-  ){
-
-    ctx.drawImage(
-      old,
-      0,
-      0,
-      old.width,
-      old.height,
-      0,
-      0,
-      r.width,
-      r.height
-    );
-
-  }
-
+  const img=new Image();
+  img.onload=()=>{
+    ctx.drawImage(img,0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
+  };
+  img.src=data;
 }
 
-/* COORDINATES */
+function snapshot(){
+  undoStack.push(canvas.toDataURL());
+  if(undoStack.length>30)undoStack.shift();
+  redoStack=[];
+}
 
-function xy(e){
+function restoreSnapshot(data){
+  ctx.clearRect(0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
 
-  let r=
-    drawCanvas.getBoundingClientRect();
+  if(!data)return;
 
-  return{
+  const img=new Image();
+  img.onload=()=>{
+    ctx.drawImage(img,0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
+  };
+  img.src=data;
+}
+
+function pointerPosition(e){
+  const r=canvas.getBoundingClientRect();
+  return {
     x:e.clientX-r.left,
     y:e.clientY-r.top
   };
-
 }
 
-/* SNAPSHOT */
-
-function snapshot(){
-
-  history.push(
-    drawCanvas.toDataURL()
-  );
-
-  if(
-    history.length>30
-  ){
-    history.shift();
-  }
-
-  redo=[];
-
+function setupBrush(){
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
+  ctx.lineWidth=3;
+  ctx.strokeStyle=$("drawColor").value;
+  ctx.globalCompositeOperation=
+    drawTool==="eraser" ? "destination-out" : "source-over";
 }
 
-/* RESTORE */
+function beginDraw(e){
+  if(!drawMode)return;
 
-function restoreData(url){
+  e.preventDefault();
+  canvas.setPointerCapture(e.pointerId);
 
-  let im=
-    new Image();
+  const p=pointerPosition(e);
 
-  im.onload=()=>{
-
-    ctx.clearRect(
-      0,
-      0,
-      drawCanvas.clientWidth,
-      drawCanvas.clientHeight
-    );
-
-    ctx.globalCompositeOperation=
-      "source-over";
-
-    ctx.drawImage(
-      im,
-      0,
-      0,
-      drawCanvas.clientWidth,
-      drawCanvas.clientHeight
-    );
-
-  };
-
-  im.src=url;
-
-}
-
-/* RESTORE DRAWING */
-
-function restoreDrawing(data){
-
-  resizeCanvas(false);
-
-  if(
-    data &&
-    data.length>20
-  ){
-
-    restoreData(data);
-
-  }
-
-}
-
-/*
-DRAWING DOWN
-*/
-
-drawCanvas.addEventListener(
-  "pointerdown",
-  e=>{
-
-    snapshot();
-
-    drawing=true;
-
-    drawCanvas.setPointerCapture(
-      e.pointerId
-    );
-
-    let p=xy(e);
-
-    startX=
-      lastX=p.x;
-
-    startY=
-      lastY=p.y;
-
-    /*
-    ERASER FIX
-    */
-
-    if(
-      drawTool==="eraser"
-    ){
-
-      ctx.globalCompositeOperation=
-        "destination-out";
-
-      ctx.lineWidth=
-        Math.max(
-          15,
-          drawSize*6
-        );
-
-    }else{
-
-      ctx.globalCompositeOperation=
-        "source-over";
-
-      ctx.strokeStyle=
-        drawColor;
-
-      ctx.lineWidth=
-        drawSize;
-
-    }
-
-    ctx.lineCap="round";
-    ctx.lineJoin="round";
-
-    if(
-      drawTool==="pen"
-    ){
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        p.x,
-        p.y
-      );
-
-      ctx.lineTo(
-        p.x+.1,
-        p.y+.1
-      );
-
-      ctx.stroke();
-
-    }
-
-  }
-);
-
-/*
-DRAWING MOVE
-*/
-
-drawCanvas.addEventListener(
-  "pointermove",
-  e=>{
-
-    if(!drawing)return;
-
-    let p=xy(e);
-
-    if(
-      drawTool==="pen" ||
-      drawTool==="eraser"
-    ){
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        lastX,
-        lastY
-      );
-
-      ctx.lineTo(
-        p.x,
-        p.y
-      );
-
-      ctx.stroke();
-
-      lastX=p.x;
-      lastY=p.y;
-
-    }
-
-  }
-);
-
-/*
-DRAWING UP
-*/
-
-drawCanvas.addEventListener(
-  "pointerup",
-  e=>{
-
-    drawing=false;
-
-    try{
-      drawCanvas.releasePointerCapture(
-        e.pointerId
-      );
-    }catch(err){}
-
-    ctx.globalCompositeOperation=
-      "source-over";
-
-    savePage();
-
-  }
-);
-
-drawCanvas.addEventListener(
-  "pointercancel",
-  ()=>{
-    drawing=false;
-
-    ctx.globalCompositeOperation=
-      "source-over";
-
-    savePage();
-  }
-);
-
-/* DRAW TOOL */
-
-document.querySelectorAll(
-  "[data-tool]"
-).forEach(
-  b=>{
-
-    b.onclick=()=>{
-
-      drawTool=
-        b.dataset.tool;
-
-    };
-
-  }
-);
-
-/* DRAW COLOR */
-
-document.getElementById(
-  "drawColor"
-).onchange=e=>{
-
-  drawColor=
-    e.target.value;
-
-};
-
-/* DRAW SIZE */
-
-document.getElementById(
-  "drawSize"
-).onchange=e=>{
-
-  drawSize=
-    Number(e.target.value);
-
-};
-
-/* UNDO */
-
-document.getElementById(
-  "undoDraw"
-).onclick=()=>{
-
-  if(history.length){
-
-    redo.push(
-      drawCanvas.toDataURL()
-    );
-
-    restoreData(
-      history.pop()
-    );
-
-    savePage();
-
-  }
-
-};
-
-/* REDO */
-
-document.getElementById(
-  "redoDraw"
-).onclick=()=>{
-
-  if(redo.length){
-
-    history.push(
-      drawCanvas.toDataURL()
-    );
-
-    restoreData(
-      redo.pop()
-    );
-
-    savePage();
-
-  }
-
-};
-
-/* CLEAR */
-
-document.getElementById(
-  "clearDraw"
-).onclick=()=>{
+  drawing=true;
+  startX=lastX=p.x;
+  startY=lastY=p.y;
 
   snapshot();
+  setupBrush();
 
-  ctx.clearRect(
-    0,
-    0,
-    drawCanvas.clientWidth,
-    drawCanvas.clientHeight
-  );
-
-  savePage();
-
-};
-
-/* CLOSE DRAW */
-
-document.getElementById(
-  "closeDraw"
-).onclick=()=>{
-
-  document.body.classList.remove(
-    "draw-active"
-  );
-
-  document.getElementById(
-    "drawingPanel"
-  ).classList.remove(
-    "show"
-  );
-
-};
-
-/* DRAW BUTTON */
-
-document.getElementById(
-  "drawBtn"
-).onclick=()=>{
-
-  document.body.classList.toggle(
-    "draw-active"
-  );
-
-  document.getElementById(
-    "drawingPanel"
-  ).classList.toggle(
-    "show"
-  );
-
-};
-
-/* RESIZE */
-
-window.addEventListener(
-  "resize",
-  ()=>{
-    resizeCanvas(true);
+  if(drawTool==="pen" || drawTool==="eraser"){
+    ctx.beginPath();
+    ctx.moveTo(p.x,p.y);
+    ctx.lineTo(p.x+.01,p.y+.01);
+    ctx.stroke();
   }
-);
-
-/* NEW PAGE */
-
-async function nextPage(){
-
-  await savePage();
-
-  currentPage++;
-
-  await loadPage();
-
-  document.querySelector(
-    ".page"
-  ).animate(
-    [
-      {
-        transform:
-          "translateX(40px) rotate(.2deg)",
-        opacity:.3
-      },
-      {
-        transform:
-          "translateX(0) rotate(-.12deg)",
-        opacity:1
-      }
-    ],
-    {
-      duration:280
-    }
-  );
-
 }
 
-document.getElementById(
-  "newPage"
-).onclick=nextPage;
+function moveDraw(e){
+  if(!drawing)return;
 
-/* DATE */
+  e.preventDefault();
 
-async function changeDate(
-  delta
-){
+  const p=pointerPosition(e);
 
-  await savePage();
-
-  let d=
-    new Date(
-      currentDate+
-      "T00:00:00"
-    );
-
-  d.setDate(
-    d.getDate()+delta
-  );
-
-  currentDate=
-    localDate(d);
-
-  currentPage=1;
-
-  await carryTodos(
-    currentDate
-  );
-
-  await loadPage();
-
-}
-
-document.getElementById(
-  "prevBtn"
-).onclick=
-  ()=>changeDate(-1);
-
-document.getElementById(
-  "nextBtn"
-).onclick=
-  ()=>changeDate(1);
-
-/* DATE INPUT */
-
-document.getElementById(
-  "dateInput"
-).onchange=
-async e=>{
-
-  await savePage();
-
-  currentDate=
-    e.target.value;
-
-  currentPage=1;
-
-  await carryTodos(
-    currentDate
-  );
-
-  await loadPage();
-
-};
-
-/* CALENDAR */
-
-document.getElementById(
-  "calendarBtn"
-).onclick=()=>{
-
-  document.getElementById(
-    "calendar"
-  ).classList.toggle(
-    "show"
-  );
-
-};
-
-document.getElementById(
-  "openDateBtn"
-).onclick=async()=>{
-
-  let d=
-    document.getElementById(
-      "calendarDate"
-    ).value;
-
-  if(d){
-
-    await savePage();
-
-    currentDate=d;
-
-    currentPage=1;
-
-    await carryTodos(
-      currentDate
-    );
-
-    await loadPage();
-
-  }
-
-};
-
-document.getElementById(
-  "todayBtn"
-).onclick=async()=>{
-
-  await savePage();
-
-  currentDate=
-    localDate();
-
-  currentPage=1;
-
-  await loadPage();
-
-};
-
-/* QUOTE */
-
-document.getElementById(
-  "quoteBtn"
-).onclick=
-async()=>{
-
-  if(
-    currentPage!==1
-  )return;
-
-  let index=
-    quotes.indexOf(
-      pageRec.quote
-    );
-
-  pageRec.quote=
-    quotes[
-      (index+1)%
-      quotes.length
-    ];
-
-  await put(
-    "pages",
-    pageRec
-  );
-
-  await loadPage();
-
-};
-
-/* EVENT */
-
-document.getElementById(
-  "eventBtn"
-).onclick=()=>{
-
-  document.getElementById(
-    "eventDate"
-  ).value=
-    currentDate;
-
-  document.getElementById(
-    "eventModal"
-  ).hidden=false;
-
-};
-
-/* CLOSE EVENT */
-
-document.getElementById(
-  "closeEvent"
-).onclick=()=>{
-
-  document.getElementById(
-    "eventModal"
-  ).hidden=true;
-
-};
-
-/* SAVE EVENT */
-
-document.getElementById(
-  "saveEvent"
-).onclick=
-async()=>{
-
-  let title=
-    document.getElementById(
-      "eventTitle"
-    ).value.trim();
-
-  if(!title){
-
-    alert(
-      "Please enter an event title."
-    );
-
+  if(drawTool==="pen" || drawTool==="eraser"){
+    setupBrush();
+    ctx.beginPath();
+    ctx.moveTo(lastX,lastY);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+    lastX=p.x;
+    lastY=p.y;
     return;
-
   }
 
-  await put(
-    "events",
-    {
-      title:title,
+  /* line and circle use a temporary redraw */
+  restoreSnapshot(undoStack[undoStack.length-1]);
 
-      date:
-        document.getElementById(
-          "eventDate"
-        ).value,
+  setupBrush();
 
-      time:
-        document.getElementById(
-          "eventTime"
-        ).value,
-
-      notes:
-        document.getElementById(
-          "eventNotes"
-        ).value,
-
-      created:Date.now(),
-
-      alerted:false
-    }
-  );
-
-  document.getElementById(
-    "eventModal"
-  ).hidden=true;
-
-  alert(
-    "Event saved."
-  );
-
-  document.getElementById(
-    "eventTitle"
-  ).value="";
-
-  document.getElementById(
-    "eventNotes"
-  ).value="";
-
-};
-
-/* EVENTS */
-
-async function checkEvents(){
-
-  let es=
-    await all("events");
-
-  let today=
-    es.filter(
-      e=>e.date===currentDate
-    );
-
-  if(today.length){
-
-    document.getElementById(
-      "calendarInfo"
-    ).textContent=
-      "Events today: "+
-      today.map(
-        e=>
-          e.time
-          ? e.time+" "+e.title
-          : e.title
-      ).join(" • ");
-
-  }else{
-
-    document.getElementById(
-      "calendarInfo"
-    ).textContent="";
-
+  if(drawTool==="line"){
+    ctx.beginPath();
+    ctx.moveTo(startX,startY);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
   }
 
-}
-
-/* EVENT ALERT */
-
-setInterval(
-  async()=>{
-
-    let now=
-      new Date();
-
-    let ds=
-      localDate(now);
-
-    let tm=
-      now.toTimeString()
-        .slice(0,5);
-
-    let es=
-      await all("events");
-
-    for(
-      let e of es
-    ){
-
-      if(
-        e.date===ds &&
-        e.time===tm &&
-        !e.alerted
-      ){
-
-        e.alerted=true;
-
-        await put(
-          "events",
-          e
-        );
-
-        alert(
-          "📅 Diary event: "+
-          e.title+
-          (
-            e.notes
-            ? "\n"+e.notes
-            : ""
-          )
-        );
-
-      }
-
-    }
-
-  },
-  30000
-);
-
-/* TODO */
-
-document.getElementById(
-  "todoBtn"
-).onclick=()=>{
-
-  let b=
-    document.getElementById(
-      "todoBox"
-    );
-
-  b.hidden=!b.hidden;
-
-};
-
-/* ADD TODO */
-
-document.getElementById(
-  "addTodo"
-).onclick=
-async()=>{
-
-  let v=
-    document.getElementById(
-      "todoInput"
-    ).value.trim();
-
-  if(!v)return;
-
-  await put(
-    "todos",
-    {
-      date:currentDate,
-      text:v,
-      done:false,
-      created:Date.now()
-    }
-  );
-
-  document.getElementById(
-    "todoInput"
-  ).value="";
-
-  await renderTodos();
-
-};
-
-/* RENDER TODO */
-
-async function renderTodos(){
-
-  let box=
-    document.getElementById(
-      "todoList"
-    );
-
-  box.innerHTML="";
-
-  let ts=
-    (
-      await all("todos")
-    ).filter(
-      x=>x.date===currentDate
-    );
-
-  ts.forEach(t=>{
-
-    let row=
-      document.createElement(
-        "div"
-      );
-
-    row.className=
-      "todo-item"+
-      (
-        t.done
-        ? " done"
-        : ""
-      );
-
-    let c=
-      document.createElement(
-        "input"
-      );
-
-    c.type="checkbox";
-
-    c.checked=t.done;
-
-    c.onchange=
-      async()=>{
-
-        t.done=
-          c.checked;
-
-        await put(
-          "todos",
-          t
-        );
-
-        if(!t.done){
-
-          await carryTodos(
-            nextDate(
-              currentDate
-            )
-          );
-
-        }
-
-        await renderTodos();
-
-      };
-
-    let s=
-      document.createElement(
-        "span"
-      );
-
-    s.textContent=t.text;
-
-    row.append(
-      c,
-      s
-    );
-
-    box.appendChild(
-      row
-    );
-
-  });
-
-}
-
-/* NEXT DATE */
-
-function nextDate(s){
-
-  let d=
-    new Date(
-      s+"T00:00:00"
-    );
-
-  d.setDate(
-    d.getDate()+1
-  );
-
-  return localDate(d);
-
-}
-
-/* PREVIOUS DATE */
-
-function previousDate(s){
-
-  let d=
-    new Date(
-      s+"T00:00:00"
-    );
-
-  d.setDate(
-    d.getDate()-1
-  );
-
-  return localDate(d);
-
-}
-
-/* CARRY TODO */
-
-async function carryTodos(
-  date
-){
-
-  let prev=
-    previousDate(date);
-
-  let ts=
-    (
-      await all("todos")
-    ).filter(
-      x=>
-        x.date===prev &&
-        !x.done
-    );
-
-  let allTodos=
-    await all("todos");
-
-  for(
-    const t of ts
-  ){
-
-    let exists=
-      allTodos.some(
-        x=>
-          x.date===date &&
-          x.text===t.text &&
-          !x.done
-      );
-
-    if(!exists){
-
-      await put(
-        "todos",
-        {
-          date:date,
-          text:t.text,
-          done:false,
-          created:Date.now(),
-          carriedFrom:prev
-        }
-      );
-
-    }
-
+  if(drawTool==="circle"){
+    const rx=Math.abs(p.x-startX)/2;
+    const ry=Math.abs(p.y-startY)/2;
+    const cx=(p.x+startX)/2;
+    const cy=(p.y+startY)/2;
+
+    ctx.beginPath();
+    ctx.ellipse(cx,cy,Math.max(rx,2),Math.max(ry,2),0,0,Math.PI*2);
+    ctx.stroke();
   }
-
 }
 
-/* MEMORIES */
+function endDraw(e){
+  if(!drawing)return;
+  drawing=false;
 
-document.getElementById(
-  "memoryBtn"
-).onclick=
-async()=>{
+  if(drawTool==="line" || drawTool==="circle"){
+    const p=pointerPosition(e);
+    restoreSnapshot(undoStack[undoStack.length-1]);
+    setupBrush();
 
-  document.getElementById(
-    "memoryModal"
-  ).hidden=false;
-
-  await renderMemories();
-
-};
-
-document.getElementById(
-  "closeMemory"
-).onclick=()=>{
-
-  document.getElementById(
-    "memoryModal"
-  ).hidden=true;
-
-};
-
-/* MEMORY FILE */
-
-document.getElementById(
-  "memoryFile"
-).onchange=
-async e=>{
-
-  let f=e.target.files[0];
-
-  if(!f)return;
-
-  let reader=
-    new FileReader();
-
-  reader.onload=
-    async()=>{
-
-      await put(
-        "attachments",
-        {
-          date:currentDate,
-          name:f.name,
-          type:f.type,
-          data:reader.result,
-          created:Date.now()
-        }
-      );
-
-      await renderMemories();
-
-    };
-
-  reader.readAsDataURL(f);
-
-  e.target.value="";
-
-};
-
-/* MEMORY LIST */
-
-async function renderMemories(){
-
-  let g=
-    document.getElementById(
-      "memoryGrid"
-    );
-
-  g.innerHTML="";
-
-  let as=
-    (
-      await all(
-        "attachments"
-      )
-    ).filter(
-      x=>x.date===currentDate
-    );
-
-  as.forEach(a=>{
-
-    let wrap=
-      document.createElement(
-        "div"
-      );
-
-    if(
-      a.type &&
-      a.type.startsWith(
-        "image/"
-      )
-    ){
-
-      let im=
-        document.createElement(
-          "img"
-        );
-
-      im.src=a.data;
-
-      wrap.appendChild(im);
-
+    if(drawTool==="line"){
+      ctx.beginPath();
+      ctx.moveTo(startX,startY);
+      ctx.lineTo(p.x,p.y);
+      ctx.stroke();
     }else{
-
-      wrap.textContent=
-        "📄 "+a.name;
-
+      const rx=Math.abs(p.x-startX)/2;
+      const ry=Math.abs(p.y-startY)/2;
+      const cx=(p.x+startX)/2;
+      const cy=(p.y+startY)/2;
+      ctx.beginPath();
+      ctx.ellipse(cx,cy,Math.max(rx,2),Math.max(ry,2),0,0,Math.PI*2);
+      ctx.stroke();
     }
-
-    let b=
-      document.createElement(
-        "button"
-      );
-
-    b.textContent=
-      "Delete";
-
-    b.onclick=
-      async()=>{
-
-        await del(
-          "attachments",
-          a.id
-        );
-
-        await renderMemories();
-
-      };
-
-    wrap.appendChild(b);
-
-    g.appendChild(
-      wrap
-    );
-
-  });
-
-}
-
-/* PRINT */
-
-document.getElementById(
-  "printBtn"
-).onclick=
-async()=>{
-
-  await savePage();
-
-  let w=
-    window.open(
-      "",
-      "_blank"
-    );
-
-  if(!w){
-
-    alert(
-      "Please allow pop-ups for printing."
-    );
-
-    return;
-
   }
 
-  w.document.write(
-    `
-    <html>
-    <head>
-    <title>Diary</title>
+  ctx.globalCompositeOperation="source-over";
+  pageRecord.drawing=canvas.toDataURL("image/png");
+  scheduleSave();
+}
 
-    <style>
+canvas.addEventListener("pointerdown",beginDraw);
+canvas.addEventListener("pointermove",moveDraw);
+canvas.addEventListener("pointerup",endDraw);
+canvas.addEventListener("pointercancel",endDraw);
 
-    body{
-      font-family:Georgia;
-      padding:35px;
-      background:#f7edcf;
-      line-height:2;
-    }
+function selectDrawTool(tool){
+  drawTool=tool;
 
-    h1{
-      font-size:26px;
-    }
+  ["penTool","lineTool","circleTool","eraserTool"].forEach(id=>{
+    $(id).classList.remove("active");
+  });
 
-    .quote{
-      font-style:italic;
-    }
-
-    .content{
-      font-size:18px;
-      white-space:pre-wrap;
-    }
-
-    </style>
-
-    </head>
-
-    <body>
-
-    <h1>
-      ${document.getElementById("dayTitle").textContent}
-      — Page ${currentPage}
-    </h1>
-
-    <div class="quote">
-      ${document.getElementById("quote").textContent}
-    </div>
-
-    <div class="content">
-      ${document.getElementById("content").innerHTML}
-    </div>
-
-    </body>
-
-    </html>
-    `
-  );
-
-  w.document.close();
-
-  w.focus();
-
-  w.print();
-
-};
-
-/* BACKUP */
-
-document.getElementById(
-  "backupBtn"
-).onclick=
-async()=>{
-
-  await savePage();
-
-  let data={
-    version:4,
-
-    pages:
-      await all("pages"),
-
-    events:
-      await all("events"),
-
-    attachments:
-      await all("attachments"),
-
-    todos:
-      await all("todos")
+  const map={
+    pen:"penTool",
+    line:"lineTool",
+    circle:"circleTool",
+    eraser:"eraserTool"
   };
 
-  let blob=
-    new Blob(
-      [
-        JSON.stringify(
-          data
-        )
-      ],
-      {
-        type:
-          "application/json"
-      }
-    );
+  $(map[tool]).classList.add("active");
+}
 
-  let a=
-    document.createElement(
-      "a"
-    );
+$("penTool").onclick=()=>selectDrawTool("pen");
+$("lineTool").onclick=()=>selectDrawTool("line");
+$("circleTool").onclick=()=>selectDrawTool("circle");
+$("eraserTool").onclick=()=>selectDrawTool("eraser");
 
-  a.href=
-    URL.createObjectURL(
-      blob
-    );
-
-  a.download=
-    "my-personal-diary-backup.json";
-
-  a.click();
-
-  URL.revokeObjectURL(
-    a.href
-  );
-
+$("drawColor").onchange=()=>{
+  if(drawTool==="eraser")selectDrawTool("pen");
 };
 
-/* RESTORE */
+$("undoDraw").onclick=()=>{
+  if(!undoStack.length)return;
 
-document.getElementById(
-  "restoreBtn"
-).onclick=()=>{
+  const current=canvas.toDataURL();
+  redoStack.push(current);
 
-  document.getElementById(
-    "restoreFile"
-  ).click();
+  const previous=undoStack.pop();
+  restoreSnapshot(previous);
 
+  pageRecord.drawing=canvas.toDataURL("image/png");
+  scheduleSave();
 };
 
-document.getElementById(
-  "restoreFile"
-).onchange=
-e=>{
+$("redoDraw").onclick=()=>{
+  if(!redoStack.length)return;
 
-  let f=e.target.files[0];
+  const current=canvas.toDataURL();
+  undoStack.push(current);
 
-  if(!f)return;
+  const next=redoStack.pop();
+  restoreSnapshot(next);
 
-  let r=
-    new FileReader();
+  pageRecord.drawing=canvas.toDataURL("image/png");
+  scheduleSave();
+};
 
-  r.onload=
-    async()=>{
+$("clearDraw").onclick=()=>{
+  if(!confirm("Clear all drawings from this page?"))return;
 
-      try{
+  snapshot();
+  ctx.clearRect(0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
+  pageRecord.drawing="";
+  scheduleSave();
+};
 
-        let d=
-          JSON.parse(
-            r.result
-          );
+function closeDrawing(){
+  drawMode=false;
+  $("page").classList.remove("draw-active");
+  $("drawTools").hidden=true;
+  $("drawBtn").textContent="✏️ Draw";
+  ctx.globalCompositeOperation="source-over";
+  savePage();
+}
 
-        for(
-          const p of
-          (d.pages||[])
-        ){
+$("drawBtn").onclick=()=>{
+  if(drawMode){
+    closeDrawing();
+    return;
+  }
 
-          await put(
-            "pages",
-            p
-          );
+  resizeCanvas(true);
+  drawMode=true;
+  $("page").classList.add("draw-active");
+  $("drawTools").hidden=false;
+  $("drawBtn").textContent="✕ Close Draw";
+  showStatus("Draw directly on your diary page");
+};
 
-        }
+$("closeDraw").onclick=closeDrawing;
 
-        for(
-          const x of
-          (d.events||[])
-        ){
+window.addEventListener("resize",()=>{
+  if(!drawMode)resizeCanvas(true);
+});
 
-          await put(
-            "events",
-            x
-          );
+/* =========================================================
+   CALENDAR
+========================================================= */
 
-        }
+$("calendarBtn").onclick=async()=>{
+  calendarDate=new Date(currentDate+"T00:00:00");
+  await renderCalendar();
+  $("calendarModal").hidden=false;
+};
 
-        for(
-          const x of
-          (d.attachments||[])
-        ){
+$("calendarClose").onclick=()=>{
+  $("calendarModal").hidden=true;
+};
 
-          await put(
-            "attachments",
-            x
-          );
+$("calPrev").onclick=async()=>{
+  calendarDate.setMonth(calendarDate.getMonth()-1);
+  await renderCalendar();
+};
 
-        }
+$("calNext").onclick=async()=>{
+  calendarDate.setMonth(calendarDate.getMonth()+1);
+  await renderCalendar();
+};
 
-        for(
-          const x of
-          (d.todos||[])
-        ){
+async function renderCalendar(){
+  const year=calendarDate.getFullYear();
+  const month=calendarDate.getMonth();
 
-          await put(
-            "todos",
-            x
-          );
+  $("calendarMonth").textContent=
+    calendarDate.toLocaleDateString("en-IN",{month:"long",year:"numeric"});
 
-        }
+  const grid=$("calendarGrid");
+  grid.innerHTML="";
 
-        alert(
-          "Backup restored."
-        );
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(x=>{
+    const h=document.createElement("div");
+    h.className="calHead";
+    h.textContent=x;
+    grid.appendChild(h);
+  });
 
-        await loadPage();
+  const first=new Date(year,month,1);
+  const last=new Date(year,month+1,0);
+  const events=await dbAll("events");
 
-      }catch(err){
+  for(let i=0;i<first.getDay();i++){
+    grid.appendChild(document.createElement("div"));
+  }
 
-        alert(
-          "Invalid backup file."
-        );
+  for(let day=1;day<=last.getDate();day++){
+    const d=new Date(year,month,day);
+    const iso=localISO(d);
 
-      }
+    const cell=document.createElement("div");
+    cell.className="calDay";
 
+    if(iso===todayISO())cell.classList.add("today");
+    if(iso===currentDate)cell.classList.add("selected");
+
+    cell.innerHTML=`<div class="num">${day}</div>`;
+
+    events
+      .filter(e=>e.date===iso)
+      .slice(0,3)
+      .forEach(e=>{
+        const ev=document.createElement("div");
+        ev.className="calEvent";
+        ev.textContent=(e.time?e.time+" ":"")+e.title;
+        cell.appendChild(ev);
+      });
+
+    cell.onclick=async()=>{
+      $("calendarModal").hidden=true;
+      await goToDate(iso);
     };
 
-  r.readAsText(f);
+    grid.appendChild(cell);
+  }
+}
 
+/* =========================================================
+   EVENTS
+========================================================= */
+
+$("eventBtn").onclick=async()=>{
+  $("eventDate").value=currentDate;
+  $("eventTime").value="";
+  $("eventTitle").value="";
+  $("eventNotes").value="";
+  await renderEvents();
+  $("eventModal").hidden=false;
 };
 
-/* START */
+$("eventClose").onclick=()=>{
+  $("eventModal").hidden=true;
+};
 
-openDB()
-.then(
-  async()=>{
+$("eventSave").onclick=async()=>{
+  const date=$("eventDate").value;
+  const title=$("eventTitle").value.trim();
 
-    buildSpiral();
+  if(!date){
+    alert("Please select the event date.");
+    return;
+  }
 
-    buildEmojis();
+  if(!title){
+    alert("Please enter an event title.");
+    return;
+  }
 
-    await carryTodos(
-      currentDate
-    );
+  await dbAdd("events",{
+    date,
+    time:$("eventTime").value,
+    title,
+    notes:$("eventNotes").value.trim(),
+    created:Date.now()
+  });
 
+  $("eventTitle").value="";
+  $("eventNotes").value="";
+  $("eventTime").value="";
+
+  await renderEvents();
+  showStatus("Event saved");
+};
+
+async function renderEvents(){
+  const all=await dbAll("events");
+
+  all.sort((a,b)=>{
+    const x=(a.date||"")+" "+(a.time||"");
+    const y=(b.date||"")+" "+(b.time||"");
+    return x.localeCompare(y);
+  });
+
+  const box=$("eventList");
+  box.innerHTML="";
+
+  if(!all.length){
+    box.innerHTML="<p>No events added yet.</p>";
+    return;
+  }
+
+  all.forEach(e=>{
+    const div=document.createElement("div");
+    div.className="eventItem";
+
+    div.innerHTML=`
+      <strong>${escapeHTML(e.title)}</strong>
+      <span>${escapeHTML(e.date)} ${escapeHTML(e.time||"")}</span>
+      ${e.notes?`<div>${escapeHTML(e.notes)}</div>`:""}
+      <button data-id="${e.id}" style="margin-top:6px">🗑 Delete</button>
+    `;
+
+    div.querySelector("button").onclick=async()=>{
+      if(confirm("Delete this event?")){
+        await dbDelete("events",e.id);
+        await renderEvents();
+      }
+    };
+
+    box.appendChild(div);
+  });
+}
+
+/* =========================================================
+   TODO
+========================================================= */
+
+$("todoBtn").onclick=async()=>{
+  await carryForwardTodos();
+  await renderTodos();
+  $("todoModal").hidden=false;
+};
+
+$("todoClose").onclick=()=>{
+  $("todoModal").hidden=true;
+};
+
+$("todoAdd").onclick=addTodo;
+
+$("todoText").addEventListener("keydown",e=>{
+  if(e.key==="Enter")addTodo();
+});
+
+async function addTodo(){
+  const text=$("todoText").value.trim();
+  if(!text)return;
+
+  await dbAdd("todos",{
+    date:currentDate,
+    text,
+    done:false,
+    created:Date.now()
+  });
+
+  $("todoText").value="";
+  await renderTodos();
+  showStatus("Task added");
+}
+
+async function renderTodos(){
+  const all=await dbAll("todos");
+  const list=all.filter(t=>t.date===currentDate);
+
+  list.sort((a,b)=>a.id-b.id);
+
+  const box=$("todoList");
+  box.innerHTML="";
+
+  if(!list.length){
+    box.innerHTML="<p>No tasks for this date.</p>";
+    return;
+  }
+
+  list.forEach(t=>{
+    const div=document.createElement("div");
+    div.className="todoItem"+(t.done?" done":"");
+
+    div.innerHTML=`
+      <input type="checkbox" ${t.done?"checked":""}>
+      <span>${escapeHTML(t.text)}</span>
+      <button>🗑</button>
+    `;
+
+    div.querySelector("input").onchange=async()=>{
+      t.done=div.querySelector("input").checked;
+      await dbPut("todos",t);
+      await renderTodos();
+    };
+
+    div.querySelector("button").onclick=async()=>{
+      await dbDelete("todos",t.id);
+      await renderTodos();
+    };
+
+    box.appendChild(div);
+  });
+}
+
+/* Automatically carry unfinished tasks from previous date */
+async function carryForwardTodos(){
+  if(!currentDate)return;
+
+  const previous=dateChange(-1);
+  const all=await dbAll("todos");
+
+  const pending=all.filter(t=>t.date===previous && !t.done);
+  const today=all.filter(t=>t.date===currentDate);
+
+  for(const task of pending){
+    const already=today.some(t=>t.text===task.text && !t.done);
+    if(!already){
+      await dbAdd("todos",{
+        date:currentDate,
+        text:task.text,
+        done:false,
+        carriedFrom:previous,
+        created:Date.now()
+      });
+    }
+  }
+}
+
+/* =========================================================
+   MEMORIES
+========================================================= */
+
+$("memoryBtn").onclick=async()=>{
+  await renderMemories();
+  $("memoryModal").hidden=false;
+};
+
+$("memoryClose").onclick=()=>{
+  $("memoryModal").hidden=true;
+};
+
+$("memoryCamera").onchange=e=>handleMemoryFile(e.target.files[0]);
+$("memoryFile").onchange=e=>handleMemoryFile(e.target.files[0]);
+
+async function handleMemoryFile(file){
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=async()=>{
+    await dbAdd("attachments",{
+      date:currentDate,
+      name:file.name,
+      type:file.type,
+      data:reader.result,
+      created:Date.now()
+    });
+
+    $("memoryCamera").value="";
+    $("memoryFile").value="";
+
+    await renderMemories();
+    showStatus("Memory saved");
+  };
+
+  reader.readAsDataURL(file);
+}
+
+async function renderMemories(){
+  const all=await dbAll("attachments");
+  const list=all.filter(x=>x.date===currentDate);
+
+  const box=$("memoryGrid");
+  box.innerHTML="";
+
+  if(!list.length){
+    box.innerHTML="<p>No memories attached to this date.</p>";
+    return;
+  }
+
+  list.forEach(m=>{
+    const card=document.createElement("div");
+    card.className="memoryItem";
+
+    if((m.type||"").startsWith("image/")){
+      card.innerHTML=`
+        <div class="memoryCard">
+          <img src="${m.data}" alt="">
+          <div>${escapeHTML(m.name)}</div>
+          <button>🗑 Delete</button>
+        </div>
+      `;
+    }else{
+      card.innerHTML=`
+        <div>📄 ${escapeHTML(m.name)}</div>
+        <button>🗑 Delete</button>
+      `;
+    }
+
+    card.querySelector("button").onclick=async()=>{
+      if(confirm("Delete this memory?")){
+        await dbDelete("attachments",m.id);
+        await renderMemories();
+      }
+    };
+
+    box.appendChild(card);
+  });
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+let settings={
+  design:"classic",
+  fontSize:"20"
+};
+
+async function loadSettings(){
+  const saved=await dbGet("settings","main");
+
+  if(saved){
+    settings={
+      design:saved.design||"classic",
+      fontSize:saved.fontSize||"20"
+    };
+  }
+
+  applyDesign();
+  applyFontSize();
+}
+
+function applyDesign(){
+  const classes=["classic","vintage","floral","blue","dark"];
+  $("page").classList.remove(...classes);
+  $("page").classList.add(settings.design||"classic");
+}
+
+function applyFontSize(){
+  $("editor").style.fontSize=(settings.fontSize||20)+"px";
+}
+
+$("settingsBtn").onclick=async()=>{
+  $("designSelect").value=settings.design;
+  $("fontSizeSelect").value=settings.fontSize;
+  $("settingsModal").hidden=false;
+};
+
+$("settingsClose").onclick=()=>{
+  $("settingsModal").hidden=true;
+};
+
+$("settingsSave").onclick=async()=>{
+  settings.design=$("designSelect").value;
+  settings.fontSize=$("fontSizeSelect").value;
+
+  await dbPut("settings",{
+    key:"main",
+    ...settings
+  });
+
+  applyDesign();
+  applyFontSize();
+
+  $("settingsModal").hidden=true;
+  showStatus("Settings saved");
+};
+
+$("clearPageBtn").onclick=async()=>{
+  if(!confirm("Clear the writing and drawing from the current page?"))return;
+
+  $("editor").innerHTML="";
+  ctx.clearRect(0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
+
+  pageRecord.content="";
+  pageRecord.drawing="";
+
+  await savePage();
+
+  $("settingsModal").hidden=true;
+  showStatus("Current page cleared");
+};
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+$("printBtn").onclick=async()=>{
+  await savePage();
+
+  const drawing=pageRecord.drawing
+    ? `<img src="${pageRecord.drawing}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain">`
+    : "";
+
+  const w=window.open("","_blank");
+
+  if(!w){
+    alert("Please allow pop-ups for printing the diary.");
+    return;
+  }
+
+  w.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${escapeHTML(displayDate(currentDate))}</title>
+      <style>
+        body{
+          margin:40px;
+          font-family:Georgia,serif;
+          background:#fffdf2;
+        }
+        .paper{
+          position:relative;
+          min-height:1000px;
+          padding:50px;
+          background:
+            repeating-linear-gradient(
+              to bottom,
+              transparent 0,
+              transparent 39px,
+              #c9d9d8 40px,
+              transparent 41px
+            );
+        }
+        .content{position:relative;z-index:2;font-size:${settings.fontSize}px;line-height:40px}
+        .drawing{position:absolute;inset:0;z-index:1}
+      </style>
+    </head>
+    <body>
+      <div class="paper">
+        <h1>${escapeHTML(displayDate(currentDate))}</h1>
+        <div class="content">${$("editor").innerHTML}</div>
+        <div class="drawing">${drawing}</div>
+      </div>
+      <script>window.onload=()=>window.print();<\/script>
+    </body>
+    </html>
+  `);
+
+  w.document.close();
+};
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+$("backupBtn").onclick=async()=>{
+  await savePage();
+
+  const backup={
+    version:8,
+    created:new Date().toISOString(),
+    pages:await dbAll("pages"),
+    events:await dbAll("events"),
+    todos:await dbAll("todos"),
+    attachments:await dbAll("attachments"),
+    settings:await dbAll("settings")
+  };
+
+  const blob=new Blob(
+    [JSON.stringify(backup)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="my-personal-diary-backup-"+todayISO()+".json";
+  a.click();
+
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showStatus("Backup created");
+};
+
+/* =========================================================
+   RESTORE
+========================================================= */
+
+$("restoreBtn").onclick=()=>{
+  $("restoreInput").click();
+};
+
+$("restoreInput").onchange=async e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+
+  try{
+    const text=await file.text();
+    const data=JSON.parse(text);
+
+    if(!confirm("Restore this diary backup? Existing matching pages may be replaced.")){
+      e.target.value="";
+      return;
+    }
+
+    for(const x of (data.pages||[]))await dbPut("pages",x);
+    for(const x of (data.events||[])){
+      if(x.id!=null)await dbPut("events",x);
+    }
+    for(const x of (data.todos||[])){
+      if(x.id!=null)await dbPut("todos",x);
+    }
+    for(const x of (data.attachments||[])){
+      if(x.id!=null)await dbPut("attachments",x);
+    }
+    for(const x of (data.settings||[]))await dbPut("settings",x);
+
+    await loadSettings();
     await loadPage();
 
+    showStatus("Diary restored");
+  }catch(err){
+    console.error(err);
+    alert("This backup file could not be restored.");
   }
-);
 
+  e.target.value="";
+};
+
+/* =========================================================
+   EVENT REMINDER
+========================================================= */
+
+async function checkEvents(){
+  const now=new Date();
+  const iso=localISO(now);
+  const hm=
+    String(now.getHours()).padStart(2,"0")+":"+
+    String(now.getMinutes()).padStart(2,"0");
+
+  const events=await dbAll("events");
+
+  const due=events.filter(e=>
+    e.date===iso &&
+    e.time===hm
+  );
+
+  if(due.length){
+    due.forEach(e=>{
+      alert("🗓️ Diary Event\n\n"+e.title+
+        (e.notes?"\n\n"+e.notes:""));
+    });
+  }
+}
+
+setInterval(checkEvents,60000);
+
+/* =========================================================
+   CLOSE MODALS WHEN CLICKING BACKDROP
+========================================================= */
+
+document.querySelectorAll(".modal").forEach(modal=>{
+  modal.addEventListener("click",e=>{
+    if(e.target===modal)modal.hidden=true;
+  });
+});
+
+/* =========================================================
+   START
+========================================================= */
+
+async function start(){
+  try{
+    await openDB();
+
+    currentDate=todayISO();
+    currentPage=1;
+
+    await loadSettings();
+    await loadPage();
+
+    resizeCanvas(false);
+
+    if("serviceWorker" in navigator){
+      try{
+        await navigator.serviceWorker.register("./service-worker.js");
+      }catch(e){
+        console.log("Service worker registration failed",e);
+      }
+    }
+
+    checkEvents();
+  }catch(e){
+    console.error(e);
+    alert("Diary could not start. Please refresh the page.");
+  }
+}
+
+window.addEventListener("beforeunload",()=>{
+  if(pageRecord){
+    pageRecord.content=$("editor").innerHTML;
+    pageRecord.mood=$("mood").value;
+
+    /* Best-effort synchronous-ish save is not possible with IndexedDB.
+       Normal autosave handles regular closing. */
+  }
+});
+
+start();
 </script>
 
 </body>

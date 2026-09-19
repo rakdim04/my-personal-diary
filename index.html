@@ -2,42 +2,60 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#6f472b">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<meta name="theme-color" content="#5b3825">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
 <link rel="manifest" href="manifest.json">
+
 <title>My Personal Diary</title>
 
 <style>
-*{box-sizing:border-box}
 
 :root{
-  --wood:#c9ad80;
-  --wood2:#b89464;
-  --paper:#fffdf2;
-  --ink:#3b2a1e;
-  --brown:#5a371f;
-  --line:rgba(100,75,40,.22);
-  --accent:#7b4b29;
-  --shadow:0 15px 35px rgba(65,40,15,.28);
+  --paper:#fbf8ea;
+  --paper2:#f5efd9;
+  --ink:#3d2b20;
+  --line:#d8cfb7;
+  --brown:#5b3825;
+  --brown2:#74482e;
+  --gold:#b68a55;
+  --shadow:rgba(50,30,15,.28);
+  --fontSize:20px;
+  --lineHeight:36px;
 }
 
-html,body{
+/* ---------- BASIC ---------- */
+
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
   margin:0;
   padding:0;
   min-height:100%;
-  font-family:Georgia,"Times New Roman",serif;
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.25),transparent 30%),
-    linear-gradient(135deg,var(--wood),var(--wood2));
 }
 
 body{
-  min-height:100vh;
+  color:var(--ink);
+  font-family:Georgia,"Times New Roman",serif;
+
+  background:
+    radial-gradient(circle at 20% 10%,#ffffff22,transparent 30%),
+    linear-gradient(135deg,#b78d60,#dfc69b 50%,#b98e60);
+
   overflow-x:hidden;
 }
 
-button,input,select,textarea{
+button,
+input,
+select,
+textarea{
   font:inherit;
 }
 
@@ -45,2193 +63,4542 @@ button{
   cursor:pointer;
 }
 
-button:disabled{
-  opacity:.45;
-  cursor:not-allowed;
+/* ---------- TOP BAR ---------- */
+
+.app{
+  min-height:100vh;
+  padding:10px;
 }
 
 .topbar{
-  margin:14px 18px 8px;
-  padding:10px 14px;
-  min-height:58px;
-  border-radius:18px;
-  background:linear-gradient(180deg,#694329,#4e2e1c);
-  box-shadow:0 8px 20px rgba(50,25,10,.35);
-  color:#fff;
+  position:sticky;
+  top:8px;
+  z-index:100;
+
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:7px;
   flex-wrap:wrap;
+
+  padding:10px 13px;
+
+  border-radius:17px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #70472d,
+      #4b2d1d
+    );
+
+  box-shadow:
+    0 8px 22px rgba(40,20,10,.35);
+
+  color:white;
 }
 
 .brand{
-  font-size:22px;
+  font-size:23px;
   font-weight:bold;
   margin-right:auto;
   white-space:nowrap;
 }
 
-.toolbar{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-}
-
-.topbtn{
+.topbar button{
   border:0;
-  background:#fffaf0;
-  color:#4a301f;
-  padding:9px 12px;
   border-radius:11px;
-  box-shadow:0 2px 5px rgba(0,0,0,.18);
-  white-space:nowrap;
+
+  background:#fffaf0;
+  color:#4b3020;
+
+  padding:8px 11px;
+
+  box-shadow:
+    0 2px 5px rgba(0,0,0,.18);
 }
 
-.topbtn:active{
-  transform:translateY(1px);
-}
+/* ---------- DATE NAVIGATION ---------- */
 
-.datebar{
+.nav{
   display:flex;
   justify-content:center;
   align-items:center;
-  gap:10px;
-  padding:8px 10px 15px;
+
+  gap:9px;
+
+  margin:11px auto;
+
+  max-width:1150px;
 }
 
-.datebar button,
-.datebar input{
-  background:#fffaf0;
-  border:1px solid #b99a70;
+.nav button,
+.nav select{
+  border:1px solid #c8b38d;
+  background:#fff9ec;
+  color:#4d3323;
+
   border-radius:10px;
-  padding:9px 14px;
-  color:#4a301f;
+
+  padding:9px 13px;
 }
 
-.datebar input{
-  width:170px;
-  text-align:center;
-}
+/* ---------- NOTEBOOK ---------- */
 
-/* PROFESSIONAL NOTEBOOK */
-
-.bookArea{
-  width:min(1450px,96vw);
-  margin:0 auto 35px;
+.notebook{
   position:relative;
-  padding:0 28px 35px;
-}
 
-.book{
-  position:relative;
   width:100%;
-  min-height:calc(100vh - 210px);
-  border-radius:10px 20px 20px 10px;
-  background:
-    linear-gradient(90deg,
-      rgba(255,255,255,.55),
-      rgba(255,255,255,.08) 5%,
-      rgba(255,255,255,0) 15%);
-  box-shadow:var(--shadow);
-  padding:18px 24px 24px 58px;
+  max-width:1280px;
+
+  margin:0 auto 30px;
+
+  padding-left:0;
 }
 
-/* natural centre/spiral structure */
-.binding{
-  position:absolute;
-  left:4px;
-  top:15px;
-  bottom:15px;
-  width:48px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-around;
-  align-items:center;
-  z-index:20;
-  pointer-events:none;
-}
+/*
+  Open notebook appearance.
+  The binding is deliberately visible at the left edge,
+  while the paper extends almost full width.
+*/
 
-.ring{
-  width:36px;
-  height:17px;
-  border-radius:50%;
-  background:
-    linear-gradient(180deg,#dadada 0%,#676767 38%,#272727 58%,#bcbcbc 100%);
-  box-shadow:
-    0 3px 3px rgba(0,0,0,.4),
-    inset 0 2px 2px rgba(255,255,255,.6);
-  transform:rotate(-1deg);
-}
-
-.paper{
+.bookPage{
   position:relative;
-  width:100%;
-  min-height:calc(100vh - 250px);
-  background:
-    linear-gradient(90deg,
-      rgba(130,90,45,.12),
-      transparent 4%,
-      transparent 96%,
-      rgba(130,90,45,.08)),
+
+  height:calc(100vh - 175px);
+  min-height:720px;
+
+  overflow-y:auto;
+  overflow-x:hidden;
+
+  border-radius:
+    17px
+    28px
+    28px
+    17px;
+
+  padding:
+    0
+    48px
+    90px
+    78px;
+
+  background-color:var(--paper);
+
+  background-image:
     repeating-linear-gradient(
       to bottom,
-      transparent 0px,
-      transparent 31px,
-      var(--line) 32px,
-      transparent 33px
+      transparent 0,
+      transparent calc(var(--lineHeight) - 1px),
+      var(--line) var(--lineHeight)
     ),
-    linear-gradient(#fffef7,#fff9e9);
-  border:1px solid #d1b98e;
-  border-radius:7px 18px 18px 7px;
+    radial-gradient(
+      rgba(80,50,20,.035) .7px,
+      transparent .8px
+    );
+
+  background-size:
+    100% var(--lineHeight),
+    7px 7px;
+
   box-shadow:
-    inset 8px 0 12px rgba(100,70,30,.09),
-    inset -3px 0 8px rgba(100,70,30,.07),
-    0 3px 12px rgba(80,50,20,.12);
-  overflow:hidden;
+    0 12px 30px var(--shadow),
+    inset 0 0 45px rgba(120,90,40,.08);
+
+  scroll-behavior:smooth;
 }
 
-/* subtle paper centre fold */
-.paper:before{
+/* central paper crease gives open-notebook appearance */
+
+.bookPage:after{
   content:"";
+
   position:absolute;
-  left:0;
+
   top:0;
   bottom:0;
-  width:13px;
-  background:linear-gradient(
-    90deg,
-    rgba(90,55,25,.13),
-    rgba(255,255,255,.55),
-    transparent
-  );
+
+  left:50%;
+
+  width:2px;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(80,50,30,.08),
+      transparent
+    );
+
   pointer-events:none;
 }
 
-.pageHead{
-  position:relative;
-  z-index:5;
-  padding:20px 46px 5px 38px;
+/* ---------- NATURAL SPIRAL ---------- */
+
+.spine{
+  position:absolute;
+
+  left:12px;
+  top:0;
+  bottom:0;
+
+  width:48px;
+
+  z-index:20;
+
+  pointer-events:none;
+}
+
+.spine:before{
+  content:"";
+
+  position:absolute;
+
+  left:19px;
+  top:0;
+  bottom:0;
+
+  width:5px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #5c402e,
+      #a68b6e,
+      #4b3426
+    );
+
+  border-radius:5px;
+
+  box-shadow:
+    1px 0 2px #0005;
+}
+
+/*
+  Natural notebook rings
+*/
+
+.spine:after{
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  top:14px;
+  bottom:14px;
+
+  background:
+
+    radial-gradient(
+      ellipse 18px 8px at 50% 0,
+      #777 0 45%,
+      #282828 48% 57%,
+      transparent 60%
+    );
+
+  background-size:
+    40px 58px;
+
+  background-repeat:repeat-y;
+
+  filter:
+    drop-shadow(
+      1px 2px 1px rgba(0,0,0,.45)
+    );
+}
+
+/* ---------- STICKY PAGE HEADER ---------- */
+
+.pageHeader{
+  position:sticky;
+
+  top:0;
+
+  z-index:15;
+
+  padding:
+    15px
+    5px
+    7px;
+
+  background:
+    linear-gradient(
+      rgba(251,248,234,.98),
+      rgba(251,248,234,.93) 75%,
+      rgba(251,248,234,0)
+    );
+
+  backdrop-filter:blur(3px);
+}
+
+.headrow{
+  display:flex;
+  align-items:center;
+
+  min-width:0;
+
+  gap:8px;
 }
 
 .dateTitle{
-  display:flex;
-  align-items:center;
-  gap:10px;
   min-width:0;
-}
 
-#pageTitle{
-  margin:0;
-  font-size:clamp(20px,2.8vw,34px);
-  line-height:1.1;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
   flex:1;
+
+  font-size:
+    clamp(
+      25px,
+      3vw,
+      39px
+    );
+
+  line-height:1.08;
+
+  font-weight:bold;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
 }
 
-.pageNumber{
-  color:#8a6b4b;
+.pageNo{
   font-size:14px;
+
+  color:#766555;
+
   white-space:nowrap;
 }
 
-.pageActions{
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  gap:7px;
-  margin-top:-8px;
+/* ---------- MOOD ---------- */
+
+.moodWrap{
+  position:relative;
 }
 
-.paperBtn{
-  border:1px solid #c6a87c;
-  background:rgba(255,252,238,.88);
-  border-radius:9px;
-  padding:6px 10px;
-  color:#55351f;
-}
+.moodButton{
+  border:0;
 
-.moodDisplay{
-  position:absolute;
-  left:38px;
-  top:84px;
+  background:transparent;
+
   font-size:25px;
-  min-height:30px;
+
+  padding:2px 4px;
+
+  border-radius:8px;
 }
 
-.quoteDisplay{
-  position:relative;
-  z-index:5;
-  margin:8px 45px 4px 38px;
-  padding:8px 14px;
-  border-left:3px solid #a87948;
-  color:#6b5037;
-  font-style:italic;
-  background:rgba(255,255,255,.28);
-  border-radius:4px;
-}
+.moodMenu{
+  position:absolute;
 
-.quoteDisplay:empty{
+  right:0;
+  top:100%;
+
   display:none;
-}
 
-/* formatting controls are separate */
-.formatBar{
-  position:relative;
-  z-index:10;
-  margin:7px 40px 0 38px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-  padding:7px;
-  background:rgba(248,238,215,.9);
-  border:1px solid #d0b386;
-  border-radius:9px;
-}
+  z-index:100;
 
-.formatBar button{
-  min-width:36px;
-  height:32px;
-  border:1px solid #c2a276;
-  border-radius:6px;
+  padding:6px;
+
   background:#fffaf0;
-  color:#4d321e;
-  font-weight:bold;
+
+  border:
+    1px solid
+    #c8b38e;
+
+  border-radius:11px;
+
+  box-shadow:
+    0 8px 20px #0004;
 }
 
-.formatBar button.active{
-  background:#6b4327;
-  color:white;
+.moodMenu.open{
+  display:flex;
+
+  gap:3px;
 }
 
-/* writing area */
+.moodMenu button{
+  border:0;
+  background:transparent;
+
+  font-size:25px;
+
+  padding:5px;
+
+  border-radius:7px;
+}
+
+/* ---------- QUOTE ---------- */
+
+.quoteRow{
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  height:31px;
+
+  margin-top:3px;
+}
+
+.quote{
+  flex:1;
+
+  min-width:0;
+
+  height:27px;
+
+  line-height:27px;
+
+  overflow:hidden;
+
+  white-space:nowrap;
+
+  text-overflow:ellipsis;
+
+  font-size:16px;
+
+  font-style:italic;
+
+  padding-left:9px;
+
+  border-left:
+    4px solid
+    #ad8355;
+}
+
+.quoteBtn{
+  flex:none;
+
+  border:
+    1px solid
+    #c2ad86;
+
+  background:#fff9ee;
+
+  border-radius:9px;
+
+  padding:4px 9px;
+}
+
+/* ---------- TOOLBAR ---------- */
+
+.toolbar{
+  display:flex;
+
+  align-items:center;
+
+  flex-wrap:wrap;
+
+  gap:5px;
+
+  padding:6px;
+
+  margin:
+    2px
+    0
+    7px;
+
+  border:
+    1px solid
+    #cbb78f;
+
+  border-radius:11px;
+
+  background:
+    rgba(247,239,217,.92);
+}
+
+.toolbar button{
+  min-width:36px;
+
+  height:35px;
+
+  border:
+    1px solid
+    #c4ae86;
+
+  border-radius:8px;
+
+  background:#fffaf0;
+
+  color:#493124;
+}
+
+.toolbar button:active{
+  transform:scale(.97);
+}
+
+.drawTools{
+  display:none;
+
+  align-items:center;
+
+  flex-wrap:wrap;
+
+  gap:4px;
+}
+
+.drawTools.open{
+  display:flex;
+}
+
+.drawTools button.active{
+  background:#d8b477;
+}
+
+.drawClose{
+  background:#9b4d32!important;
+  color:#fff!important;
+}
+
+/* ---------- EDITOR ---------- */
+
 .editorWrap{
   position:relative;
-  z-index:4;
-  margin:0 45px 30px 38px;
-  min-height:calc(100vh - 430px);
+
+  min-height:
+    calc(
+      var(--lineHeight) * 22
+    );
 }
 
-#editor{
+.editor{
   position:relative;
-  z-index:3;
-  min-height:calc(100vh - 430px);
-  padding:8px 18px 70px 5px;
+
+  z-index:2;
+
+  min-height:
+    calc(
+      var(--lineHeight) * 22
+    );
+
   outline:none;
-  font-size:19px;
-  line-height:32px;
-  color:#342519;
-  word-break:break-word;
-}
 
-#editor:empty:before{
-  content:"Start writing here...";
-  color:#b09a7e;
-  font-style:italic;
-}
+  font-size:var(--fontSize);
 
-#editor ul,
-#editor ol{
-  margin-top:0;
-  margin-bottom:0;
-  padding-left:30px;
-}
+  line-height:var(--lineHeight);
 
-#editor li{
-  padding-left:4px;
-  line-height:32px;
-}
+  white-space:pre-wrap;
 
-/* DRAWING IS INSIDE SAME PAGE */
-#drawCanvas{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  z-index:8;
-  pointer-events:none;
-  touch-action:none;
+  word-break:normal;
+
+  overflow-wrap:break-word;
+
+  padding:
+    0
+    5px
+    100px
+    4px;
+
   background:transparent;
 }
 
-.drawMode #drawCanvas{
-  pointer-events:auto;
-  cursor:crosshair;
+/*
+  This alignment is important:
+  text baseline now sits on the ruled paper line.
+*/
+
+.editor p,
+.editor div{
+  margin:0;
+  padding:0;
+  line-height:var(--lineHeight);
 }
 
-.drawMode #editor{
+.editor ul,
+.editor ol{
+  margin:0;
+  padding-left:30px;
+}
+
+.editor li{
+  line-height:var(--lineHeight);
+  margin:0;
+}
+
+/* ---------- DRAWING ---------- */
+
+.drawCanvas{
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  z-index:5;
+
+  background:transparent;
+
+  touch-action:none;
+
   pointer-events:none;
 }
 
-.drawToolbar{
+.drawCanvas.enabled{
+  pointer-events:auto;
+}
+
+.drawHint{
   position:absolute;
-  z-index:15;
-  top:10px;
-  right:18px;
+
+  right:10px;
+  top:8px;
+
+  z-index:7;
+
   display:none;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:5px;
-  padding:7px;
-  background:#4d301f;
-  border-radius:10px;
-  box-shadow:0 5px 12px rgba(0,0,0,.3);
+
+  padding:4px 8px;
+
+  font-size:12px;
+
+  background:#fff8e9dd;
+
+  border:1px solid #c4ae86;
+
+  border-radius:7px;
 }
 
-.drawMode .drawToolbar{
-  display:flex;
+.drawHint.show{
+  display:block;
 }
 
-.drawToolbar button{
-  border:0;
-  background:#fffaf0;
-  color:#392417;
-  padding:6px 9px;
-  border-radius:6px;
-}
+/* ---------- NEW PAGE ---------- */
 
-.drawToolbar button.selected{
-  background:#d5ae70;
-}
-
-.drawToolbar .closeDraw{
-  background:#c85c43;
-  color:#fff;
-}
-
-/* New Page */
 .newPage{
   position:absolute;
-  right:-4px;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:30;
+
+  right:-1px;
+  top:45%;
+
+  z-index:20;
+
+  border:
+    1px solid
+    #a47a4d;
+
+  border-right:0;
+
+  background:
+    linear-gradient(
+      #f0d5a7,
+      #dfbd88
+    );
+
+  color:#4d3020;
+
+  padding:
+    15px
+    8px;
+
+  border-radius:
+    10px
+    0
+    0
+    10px;
+
+  box-shadow:
+    -3px 4px 8px #0002;
+
   writing-mode:vertical-rl;
-  border:1px solid #a47a4d;
-  background:#f4dfb8;
-  color:#56351f;
-  padding:15px 8px;
-  border-radius:8px 0 0 8px;
-  box-shadow:0 4px 9px rgba(60,35,15,.25);
-  font-weight:bold;
 }
 
-/* bottom status */
-.pageFooter{
-  position:absolute;
-  bottom:12px;
-  left:38px;
-  right:45px;
-  z-index:10;
-  display:flex;
-  justify-content:space-between;
-  color:#8c704e;
-  font-size:13px;
-}
+/* ---------- MODALS ---------- */
 
-/* MODALS */
-.modal{
+.modalBack{
   position:fixed;
+
   inset:0;
-  background:rgba(30,18,10,.48);
+
+  z-index:200;
+
   display:none;
+
   align-items:center;
   justify-content:center;
-  z-index:1000;
-  padding:15px;
+
+  padding:14px;
+
+  background:#0008;
 }
 
-.modal.show{
+.modalBack.open{
   display:flex;
 }
 
-.modalBox{
-  width:min(700px,96vw);
+.modal{
+  width:min(650px,96vw);
+
   max-height:90vh;
+
   overflow:auto;
+
+  padding:18px;
+
+  border-radius:17px;
+
   background:#fffaf0;
-  border:1px solid #c8aa7d;
-  border-radius:16px;
-  box-shadow:0 18px 45px rgba(0,0,0,.4);
-  padding:20px;
-  color:#422b1b;
+
+  box-shadow:
+    0 20px 50px #0007;
 }
 
-.modalBox h2{
-  margin:0 0 15px;
+.modal h2{
+  margin-top:0;
 }
 
-.modalHead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
+.form{
+  display:grid;
+  gap:9px;
 }
 
-.close{
-  border:0;
-  background:#6a4227;
-  color:#fff;
-  border-radius:7px;
-  padding:7px 12px;
-}
-
-.field{
-  margin:10px 0;
-}
-
-.field label{
-  display:block;
-  margin-bottom:5px;
-  font-weight:bold;
-}
-
-.field input,
-.field textarea,
-.field select{
+.form input,
+.form textarea,
+.form select{
   width:100%;
-  border:1px solid #c6a87b;
-  border-radius:8px;
+
   padding:9px;
-  background:#fffdf7;
+
+  border:
+    1px solid
+    #c8b58e;
+
+  border-radius:8px;
+
+  background:white;
 }
 
-.primary{
+.actions{
+  display:flex;
+
+  justify-content:flex-end;
+
+  flex-wrap:wrap;
+
+  gap:7px;
+
+  margin-top:13px;
+}
+
+.actions button{
   border:0;
-  border-radius:8px;
-  padding:9px 14px;
-  background:#70472a;
+
+  border-radius:9px;
+
+  padding:9px 13px;
+
+  background:#e4cea5;
+}
+
+.actions .primary{
+  background:#654029;
   color:#fff;
 }
 
-.secondary{
-  border:1px solid #c6a87b;
-  border-radius:8px;
-  padding:9px 14px;
-  background:#fff8eb;
-  color:#4b301f;
-}
+/* ---------- CALENDAR ---------- */
 
-.modalActions{
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
-  margin-top:15px;
-}
-
-/* calendar */
 .calendarHead{
   display:flex;
-  justify-content:space-between;
+
   align-items:center;
-  margin-bottom:12px;
+
+  justify-content:space-between;
+
+  gap:8px;
 }
 
 .calendarGrid{
   display:grid;
-  grid-template-columns:repeat(7,1fr);
+
+  grid-template-columns:
+    repeat(7,1fr);
+
   gap:4px;
 }
 
-.calDay{
-  min-height:45px;
-  border:1px solid #dfccb0;
+.calCell{
+  min-height:55px;
+
+  padding:5px;
+
+  border:
+    1px solid
+    #d8c9aa;
+
+  border-radius:8px;
+
   background:#fffdf7;
-  border-radius:6px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  position:relative;
+
+  cursor:pointer;
 }
 
-.calDay.head{
-  min-height:30px;
-  background:#ead8ba;
-  font-weight:bold;
+.calCell.today{
+  outline:
+    2px solid
+    #a96f32;
 }
 
-.calDay.today{
-  outline:2px solid #8b5a32;
+.calCell.event{
+  background:#efdfbd;
 }
 
-.calDay.hasEvent:after{
-  content:"";
-  width:6px;
-  height:6px;
+.eventDot{
+  display:inline-block;
+
+  width:7px;
+  height:7px;
+
   border-radius:50%;
-  background:#c34d32;
-  position:absolute;
-  bottom:4px;
+
+  margin-left:4px;
+
+  background:#9b4b31;
 }
 
-/* lists */
-.itemRow{
+/* ---------- TODO ---------- */
+
+.todoAdd{
   display:flex;
-  align-items:center;
-  gap:8px;
-  padding:8px;
-  border-bottom:1px solid #e0cdb1;
+
+  gap:6px;
 }
 
-.itemRow span{
+.todoAdd input{
   flex:1;
+
+  padding:9px;
+
+  border:
+    1px solid
+    #c8b58e;
+
+  border-radius:8px;
 }
 
-.done{
+.todoList{
+  max-height:45vh;
+
+  overflow:auto;
+
+  margin-top:10px;
+}
+
+.todoItem{
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+
+  padding:8px 2px;
+
+  border-bottom:
+    1px solid
+    #d8ccb5;
+
+  line-height:1.4;
+}
+
+.todoItem span{
+  flex:1;
+
+  min-width:0;
+
+  word-break:break-word;
+}
+
+.todoItem.done span{
   text-decoration:line-through;
-  opacity:.55;
+  opacity:.5;
 }
 
-.eventDate{
-  color:#876747;
-  font-size:13px;
-}
+/* ---------- SETTINGS ---------- */
 
-.moodChoices{
+.designs{
   display:grid;
-  grid-template-columns:repeat(6,1fr);
+
+  grid-template-columns:
+    repeat(3,1fr);
+
   gap:8px;
 }
 
-.moodChoice{
-  font-size:28px;
-  padding:9px;
-  border:1px solid #ddc8a5;
-  border-radius:9px;
-  background:#fffdf5;
+.design{
+  height:65px;
+
+  border:
+    2px solid
+    #c9b48e;
+
+  border-radius:10px;
+
+  cursor:pointer;
 }
 
-/* alert */
-.alertBox{
-  border-left:5px solid #bd4e35;
-  background:#fff3e7;
-  padding:12px;
-  margin:8px 0;
-  border-radius:6px;
+.design.selected{
+  outline:
+    3px solid
+    #a96f32;
 }
 
-/* settings */
-.settingRow{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:10px 0;
-  border-bottom:1px solid #e1d0b6;
+.design.classic{
+  background:
+    repeating-linear-gradient(
+      #fbf8ea 0 35px,
+      #d8cfb7 36px
+    );
 }
 
-/* mobile */
+.design.vintage{
+  background:
+    repeating-linear-gradient(
+      #ead8b5 0 35px,
+      #c7ae86 36px
+    );
+}
+
+.design.blue{
+  background:
+    repeating-linear-gradient(
+      #edf5f4 0 35px,
+      #b9d3d2 36px
+    );
+}
+
+.design.green{
+  background:
+    repeating-linear-gradient(
+      #eef1df 0 35px,
+      #c7d0ae 36px
+    );
+}
+
+.design.rose{
+  background:
+    repeating-linear-gradient(
+      #f5e9e6 0 35px,
+      #d9bfc0 36px
+    );
+}
+
+.design.night{
+  background:
+    repeating-linear-gradient(
+      #363d43 0 35px,
+      #5d6870 36px
+    );
+}
+
+/* ---------- UTILITY ---------- */
+
+.hidden{
+  display:none!important;
+}
+
+/* ---------- MOBILE ---------- */
+
 @media(max-width:700px){
+
+  .app{
+    padding:4px;
+  }
+
   .topbar{
-    margin:6px;
-    padding:8px;
-    border-radius:12px;
+    position:relative;
+
+    border-radius:11px;
+
+    padding:6px;
   }
 
   .brand{
     width:100%;
+
     font-size:18px;
-    margin-bottom:2px;
   }
 
-  .toolbar{
-    width:100%;
-    justify-content:flex-start;
-    overflow-x:auto;
-    flex-wrap:nowrap;
-    padding-bottom:2px;
+  .topbar button{
+    padding:6px 8px;
+
+    font-size:12px;
   }
 
-  .topbtn{
-    font-size:13px;
-    padding:8px 9px;
-  }
-
-  .datebar{
+  .nav{
     gap:5px;
-    padding-bottom:8px;
+    margin:6px auto;
   }
 
-  .datebar input{
-    width:145px;
-    padding:8px 5px;
+  .nav button,
+  .nav select{
+    padding:7px 8px;
+    font-size:13px;
   }
 
-  .bookArea{
-    width:100%;
-    padding:0 8px 20px 18px;
+  .bookPage{
+    height:calc(100vh - 145px);
+
+    min-height:600px;
+
+    padding:
+      0
+      16px
+      75px
+      48px;
+
+    border-radius:
+      11px
+      17px
+      17px
+      11px;
   }
 
-  .book{
-    padding:8px 9px 20px 34px;
-    min-height:calc(100vh - 190px);
+  .spine{
+    left:3px;
+    width:38px;
   }
 
-  .binding{
-    width:28px;
+  .spine:before{
+    left:16px;
   }
 
-  .ring{
-    width:27px;
-    height:13px;
+  .dateTitle{
+    font-size:25px;
   }
 
-  .paper{
-    min-height:calc(100vh - 215px);
-  }
-
-  .pageHead{
-    padding:13px 20px 4px 18px;
-  }
-
-  #pageTitle{
-    font-size:18px;
-  }
-
-  .pageNumber{
+  .pageNo{
     font-size:11px;
   }
 
-  .moodDisplay{
-    left:18px;
-    top:61px;
-    font-size:20px;
-  }
-
-  .pageActions{
-    margin-top:0;
-  }
-
-  .quoteDisplay{
-    margin:7px 18px 4px 18px;
+  .quote{
     font-size:13px;
   }
 
-  .formatBar{
-    margin:5px 18px 0;
+  .quoteBtn{
+    padding:3px 6px;
+    font-size:12px;
+  }
+
+  .toolbar{
     gap:3px;
   }
 
-  .formatBar button{
-    min-width:31px;
-    height:29px;
-    font-size:13px;
+  .toolbar button{
+    min-width:32px;
+    height:32px;
   }
 
-  .editorWrap{
-    margin:0 20px 25px 18px;
-    min-height:calc(100vh - 380px);
-  }
+  .editor{
+    font-size:
+      clamp(
+        17px,
+        4.7vw,
+        19px
+      );
 
-  #editor{
-    min-height:calc(100vh - 380px);
-    padding:5px 4px 60px;
-    font-size:16px;
-    line-height:28px;
-  }
+    line-height:
+      var(--lineHeight);
 
-  #editor li{
-    line-height:28px;
+    min-height:
+      calc(
+        var(--lineHeight) * 20
+      );
   }
 
   .newPage{
-    right:-2px;
+    right:-1px;
+    padding:12px 7px;
+  }
+
+  .designs{
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
+  .calendarGrid .calCell{
+    min-height:43px;
     font-size:12px;
-    padding:12px 6px;
   }
 
-  .pageFooter{
-    left:18px;
-    right:20px;
-  }
-
-  .moodChoices{
-    grid-template-columns:repeat(4,1fr);
-  }
-
-  .modalBox{
-    padding:14px;
-  }
 }
 
-@media(min-width:701px) and (max-width:1100px){
-  .book{
-    min-height:calc(100vh - 220px);
-  }
-
-  .paper,
-  #editor{
-    min-height:calc(100vh - 270px);
-  }
-}
 </style>
 </head>
 
 <body>
 
+<div class="app">
+
 <header class="topbar">
-  <div class="brand">📖 My Personal Diary</div>
 
-  <div class="toolbar">
-    <button class="topbtn" onclick="openCalendar()">📅 Calendar</button>
-    <button class="topbtn" onclick="openEvents()">🗓 Event</button>
-    <button class="topbtn" onclick="openTodo()">☑ To-do</button>
-    <button class="topbtn" onclick="openMood()">😊 Mood</button>
-    <button class="topbtn" onclick="openDraw()">✏️ Draw</button>
-    <button class="topbtn" onclick="changeQuote()">💬 Quote</button>
-    <button class="topbtn" onclick="printPage()">🖨 Print</button>
-    <button class="topbtn" onclick="backupDiary()">💾 Backup</button>
-    <button class="topbtn" onclick="restoreDiary()">↩ Restore</button>
-    <button class="topbtn" onclick="openSettings()">⚙ Settings</button>
-  </div>
-</header>
-
-<div class="datebar">
-  <button onclick="changeDate(-1)">‹ Previous</button>
-  <input id="datePicker" type="date" onchange="goToDate(this.value)">
-  <button onclick="changeDate(1)">Next ›</button>
+<div class="brand">
+📖 My Personal Diary
 </div>
 
-<main class="bookArea">
-  <div class="book">
-
-    <div class="binding" aria-hidden="true">
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-    </div>
-
-    <section class="paper" id="paper">
-
-      <div class="pageHead">
-        <div class="dateTitle">
-          <h1 id="pageTitle"></h1>
-          <span class="pageNumber" id="pageNumber"></span>
-        </div>
-
-        <div class="moodDisplay" id="moodDisplay"></div>
-
-        <div class="pageActions">
-          <button class="paperBtn" onclick="changeQuote()">💬 Quote</button>
-        </div>
-
-        <div class="quoteDisplay" id="quoteDisplay"></div>
-      </div>
-
-      <div class="formatBar" id="formatBar">
-        <button onmousedown="formatCmd(event,'bold')" title="Bold"><b>B</b></button>
-        <button onmousedown="formatCmd(event,'italic')" title="Italic"><i>I</i></button>
-        <button onmousedown="formatCmd(event,'underline')" title="Underline"><u>U</u></button>
-        <button onmousedown="formatCmd(event,'insertUnorderedList')" title="Bullet list">•</button>
-        <button onmousedown="formatCmd(event,'insertOrderedList')" title="Numbered list">1.</button>
-        <button onmousedown="formatCmd(event,'justifyLeft')" title="Left">≡</button>
-        <button onmousedown="formatCmd(event,'justifyCenter')" title="Center">≣</button>
-        <button onmousedown="formatCmd(event,'removeFormat')" title="Clear formatting">Tx</button>
-      </div>
-
-      <div class="editorWrap" id="editorWrap">
-
-        <div
-          id="editor"
-          contenteditable="true"
-          spellcheck="true"
-          oninput="scheduleSave()">
-        </div>
-
-        <!-- DRAWING IS PART OF THIS SAME PAGE -->
-        <canvas id="drawCanvas"></canvas>
-
-        <div class="drawToolbar" id="drawToolbar">
-          <button id="penBtn" class="selected" onclick="setDrawTool('pen')">✏ Pen</button>
-          <button id="lineBtn" onclick="setDrawTool('line')">╱ Line</button>
-          <button id="circleBtn" onclick="setDrawTool('circle')">◯ Circle</button>
-          <button id="eraserBtn" onclick="setDrawTool('eraser')">⌫ Eraser</button>
-          <button onclick="undoDraw()">↶</button>
-          <button onclick="redoDraw()">↷</button>
-          <button onclick="clearDraw()">Clear</button>
-          <button class="closeDraw" onclick="closeDraw()">Close Draw</button>
-        </div>
-
-      </div>
-
-      <button class="newPage" onclick="newPage()">＋ New Page</button>
-
-      <div class="pageFooter">
-        <span id="saveStatus">Saved</span>
-        <span id="wordCount">0 words</span>
-      </div>
-
-    </section>
-  </div>
-</main>
-
-<!-- CALENDAR -->
-<div class="modal" id="calendarModal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <h2>📅 Calendar</h2>
-      <button class="close" onclick="closeModal('calendarModal')">Close</button>
-    </div>
-
-    <div class="calendarHead">
-      <button class="secondary" onclick="calendarMonth(-1)">‹</button>
-      <strong id="calendarTitle"></strong>
-      <button class="secondary" onclick="calendarMonth(1)">›</button>
-    </div>
-
-    <div class="calendarGrid" id="calendarGrid"></div>
-  </div>
-</div>
-
-<!-- EVENTS -->
-<div class="modal" id="eventModal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <h2>🗓 Diary Events</h2>
-      <button class="close" onclick="closeModal('eventModal')">Close</button>
-    </div>
-
-    <div id="eventReadOnlyNote" class="alertBox" style="display:none">
-      Previous dates are read-only. New events cannot be added to a previous date.
-    </div>
-
-    <div class="field">
-      <label>Date</label>
-      <input id="eventDate" type="date">
-    </div>
-
-    <div class="field">
-      <label>Event</label>
-      <input id="eventText" type="text" placeholder="Birthday, appointment, anniversary...">
-    </div>
-
-    <div class="field">
-      <label>Time</label>
-      <input id="eventTime" type="time">
-    </div>
-
-    <div class="field">
-      <label>Reminder</label>
-      <select id="eventReminder">
-        <option value="0">At event time</option>
-        <option value="5">5 minutes before</option>
-        <option value="15">15 minutes before</option>
-        <option value="30">30 minutes before</option>
-        <option value="60">1 hour before</option>
-      </select>
-    </div>
-
-    <div class="modalActions">
-      <button class="secondary" onclick="closeModal('eventModal')">Close</button>
-      <button class="primary" id="saveEventBtn" onclick="saveEvent()">Save Event</button>
-    </div>
-
-    <hr>
-
-    <div id="eventList"></div>
-  </div>
-</div>
-
-<!-- TODO -->
-<div class="modal" id="todoModal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <h2>☑ To-do List</h2>
-      <button class="close" onclick="closeModal('todoModal')">Close</button>
-    </div>
-
-    <div id="todoReadOnlyNote" class="alertBox" style="display:none">
-      Previous dates are read-only. New To-do items cannot be added to a previous date.
-    </div>
-
-    <div class="field">
-      <label>Task</label>
-      <input id="todoText" type="text" placeholder="Enter task">
-    </div>
-
-    <div class="modalActions">
-      <button class="primary" id="addTodoBtn" onclick="addTodo()">Add To-do</button>
-    </div>
-
-    <div id="todoList"></div>
-  </div>
-</div>
-
-<!-- MOOD -->
-<div class="modal" id="moodModal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <h2>😊 Select Mood</h2>
-      <button class="close" onclick="closeModal('moodModal')">Close</button>
-    </div>
-
-    <div class="moodChoices">
-      <button class="moodChoice" onclick="selectMood('😀')">😀</button>
-      <button class="moodChoice" onclick="selectMood('😊')">😊</button>
-      <button class="moodChoice" onclick="selectMood('😂')">😂</button>
-      <button class="moodChoice" onclick="selectMood('❤️')">❤️</button>
-      <button class="moodChoice" onclick="selectMood('🙏')">🙏</button>
-      <button class="moodChoice" onclick="selectMood('🌸')">🌸</button>
-      <button class="moodChoice" onclick="selectMood('🌿')">🌿</button>
-      <button class="moodChoice" onclick="selectMood('✨')">✨</button>
-      <button class="moodChoice" onclick="selectMood('⭐')">⭐</button>
-      <button class="moodChoice" onclick="selectMood('🎉')">🎉</button>
-      <button class="moodChoice" onclick="selectMood('☀️')">☀️</button>
-      <button class="moodChoice" onclick="selectMood('🌙')">🌙</button>
-      <button class="moodChoice" onclick="selectMood('☕')">☕</button>
-      <button class="moodChoice" onclick="selectMood('👍')">👍</button>
-      <button class="moodChoice" onclick="selectMood('💡')">💡</button>
-      <button class="moodChoice" onclick="selectMood('😌')">😌</button>
-    </div>
-  </div>
-</div>
-
-<!-- SETTINGS -->
-<div class="modal" id="settingsModal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <h2>⚙ Diary Settings</h2>
-      <button class="close" onclick="closeModal('settingsModal')">Close</button>
-    </div>
-
-    <div class="settingRow">
-      <span>Page design</span>
-      <select id="pageDesign" onchange="setDesign(this.value)">
-        <option value="classic">Classic Paper</option>
-        <option value="vintage">Vintage Paper</option>
-        <option value="cream">Soft Cream</option>
-        <option value="forest">Natural Green</option>
-      </select>
-    </div>
-
-    <div class="settingRow">
-      <span>Event alerts</span>
-      <input id="alertsEnabled" type="checkbox" onchange="saveSettings()">
-    </div>
-
-    <div class="settingRow">
-      <span>Diary auto-save</span>
-      <strong>ON</strong>
-    </div>
-
-    <div class="modalActions">
-      <button class="secondary" onclick="backupDiary()">Backup Diary</button>
-      <button class="close" onclick="closeModal('settingsModal')">Close</button>
-    </div>
-  </div>
-</div>
-
-<!-- EVENT ALERT -->
-<div class="modal" id="alertModal">
-  <div class="modalBox">
-    <div class="modalHead">
-      <h2>🔔 Diary Event Reminder</h2>
-      <button class="close" onclick="closeModal('alertModal')">Close</button>
-    </div>
-    <div id="alertContent"></div>
-  </div>
-</div>
+<button id="calendarBtn">📅 Calendar</button>
+<button id="eventBtn">🗓️ Event</button>
+<button id="memoryBtn">🖼️ Memories</button>
+<button id="todoBtn">☑️ To-do</button>
+<button id="drawBtn">✏️ Draw</button>
+<button id="settingsBtn">⚙️ Settings</button>
+<button id="printBtn">🖨️ Print</button>
+<button id="backupBtn">💾 Backup</button>
+<button id="restoreBtn">↩️ Restore</button>
 
 <input
-  id="restoreFile"
+  id="restoreInput"
   type="file"
   accept=".json,application/json"
-  style="display:none"
-  onchange="restoreFileSelected(event)">
+  hidden
+>
+
+</header>
+
+
+<div class="nav">
+
+<button id="prevBtn">
+‹ Previous
+</button>
+
+<select id="dateSelect"></select>
+
+<button id="nextBtn">
+Next ›
+</button>
+
+</div>
+
+
+<main class="notebook">
+
+<div class="spine"></div>
+
+<section
+  class="bookPage"
+  id="bookPage"
+>
+
+<header class="pageHeader">
+
+<div class="headrow">
+
+<div
+  class="dateTitle"
+  id="dateTitle"
+></div>
+
+<div class="moodWrap">
+
+<button
+  class="moodButton"
+  id="moodButton"
+>
+🙂
+</button>
+
+<div
+  class="moodMenu"
+  id="moodMenu"
+></div>
+
+</div>
+
+<div
+  class="pageNo"
+  id="pageNo"
+>
+Page 1
+</div>
+
+</div>
+
+
+<div class="quoteRow">
+
+<div
+  class="quote"
+  id="quoteText"
+></div>
+
+<button
+  class="quoteBtn"
+  id="quoteBtn"
+>
+💬 Quote
+</button>
+
+</div>
+
+</header>
+
+
+<div class="toolbar">
+
+<button data-command="bold">
+<b>B</b>
+</button>
+
+<button data-command="italic">
+<i>I</i>
+</button>
+
+<button data-command="underline">
+<u>U</u>
+</button>
+
+<button data-command="insertUnorderedList">
+•
+</button>
+
+<button data-command="insertOrderedList">
+1.
+</button>
+
+<button data-command="justifyLeft">
+≡
+</button>
+
+<button data-command="justifyCenter">
+≡
+</button>
+
+<button data-command="removeFormat">
+Tx
+</button>
+
+<button id="drawToolbarButton">
+✏️
+</button>
+
+
+<div
+  class="drawTools"
+  id="drawTools"
+>
+
+<button data-tool="pen">
+✎ Pen
+</button>
+
+<button data-tool="line">
+╱ Line
+</button>
+
+<button data-tool="circle">
+◯ Circle
+</button>
+
+<button data-tool="eraser">
+⌫ Eraser
+</button>
+
+<button id="drawUndo">
+↶
+</button>
+
+<button id="drawRedo">
+↷
+</button>
+
+<button id="drawClear">
+Clear
+</button>
+
+<button
+  id="drawClose"
+  class="drawClose"
+>
+Close
+</button>
+
+</div>
+
+</div>
+
+
+<div
+  class="editorWrap"
+  id="editorWrap"
+>
+
+<div
+  class="drawHint"
+  id="drawHint"
+>
+Draw mode
+</div>
+
+<div
+  id="editor"
+  class="editor"
+  contenteditable="true"
+  spellcheck="true"
+></div>
+
+<canvas
+  id="drawCanvas"
+  class="drawCanvas"
+></canvas>
+
+</div>
+
+
+<button
+  id="newPageBtn"
+  class="newPage"
+>
+＋ New Page
+</button>
+
+</section>
+
+</main>
+
+</div>
+
+
+<!-- CALENDAR -->
+
+<div
+  class="modalBack"
+  id="calendarModal"
+>
+
+<div class="modal">
+
+<div class="calendarHead">
+
+<h2>📅 Diary Calendar</h2>
+
+<button data-close="calendarModal">
+Close
+</button>
+
+</div>
+
+<div class="calendarHead">
+
+<button id="calPrev">
+‹
+</button>
+
+<h3 id="calTitle"></h3>
+
+<button id="calNext">
+›
+</button>
+
+</div>
+
+<div
+  class="calendarGrid"
+  id="calendarGrid"
+></div>
+
+<div id="calendarEvents"></div>
+
+</div>
+
+</div>
+
+
+<!-- EVENT -->
+
+<div
+  class="modalBack"
+  id="eventModal"
+>
+
+<div class="modal">
+
+<h2>
+🗓️ Diary Event
+</h2>
+
+<p
+  id="eventPastMessage"
+  class="hidden"
+>
+Events cannot be added to a previous date.
+</p>
+
+<div class="form">
+
+<input
+  id="eventTitle"
+  placeholder="Event title"
+>
+
+<input
+  id="eventDate"
+  type="date"
+>
+
+<input
+  id="eventTime"
+  type="time"
+>
+
+<textarea
+  id="eventNotes"
+  rows="3"
+  placeholder="Notes"
+></textarea>
+
+</div>
+
+<div id="eventList"></div>
+
+<div class="actions">
+
+<button data-close="eventModal">
+Close
+</button>
+
+<button
+  id="saveEvent"
+  class="primary"
+>
+Save Event
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TODO -->
+
+<div
+  class="modalBack"
+  id="todoModal"
+>
+
+<div class="modal">
+
+<h2>
+☑️ To-do List
+</h2>
+
+<p
+  id="todoPastMessage"
+  class="hidden"
+>
+Previous-date To-do items cannot be changed.
+</p>
+
+<div class="todoAdd">
+
+<input
+  id="todoText"
+  placeholder="New task"
+>
+
+<button
+  id="addTodo"
+  class="primary"
+>
+Add
+</button>
+
+</div>
+
+<div
+  id="todoList"
+  class="todoList"
+></div>
+
+<div class="actions">
+
+<button data-close="todoModal">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MEMORIES -->
+
+<div
+  class="modalBack"
+  id="memoryModal"
+>
+
+<div class="modal">
+
+<h2>
+🖼️ Memories
+</h2>
+
+<input
+  id="memoryInput"
+  type="file"
+  accept="image/*,application/pdf,.doc,.docx,.txt"
+  multiple
+>
+
+<div id="memoryList"></div>
+
+<div class="actions">
+
+<button data-close="memoryModal">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div
+  class="modalBack"
+  id="settingsModal"
+>
+
+<div class="modal">
+
+<h2>
+⚙️ Diary Settings
+</h2>
+
+<h3>
+Page Design
+</h3>
+
+<div class="designs">
+
+<div
+  class="design classic"
+  data-design="classic"
+></div>
+
+<div
+  class="design vintage"
+  data-design="vintage"
+></div>
+
+<div
+  class="design blue"
+  data-design="blue"
+></div>
+
+<div
+  class="design green"
+  data-design="green"
+></div>
+
+<div
+  class="design rose"
+  data-design="rose"
+></div>
+
+<div
+  class="design night"
+  data-design="night"
+></div>
+
+</div>
+
+
+<h3>
+Page Adjustments
+</h3>
+
+<div class="form">
+
+<label>
+Writing Size
+<input
+  id="fontSize"
+  type="range"
+  min="16"
+  max="25"
+  value="20"
+>
+</label>
+
+<label>
+Line Spacing
+<input
+  id="lineSize"
+  type="range"
+  min="30"
+  max="42"
+  value="36"
+>
+</label>
+
+<label>
+Page Width
+<input
+  id="pageWidth"
+  type="range"
+  min="900"
+  max="1400"
+  value="1250"
+>
+</label>
+
+</div>
+
+<div class="actions">
+
+<button data-close="settingsModal">
+Close
+</button>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script>
-"use strict";
 
 /* =========================================================
-   MY PERSONAL DIARY v8.5
-   ========================================================= */
+   DIARY DATABASE
+========================================================= */
 
-const PAGE_KEY = "myPersonalDiary.pages.v84";
-const EVENT_KEY = "myPersonalDiary.events.v84";
-const TODO_KEY = "myPersonalDiary.todos.v84";
-const SETTINGS_KEY = "myPersonalDiary.settings.v84";
+const DB_NAME = "myPersonalDiaryDB";
+const DB_VERSION = 8;
 
-let pages = loadJSON(PAGE_KEY,{});
-let events = loadJSON(EVENT_KEY,[]);
-let todos = loadJSON(TODO_KEY,[]);
-let settings = loadJSON(SETTINGS_KEY,{
-  design:"classic",
-  alerts:true
-});
+let db;
 
-let currentDate = todayISO();
+let currentDate = localISO();
 let currentPage = 1;
+
+let pageRecord = null;
+
 let saveTimer = null;
-let calendarCursor = new Date();
-let alertedEvents = JSON.parse(localStorage.getItem("myPersonalDiary.alertedEvents") || "{}");
 
-let drawTool = "pen";
-let drawing = false;
-let drawStart = null;
-let currentStroke = null;
-let drawHistory = [];
-let drawRedo = [];
-let drawCtx;
-let canvasWidth = 0;
-let canvasHeight = 0;
 
-const QUOTES = [
-  "Every day is a new page in the story of your life.",
-  "Small steps every day create remarkable journeys.",
-  "The best memories are made one ordinary day at a time.",
-  "Write today. Remember tomorrow.",
-  "Gratitude turns ordinary moments into treasured memories.",
-  "A peaceful mind makes a beautiful day.",
-  "Your story deserves to be written.",
-  "Life is made of moments. Keep the ones that matter."
-];
+/* =========================================================
+   DATE
+========================================================= */
 
-const editor = document.getElementById("editor");
-const canvas = document.getElementById("drawCanvas");
-drawCtx = canvas.getContext("2d");
+function localISO(date = new Date()){
 
-function todayISO(){
-  const d=new Date();
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  const day=String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
+  const d =
+    new Date(
+      date.getTime() -
+      date.getTimezoneOffset()*60000
+    );
+
+  return d.toISOString().slice(0,10);
 }
 
-function parseISO(s){
-  const [y,m,d]=s.split("-").map(Number);
-  return new Date(y,m-1,d);
+function today(){
+
+  return localISO();
+
 }
 
-function formatLongDate(s){
-  return parseISO(s).toLocaleDateString("en-IN",{
-    weekday:"long",
-    day:"numeric",
-    month:"long",
-    year:"numeric"
-  });
+function isPastDate(){
+
+  return currentDate < today();
+
 }
 
-function loadJSON(key,fallback){
-  try{
-    const v=localStorage.getItem(key);
-    return v ? JSON.parse(v) : fallback;
-  }catch(e){
-    console.error(e);
-    return fallback;
+function formatDate(iso){
+
+  return new Date(
+    iso+"T12:00:00"
+  ).toLocaleDateString(
+    undefined,
+    {
+      weekday:"long",
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+function openDB(){
+
+ return new Promise(
+  (resolve,reject)=>{
+
+   const request =
+     indexedDB.open(
+       DB_NAME,
+       DB_VERSION
+     );
+
+   request.onupgradeneeded =
+     event => {
+
+       const database =
+         event.target.result;
+
+       if(
+         !database.objectStoreNames.contains(
+           "pages"
+         )
+       ){
+
+         const store =
+           database.createObjectStore(
+             "pages",
+             {keyPath:"id"}
+           );
+
+         store.createIndex(
+           "date",
+           "date"
+         );
+
+       }
+
+       if(
+         !database.objectStoreNames.contains(
+           "events"
+         )
+       ){
+
+         const store =
+           database.createObjectStore(
+             "events",
+             {
+               keyPath:"id",
+               autoIncrement:true
+             }
+           );
+
+         store.createIndex(
+           "date",
+           "date"
+         );
+
+       }
+
+       if(
+         !database.objectStoreNames.contains(
+           "todos"
+         )
+       ){
+
+         const store =
+           database.createObjectStore(
+             "todos",
+             {
+               keyPath:"id",
+               autoIncrement:true
+             }
+           );
+
+         store.createIndex(
+           "date",
+           "date"
+         );
+
+       }
+
+       if(
+         !database.objectStoreNames.contains(
+           "attachments"
+         )
+       ){
+
+         const store =
+           database.createObjectStore(
+             "attachments",
+             {
+               keyPath:"id",
+               autoIncrement:true
+             }
+           );
+
+         store.createIndex(
+           "date",
+           "date"
+         );
+
+       }
+
+     };
+
+   request.onsuccess =
+     () => {
+
+       db =
+         request.result;
+
+       resolve(db);
+
+     };
+
+   request.onerror =
+     () => reject(request.error);
+
   }
+ );
+
 }
 
-function saveJSON(key,value){
-  localStorage.setItem(key,JSON.stringify(value));
+
+function store(name,mode="readonly"){
+
+ return db
+   .transaction(
+     name,
+     mode
+   )
+   .objectStore(name);
+
 }
+
+
+function getRecord(name,key){
+
+ return new Promise(
+  (resolve,reject)=>{
+
+   const r =
+     store(name).get(key);
+
+   r.onsuccess =
+     () => resolve(r.result);
+
+   r.onerror =
+     () => reject(r.error);
+
+  }
+ );
+
+}
+
+
+function saveRecord(name,data){
+
+ return new Promise(
+  (resolve,reject)=>{
+
+   const r =
+     store(
+       name,
+       "readwrite"
+     ).put(data);
+
+   r.onsuccess =
+     () => resolve(r.result);
+
+   r.onerror =
+     () => reject(r.error);
+
+  }
+ );
+
+}
+
+
+function getAll(name){
+
+ return new Promise(
+  (resolve,reject)=>{
+
+   const r =
+     store(name).getAll();
+
+   r.onsuccess =
+     () => resolve(r.result);
+
+   r.onerror =
+     () => reject(r.error);
+
+  }
+ );
+
+}
+
+
+function deleteRecord(name,key){
+
+ return new Promise(
+  (resolve,reject)=>{
+
+   const r =
+     store(
+       name,
+       "readwrite"
+     ).delete(key);
+
+   r.onsuccess =
+     () => resolve();
+
+   r.onerror =
+     () => reject(r.error);
+
+  }
+ );
+
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
 
 function pageId(){
-  return currentDate + "_" + currentPage;
+
+ return currentDate+
+        "-"+
+        currentPage;
+
 }
 
-function defaultQuote(){
-  const d=parseISO(currentDate);
-  const index=(d.getFullYear()+d.getMonth()+d.getDate()) % QUOTES.length;
-  return QUOTES[index];
+
+const quotes = [
+
+ "A peaceful mind makes a beautiful day.",
+
+ "Small steps create lasting memories.",
+
+ "Today is a page worth remembering.",
+
+ "Gratitude turns ordinary moments into treasures.",
+
+ "Write it down; let the memory live.",
+
+ "A calm heart sees beauty everywhere.",
+
+ "Every day is a new page."
+
+];
+
+
+async function ensurePage(){
+
+ const id =
+   pageId();
+
+ pageRecord =
+   await getRecord(
+     "pages",
+     id
+   );
+
+ if(!pageRecord){
+
+   pageRecord = {
+
+     id:id,
+
+     date:currentDate,
+
+     page:currentPage,
+
+     content:"",
+
+     mood:"🙂",
+
+     quote:
+       quotes[
+         Math.floor(
+           Math.random()*
+           quotes.length
+         )
+       ],
+
+     design:"classic",
+
+     drawing:""
+
+   };
+
+   await saveRecord(
+     "pages",
+     pageRecord
+   );
+
+ }
+
 }
 
-function getPage(){
-  const id=pageId();
 
-  if(!pages[id]){
-    pages[id]={
-      id,
-      date:currentDate,
-      page:currentPage,
-      content:"",
-      mood:"",
-      quote:defaultQuote(),
-      strokes:[]
-    };
-  }
+async function savePage(){
 
-  if(!Array.isArray(pages[id].strokes)){
-    pages[id].strokes=[];
-  }
+ if(!pageRecord)
+   return;
 
-  return pages[id];
+ pageRecord.content =
+   document
+     .getElementById("editor")
+     .innerHTML;
+
+ pageRecord.mood =
+   document
+     .getElementById("moodButton")
+     .textContent;
+
+ pageRecord.quote =
+   document
+     .getElementById("quoteText")
+     .textContent;
+
+ await saveRecord(
+   "pages",
+   pageRecord
+ );
+
 }
 
-function savePageNow(){
-  const p=getPage();
-
-  p.content=editor.innerHTML;
-  p.mood=document.getElementById("moodDisplay").textContent || "";
-  p.quote=document.getElementById("quoteDisplay").textContent || defaultQuote();
-  p.strokes=drawHistory.slice();
-
-  pages[p.id]=p;
-  saveJSON(PAGE_KEY,pages);
-
-  document.getElementById("saveStatus").textContent="Saved";
-  updateWordCount();
-}
 
 function scheduleSave(){
-  document.getElementById("saveStatus").textContent="Saving…";
 
-  clearTimeout(saveTimer);
+ clearTimeout(saveTimer);
 
-  saveTimer=setTimeout(()=>{
-    savePageNow();
-  },350);
+ saveTimer =
+   setTimeout(
+     savePage,
+     300
+   );
 
-  updateWordCount();
 }
 
-function loadPage(){
-  const p=getPage();
-
-  editor.innerHTML=p.content || "";
-
-  document.getElementById("moodDisplay").textContent=p.mood || "";
-  document.getElementById("quoteDisplay").textContent=p.quote || defaultQuote();
-
-  document.getElementById("pageTitle").textContent=formatLongDate(currentDate);
-  document.getElementById("pageNumber").textContent="Page " + currentPage;
-  document.getElementById("datePicker").value=currentDate;
-
-  drawHistory=Array.isArray(p.strokes) ? JSON.parse(JSON.stringify(p.strokes)) : [];
-  drawRedo=[];
-
-  applyDesign();
-  updateWordCount();
-
-  requestAnimationFrame(()=>{
-    resizeCanvas();
-    redrawCanvas();
-  });
-}
-
-function goToDate(date){
-  if(!date)return;
-
-  savePageNow();
-
-  currentDate=date;
-  currentPage=1;
-
-  loadPage();
-}
-
-function changeDate(days){
-  const d=parseISO(currentDate);
-  d.setDate(d.getDate()+days);
-
-  goToDate(
-    `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`
-  );
-}
-
-function newPage(){
-  savePageNow();
-  currentPage++;
-  loadPage();
-}
-
-function updateWordCount(){
-  const text=editor.innerText.trim();
-  const words=text ? text.split(/\s+/).length : 0;
-  document.getElementById("wordCount").textContent=words+" words";
-}
 
 /* =========================================================
-   FORMATTING
-   ========================================================= */
+   PAGE SETTINGS
+========================================================= */
 
-function formatCmd(e,cmd){
-  e.preventDefault();
+function lineHeight(){
 
-  editor.focus();
+ return Number(
+   localStorage.getItem(
+     "lineHeight"
+   ) || 36
+ );
 
-  try{
-    document.execCommand(cmd,false,null);
-  }catch(err){
-    console.error(err);
-  }
-
-  scheduleSave();
 }
+
+
+function applyPageSettings(){
+
+ const fs =
+   Number(
+     localStorage.getItem(
+       "fontSize"
+     ) || 20
+   );
+
+ const lh =
+   lineHeight();
+
+ const width =
+   Number(
+     localStorage.getItem(
+       "pageWidth"
+     ) || 1250
+   );
+
+ document.documentElement
+   .style.setProperty(
+     "--fontSize",
+     fs+"px"
+   );
+
+ document.documentElement
+   .style.setProperty(
+     "--lineHeight",
+     lh+"px"
+   );
+
+ document
+   .querySelector(
+     ".notebook"
+   )
+   .style.maxWidth =
+     width+"px";
+
+}
+
+
+function applyDesign(design){
+
+ const page =
+   document.getElementById(
+     "bookPage"
+   );
+
+ let paper="#fbf8ea";
+ let line="#d8cfb7";
+
+ if(design==="vintage"){
+
+   paper="#ead8b5";
+   line="#c7ae86";
+
+ }
+
+ if(design==="blue"){
+
+   paper="#edf5f4";
+   line="#b9d3d2";
+
+ }
+
+ if(design==="green"){
+
+   paper="#eef1df";
+   line="#c7d0ae";
+
+ }
+
+ if(design==="rose"){
+
+   paper="#f5e9e6";
+   line="#d9bfc0";
+
+ }
+
+ if(design==="night"){
+
+   paper="#363d43";
+   line="#5d6870";
+
+ }
+
+ document.documentElement
+   .style.setProperty(
+     "--paper",
+     paper
+   );
+
+ document.documentElement
+   .style.setProperty(
+     "--line",
+     line
+   );
+
+ page.style.color =
+   design==="night"
+   ? "#f3eadb"
+   : "";
+
+ pageRecord.design =
+   design;
+
+ document
+   .querySelectorAll(
+     ".design"
+   )
+   .forEach(
+     x =>
+       x.classList.toggle(
+         "selected",
+         x.dataset.design===design
+       )
+   );
+
+}
+
+
+/* =========================================================
+   RENDER PAGE
+========================================================= */
+
+async function renderPage(){
+
+ await ensurePage();
+
+ document
+   .getElementById(
+     "dateTitle"
+   )
+   .textContent =
+     formatDate(
+       currentDate
+     );
+
+ document
+   .getElementById(
+     "pageNo"
+   )
+   .textContent =
+     "Page "+
+     currentPage;
+
+ document
+   .getElementById(
+     "editor"
+   )
+   .innerHTML =
+     pageRecord.content || "";
+
+ document
+   .getElementById(
+     "moodButton"
+   )
+   .textContent =
+     pageRecord.mood || "🙂";
+
+ document
+   .getElementById(
+     "quoteText"
+   )
+   .textContent =
+     pageRecord.quote ||
+     quotes[0];
+
+ applyPageSettings();
+
+ applyDesign(
+   pageRecord.design ||
+   "classic"
+ );
+
+ await loadDrawing();
+
+ buildDateSelect();
+
+ updateDateControls();
+
+}
+
+
+/* =========================================================
+   DATE NAVIGATION
+========================================================= */
+
+function buildDateSelect(){
+
+ const select =
+   document.getElementById(
+     "dateSelect"
+   );
+
+ select.innerHTML="";
+
+ const base =
+   new Date(
+     currentDate+
+     "T12:00:00"
+   );
+
+ for(
+   let i=-30;
+   i<=30;
+   i++
+ ){
+
+   const d =
+     new Date(base);
+
+   d.setDate(
+     base.getDate()+i
+   );
+
+   const iso =
+     localISO(d);
+
+   const option =
+     document.createElement(
+       "option"
+     );
+
+   option.value=iso;
+
+   option.textContent=
+     formatDate(iso);
+
+   if(
+     iso===currentDate
+   )
+     option.selected=true;
+
+   select.appendChild(
+     option
+   );
+
+ }
+
+}
+
+
+async function goDate(date){
+
+ await savePage();
+
+ currentDate =
+   date;
+
+ currentPage=1;
+
+ await renderPage();
+
+}
+
+
+document
+  .getElementById(
+    "dateSelect"
+  )
+  .onchange =
+    e =>
+      goDate(
+        e.target.value
+      );
+
+
+document
+  .getElementById(
+    "prevBtn"
+  )
+  .onclick =
+    () => {
+
+      const d =
+        new Date(
+          currentDate+
+          "T12:00:00"
+        );
+
+      d.setDate(
+        d.getDate()-1
+      );
+
+      goDate(
+        localISO(d)
+      );
+
+    };
+
+
+document
+  .getElementById(
+    "nextBtn"
+  )
+  .onclick =
+    () => {
+
+      const d =
+        new Date(
+          currentDate+
+          "T12:00:00"
+        );
+
+      d.setDate(
+        d.getDate()+1
+      );
+
+      goDate(
+        localISO(d)
+      );
+
+    };
+
+
+document
+  .getElementById(
+    "newPageBtn"
+  )
+  .onclick =
+    async () => {
+
+      await savePage();
+
+      currentPage++;
+
+      await renderPage();
+
+      document
+        .getElementById(
+          "bookPage"
+        )
+        .scrollTop=0;
+
+    };
+
+
+function updateDateControls(){
+
+ const past =
+   isPastDate();
+
+ document
+   .getElementById(
+     "saveEvent"
+   )
+   .disabled =
+     past;
+
+ document
+   .getElementById(
+     "addTodo"
+   )
+   .disabled =
+     past;
+
+ document
+   .getElementById(
+     "eventPastMessage"
+   )
+   .classList
+   .toggle(
+     "hidden",
+     !past
+   );
+
+ document
+   .getElementById(
+     "todoPastMessage"
+   )
+   .classList
+   .toggle(
+     "hidden",
+     !past
+   );
+
+}
+
+
+/* =========================================================
+   TEXT FORMATTING
+========================================================= */
+
+document
+  .querySelectorAll(
+    "[data-command]"
+  )
+  .forEach(
+    button => {
+
+      button.onclick =
+        () => {
+
+          document
+            .getElementById(
+              "editor"
+            )
+            .focus();
+
+          document.execCommand(
+            button.dataset.command,
+            false,
+            null
+          );
+
+          scheduleSave();
+
+        };
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "editor"
+  )
+  .addEventListener(
+    "input",
+    scheduleSave
+  );
+
+
+/* =========================================================
+   QUOTE
+========================================================= */
+
+document
+  .getElementById(
+    "quoteBtn"
+  )
+  .onclick =
+    async () => {
+
+      pageRecord.quote =
+        quotes[
+          Math.floor(
+            Math.random()*
+            quotes.length
+          )
+        ];
+
+      document
+        .getElementById(
+          "quoteText"
+        )
+        .textContent =
+          pageRecord.quote;
+
+      await saveRecord(
+        "pages",
+        pageRecord
+      );
+
+    };
+
 
 /* =========================================================
    MOOD
-   ========================================================= */
+========================================================= */
 
-function openMood(){
-  document.getElementById("moodModal").classList.add("show");
-}
+const moodList = [
+ "🙂",
+ "😀",
+ "😍",
+ "😊",
+ "😂",
+ "😌",
+ "😢",
+ "😡",
+ "😴",
+ "🙏",
+ "❤️",
+ "🌟",
+ "😎",
+ "🤔",
+ "🥳"
+];
 
-function selectMood(mood){
-  document.getElementById("moodDisplay").textContent=mood;
-  closeModal("moodModal");
-  scheduleSave();
-}
 
-/* =========================================================
-   QUOTES
-   ========================================================= */
+moodList.forEach(
+  mood => {
 
-function changeQuote(){
-  const p=getPage();
-  let index=Math.floor(Math.random()*QUOTES.length);
+    const button =
+      document.createElement(
+        "button"
+      );
 
-  if(QUOTES.length>1 && QUOTES[index]===p.quote){
-    index=(index+1)%QUOTES.length;
+    button.textContent=mood;
+
+    button.onclick =
+      async () => {
+
+        document
+          .getElementById(
+            "moodButton"
+          )
+          .textContent =
+            mood;
+
+        pageRecord.mood =
+          mood;
+
+        await saveRecord(
+          "pages",
+          pageRecord
+        );
+
+        document
+          .getElementById(
+            "moodMenu"
+          )
+          .classList
+          .remove(
+            "open"
+          );
+
+      };
+
+    document
+      .getElementById(
+        "moodMenu"
+      )
+      .appendChild(
+        button
+      );
+
   }
+);
 
-  document.getElementById("quoteDisplay").textContent=QUOTES[index];
-  scheduleSave();
-}
+
+document
+  .getElementById(
+    "moodButton"
+  )
+  .onclick =
+    () =>
+      document
+        .getElementById(
+          "moodMenu"
+        )
+        .classList
+        .toggle(
+          "open"
+        );
+
 
 /* =========================================================
    DRAWING
-   ========================================================= */
+========================================================= */
 
-function openDraw(){
-  document.getElementById("paper").classList.add("drawMode");
+const canvas =
+  document.getElementById(
+    "drawCanvas"
+  );
 
-  requestAnimationFrame(()=>{
-    resizeCanvas();
-    redrawCanvas();
-  });
-}
+const ctx =
+  canvas.getContext(
+    "2d"
+  );
 
-function closeDraw(){
-  /*
-    IMPORTANT:
-    Do NOT hide or remove the canvas.
-    It remains on the same paper.
-    Only pointer events are disabled.
-  */
-  document.getElementById("paper").classList.remove("drawMode");
+const editorWrap =
+  document.getElementById(
+    "editorWrap"
+  );
 
-  savePageNow();
-}
+let drawing=false;
+let drawTool="pen";
+let startX=0;
+let startY=0;
+let baseImage=null;
 
-function setDrawTool(tool){
-  drawTool=tool;
 
-  document.querySelectorAll(".drawToolbar button").forEach(b=>{
-    b.classList.remove("selected");
-  });
-
-  if(tool==="pen")document.getElementById("penBtn").classList.add("selected");
-  if(tool==="line")document.getElementById("lineBtn").classList.add("selected");
-  if(tool==="circle")document.getElementById("circleBtn").classList.add("selected");
-  if(tool==="eraser")document.getElementById("eraserBtn").classList.add("selected");
-}
+/*
+  Canvas is transparent and lives
+  directly over the writing page.
+*/
 
 function resizeCanvas(){
-  const rect=canvas.parentElement.getBoundingClientRect();
 
-  const old=document.createElement("canvas");
-  old.width=canvas.width;
-  old.height=canvas.height;
+ const rect =
+   editorWrap
+     .getBoundingClientRect();
 
-  if(canvas.width && canvas.height){
-    old.getContext("2d").drawImage(canvas,0,0);
+ const old =
+   document.createElement(
+     "canvas"
+   );
+
+ old.width =
+   canvas.width;
+
+ old.height =
+   canvas.height;
+
+ if(
+   old.width &&
+   old.height
+ ){
+
+   old
+     .getContext("2d")
+     .drawImage(
+       canvas,
+       0,
+       0
+     );
+
+ }
+
+ const ratio =
+   window.devicePixelRatio || 1;
+
+ canvas.width =
+   rect.width*
+   ratio;
+
+ canvas.height =
+   rect.height*
+   ratio;
+
+ canvas.style.width =
+   rect.width+"px";
+
+ canvas.style.height =
+   rect.height+"px";
+
+ ctx.setTransform(
+   ratio,
+   0,
+   0,
+   ratio,
+   0,
+   0
+ );
+
+ if(
+   old.width
+ ){
+
+   ctx.drawImage(
+     old,
+     0,
+     0,
+     old.width/ratio,
+     old.height/ratio
+   );
+
+ }
+
+}
+
+
+function clearCanvas(){
+
+ ctx.clearRect(
+   0,
+   0,
+   canvas.clientWidth,
+   canvas.clientHeight
+ );
+
+}
+
+
+async function loadDrawing(){
+
+ resizeCanvas();
+
+ clearCanvas();
+
+ if(
+   pageRecord &&
+   pageRecord.drawing
+ ){
+
+   const image =
+     new Image();
+
+   image.onload =
+     () => {
+
+       ctx.drawImage(
+         image,
+         0,
+         0,
+         canvas.clientWidth,
+         canvas.clientHeight
+       );
+
+     };
+
+   image.src =
+     pageRecord.drawing;
+
+ }
+
+}
+
+
+function saveDrawing(){
+
+ pageRecord.drawing =
+   canvas.toDataURL(
+     "image/png"
+   );
+
+ return saveRecord(
+   "pages",
+   pageRecord
+ );
+
+}
+
+
+function getPoint(event){
+
+ const r =
+   canvas.getBoundingClientRect();
+
+ return {
+
+   x:
+     event.clientX-r.left,
+
+   y:
+     event.clientY-r.top
+
+ };
+
+}
+
+
+function startDrawing(event){
+
+ if(!drawing)
+   return;
+
+ const p =
+   getPoint(event);
+
+ startX=p.x;
+ startY=p.y;
+
+ canvas.setPointerCapture(
+   event.pointerId
+ );
+
+ if(
+   drawTool==="pen" ||
+   drawTool==="eraser"
+ ){
+
+   ctx.beginPath();
+
+   ctx.moveTo(
+     p.x,
+     p.y
+   );
+
+ }
+
+}
+
+
+function moveDrawing(event){
+
+ if(
+   !drawing ||
+   drawTool==="line" ||
+   drawTool==="circle"
+ )
+   return;
+
+ const p =
+   getPoint(event);
+
+ ctx.lineCap="round";
+ ctx.lineJoin="round";
+
+ if(
+   drawTool==="eraser"
+ ){
+
+   ctx.globalCompositeOperation =
+     "destination-out";
+
+   ctx.lineWidth=38;
+
+ }else{
+
+   ctx.globalCompositeOperation =
+     "source-over";
+
+   ctx.lineWidth=3;
+
+   ctx.strokeStyle="#21170f";
+
+ }
+
+ ctx.lineTo(
+   p.x,
+   p.y
+ );
+
+ ctx.stroke();
+
+ event.preventDefault();
+
+}
+
+
+function finishDrawing(event){
+
+ if(!drawing)
+   return;
+
+ const p =
+   getPoint(event);
+
+ /*
+   Line and circle are drawn once,
+   avoiding the previous disappearing/race problem.
+ */
+
+ if(
+   drawTool==="line"
+ ){
+
+   ctx.globalCompositeOperation =
+     "source-over";
+
+   ctx.strokeStyle="#21170f";
+
+   ctx.lineWidth=3;
+
+   ctx.lineCap="round";
+
+   ctx.beginPath();
+
+   ctx.moveTo(
+     startX,
+     startY
+   );
+
+   ctx.lineTo(
+     p.x,
+     p.y
+   );
+
+   ctx.stroke();
+
+ }
+
+
+ if(
+   drawTool==="circle"
+ ){
+
+   ctx.globalCompositeOperation =
+     "source-over";
+
+   ctx.strokeStyle="#21170f";
+
+   ctx.lineWidth=3;
+
+   const cx =
+     (startX+p.x)/2;
+
+   const cy =
+     (startY+p.y)/2;
+
+   const rx =
+     Math.abs(
+       p.x-startX
+     )/2;
+
+   const ry =
+     Math.abs(
+       p.y-startY
+     )/2;
+
+   ctx.beginPath();
+
+   ctx.ellipse(
+     cx,
+     cy,
+     Math.max(rx,3),
+     Math.max(ry,3),
+     0,
+     0,
+     Math.PI*2
+   );
+
+   ctx.stroke();
+
+ }
+
+ drawing=false;
+
+ ctx.globalCompositeOperation =
+   "source-over";
+
+ saveDrawing();
+
+ event.preventDefault();
+
+}
+
+
+canvas.addEventListener(
+  "pointerdown",
+  event => {
+
+    if(!drawing)
+      return;
+
+    startDrawing(event);
+
   }
-
-  const dpr=Math.max(1,window.devicePixelRatio || 1);
-
-  canvasWidth=rect.width;
-  canvasHeight=rect.height;
-
-  canvas.width=Math.round(rect.width*dpr);
-  canvas.height=Math.round(rect.height*dpr);
-
-  canvas.style.width=rect.width+"px";
-  canvas.style.height=rect.height+"px";
-
-  drawCtx=canvas.getContext("2d");
-  drawCtx.setTransform(dpr,0,0,dpr,0,0);
-
-  redrawCanvas();
-}
-
-function pointerPosition(e){
-  const r=canvas.getBoundingClientRect();
-
-  return {
-    x:e.clientX-r.left,
-    y:e.clientY-r.top
-  };
-}
-
-function beginDrawing(e){
-  if(!document.getElementById("paper").classList.contains("drawMode"))return;
-
-  e.preventDefault();
-
-  try{
-    canvas.setPointerCapture(e.pointerId);
-  }catch(err){}
-
-  drawing=true;
-  drawStart=pointerPosition(e);
-
-  if(drawTool==="eraser"){
-    eraseAt(drawStart.x,drawStart.y);
-    return;
-  }
-
-  currentStroke={
-    type:drawTool,
-    color:drawTool==="circle" ? "#b52b2b" : "#292019",
-    size:drawTool==="circle" ? 3 : 3,
-    points:[{x:drawStart.x,y:drawStart.y}],
-    start:{x:drawStart.x,y:drawStart.y},
-    end:{x:drawStart.x,y:drawStart.y}
-  };
-}
-
-function moveDrawing(e){
-  if(!drawing)return;
-
-  e.preventDefault();
-
-  const p=pointerPosition(e);
-
-  if(drawTool==="eraser"){
-    eraseAt(p.x,p.y);
-    return;
-  }
-
-  if(!currentStroke)return;
-
-  if(drawTool==="pen"){
-    currentStroke.points.push({x:p.x,y:p.y});
-    redrawCanvas();
-
-    drawStroke(currentStroke);
-  }else{
-    currentStroke.end={x:p.x,y:p.y};
-    redrawCanvas();
-    drawStroke(currentStroke);
-  }
-}
-
-function endDrawing(e){
-  if(!drawing)return;
-
-  drawing=false;
-
-  if(drawTool!=="eraser" && currentStroke){
-    drawHistory.push(JSON.parse(JSON.stringify(currentStroke)));
-    drawRedo=[];
-  }
-
-  currentStroke=null;
-  drawStart=null;
-
-  redrawCanvas();
-  scheduleSave();
-}
-
-function drawStroke(stroke){
-  if(!stroke)return;
-
-  drawCtx.save();
-
-  drawCtx.strokeStyle=stroke.color || "#292019";
-  drawCtx.fillStyle="transparent";
-  drawCtx.lineWidth=stroke.size || 3;
-  drawCtx.lineCap="round";
-  drawCtx.lineJoin="round";
-
-  if(stroke.type==="pen"){
-    if(stroke.points.length<2){
-      drawCtx.beginPath();
-      drawCtx.arc(
-        stroke.points[0].x,
-        stroke.points[0].y,
-        1.5,
-        0,
-        Math.PI*2
-      );
-      drawCtx.fillStyle=stroke.color || "#292019";
-      drawCtx.fill();
-    }else{
-      drawCtx.beginPath();
-      drawCtx.moveTo(stroke.points[0].x,stroke.points[0].y);
-
-      for(let i=1;i<stroke.points.length;i++){
-        drawCtx.lineTo(
-          stroke.points[i].x,
-          stroke.points[i].y
-        );
-      }
-
-      drawCtx.stroke();
-    }
-  }
-
-  if(stroke.type==="line"){
-    drawCtx.beginPath();
-    drawCtx.moveTo(stroke.start.x,stroke.start.y);
-    drawCtx.lineTo(stroke.end.x,stroke.end.y);
-    drawCtx.stroke();
-  }
-
-  if(stroke.type==="circle"){
-    const cx=(stroke.start.x+stroke.end.x)/2;
-    const cy=(stroke.start.y+stroke.end.y)/2;
-    const rx=Math.abs(stroke.end.x-stroke.start.x)/2;
-    const ry=Math.abs(stroke.end.y-stroke.start.y)/2;
-
-    drawCtx.beginPath();
-    drawCtx.ellipse(cx,cy,Math.max(rx,3),Math.max(ry,3),0,0,Math.PI*2);
-    drawCtx.stroke();
-  }
-
-  drawCtx.restore();
-}
-
-function redrawCanvas(){
-  if(!drawCtx)return;
-
-  drawCtx.clearRect(0,0,canvasWidth,canvasHeight);
-
-  for(const s of drawHistory){
-    drawStroke(s);
-  }
-
-  if(currentStroke){
-    drawStroke(currentStroke);
-  }
-}
-
-/* Fast vector eraser */
-function eraseAt(x,y){
-  const radius=24;
-
-  const before=drawHistory.length;
-
-  drawHistory=drawHistory.filter(stroke=>{
-    return !strokeHitByEraser(stroke,x,y,radius);
-  });
-
-  if(before!==drawHistory.length){
-    redrawCanvas();
-    scheduleSave();
-  }
-}
-
-function strokeHitByEraser(stroke,x,y,r){
-  if(stroke.type==="line" || stroke.type==="circle"){
-    const minX=Math.min(stroke.start.x,stroke.end.x)-r;
-    const maxX=Math.max(stroke.start.x,stroke.end.x)+r;
-    const minY=Math.min(stroke.start.y,stroke.end.y)-r;
-    const maxY=Math.max(stroke.start.y,stroke.end.y)+r;
-
-    return x>=minX && x<=maxX && y>=minY && y<=maxY;
-  }
-
-  for(const p of stroke.points){
-    const dx=p.x-x;
-    const dy=p.y-y;
-
-    if(Math.sqrt(dx*dx+dy*dy)<=r){
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function undoDraw(){
-  if(!drawHistory.length)return;
-
-  drawRedo.push(drawHistory.pop());
-  redrawCanvas();
-  scheduleSave();
-}
-
-function redoDraw(){
-  if(!drawRedo.length)return;
-
-  drawHistory.push(drawRedo.pop());
-  redrawCanvas();
-  scheduleSave();
-}
-
-function clearDraw(){
-  if(!drawHistory.length)return;
-
-  if(confirm("Clear all drawings from this page?")){
-    drawHistory=[];
-    drawRedo=[];
-    redrawCanvas();
-    scheduleSave();
-  }
-}
-
-canvas.addEventListener("pointerdown",beginDrawing);
-canvas.addEventListener("pointermove",moveDrawing);
-canvas.addEventListener("pointerup",endDrawing);
-canvas.addEventListener("pointercancel",endDrawing);
-
-window.addEventListener("resize",()=>{
-  clearTimeout(window.__resizeTimer);
-  window.__resizeTimer=setTimeout(()=>{
-    resizeCanvas();
-  },150);
-});
-
-/* =========================================================
-   CALENDAR
-   ========================================================= */
-
-function openCalendar(){
-  calendarCursor=parseISO(currentDate);
-  renderCalendar();
-  document.getElementById("calendarModal").classList.add("show");
-}
-
-function calendarMonth(delta){
-  calendarCursor.setMonth(calendarCursor.getMonth()+delta);
-  renderCalendar();
-}
-
-function renderCalendar(){
-  const y=calendarCursor.getFullYear();
-  const m=calendarCursor.getMonth();
-
-  document.getElementById("calendarTitle").textContent=
-    calendarCursor.toLocaleDateString("en-IN",{
-      month:"long",
-      year:"numeric"
-    });
-
-  const grid=document.getElementById("calendarGrid");
-  grid.innerHTML="";
-
-  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(x=>{
-    const h=document.createElement("div");
-    h.className="calDay head";
-    h.textContent=x;
-    grid.appendChild(h);
-  });
-
-  const first=new Date(y,m,1).getDay();
-  const last=new Date(y,m+1,0).getDate();
-
-  for(let i=0;i<first;i++){
-    grid.appendChild(document.createElement("div"));
-  }
-
-  for(let day=1;day<=last;day++){
-    const iso=
-      `${y}-${String(m+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
-    const cell=document.createElement("button");
-    cell.className="calDay";
-    cell.textContent=day;
-
-    if(iso===todayISO())cell.classList.add("today");
-
-    if(events.some(e=>e.date===iso)){
-      cell.classList.add("hasEvent");
-    }
-
-    cell.onclick=()=>{
-      goToDate(iso);
-      closeModal("calendarModal");
-    };
-
-    grid.appendChild(cell);
-  }
-}
-
-/* =========================================================
-   EVENTS
-   ========================================================= */
-
-function isPastDate(date){
-  return date < todayISO();
-}
-
-function openEvents(){
-  document.getElementById("eventDate").value=currentDate;
-  document.getElementById("eventText").value="";
-  document.getElementById("eventTime").value="";
-  document.getElementById("eventReminder").value="0";
-
-  updateEventEditingState();
-  renderEvents();
-
-  document.getElementById("eventModal").classList.add("show");
-}
-
-function updateEventEditingState(){
-  const past=isPastDate(document.getElementById("eventDate").value);
-
-  document.getElementById("eventText").disabled=past;
-  document.getElementById("eventTime").disabled=past;
-  document.getElementById("eventReminder").disabled=past;
-  document.getElementById("saveEventBtn").disabled=past;
-
-  document.getElementById("eventReadOnlyNote").style.display=
-    past ? "block" : "none";
-}
-
-document.getElementById("eventDate").addEventListener(
-  "change",
-  updateEventEditingState
 );
 
-function saveEvent(){
-  const date=document.getElementById("eventDate").value;
-  const text=document.getElementById("eventText").value.trim();
-  const time=document.getElementById("eventTime").value;
-  const reminder=Number(document.getElementById("eventReminder").value);
 
-  if(!date || !text){
-    alert("Please enter event date and event name.");
-    return;
-  }
+canvas.addEventListener(
+  "pointermove",
+  moveDrawing
+);
 
-  if(isPastDate(date)){
-    alert("Previous dates are read-only.");
-    return;
-  }
 
-  events.push({
-    id:"e_"+Date.now()+"_"+Math.random().toString(36).slice(2),
-    date,
-    text,
-    time,
-    reminder,
-    createdAt:Date.now()
-  });
+canvas.addEventListener(
+  "pointerup",
+  finishDrawing
+);
 
-  saveJSON(EVENT_KEY,events);
 
-  document.getElementById("eventText").value="";
-  document.getElementById("eventTime").value="";
+canvas.addEventListener(
+  "pointercancel",
+  finishDrawing
+);
 
-  renderEvents();
-  renderCalendar();
 
-  alert("Event saved successfully.");
+/*
+  Open Draw.
+  The canvas stays on the page.
+*/
+
+function openDraw(){
+
+ drawing=true;
+
+ canvas.classList.add(
+   "enabled"
+ );
+
+ document
+   .getElementById(
+     "drawHint"
+   )
+   .classList
+   .add(
+     "show"
+   );
+
+ document
+   .getElementById(
+     "drawTools"
+   )
+   .classList
+   .add(
+     "open"
+   );
+
 }
 
-function renderEvents(){
-  const box=document.getElementById("eventList");
 
-  const sorted=events
-    .slice()
-    .sort((a,b)=>
-      (a.date+a.time).localeCompare(b.date+b.time)
-    );
+/*
+  Close Draw only disables drawing.
+  It NEVER clears the canvas.
+*/
 
-  if(!sorted.length){
-    box.innerHTML="<p>No events added yet.</p>";
-    return;
-  }
+function closeDraw(){
 
-  box.innerHTML=sorted.map(e=>`
-    <div class="itemRow">
-      <span>
-        <strong>${escapeHTML(e.text)}</strong><br>
-        <span class="eventDate">
-          ${escapeHTML(formatLongDate(e.date))}
-          ${e.time ? " • "+escapeHTML(e.time) : ""}
-        </span>
-      </span>
-      <button class="secondary" onclick="deleteEvent('${e.id}')">Delete</button>
-    </div>
-  `).join("");
+ drawing=false;
+
+ canvas.classList.remove(
+   "enabled"
+ );
+
+ document
+   .getElementById(
+     "drawHint"
+   )
+   .classList
+   .remove(
+     "show"
+   );
+
+ document
+   .getElementById(
+     "drawTools"
+   )
+   .classList
+   .remove(
+     "open"
+   );
+
+ saveDrawing();
+
 }
 
-function deleteEvent(id){
-  events=events.filter(e=>e.id!==id);
-  saveJSON(EVENT_KEY,events);
-  renderEvents();
-  renderCalendar();
-}
 
-/* =========================================================
-   EVENT ALERT ENGINE
-   ========================================================= */
+/*
+  Selecting a drawing tool:
+  - activates the tool
+  - keeps drawing active
+  - immediately hides the toolbar
+*/
 
-function checkEventAlerts(){
-  if(!settings.alerts)return;
+document
+  .querySelectorAll(
+    "[data-tool]"
+  )
+  .forEach(
+    button => {
 
-  const now=new Date();
+      button.onclick =
+        () => {
 
-  for(const e of events){
-    if(e.date!==todayISO())continue;
+          drawTool =
+            button.dataset.tool;
 
-    if(!e.time)continue;
+          document
+            .querySelectorAll(
+              "[data-tool]"
+            )
+            .forEach(
+              b =>
+                b.classList
+                 .remove(
+                   "active"
+                 )
+            );
 
-    const [hh,mm]=e.time.split(":").map(Number);
+          button.classList
+            .add("active");
 
-    const eventTime=new Date();
-    eventTime.setHours(hh,mm,0,0);
+          drawing=true;
 
-    const reminderMs=(Number(e.reminder)||0)*60000;
-    const alertTime=new Date(eventTime.getTime()-reminderMs);
+          canvas.classList
+            .add("enabled");
 
-    const diff=Math.abs(now.getTime()-alertTime.getTime());
+          document
+            .getElementById(
+              "drawTools"
+            )
+            .classList
+            .remove(
+              "open"
+            );
 
-    if(diff<=30000 && !alertedEvents[e.id]){
-      alertedEvents[e.id]=true;
+        };
 
-      localStorage.setItem(
-        "myPersonalDiary.alertedEvents",
-        JSON.stringify(alertedEvents)
+    }
+  );
+
+
+document
+  .getElementById(
+    "drawBtn"
+  )
+  .onclick =
+    openDraw;
+
+
+document
+  .getElementById(
+    "drawToolbarButton"
+  )
+  .onclick =
+    () => {
+
+      document
+        .getElementById(
+          "drawTools"
+        )
+        .classList
+        .toggle(
+          "open"
+        );
+
+    };
+
+
+document
+  .getElementById(
+    "drawClose"
+  )
+  .onclick =
+    closeDraw;
+
+
+document
+  .getElementById(
+    "drawClear"
+  )
+  .onclick =
+    async () => {
+
+      clearCanvas();
+
+      pageRecord.drawing="";
+
+      await saveRecord(
+        "pages",
+        pageRecord
       );
 
-      showEventAlert(e);
-    }
+    };
+
+
+window.addEventListener(
+  "resize",
+  () => {
+
+    if(!drawing)
+      loadDrawing();
+
   }
-}
+);
 
-function showEventAlert(e){
-  document.getElementById("alertContent").innerHTML=`
-    <div class="alertBox">
-      <strong>${escapeHTML(e.text)}</strong><br>
-      ${e.time ? "Time: "+escapeHTML(e.time) : ""}
-    </div>
-  `;
-
-  document.getElementById("alertModal").classList.add("show");
-}
-
-setInterval(checkEventAlerts,15000);
-
-/* =========================================================
-   TO-DO
-   ========================================================= */
-
-function openTodo(){
-  renderTodos();
-
-  const past=isPastDate(currentDate);
-
-  document.getElementById("todoText").disabled=past;
-  document.getElementById("addTodoBtn").disabled=past;
-
-  document.getElementById("todoReadOnlyNote").style.display=
-    past ? "block" : "none";
-
-  document.getElementById("todoModal").classList.add("show");
-}
-
-function addTodo(){
-  if(isPastDate(currentDate)){
-    alert("Previous dates are read-only.");
-    return;
-  }
-
-  const input=document.getElementById("todoText");
-  const text=input.value.trim();
-
-  if(!text)return;
-
-  todos.push({
-    id:"t_"+Date.now()+"_"+Math.random().toString(36).slice(2),
-    date:currentDate,
-    text,
-    done:false
-  });
-
-  saveJSON(TODO_KEY,todos);
-
-  input.value="";
-  renderTodos();
-}
-
-function renderTodos(){
-  const box=document.getElementById("todoList");
-
-  const list=todos
-    .filter(t=>t.date===currentDate);
-
-  if(!list.length){
-    box.innerHTML="<p>No To-do items for this date.</p>";
-    return;
-  }
-
-  box.innerHTML=list.map(t=>`
-    <div class="itemRow">
-      <input
-        type="checkbox"
-        ${t.done ? "checked" : ""}
-        onchange="toggleTodo('${t.id}')">
-
-      <span class="${t.done ? "done" : ""}">
-        ${escapeHTML(t.text)}
-      </span>
-
-      <button class="secondary"
-        onclick="deleteTodo('${t.id}')">
-        Delete
-      </button>
-    </div>
-  `).join("");
-}
-
-function toggleTodo(id){
-  const item=todos.find(t=>t.id===id);
-
-  if(!item)return;
-
-  item.done=!item.done;
-
-  saveJSON(TODO_KEY,todos);
-  renderTodos();
-}
-
-function deleteTodo(id){
-  todos=todos.filter(t=>t.id!==id);
-  saveJSON(TODO_KEY,todos);
-  renderTodos();
-}
-
-/* Carry unfinished tasks forward when moving to next date */
-function carryTodosForward(fromDate,toDate){
-  const pending=todos.filter(
-    t=>t.date===fromDate && !t.done
-  );
-
-  for(const task of pending){
-    const exists=todos.some(
-      x=>x.date===toDate &&
-         x.text===task.text &&
-         !x.done
-    );
-
-    if(!exists){
-      todos.push({
-        id:"t_"+Date.now()+"_"+Math.random().toString(36).slice(2),
-        date:toDate,
-        text:task.text,
-        done:false,
-        carriedFrom:fromDate
-      });
-    }
-  }
-
-  saveJSON(TODO_KEY,todos);
-}
-
-/* =========================================================
-   SETTINGS / DESIGN
-   ========================================================= */
-
-function openSettings(){
-  document.getElementById("pageDesign").value=settings.design||"classic";
-  document.getElementById("alertsEnabled").checked=settings.alerts!==false;
-
-  document.getElementById("settingsModal").classList.add("show");
-}
-
-function setDesign(value){
-  settings.design=value;
-  saveSettings();
-  applyDesign();
-}
-
-function saveSettings(){
-  settings.design=document.getElementById("pageDesign").value;
-  settings.alerts=document.getElementById("alertsEnabled").checked;
-
-  saveJSON(SETTINGS_KEY,settings);
-  applyDesign();
-}
-
-function applyDesign(){
-  const paper=document.getElementById("paper");
-
-  paper.style.background="";
-
-  if(settings.design==="vintage"){
-    paper.style.background=
-      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(130,95,55,.25) 32px,transparent 33px),linear-gradient(#f8ecd0,#f4dfb5)";
-  }
-
-  if(settings.design==="cream"){
-    paper.style.background=
-      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(130,110,75,.2) 32px,transparent 33px),linear-gradient(#fffef5,#fffbed)";
-  }
-
-  if(settings.design==="forest"){
-    paper.style.background=
-      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(75,110,75,.19) 32px,transparent 33px),linear-gradient(#f8fbef,#edf4df)";
-  }
-
-  if(settings.design==="classic"){
-    paper.style.background=
-      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(100,75,40,.22) 32px,transparent 33px),linear-gradient(#fffef7,#fff9e9)";
-  }
-}
-
-/* =========================================================
-   BACKUP / RESTORE
-   ========================================================= */
-
-function backupDiary(){
-  savePageNow();
-
-  const data={
-    version:"8.5",
-    exportedAt:new Date().toISOString(),
-    pages,
-    events,
-    todos,
-    settings
-  };
-
-  const blob=new Blob(
-    [JSON.stringify(data,null,2)],
-    {type:"application/json"}
-  );
-
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-
-  a.href=url;
-  a.download="my-personal-diary-backup.json";
-  a.click();
-
-  URL.revokeObjectURL(url);
-}
-
-function restoreDiary(){
-  document.getElementById("restoreFile").click();
-}
-
-function restoreFileSelected(e){
-  const file=e.target.files[0];
-
-  if(!file)return;
-
-  const reader=new FileReader();
-
-  reader.onload=function(){
-    try{
-      const data=JSON.parse(reader.result);
-
-      if(data.pages)pages=data.pages;
-      if(data.events)events=data.events;
-      if(data.todos)todos=data.todos;
-      if(data.settings)settings=data.settings;
-
-      saveJSON(PAGE_KEY,pages);
-      saveJSON(EVENT_KEY,events);
-      saveJSON(TODO_KEY,todos);
-      saveJSON(SETTINGS_KEY,settings);
-
-      loadPage();
-
-      alert("Diary restored successfully.");
-    }catch(err){
-      alert("The backup file is not valid.");
-    }
-  };
-
-  reader.readAsText(file);
-  e.target.value="";
-}
-
-/* =========================================================
-   PRINT
-   ========================================================= */
-
-function printPage(){
-  savePageNow();
-
-  const drawing=canvas.toDataURL("image/png");
-
-  const win=window.open("","_blank");
-
-  if(!win){
-    alert("Please allow pop-ups for printing.");
-    return;
-  }
-
-  win.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>Diary - ${escapeHTML(formatLongDate(currentDate))}</title>
-    <style>
-      body{
-        margin:30px;
-        font-family:Georgia,serif;
-        color:#302116;
-        background:#fffdf3;
-      }
-      h1{font-size:28px}
-      .quote{
-        border-left:3px solid #8a633d;
-        padding:8px 12px;
-        font-style:italic;
-      }
-      .content{
-        font-size:18px;
-        line-height:1.8;
-        white-space:normal;
-      }
-      img{
-        max-width:100%;
-      }
-    </style>
-    </head>
-    <body>
-      <h1>${escapeHTML(formatLongDate(currentDate))}</h1>
-      <div>${escapeHTML(document.getElementById("moodDisplay").textContent)}</div>
-      <div class="quote">${escapeHTML(document.getElementById("quoteDisplay").textContent)}</div>
-      <div class="content">${editor.innerHTML}</div>
-      <br>
-      <img src="${drawing}">
-    </body>
-    </html>
-  `);
-
-  win.document.close();
-  win.focus();
-
-  setTimeout(()=>{
-    win.print();
-  },400);
-}
 
 /* =========================================================
    MODALS
-   ========================================================= */
+========================================================= */
+
+function openModal(id){
+
+ document
+   .getElementById(id)
+   .classList
+   .add("open");
+
+ if(
+   id==="calendarModal"
+ )
+   renderCalendar();
+
+ if(
+   id==="eventModal"
+ )
+   renderEvents();
+
+ if(
+   id==="todoModal"
+ )
+   renderTodos();
+
+ if(
+   id==="memoryModal"
+ )
+   renderMemories();
+
+ if(
+   id==="settingsModal"
+ ){
+
+   document
+     .getElementById(
+       "fontSize"
+     )
+     .value =
+       localStorage.getItem(
+         "fontSize"
+       ) || 20;
+
+   document
+     .getElementById(
+       "lineSize"
+     )
+     .value =
+       lineHeight();
+
+   document
+     .getElementById(
+       "pageWidth"
+     )
+     .value =
+       localStorage.getItem(
+         "pageWidth"
+       ) || 1250;
+
+ }
+
+ updateDateControls();
+
+}
+
 
 function closeModal(id){
-  document.getElementById(id).classList.remove("show");
+
+ document
+   .getElementById(id)
+   .classList
+   .remove("open");
+
 }
 
-document.querySelectorAll(".modal").forEach(modal=>{
-  modal.addEventListener("click",e=>{
-    if(e.target===modal){
-      modal.classList.remove("show");
+
+document
+  .querySelectorAll(
+    "[data-close]"
+  )
+  .forEach(
+    button => {
+
+      button.onclick =
+        () =>
+          closeModal(
+            button.dataset.close
+          );
+
     }
-  });
-});
+  );
+
+
+document
+  .getElementById(
+    "calendarBtn"
+  )
+  .onclick =
+    () =>
+      openModal(
+        "calendarModal"
+      );
+
+
+document
+  .getElementById(
+    "eventBtn"
+  )
+  .onclick =
+    () =>
+      openModal(
+        "eventModal"
+      );
+
+
+document
+  .getElementById(
+    "todoBtn"
+  )
+  .onclick =
+    () =>
+      openModal(
+        "todoModal"
+      );
+
+
+document
+  .getElementById(
+    "memoryBtn"
+  )
+  .onclick =
+    () =>
+      openModal(
+        "memoryModal"
+      );
+
+
+document
+  .getElementById(
+    "settingsBtn"
+  )
+  .onclick =
+    () =>
+      openModal(
+        "settingsModal"
+      );
+
 
 /* =========================================================
-   SAFETY
-   ========================================================= */
+   EVENTS
+========================================================= */
+
+async function renderEvents(){
+
+ const all =
+   await getAll(
+     "events"
+   );
+
+ const events =
+   all
+     .filter(
+       e =>
+         e.date===
+         currentDate
+     )
+     .sort(
+       (a,b) =>
+         (a.time||"")
+         .localeCompare(
+           b.time||""
+         )
+     );
+
+ const list =
+   document
+     .getElementById(
+       "eventList"
+     );
+
+ list.innerHTML =
+   events.length
+   ?
+   events.map(
+     e => `
+
+       <div class="todoItem">
+
+         <span>
+           🗓️
+           <b>${escapeHTML(e.title)}</b>
+           ${e.time||""}
+           ${e.notes
+             ? " — "+escapeHTML(e.notes)
+             : ""}
+         </span>
+
+         ${
+           !isPastDate()
+           ?
+           `<button
+              onclick="deleteEvent(${e.id})"
+            >
+             Delete
+            </button>`
+           :
+           ""
+         }
+
+       </div>
+
+     `
+   ).join("")
+   :
+   "<p>No events for this date.</p>";
+
+}
+
+
+async function deleteEvent(id){
+
+ if(isPastDate())
+   return;
+
+ await deleteRecord(
+   "events",
+   id
+ );
+
+ await renderEvents();
+ await renderCalendar();
+
+}
+
+
+document
+  .getElementById(
+    "eventDate"
+  )
+  .value =
+    currentDate;
+
+
+document
+  .getElementById(
+    "saveEvent"
+  )
+  .onclick =
+    async () => {
+
+      if(isPastDate())
+        return;
+
+      const title =
+        document
+          .getElementById(
+            "eventTitle"
+          )
+          .value
+          .trim();
+
+      if(!title){
+
+        alert(
+          "Please enter an event title."
+        );
+
+        return;
+
+      }
+
+      const eventDate =
+        document
+          .getElementById(
+            "eventDate"
+          )
+          .value ||
+        currentDate;
+
+      if(
+        eventDate <
+        today()
+      ){
+
+        alert(
+          "Events cannot be added to a previous date."
+        );
+
+        return;
+
+      }
+
+      await saveRecord(
+        "events",
+        {
+          date:eventDate,
+
+          time:
+            document
+              .getElementById(
+                "eventTime"
+              )
+              .value,
+
+          title:title,
+
+          notes:
+            document
+              .getElementById(
+                "eventNotes"
+              )
+              .value
+
+        }
+      );
+
+      document
+        .getElementById(
+          "eventTitle"
+        )
+        .value="";
+
+      document
+        .getElementById(
+          "eventNotes"
+        )
+        .value="";
+
+      await renderEvents();
+
+      await renderCalendar();
+
+    };
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+let calendarDate =
+  new Date();
+
+
+async function renderCalendar(){
+
+ const year =
+   calendarDate
+     .getFullYear();
+
+ const month =
+   calendarDate
+     .getMonth();
+
+ document
+   .getElementById(
+     "calTitle"
+   )
+   .textContent =
+     calendarDate.toLocaleDateString(
+       undefined,
+       {
+         month:"long",
+         year:"numeric"
+       }
+     );
+
+ const events =
+   await getAll(
+     "events"
+   );
+
+ const grid =
+   document
+     .getElementById(
+       "calendarGrid"
+     );
+
+ grid.innerHTML="";
+
+ [
+   "Sun",
+   "Mon",
+   "Tue",
+   "Wed",
+   "Thu",
+   "Fri",
+   "Sat"
+ ].forEach(
+   day => {
+
+     const h =
+       document.createElement(
+         "div"
+       );
+
+     h.textContent=day;
+
+     h.style.fontWeight="bold";
+
+     grid.appendChild(h);
+
+   }
+ );
+
+ const firstDay =
+   new Date(
+     year,
+     month,
+     1
+   ).getDay();
+
+ const days =
+   new Date(
+     year,
+     month+1,
+     0
+   ).getDate();
+
+ for(
+   let i=0;
+   i<firstDay;
+   i++
+ ){
+
+   const blank =
+     document.createElement(
+       "div"
+     );
+
+   grid.appendChild(
+     blank
+   );
+
+ }
+
+ for(
+   let day=1;
+   day<=days;
+   day++
+ ){
+
+   const iso =
+     localISO(
+       new Date(
+         year,
+         month,
+         day
+       )
+     );
+
+   const hasEvent =
+     events.some(
+       e =>
+         e.date===iso
+     );
+
+   const cell =
+     document.createElement(
+       "div"
+     );
+
+   cell.className =
+     "calCell";
+
+   if(
+     iso===today()
+   )
+     cell.classList.add(
+       "today"
+     );
+
+   if(hasEvent)
+     cell.classList.add(
+       "event"
+     );
+
+   cell.innerHTML =
+     "<b>"+
+     day+
+     "</b>"+
+     (
+       hasEvent
+       ?
+       '<span class="eventDot"></span>'
+       :
+       ""
+     );
+
+   cell.onclick =
+     async () => {
+
+       await goDate(
+         iso
+       );
+
+       closeModal(
+         "calendarModal"
+       );
+
+     };
+
+   grid.appendChild(
+     cell
+   );
+
+ }
+
+ const monthEvents =
+   events.filter(
+     e =>
+       e.date.startsWith(
+         year+
+         "-"+
+         String(
+           month+1
+         ).padStart(
+           2,
+           "0"
+         )
+       )
+   );
+
+ document
+   .getElementById(
+     "calendarEvents"
+   )
+   .innerHTML =
+     monthEvents.length
+     ?
+     monthEvents
+       .sort(
+         (a,b) =>
+           a.date.localeCompare(
+             b.date
+           )
+       )
+       .map(
+         e =>
+           `<p>
+             🗓️
+             <b>${e.date}</b>
+             ${e.time||""}
+             —
+             ${escapeHTML(e.title)}
+           </p>`
+       )
+       .join("")
+     :
+     "<p>No diary events this month.</p>";
+
+}
+
+
+document
+  .getElementById(
+    "calPrev"
+  )
+  .onclick =
+    () => {
+
+      calendarDate.setMonth(
+        calendarDate.getMonth()-1
+      );
+
+      renderCalendar();
+
+    };
+
+
+document
+  .getElementById(
+    "calNext"
+  )
+  .onclick =
+    () => {
+
+      calendarDate.setMonth(
+        calendarDate.getMonth()+1
+      );
+
+      renderCalendar();
+
+    };
+
+
+/* =========================================================
+   TODO
+========================================================= */
+
+async function renderTodos(){
+
+ const todos =
+   (
+     await getAll(
+       "todos"
+     )
+   )
+   .filter(
+     x =>
+       x.date===
+       currentDate
+   );
+
+ const list =
+   document
+     .getElementById(
+       "todoList"
+     );
+
+ if(!todos.length){
+
+   list.innerHTML =
+     "<p>No tasks for this date.</p>";
+
+   return;
+
+ }
+
+ list.innerHTML =
+   todos
+     .map(
+       item => `
+
+       <div
+         class="todoItem
+         ${item.done?"done":""}"
+       >
+
+         <input
+           type="checkbox"
+           ${item.done?"checked":""}
+           ${isPastDate()?"disabled":""}
+           onchange="
+             toggleTodo(
+               ${item.id},
+               this.checked
+             )
+           "
+         >
+
+         <span>
+           ${escapeHTML(item.text)}
+         </span>
+
+         ${
+           !isPastDate()
+           ?
+           `<button
+              onclick="
+                deleteTodo(
+                  ${item.id}
+                )
+              "
+            >
+              ×
+            </button>`
+           :
+           ""
+         }
+
+       </div>
+
+     `
+     )
+     .join("");
+
+}
+
+
+document
+  .getElementById(
+    "addTodo"
+  )
+  .onclick =
+    async () => {
+
+      if(isPastDate())
+        return;
+
+      const input =
+        document
+          .getElementById(
+            "todoText"
+          );
+
+      const text =
+        input.value.trim();
+
+      if(!text)
+        return;
+
+      await saveRecord(
+        "todos",
+        {
+          date:currentDate,
+
+          text:text,
+
+          done:false
+        }
+      );
+
+      input.value="";
+
+      await renderTodos();
+
+    };
+
+
+async function toggleTodo(
+  id,
+  done
+){
+
+ if(isPastDate())
+   return;
+
+ const item =
+   await getRecord(
+     "todos",
+     id
+   );
+
+ if(!item)
+   return;
+
+ item.done =
+   done;
+
+ await saveRecord(
+   "todos",
+   item
+ );
+
+ await renderTodos();
+
+}
+
+
+async function deleteTodo(id){
+
+ if(isPastDate())
+   return;
+
+ await deleteRecord(
+   "todos",
+   id
+ );
+
+ await renderTodos();
+
+}
+
+
+/* =========================================================
+   MEMORIES
+========================================================= */
+
+async function renderMemories(){
+
+ const memories =
+   (
+     await getAll(
+       "attachments"
+     )
+   )
+   .filter(
+     x =>
+       x.date===
+       currentDate
+   );
+
+ document
+   .getElementById(
+     "memoryList"
+   )
+   .innerHTML =
+     memories.length
+     ?
+     memories
+       .map(
+         m =>
+           `<div class="todoItem">
+             <span>
+               ${escapeHTML(m.name)}
+             </span>
+
+             <button
+               onclick="
+                 deleteMemory(
+                   ${m.id}
+                 )
+               "
+             >
+               Delete
+             </button>
+
+           </div>`
+       )
+       .join("")
+     :
+     "<p>No memories attached.</p>";
+
+}
+
+
+document
+  .getElementById(
+    "memoryInput"
+  )
+  .onchange =
+    event => {
+
+      [...event.target.files]
+        .forEach(
+          file => {
+
+            const reader =
+              new FileReader();
+
+            reader.onload =
+              async () => {
+
+                await saveRecord(
+                  "attachments",
+                  {
+                    date:currentDate,
+
+                    name:file.name,
+
+                    type:file.type,
+
+                    data:
+                      reader.result
+                  }
+                );
+
+                renderMemories();
+
+              };
+
+            reader.readAsDataURL(
+              file
+            );
+
+          }
+        );
+
+      event.target.value="";
+
+    };
+
+
+async function deleteMemory(id){
+
+ await deleteRecord(
+   "attachments",
+   id
+ );
+
+ renderMemories();
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+document
+  .querySelectorAll(
+    ".design"
+  )
+  .forEach(
+    design => {
+
+      design.onclick =
+        async () => {
+
+          pageRecord.design =
+            design.dataset.design;
+
+          await saveRecord(
+            "pages",
+            pageRecord
+          );
+
+          applyDesign(
+            pageRecord.design
+          );
+
+        };
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "fontSize"
+  )
+  .oninput =
+    event => {
+
+      localStorage.setItem(
+        "fontSize",
+        event.target.value
+      );
+
+      applyPageSettings();
+
+    };
+
+
+document
+  .getElementById(
+    "lineSize"
+  )
+  .oninput =
+    event => {
+
+      localStorage.setItem(
+        "lineHeight",
+        event.target.value
+      );
+
+      applyPageSettings();
+
+    };
+
+
+document
+  .getElementById(
+    "pageWidth"
+  )
+  .oninput =
+    event => {
+
+      localStorage.setItem(
+        "pageWidth",
+        event.target.value
+      );
+
+      applyPageSettings();
+
+    };
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+document
+  .getElementById(
+    "printBtn"
+  )
+  .onclick =
+    async () => {
+
+      await savePage();
+
+      const w =
+        window.open(
+          "",
+          "_blank"
+        );
+
+      if(!w){
+
+        alert(
+          "Please allow pop-ups for printing."
+        );
+
+        return;
+
+      }
+
+      w.document.write(
+        `
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <title>
+        ${escapeHTML(
+          formatDate(
+            currentDate
+          )
+        )}
+        </title>
+
+        <style>
+
+        body{
+          font-family:Georgia;
+          padding:40px;
+          line-height:1.8;
+        }
+
+        h1{
+          font-size:30px;
+        }
+
+        .quote{
+          font-style:italic;
+        }
+
+        </style>
+
+        </head>
+
+        <body>
+
+        <h1>
+        ${escapeHTML(
+          formatDate(
+            currentDate
+          )
+        )}
+        </h1>
+
+        <p class="quote">
+        ${escapeHTML(
+          pageRecord.quote
+        )}
+        </p>
+
+        ${pageRecord.content}
+
+        </body>
+
+        </html>
+        `
+      );
+
+      w.document.close();
+
+      setTimeout(
+        () => w.print(),
+        300
+      );
+
+    };
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+document
+  .getElementById(
+    "backupBtn"
+  )
+  .onclick =
+    async () => {
+
+      await savePage();
+
+      const data = {
+
+        version:8,
+
+        pages:
+          await getAll(
+            "pages"
+          ),
+
+        events:
+          await getAll(
+            "events"
+          ),
+
+        todos:
+          await getAll(
+            "todos"
+          ),
+
+        attachments:
+          await getAll(
+            "attachments"
+          ),
+
+        settings:{
+
+          fontSize:
+            localStorage.getItem(
+              "fontSize"
+            ),
+
+          lineHeight:
+            localStorage.getItem(
+              "lineHeight"
+            ),
+
+          pageWidth:
+            localStorage.getItem(
+              "pageWidth"
+            )
+
+        }
+
+      };
+
+      const blob =
+        new Blob(
+          [
+            JSON.stringify(
+              data
+            )
+          ],
+          {
+            type:
+              "application/json"
+          }
+        );
+
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+      const a =
+        document.createElement(
+          "a"
+        );
+
+      a.href=url;
+
+      a.download =
+        "my-personal-diary-backup.json";
+
+      a.click();
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    };
+
+
+/* =========================================================
+   RESTORE
+========================================================= */
+
+document
+  .getElementById(
+    "restoreBtn"
+  )
+  .onclick =
+    () =>
+      document
+        .getElementById(
+          "restoreInput"
+        )
+        .click();
+
+
+document
+  .getElementById(
+    "restoreInput"
+  )
+  .onchange =
+    async event => {
+
+      const file =
+        event.target.files[0];
+
+      if(!file)
+        return;
+
+      try{
+
+        const data =
+          JSON.parse(
+            await file.text()
+          );
+
+        for(
+          const item
+          of
+          data.pages || []
+        )
+          await saveRecord(
+            "pages",
+            item
+          );
+
+        for(
+          const item
+          of
+          data.events || []
+        )
+          await saveRecord(
+            "events",
+            item
+          );
+
+        for(
+          const item
+          of
+          data.todos || []
+        )
+          await saveRecord(
+            "todos",
+            item
+          );
+
+        for(
+          const item
+          of
+          data.attachments || []
+        )
+          await saveRecord(
+            "attachments",
+            item
+          );
+
+        if(data.settings){
+
+          Object.entries(
+            data.settings
+          ).forEach(
+            ([key,value]) => {
+
+              if(value!==null)
+                localStorage.setItem(
+                  key,
+                  value
+                );
+
+            }
+          );
+
+        }
+
+        await renderPage();
+
+        alert(
+          "Diary restored successfully."
+        );
+
+      }catch(error){
+
+        alert(
+          "Invalid diary backup."
+        );
+
+      }
+
+      event.target.value="";
+
+    };
+
+
+/* =========================================================
+   EVENT ALERT
+========================================================= */
+
+setInterval(
+  async () => {
+
+    const events =
+      await getAll(
+        "events"
+      );
+
+    const now =
+      new Date();
+
+    const currentTime =
+      now.toTimeString()
+        .slice(0,5);
+
+    events
+      .filter(
+        e =>
+          e.date===
+          today() &&
+          e.time===
+          currentTime
+      )
+      .forEach(
+        e => {
+
+          const key =
+            "diaryAlert-"+
+            e.id+
+            "-"+
+            today();
+
+          if(
+            !sessionStorage.getItem(
+              key
+            )
+          ){
+
+            sessionStorage.setItem(
+              key,
+              "1"
+            );
+
+            alert(
+              "🗓️ Diary Event\n\n"+
+              e.title+
+              (
+                e.notes
+                ?
+                "\n\n"+
+                e.notes
+                :
+                ""
+              )
+            );
+
+          }
+
+        }
+      );
+
+  },
+  30000
+);
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function escapeHTML(value){
-  return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+
+ return String(
+   value ?? ""
+ )
+ .replace(
+   /[&<>"']/g,
+   character => ({
+     "&":"&amp;",
+     "<":"&lt;",
+     ">":"&gt;",
+     '"':"&quot;",
+     "'":"&#039;"
+   })[character]
+ );
+
 }
 
-/* =========================================================
-   MIGRATION FROM OLDER SIMPLE STORAGE
-   ========================================================= */
-
-function migrateOldData(){
-  try{
-    const old=localStorage.getItem("myPersonalDiaryEntries");
-
-    if(old && Object.keys(pages).length===0){
-      const data=JSON.parse(old);
-
-      Object.keys(data).forEach(date=>{
-        const value=data[date];
-
-        pages[date+"_1"]={
-          id:date+"_1",
-          date,
-          page:1,
-          content:
-            typeof value==="string"
-              ? value
-              : (value.content||""),
-          mood:
-            typeof value==="object"
-              ? (value.mood||"")
-              : "",
-          quote:defaultQuote(),
-          strokes:[]
-        };
-      });
-
-      saveJSON(PAGE_KEY,pages);
-    }
-  }catch(e){
-    console.log("Migration skipped",e);
-  }
-}
 
 /* =========================================================
-   NAVIGATION WITH TODO CARRY FORWARD
-   ========================================================= */
+   START
+========================================================= */
 
-const originalGoToDate=goToDate;
+(async function(){
 
-goToDate=function(date){
-  const oldDate=currentDate;
+ try{
 
-  if(date>oldDate){
-    carryTodosForward(oldDate,date);
-  }
+   await openDB();
 
-  savePageNow();
+   await renderPage();
 
-  currentDate=date;
-  currentPage=1;
+ }catch(error){
 
-  loadPage();
-};
+   console.error(
+     error
+   );
 
-/* =========================================================
-   INITIALISE
-   ========================================================= */
+   alert(
+     "Diary database could not be opened. Please reload the diary."
+   );
 
-migrateOldData();
+ }
 
-document.getElementById("datePicker").value=currentDate;
-
-loadPage();
-
-setInterval(()=>{
-  savePageNow();
-},10000);
-
-document.addEventListener("visibilitychange",()=>{
-  if(document.hidden){
-    savePageNow();
-  }
-});
-
-window.addEventListener("beforeunload",()=>{
-  savePageNow();
-});
-
-checkEventAlerts();
+})();
 
 </script>
+
 </body>
 </html>

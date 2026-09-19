@@ -2,27 +2,39 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#5b3a24">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#6f472b">
 <link rel="manifest" href="manifest.json">
 <title>My Personal Diary</title>
 
 <style>
 *{box-sizing:border-box}
 
+:root{
+  --wood:#c9ad80;
+  --wood2:#b89464;
+  --paper:#fffdf2;
+  --ink:#3b2a1e;
+  --brown:#5a371f;
+  --line:rgba(100,75,40,.22);
+  --accent:#7b4b29;
+  --shadow:0 15px 35px rgba(65,40,15,.28);
+}
+
 html,body{
   margin:0;
   padding:0;
   min-height:100%;
+  font-family:Georgia,"Times New Roman",serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.25),transparent 30%),
+    linear-gradient(135deg,var(--wood),var(--wood2));
 }
 
 body{
-  font-family:Georgia,"Times New Roman",serif;
-  color:#3c2a1d;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.35),transparent 30%),
-    radial-gradient(circle at 80% 80%,rgba(120,75,30,.15),transparent 35%),
-    linear-gradient(135deg,#d9bf96,#b99364,#d8bd91);
+  min-height:100vh;
+  overflow-x:hidden;
 }
 
 button,input,select,textarea{
@@ -30,523 +42,491 @@ button,input,select,textarea{
 }
 
 button{
-  border:1px solid #b9976d;
-  background:#fffdf7;
-  color:#493322;
-  border-radius:9px;
-  padding:9px 13px;
   cursor:pointer;
-  box-shadow:0 2px 4px rgba(0,0,0,.13);
 }
 
-button:hover{
-  background:#f4e8d3;
+button:disabled{
+  opacity:.45;
+  cursor:not-allowed;
 }
-
-button:active{
-  transform:translateY(1px);
-}
-
-[hidden]{
-  display:none!important;
-}
-
-/* =========================================================
-   TOP BAR
-========================================================= */
 
 .topbar{
-  width:96%;
-  margin:16px auto 10px;
-  padding:10px 13px;
+  margin:14px 18px 8px;
+  padding:10px 14px;
+  min-height:58px;
   border-radius:18px;
+  background:linear-gradient(180deg,#694329,#4e2e1c);
+  box-shadow:0 8px 20px rgba(50,25,10,.35);
+  color:#fff;
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:8px;
   flex-wrap:wrap;
-  background:linear-gradient(#634027,#432817);
-  color:#fff8ec;
-  box-shadow:0 8px 20px rgba(60,35,15,.28);
 }
 
 .brand{
-  font-size:24px;
+  font-size:22px;
   font-weight:bold;
   margin-right:auto;
   white-space:nowrap;
 }
 
-.topbar button{
-  font-size:15px;
-}
-
-/* =========================================================
-   DATE BAR
-========================================================= */
-
-.datebar{
-  width:96%;
-  margin:0 auto 18px;
+.toolbar{
   display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.datebar input{
-  width:210px;
-  padding:10px;
-  border:1px solid #b9976d;
-  border-radius:9px;
-  background:#fffdf8;
-}
-
-/* =========================================================
-   DIARY BOOK
-========================================================= */
-
-.diary{
-  width:94%;
-  max-width:1500px;
-  margin:0 auto 40px;
-  position:relative;
-  padding-left:82px;
-}
-
-/* Natural binding area */
-.binding{
-  position:absolute;
-  left:5px;
-  top:18px;
-  bottom:18px;
-  width:72px;
-  z-index:20;
-  pointer-events:none;
-}
-
-.binding-hole{
-  position:absolute;
-  left:3px;
-  width:47px;
-  height:29px;
-  border-radius:50%;
-  background:
-    radial-gradient(
-      ellipse at 42% 30%,
-      #f3f3f3 0,
-      #b8b8b8 25%,
-      #555 52%,
-      #252525 65%,
-      #aaa 78%,
-      #444 100%
-    );
-  box-shadow:
-    inset 2px 2px 4px rgba(0,0,0,.65),
-    3px 4px 5px rgba(0,0,0,.25);
-}
-
-.binding-hole:before{
-  content:"";
-  position:absolute;
-  left:7px;
-  top:10px;
-  width:33px;
-  height:7px;
-  border-radius:50%;
-  background:rgba(30,20,10,.55);
-}
-
-.binding-hole:nth-child(1){top:0}
-.binding-hole:nth-child(2){top:9%}
-.binding-hole:nth-child(3){top:18%}
-.binding-hole:nth-child(4){top:27%}
-.binding-hole:nth-child(5){top:36%}
-.binding-hole:nth-child(6){top:45%}
-.binding-hole:nth-child(7){top:54%}
-.binding-hole:nth-child(8){top:63%}
-.binding-hole:nth-child(9){top:72%}
-.binding-hole:nth-child(10){top:81%}
-.binding-hole:nth-child(11){top:90%}
-
-.page{
-  position:relative;
-  min-height:1250px;
-  padding:70px 75px 100px 95px;
-  overflow:hidden;
-
-  border:1px solid #b49367;
-  border-radius:5px 20px 20px 5px;
-
-  background-color:#fff8dd;
-
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 39px,
-      rgba(93,133,143,.22) 40px,
-      transparent 41px
-    ),
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(120,80,35,.06),
-      transparent 38%
-    );
-
-  box-shadow:
-    0 18px 32px rgba(62,39,20,.32),
-    inset 0 0 35px rgba(115,75,30,.13);
-}
-
-/* page designs */
-
-.page.classic{
-  background-color:#fff8dd;
-}
-
-.page.vintage{
-  background-color:#f0dfba;
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 39px,
-      rgba(115,88,55,.22) 40px,
-      transparent 41px
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(110,70,25,.09),
-      transparent 35%
-    );
-}
-
-.page.natural{
-  background-color:#fff7e5;
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 39px,
-      rgba(105,135,105,.21) 40px,
-      transparent 41px
-    );
-}
-
-.page.blue{
-  background-color:#edf5f3;
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 39px,
-      rgba(70,115,125,.22) 40px,
-      transparent 41px
-    );
-}
-
-.page.night{
-  background-color:#29251f;
-  color:#eee1c7;
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 39px,
-      rgba(220,190,130,.13) 40px,
-      transparent 41px
-    );
-}
-
-/* =========================================================
-   PAGE HEADER
-========================================================= */
-
-.pageHeader{
-  position:relative;
-  z-index:5;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:20px;
-}
-
-.pageHeader h1{
-  margin:0 0 2px;
-  font-size:34px;
-}
-
-.pageNumber{
-  font-size:15px;
-  opacity:.7;
-}
-
-/* Mood and quote directly on diary */
-
-.pageTopRight{
-  display:flex;
-  align-items:center;
-  gap:10px;
+  gap:6px;
   flex-wrap:wrap;
   justify-content:flex-end;
 }
 
-.moodDisplay{
-  min-width:58px;
-  min-height:45px;
-  padding:4px 9px;
-  border:1px solid #c7aa7d;
-  border-radius:12px;
-  background:rgba(255,252,240,.78);
+.topbtn{
+  border:0;
+  background:#fffaf0;
+  color:#4a301f;
+  padding:9px 12px;
+  border-radius:11px;
+  box-shadow:0 2px 5px rgba(0,0,0,.18);
+  white-space:nowrap;
+}
+
+.topbtn:active{
+  transform:translateY(1px);
+}
+
+.datebar{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px 15px;
+}
+
+.datebar button,
+.datebar input{
+  background:#fffaf0;
+  border:1px solid #b99a70;
+  border-radius:10px;
+  padding:9px 14px;
+  color:#4a301f;
+}
+
+.datebar input{
+  width:170px;
   text-align:center;
-  font-size:30px;
-  box-shadow:0 2px 5px rgba(80,50,20,.12);
+}
+
+/* PROFESSIONAL NOTEBOOK */
+
+.bookArea{
+  width:min(1450px,96vw);
+  margin:0 auto 35px;
+  position:relative;
+  padding:0 28px 35px;
+}
+
+.book{
+  position:relative;
+  width:100%;
+  min-height:calc(100vh - 210px);
+  border-radius:10px 20px 20px 10px;
+  background:
+    linear-gradient(90deg,
+      rgba(255,255,255,.55),
+      rgba(255,255,255,.08) 5%,
+      rgba(255,255,255,0) 15%);
+  box-shadow:var(--shadow);
+  padding:18px 24px 24px 58px;
+}
+
+/* natural centre/spiral structure */
+.binding{
+  position:absolute;
+  left:4px;
+  top:15px;
+  bottom:15px;
+  width:48px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+  align-items:center;
+  z-index:20;
+  pointer-events:none;
+}
+
+.ring{
+  width:36px;
+  height:17px;
+  border-radius:50%;
+  background:
+    linear-gradient(180deg,#dadada 0%,#676767 38%,#272727 58%,#bcbcbc 100%);
+  box-shadow:
+    0 3px 3px rgba(0,0,0,.4),
+    inset 0 2px 2px rgba(255,255,255,.6);
+  transform:rotate(-1deg);
+}
+
+.paper{
+  position:relative;
+  width:100%;
+  min-height:calc(100vh - 250px);
+  background:
+    linear-gradient(90deg,
+      rgba(130,90,45,.12),
+      transparent 4%,
+      transparent 96%,
+      rgba(130,90,45,.08)),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 31px,
+      var(--line) 32px,
+      transparent 33px
+    ),
+    linear-gradient(#fffef7,#fff9e9);
+  border:1px solid #d1b98e;
+  border-radius:7px 18px 18px 7px;
+  box-shadow:
+    inset 8px 0 12px rgba(100,70,30,.09),
+    inset -3px 0 8px rgba(100,70,30,.07),
+    0 3px 12px rgba(80,50,20,.12);
+  overflow:hidden;
+}
+
+/* subtle paper centre fold */
+.paper:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:13px;
+  background:linear-gradient(
+    90deg,
+    rgba(90,55,25,.13),
+    rgba(255,255,255,.55),
+    transparent
+  );
+  pointer-events:none;
+}
+
+.pageHead{
+  position:relative;
+  z-index:5;
+  padding:20px 46px 5px 38px;
+}
+
+.dateTitle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+#pageTitle{
+  margin:0;
+  font-size:clamp(20px,2.8vw,34px);
+  line-height:1.1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  flex:1;
+}
+
+.pageNumber{
+  color:#8a6b4b;
+  font-size:14px;
+  white-space:nowrap;
+}
+
+.pageActions{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:7px;
+  margin-top:-8px;
+}
+
+.paperBtn{
+  border:1px solid #c6a87c;
+  background:rgba(255,252,238,.88);
+  border-radius:9px;
+  padding:6px 10px;
+  color:#55351f;
+}
+
+.moodDisplay{
+  position:absolute;
+  left:38px;
+  top:84px;
+  font-size:25px;
+  min-height:30px;
 }
 
 .quoteDisplay{
-  max-width:330px;
-  padding:9px 13px;
-  border-left:3px solid #a67b45;
-  border-radius:6px;
-  background:rgba(255,252,239,.55);
+  position:relative;
+  z-index:5;
+  margin:8px 45px 4px 38px;
+  padding:8px 14px;
+  border-left:3px solid #a87948;
+  color:#6b5037;
   font-style:italic;
-  font-size:14px;
-  line-height:20px;
+  background:rgba(255,255,255,.28);
+  border-radius:4px;
 }
 
-/* =========================================================
-   FORMATTING BAR - SEPARATE FROM DIARY
-========================================================= */
+.quoteDisplay:empty{
+  display:none;
+}
 
+/* formatting controls are separate */
 .formatBar{
   position:relative;
-  z-index:15;
+  z-index:10;
+  margin:7px 40px 0 38px;
   display:flex;
-  align-items:center;
-  gap:6px;
-  margin:17px 0 8px;
-  padding:7px 9px;
-  border:1px solid #cdb185;
-  border-radius:10px;
-  background:rgba(255,252,239,.88);
-  box-shadow:0 2px 6px rgba(80,50,20,.08);
+  flex-wrap:wrap;
+  gap:5px;
+  padding:7px;
+  background:rgba(248,238,215,.9);
+  border:1px solid #d0b386;
+  border-radius:9px;
 }
 
 .formatBar button{
-  min-width:38px;
-  padding:6px 9px;
+  min-width:36px;
+  height:32px;
+  border:1px solid #c2a276;
+  border-radius:6px;
+  background:#fffaf0;
+  color:#4d321e;
+  font-weight:bold;
 }
 
-.formatBar .separator{
-  width:1px;
-  height:25px;
-  background:#cbb28c;
+.formatBar button.active{
+  background:#6b4327;
+  color:white;
 }
 
-/* =========================================================
-   WRITING AREA
-========================================================= */
-
-.editorArea{
+/* writing area */
+.editorWrap{
   position:relative;
-  min-height:900px;
+  z-index:4;
+  margin:0 45px 30px 38px;
+  min-height:calc(100vh - 430px);
 }
 
-/*
-   The editor is deliberately above the canvas.
-   In normal mode it receives typing.
-   In draw mode the canvas receives touch/stylus input.
-*/
-
-.editor{
+#editor{
   position:relative;
-  z-index:2;
-  min-height:900px;
+  z-index:3;
+  min-height:calc(100vh - 430px);
+  padding:8px 18px 70px 5px;
   outline:none;
-  font-size:20px;
-  line-height:40px;
-  padding:0 5px;
-  word-wrap:break-word;
+  font-size:19px;
+  line-height:32px;
+  color:#342519;
+  word-break:break-word;
 }
 
-.editor:empty:before{
+#editor:empty:before{
   content:"Start writing here...";
-  color:rgba(90,60,30,.34);
-  pointer-events:none;
+  color:#b09a7e;
+  font-style:italic;
 }
 
-/* =========================================================
-   DRAWING LAYER
-========================================================= */
+#editor ul,
+#editor ol{
+  margin-top:0;
+  margin-bottom:0;
+  padding-left:30px;
+}
 
+#editor li{
+  padding-left:4px;
+  line-height:32px;
+}
+
+/* DRAWING IS INSIDE SAME PAGE */
 #drawCanvas{
   position:absolute;
-  z-index:30;
-  left:0;
-  top:0;
+  inset:0;
   width:100%;
   height:100%;
-  display:none;
-  background:transparent;
+  z-index:8;
+  pointer-events:none;
   touch-action:none;
+  background:transparent;
 }
 
-.page.drawMode #drawCanvas{
-  display:block;
+.drawMode #drawCanvas{
+  pointer-events:auto;
   cursor:crosshair;
 }
 
-.page.drawMode .editor{
+.drawMode #editor{
   pointer-events:none;
 }
 
-.page.drawMode .formatBar{
-  opacity:.45;
-}
-
-/* Draw controls are NOT a modal */
-
-.drawBar{
-  position:fixed;
-  z-index:3000;
-  left:50%;
-  bottom:14px;
-  transform:translateX(-50%);
-  width:max-content;
-  max-width:96vw;
-  display:flex;
-  gap:5px;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  padding:9px;
-  border-radius:14px;
-  background:rgba(61,39,23,.97);
-  box-shadow:0 10px 35px rgba(0,0,0,.4);
-}
-
-.drawBar button{
-  padding:7px 10px;
-  font-size:14px;
-}
-
-.drawBar button.active{
-  background:#dfbd7c;
-  color:#2f1c0e;
-  font-weight:bold;
-}
-
-.drawBar input[type=color]{
-  width:38px;
-  height:34px;
-  padding:2px;
-}
-
-/* =========================================================
-   NEW PAGE TAB
-========================================================= */
-
-.newPageTab{
+.drawToolbar{
   position:absolute;
-  right:-1px;
-  bottom:25px;
-  z-index:50;
-  border-radius:13px 0 0 13px;
-  background:#e7ce9d;
-  font-weight:bold;
-  box-shadow:-2px 3px 7px rgba(60,40,20,.18);
+  z-index:15;
+  top:10px;
+  right:18px;
+  display:none;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:5px;
+  padding:7px;
+  background:#4d301f;
+  border-radius:10px;
+  box-shadow:0 5px 12px rgba(0,0,0,.3);
 }
 
-/* =========================================================
-   FOOTER
-========================================================= */
+.drawMode .drawToolbar{
+  display:flex;
+}
 
+.drawToolbar button{
+  border:0;
+  background:#fffaf0;
+  color:#392417;
+  padding:6px 9px;
+  border-radius:6px;
+}
+
+.drawToolbar button.selected{
+  background:#d5ae70;
+}
+
+.drawToolbar .closeDraw{
+  background:#c85c43;
+  color:#fff;
+}
+
+/* New Page */
+.newPage{
+  position:absolute;
+  right:-4px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:30;
+  writing-mode:vertical-rl;
+  border:1px solid #a47a4d;
+  background:#f4dfb8;
+  color:#56351f;
+  padding:15px 8px;
+  border-radius:8px 0 0 8px;
+  box-shadow:0 4px 9px rgba(60,35,15,.25);
+  font-weight:bold;
+}
+
+/* bottom status */
 .pageFooter{
   position:absolute;
-  z-index:5;
-  left:95px;
-  right:75px;
-  bottom:30px;
+  bottom:12px;
+  left:38px;
+  right:45px;
+  z-index:10;
   display:flex;
   justify-content:space-between;
+  color:#8c704e;
   font-size:13px;
-  opacity:.62;
 }
 
-/* =========================================================
-   MODALS
-========================================================= */
-
+/* MODALS */
 .modal{
   position:fixed;
   inset:0;
-  z-index:5000;
-  display:flex;
-  justify-content:center;
+  background:rgba(30,18,10,.48);
+  display:none;
   align-items:center;
+  justify-content:center;
+  z-index:1000;
   padding:15px;
-  background:rgba(25,15,8,.58);
+}
+
+.modal.show{
+  display:flex;
 }
 
 .modalBox{
-  width:min(760px,96vw);
-  max-height:92vh;
+  width:min(700px,96vw);
+  max-height:90vh;
   overflow:auto;
-  padding:22px;
-  border-radius:18px;
   background:#fffaf0;
-  box-shadow:0 20px 65px rgba(0,0,0,.42);
+  border:1px solid #c8aa7d;
+  border-radius:16px;
+  box-shadow:0 18px 45px rgba(0,0,0,.4);
+  padding:20px;
+  color:#422b1b;
 }
 
 .modalBox h2{
-  margin-top:0;
-  color:#5a3921;
+  margin:0 0 15px;
 }
 
-.formRow{
+.modalHead{
   display:flex;
-  gap:10px;
-  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.close{
+  border:0;
+  background:#6a4227;
+  color:#fff;
+  border-radius:7px;
+  padding:7px 12px;
+}
+
+.field{
   margin:10px 0;
 }
 
-.formRow>*{
-  flex:1;
-  min-width:150px;
+.field label{
+  display:block;
+  margin-bottom:5px;
+  font-weight:bold;
 }
 
-.modal input,
-.modal select,
-.modal textarea{
+.field input,
+.field textarea,
+.field select{
   width:100%;
-  padding:10px;
-  margin:5px 0 10px;
-  border:1px solid #c6aa7d;
+  border:1px solid #c6a87b;
   border-radius:8px;
-  background:#fff;
+  padding:9px;
+  background:#fffdf7;
 }
 
-.modal textarea{
-  min-height:100px;
+.primary{
+  border:0;
+  border-radius:8px;
+  padding:9px 14px;
+  background:#70472a;
+  color:#fff;
+}
+
+.secondary{
+  border:1px solid #c6a87b;
+  border-radius:8px;
+  padding:9px 14px;
+  background:#fff8eb;
+  color:#4b301f;
 }
 
 .modalActions{
   display:flex;
   justify-content:flex-end;
-  gap:10px;
+  gap:8px;
   margin-top:15px;
 }
 
-/* =========================================================
-   CALENDAR
-========================================================= */
-
-.calendarHeader{
+/* calendar */
+.calendarHead{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:10px;
+  margin-bottom:12px;
 }
 
 .calendarGrid{
@@ -555,199 +535,236 @@ button:active{
   gap:4px;
 }
 
-.calendarWeek{
-  text-align:center;
-  font-weight:bold;
-  padding:8px 2px;
+.calDay{
+  min-height:45px;
+  border:1px solid #dfccb0;
+  background:#fffdf7;
+  border-radius:6px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
 }
 
-.calendarDay{
-  min-height:78px;
-  padding:5px;
-  border:1px solid #dcc39d;
-  border-radius:7px;
-  background:#fff;
-  cursor:pointer;
-}
-
-.calendarDay:hover{
-  background:#f5ead8;
-}
-
-.calendarDay.today{
-  border:2px solid #8a5a30;
-}
-
-.calendarDay.selected{
-  background:#ead5ac;
-}
-
-.calendarNumber{
+.calDay.head{
+  min-height:30px;
+  background:#ead8ba;
   font-weight:bold;
 }
 
-.calendarEvent{
-  margin-top:4px;
-  padding:2px 4px;
-  border-radius:4px;
-  background:#e7d0a5;
-  font-size:11px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.calDay.today{
+  outline:2px solid #8b5a32;
 }
 
-/* =========================================================
-   EVENT / TODO
-========================================================= */
-
-.eventItem,
-.todoItem,
-.memoryItem{
-  padding:9px;
-  margin:7px 0;
-  border:1px solid #ddc29a;
-  border-radius:8px;
-  background:#fff;
+.calDay.hasEvent:after{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#c34d32;
+  position:absolute;
+  bottom:4px;
 }
 
-.eventItem strong{
-  display:block;
-  font-size:17px;
-  margin-bottom:4px;
-}
-
-.todoItem{
+/* lists */
+.itemRow{
   display:flex;
   align-items:center;
   gap:8px;
+  padding:8px;
+  border-bottom:1px solid #e0cdb1;
 }
 
-.todoItem span{
+.itemRow span{
   flex:1;
 }
 
-.todoItem.done span{
+.done{
   text-decoration:line-through;
   opacity:.55;
 }
 
-/* =========================================================
-   MEMORY
-========================================================= */
+.eventDate{
+  color:#876747;
+  font-size:13px;
+}
 
-.memoryGrid{
+.moodChoices{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:10px;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
 }
 
-.memoryCard img{
-  width:100%;
-  height:120px;
-  object-fit:cover;
-  border-radius:8px;
-}
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-#status{
-  position:fixed;
-  right:15px;
-  bottom:15px;
-  z-index:6000;
-  display:none;
-  padding:10px 15px;
+.moodChoice{
+  font-size:28px;
+  padding:9px;
+  border:1px solid #ddc8a5;
   border-radius:9px;
-  background:#3d291b;
-  color:white;
+  background:#fffdf5;
 }
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* alert */
+.alertBox{
+  border-left:5px solid #bd4e35;
+  background:#fff3e7;
+  padding:12px;
+  margin:8px 0;
+  border-radius:6px;
+}
 
-@media(max-width:750px){
+/* settings */
+.settingRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid #e1d0b6;
+}
 
+/* mobile */
+@media(max-width:700px){
   .topbar{
-    width:98%;
-    justify-content:center;
+    margin:6px;
+    padding:8px;
+    border-radius:12px;
   }
 
   .brand{
     width:100%;
-    text-align:center;
-    margin-bottom:4px;
+    font-size:18px;
+    margin-bottom:2px;
   }
 
-  .topbar button{
+  .toolbar{
+    width:100%;
+    justify-content:flex-start;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    padding-bottom:2px;
+  }
+
+  .topbtn{
     font-size:13px;
-    padding:7px 8px;
+    padding:8px 9px;
   }
 
-  .diary{
-    width:98%;
-    padding-left:43px;
+  .datebar{
+    gap:5px;
+    padding-bottom:8px;
+  }
+
+  .datebar input{
+    width:145px;
+    padding:8px 5px;
+  }
+
+  .bookArea{
+    width:100%;
+    padding:0 8px 20px 18px;
+  }
+
+  .book{
+    padding:8px 9px 20px 34px;
+    min-height:calc(100vh - 190px);
   }
 
   .binding{
-    left:2px;
-    width:39px;
+    width:28px;
   }
 
-  .binding-hole{
-    width:32px;
-    height:22px;
+  .ring{
+    width:27px;
+    height:13px;
   }
 
-  .page{
-    min-height:1150px;
-    padding:55px 25px 90px 50px;
+  .paper{
+    min-height:calc(100vh - 215px);
   }
 
-  .pageHeader h1{
-    font-size:24px;
+  .pageHead{
+    padding:13px 20px 4px 18px;
   }
 
-  .pageTopRight{
-    gap:5px;
+  #pageTitle{
+    font-size:18px;
+  }
+
+  .pageNumber{
+    font-size:11px;
+  }
+
+  .moodDisplay{
+    left:18px;
+    top:61px;
+    font-size:20px;
+  }
+
+  .pageActions{
+    margin-top:0;
   }
 
   .quoteDisplay{
-    max-width:170px;
+    margin:7px 18px 4px 18px;
+    font-size:13px;
+  }
+
+  .formatBar{
+    margin:5px 18px 0;
+    gap:3px;
+  }
+
+  .formatBar button{
+    min-width:31px;
+    height:29px;
+    font-size:13px;
+  }
+
+  .editorWrap{
+    margin:0 20px 25px 18px;
+    min-height:calc(100vh - 380px);
+  }
+
+  #editor{
+    min-height:calc(100vh - 380px);
+    padding:5px 4px 60px;
+    font-size:16px;
+    line-height:28px;
+  }
+
+  #editor li{
+    line-height:28px;
+  }
+
+  .newPage{
+    right:-2px;
     font-size:12px;
-    line-height:17px;
-  }
-
-  .editorArea,
-  .editor{
-    min-height:850px;
-  }
-
-  .editor{
-    font-size:18px;
-    line-height:40px;
+    padding:12px 6px;
   }
 
   .pageFooter{
-    left:50px;
-    right:25px;
+    left:18px;
+    right:20px;
   }
 
-  .newPageTab{
-    font-size:13px;
-    padding:7px 10px;
+  .moodChoices{
+    grid-template-columns:repeat(4,1fr);
   }
 
-  .drawBar{
-    bottom:7px;
+  .modalBox{
+    padding:14px;
+  }
+}
+
+@media(min-width:701px) and (max-width:1100px){
+  .book{
+    min-height:calc(100vh - 220px);
   }
 
-  .drawBar button{
-    font-size:12px;
-    padding:6px 8px;
+  .paper,
+  #editor{
+    min-height:calc(100vh - 270px);
   }
 }
 </style>
@@ -755,366 +772,363 @@ button:active{
 
 <body>
 
-<!-- =======================================================
-     TOP BAR
-======================================================= -->
-
 <header class="topbar">
-
   <div class="brand">📖 My Personal Diary</div>
 
-  <button id="calendarBtn">📅 Calendar</button>
-  <button id="eventBtn">🗓️ Events</button>
-  <button id="memoryBtn">🖼️ Memories</button>
-  <button id="todoBtn">☑️ To-do</button>
-  <button id="drawBtn">✏️ Draw</button>
-  <button id="settingsBtn">⚙️ Settings</button>
-  <button id="printBtn">🖨️ Print</button>
-  <button id="backupBtn">💾 Backup</button>
-  <button id="restoreBtn">↩️ Restore</button>
-
-  <input id="restoreInput" type="file" accept=".json,application/json" hidden>
-
+  <div class="toolbar">
+    <button class="topbtn" onclick="openCalendar()">📅 Calendar</button>
+    <button class="topbtn" onclick="openEvents()">🗓 Event</button>
+    <button class="topbtn" onclick="openTodo()">☑ To-do</button>
+    <button class="topbtn" onclick="openMood()">😊 Mood</button>
+    <button class="topbtn" onclick="openDraw()">✏️ Draw</button>
+    <button class="topbtn" onclick="changeQuote()">💬 Quote</button>
+    <button class="topbtn" onclick="printPage()">🖨 Print</button>
+    <button class="topbtn" onclick="backupDiary()">💾 Backup</button>
+    <button class="topbtn" onclick="restoreDiary()">↩ Restore</button>
+    <button class="topbtn" onclick="openSettings()">⚙ Settings</button>
+  </div>
 </header>
 
-<!-- DATE -->
-
 <div class="datebar">
-  <button id="prevBtn">‹ Previous</button>
-  <input id="datePicker" type="date">
-  <button id="nextBtn">Next ›</button>
+  <button onclick="changeDate(-1)">‹ Previous</button>
+  <input id="datePicker" type="date" onchange="goToDate(this.value)">
+  <button onclick="changeDate(1)">Next ›</button>
 </div>
 
-<!-- =======================================================
-     DIARY
-======================================================= -->
+<main class="bookArea">
+  <div class="book">
 
-<main class="diary">
+    <div class="binding" aria-hidden="true">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+    </div>
 
-  <div class="binding">
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-    <div class="binding-hole"></div>
-  </div>
+    <section class="paper" id="paper">
 
-  <section class="page classic" id="page">
+      <div class="pageHead">
+        <div class="dateTitle">
+          <h1 id="pageTitle"></h1>
+          <span class="pageNumber" id="pageNumber"></span>
+        </div>
 
-    <div class="pageHeader">
+        <div class="moodDisplay" id="moodDisplay"></div>
 
-      <div>
-        <h1 id="pageTitle"></h1>
-        <div class="pageNumber" id="pageNumber">Page 1</div>
-      </div>
+        <div class="pageActions">
+          <button class="paperBtn" onclick="changeQuote()">💬 Quote</button>
+        </div>
 
-      <div class="pageTopRight">
-
-        <!-- Mood selector -->
-        <select id="moodSelect" title="Select mood">
-          <option value="">Mood</option>
-          <option value="😊">😊 Happy</option>
-          <option value="😌">😌 Peaceful</option>
-          <option value="😍">😍 Excited</option>
-          <option value="🙏">🙏 Grateful</option>
-          <option value="😐">😐 Normal</option>
-          <option value="😔">😔 Sad</option>
-          <option value="😡">😡 Angry</option>
-          <option value="😴">😴 Tired</option>
-        </select>
-
-        <!-- Selected mood appears here -->
-        <div class="moodDisplay" id="moodDisplay">🙂</div>
-
-        <!-- Quote appears directly on paper -->
         <div class="quoteDisplay" id="quoteDisplay"></div>
+      </div>
+
+      <div class="formatBar" id="formatBar">
+        <button onmousedown="formatCmd(event,'bold')" title="Bold"><b>B</b></button>
+        <button onmousedown="formatCmd(event,'italic')" title="Italic"><i>I</i></button>
+        <button onmousedown="formatCmd(event,'underline')" title="Underline"><u>U</u></button>
+        <button onmousedown="formatCmd(event,'insertUnorderedList')" title="Bullet list">•</button>
+        <button onmousedown="formatCmd(event,'insertOrderedList')" title="Numbered list">1.</button>
+        <button onmousedown="formatCmd(event,'justifyLeft')" title="Left">≡</button>
+        <button onmousedown="formatCmd(event,'justifyCenter')" title="Center">≣</button>
+        <button onmousedown="formatCmd(event,'removeFormat')" title="Clear formatting">Tx</button>
+      </div>
+
+      <div class="editorWrap" id="editorWrap">
+
+        <div
+          id="editor"
+          contenteditable="true"
+          spellcheck="true"
+          oninput="scheduleSave()">
+        </div>
+
+        <!-- DRAWING IS PART OF THIS SAME PAGE -->
+        <canvas id="drawCanvas"></canvas>
+
+        <div class="drawToolbar" id="drawToolbar">
+          <button id="penBtn" class="selected" onclick="setDrawTool('pen')">✏ Pen</button>
+          <button id="lineBtn" onclick="setDrawTool('line')">╱ Line</button>
+          <button id="circleBtn" onclick="setDrawTool('circle')">◯ Circle</button>
+          <button id="eraserBtn" onclick="setDrawTool('eraser')">⌫ Eraser</button>
+          <button onclick="undoDraw()">↶</button>
+          <button onclick="redoDraw()">↷</button>
+          <button onclick="clearDraw()">Clear</button>
+          <button class="closeDraw" onclick="closeDraw()">Close Draw</button>
+        </div>
 
       </div>
 
-    </div>
+      <button class="newPage" onclick="newPage()">＋ New Page</button>
 
-    <!-- SEPARATE FORMATTING TOOLBAR -->
-    <div class="formatBar">
-
-      <button id="boldBtn" title="Bold"><b>B</b></button>
-      <button id="italicBtn" title="Italic"><i>I</i></button>
-      <button id="underlineBtn" title="Underline"><u>U</u></button>
-
-      <div class="separator"></div>
-
-      <button id="bulletBtn" title="Bullet list">• List</button>
-      <button id="leftBtn" title="Align left">≡</button>
-      <button id="centerBtn" title="Center">≡</button>
-
-    </div>
-
-    <!-- WRITING + DRAWING -->
-    <div class="editorArea" id="editorArea">
-
-      <div
-        id="editor"
-        class="editor"
-        contenteditable="true"
-        spellcheck="true">
+      <div class="pageFooter">
+        <span id="saveStatus">Saved</span>
+        <span id="wordCount">0 words</span>
       </div>
 
-      <!-- transparent drawing canvas -->
-      <canvas id="drawCanvas"></canvas>
-
-    </div>
-
-    <!-- NEW PAGE AT RIGHT -->
-    <button class="newPageTab" id="newPageBtn">
-      ＋ New Page
-    </button>
-
-    <div class="pageFooter">
-      <span id="saveStatus">Ready</span>
-      <span>My Personal Diary</span>
-    </div>
-
-  </section>
-
+    </section>
+  </div>
 </main>
 
-<!-- =======================================================
-     DRAW TOOLBAR
-======================================================= -->
-
-<div class="drawBar" id="drawBar" hidden>
-
-  <button id="penBtn" class="active">✏️ Pen</button>
-  <button id="lineBtn">╱ Line</button>
-  <button id="circleBtn">◯ Circle</button>
-  <button id="eraserBtn">⌫ Eraser</button>
-
-  <input id="drawColor" type="color" value="#222222">
-
-  <button id="undoBtn">↶ Undo</button>
-  <button id="redoBtn">↷ Redo</button>
-  <button id="clearDrawingBtn">🗑 Clear</button>
-
-  <button id="closeDrawBtn">✕ Close Draw</button>
-
-</div>
-
-<!-- =======================================================
-     CALENDAR
-======================================================= -->
-
-<div class="modal" id="calendarModal" hidden>
-
+<!-- CALENDAR -->
+<div class="modal" id="calendarModal">
   <div class="modalBox">
+    <div class="modalHead">
+      <h2>📅 Calendar</h2>
+      <button class="close" onclick="closeModal('calendarModal')">Close</button>
+    </div>
 
-    <div class="calendarHeader">
-      <button id="calendarPrevious">‹</button>
-      <h2 id="calendarTitle">Calendar</h2>
-      <button id="calendarNext">›</button>
+    <div class="calendarHead">
+      <button class="secondary" onclick="calendarMonth(-1)">‹</button>
+      <strong id="calendarTitle"></strong>
+      <button class="secondary" onclick="calendarMonth(1)">›</button>
     </div>
 
     <div class="calendarGrid" id="calendarGrid"></div>
-
-    <div class="modalActions">
-      <button id="calendarClose">Close</button>
-    </div>
-
   </div>
-
 </div>
 
-<!-- =======================================================
-     EVENTS
-======================================================= -->
-
-<div class="modal" id="eventModal" hidden>
-
+<!-- EVENTS -->
+<div class="modal" id="eventModal">
   <div class="modalBox">
+    <div class="modalHead">
+      <h2>🗓 Diary Events</h2>
+      <button class="close" onclick="closeModal('eventModal')">Close</button>
+    </div>
 
-    <h2>🗓️ Diary Events</h2>
+    <div id="eventReadOnlyNote" class="alertBox" style="display:none">
+      Previous dates are read-only. New events cannot be added to a previous date.
+    </div>
 
-    <label>Date</label>
-    <input type="date" id="eventDate">
+    <div class="field">
+      <label>Date</label>
+      <input id="eventDate" type="date">
+    </div>
 
-    <label>Time</label>
-    <input type="time" id="eventTime">
+    <div class="field">
+      <label>Event</label>
+      <input id="eventText" type="text" placeholder="Birthday, appointment, anniversary...">
+    </div>
 
-    <label>Event title</label>
-    <input
-      type="text"
-      id="eventTitle"
-      placeholder="Example: Doctor appointment">
+    <div class="field">
+      <label>Time</label>
+      <input id="eventTime" type="time">
+    </div>
 
-    <label>Notes</label>
-    <textarea
-      id="eventNotes"
-      placeholder="Event details..."></textarea>
+    <div class="field">
+      <label>Reminder</label>
+      <select id="eventReminder">
+        <option value="0">At event time</option>
+        <option value="5">5 minutes before</option>
+        <option value="15">15 minutes before</option>
+        <option value="30">30 minutes before</option>
+        <option value="60">1 hour before</option>
+      </select>
+    </div>
 
     <div class="modalActions">
-      <button id="eventClose">Close</button>
-      <button id="eventSave">💾 Save Event</button>
+      <button class="secondary" onclick="closeModal('eventModal')">Close</button>
+      <button class="primary" id="saveEventBtn" onclick="saveEvent()">Save Event</button>
     </div>
 
     <hr>
 
-    <h3>Saved Events</h3>
     <div id="eventList"></div>
-
   </div>
-
 </div>
 
-<!-- =======================================================
-     TODO
-======================================================= -->
-
-<div class="modal" id="todoModal" hidden>
-
+<!-- TODO -->
+<div class="modal" id="todoModal">
   <div class="modalBox">
+    <div class="modalHead">
+      <h2>☑ To-do List</h2>
+      <button class="close" onclick="closeModal('todoModal')">Close</button>
+    </div>
 
-    <h2>☑️ To-do List</h2>
+    <div id="todoReadOnlyNote" class="alertBox" style="display:none">
+      Previous dates are read-only. New To-do items cannot be added to a previous date.
+    </div>
 
-    <div class="formRow">
-      <input
-        type="text"
-        id="todoInput"
-        placeholder="Write a task...">
+    <div class="field">
+      <label>Task</label>
+      <input id="todoText" type="text" placeholder="Enter task">
+    </div>
 
-      <button id="todoAdd">＋ Add</button>
+    <div class="modalActions">
+      <button class="primary" id="addTodoBtn" onclick="addTodo()">Add To-do</button>
     </div>
 
     <div id="todoList"></div>
-
-    <div class="modalActions">
-      <button id="todoClose">Close</button>
-    </div>
-
   </div>
-
 </div>
 
-<!-- =======================================================
-     MEMORIES
-======================================================= -->
-
-<div class="modal" id="memoryModal" hidden>
-
+<!-- MOOD -->
+<div class="modal" id="moodModal">
   <div class="modalBox">
-
-    <h2>🖼️ Memories</h2>
-
-    <label>📷 Camera / Photo</label>
-    <input
-      id="cameraInput"
-      type="file"
-      accept="image/*"
-      capture="environment">
-
-    <label>📄 Document / Image</label>
-    <input
-      id="memoryInput"
-      type="file"
-      accept="image/*,.pdf">
-
-    <div class="memoryGrid" id="memoryGrid"></div>
-
-    <div class="modalActions">
-      <button id="memoryClose">Close</button>
+    <div class="modalHead">
+      <h2>😊 Select Mood</h2>
+      <button class="close" onclick="closeModal('moodModal')">Close</button>
     </div>
 
+    <div class="moodChoices">
+      <button class="moodChoice" onclick="selectMood('😀')">😀</button>
+      <button class="moodChoice" onclick="selectMood('😊')">😊</button>
+      <button class="moodChoice" onclick="selectMood('😂')">😂</button>
+      <button class="moodChoice" onclick="selectMood('❤️')">❤️</button>
+      <button class="moodChoice" onclick="selectMood('🙏')">🙏</button>
+      <button class="moodChoice" onclick="selectMood('🌸')">🌸</button>
+      <button class="moodChoice" onclick="selectMood('🌿')">🌿</button>
+      <button class="moodChoice" onclick="selectMood('✨')">✨</button>
+      <button class="moodChoice" onclick="selectMood('⭐')">⭐</button>
+      <button class="moodChoice" onclick="selectMood('🎉')">🎉</button>
+      <button class="moodChoice" onclick="selectMood('☀️')">☀️</button>
+      <button class="moodChoice" onclick="selectMood('🌙')">🌙</button>
+      <button class="moodChoice" onclick="selectMood('☕')">☕</button>
+      <button class="moodChoice" onclick="selectMood('👍')">👍</button>
+      <button class="moodChoice" onclick="selectMood('💡')">💡</button>
+      <button class="moodChoice" onclick="selectMood('😌')">😌</button>
+    </div>
   </div>
-
 </div>
 
-<!-- =======================================================
-     SETTINGS
-======================================================= -->
-
-<div class="modal" id="settingsModal" hidden>
-
+<!-- SETTINGS -->
+<div class="modal" id="settingsModal">
   <div class="modalBox">
-
-    <h2>⚙️ Diary Settings</h2>
-
-    <label>Diary design</label>
-
-    <select id="designSelect">
-      <option value="classic">Classic Cream</option>
-      <option value="vintage">Vintage Paper</option>
-      <option value="natural">Natural Paper</option>
-      <option value="blue">Soft Blue</option>
-      <option value="night">Night Diary</option>
-    </select>
-
-    <label>Writing size</label>
-
-    <select id="fontSizeSelect">
-      <option value="18">18</option>
-      <option value="20">20</option>
-      <option value="22">22</option>
-      <option value="24">24</option>
-      <option value="26">26</option>
-    </select>
-
-    <hr>
-
-    <button id="clearPageBtn">
-      🗑 Clear Current Page
-    </button>
-
-    <div class="modalActions">
-      <button id="settingsClose">Close</button>
-      <button id="settingsSave">💾 Save Settings</button>
+    <div class="modalHead">
+      <h2>⚙ Diary Settings</h2>
+      <button class="close" onclick="closeModal('settingsModal')">Close</button>
     </div>
 
-  </div>
+    <div class="settingRow">
+      <span>Page design</span>
+      <select id="pageDesign" onchange="setDesign(this.value)">
+        <option value="classic">Classic Paper</option>
+        <option value="vintage">Vintage Paper</option>
+        <option value="cream">Soft Cream</option>
+        <option value="forest">Natural Green</option>
+      </select>
+    </div>
 
+    <div class="settingRow">
+      <span>Event alerts</span>
+      <input id="alertsEnabled" type="checkbox" onchange="saveSettings()">
+    </div>
+
+    <div class="settingRow">
+      <span>Diary auto-save</span>
+      <strong>ON</strong>
+    </div>
+
+    <div class="modalActions">
+      <button class="secondary" onclick="backupDiary()">Backup Diary</button>
+      <button class="close" onclick="closeModal('settingsModal')">Close</button>
+    </div>
+  </div>
 </div>
 
-<div id="status"></div>
+<!-- EVENT ALERT -->
+<div class="modal" id="alertModal">
+  <div class="modalBox">
+    <div class="modalHead">
+      <h2>🔔 Diary Event Reminder</h2>
+      <button class="close" onclick="closeModal('alertModal')">Close</button>
+    </div>
+    <div id="alertContent"></div>
+  </div>
+</div>
+
+<input
+  id="restoreFile"
+  type="file"
+  accept=".json,application/json"
+  style="display:none"
+  onchange="restoreFileSelected(event)">
 
 <script>
 "use strict";
 
 /* =========================================================
-   STORAGE
-   ---------------------------------------------------------
-   Core diary data is kept in localStorage because it is
-   extremely reliable for a GitHub Pages PWA and avoids the
-   tablet IndexedDB refresh problem of the previous version.
-========================================================= */
+   MY PERSONAL DIARY v8.5
+   ========================================================= */
 
-const PAGE_KEY="myPersonalDiary.pages.v84";
-const EVENT_KEY="myPersonalDiary.events.v84";
-const TODO_KEY="myPersonalDiary.todos.v84";
-const SETTINGS_KEY="myPersonalDiary.settings.v84";
-const MEMORY_DB="myPersonalDiaryMemoriesV84";
+const PAGE_KEY = "myPersonalDiary.pages.v84";
+const EVENT_KEY = "myPersonalDiary.events.v84";
+const TODO_KEY = "myPersonalDiary.todos.v84";
+const SETTINGS_KEY = "myPersonalDiary.settings.v84";
 
-let pages={};
-let events=[];
-let todos=[];
-let settings={
+let pages = loadJSON(PAGE_KEY,{});
+let events = loadJSON(EVENT_KEY,[]);
+let todos = loadJSON(TODO_KEY,[]);
+let settings = loadJSON(SETTINGS_KEY,{
   design:"classic",
-  fontSize:"20"
-};
+  alerts:true
+});
 
-let currentDate="";
-let currentPage=1;
-let currentPageData=null;
+let currentDate = todayISO();
+let currentPage = 1;
+let saveTimer = null;
+let calendarCursor = new Date();
+let alertedEvents = JSON.parse(localStorage.getItem("myPersonalDiary.alertedEvents") || "{}");
 
-/* =========================================================
-   BASIC STORAGE
-========================================================= */
+let drawTool = "pen";
+let drawing = false;
+let drawStart = null;
+let currentStroke = null;
+let drawHistory = [];
+let drawRedo = [];
+let drawCtx;
+let canvasWidth = 0;
+let canvasHeight = 0;
+
+const QUOTES = [
+  "Every day is a new page in the story of your life.",
+  "Small steps every day create remarkable journeys.",
+  "The best memories are made one ordinary day at a time.",
+  "Write today. Remember tomorrow.",
+  "Gratitude turns ordinary moments into treasured memories.",
+  "A peaceful mind makes a beautiful day.",
+  "Your story deserves to be written.",
+  "Life is made of moments. Keep the ones that matter."
+];
+
+const editor = document.getElementById("editor");
+const canvas = document.getElementById("drawCanvas");
+drawCtx = canvas.getContext("2d");
+
+function todayISO(){
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function parseISO(s){
+  const [y,m,d]=s.split("-").map(Number);
+  return new Date(y,m-1,d);
+}
+
+function formatLongDate(s){
+  return parseISO(s).toLocaleDateString("en-IN",{
+    weekday:"long",
+    day:"numeric",
+    month:"long",
+    year:"numeric"
+  });
+}
 
 function loadJSON(key,fallback){
   try{
-    const x=localStorage.getItem(key);
-    return x ? JSON.parse(x) : fallback;
+    const v=localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
   }catch(e){
     console.error(e);
     return fallback;
@@ -1122,485 +1136,239 @@ function loadJSON(key,fallback){
 }
 
 function saveJSON(key,value){
-  try{
-    localStorage.setItem(key,JSON.stringify(value));
-    return true;
-  }catch(e){
-    console.error(e);
-    showStatus("Storage error");
-    return false;
-  }
+  localStorage.setItem(key,JSON.stringify(value));
 }
 
-function loadStorage(){
-
-  pages=loadJSON(PAGE_KEY,{});
-  events=loadJSON(EVENT_KEY,[]);
-  todos=loadJSON(TODO_KEY,[]);
-  settings=loadJSON(
-    SETTINGS_KEY,
-    {
-      design:"classic",
-      fontSize:"20"
-    }
-  );
-
+function pageId(){
+  return currentDate + "_" + currentPage;
 }
 
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function $(id){
-  return document.getElementById(id);
+function defaultQuote(){
+  const d=parseISO(currentDate);
+  const index=(d.getFullYear()+d.getMonth()+d.getDate()) % QUOTES.length;
+  return QUOTES[index];
 }
 
-function localISO(date){
-  const y=date.getFullYear();
-  const m=String(date.getMonth()+1).padStart(2,"0");
-  const d=String(date.getDate()).padStart(2,"0");
-  return y+"-"+m+"-"+d;
-}
+function getPage(){
+  const id=pageId();
 
-function todayISO(){
-  return localISO(new Date());
-}
-
-function displayDate(iso){
-  const d=new Date(iso+"T00:00:00");
-
-  return d.toLocaleDateString(
-    "en-IN",
-    {
-      weekday:"long",
-      day:"numeric",
-      month:"long",
-      year:"numeric"
-    }
-  );
-}
-
-function changeDate(iso,days){
-  const d=new Date(iso+"T00:00:00");
-  d.setDate(d.getDate()+days);
-  return localISO(d);
-}
-
-function pageID(date,page){
-  return date+"-page-"+page;
-}
-
-function showStatus(message){
-
-  const s=$("status");
-
-  s.textContent=message;
-  s.style.display="block";
-
-  clearTimeout(showStatus.timer);
-
-  showStatus.timer=setTimeout(()=>{
-    s.style.display="none";
-  },1800);
-}
-
-function escapeHTML(text){
-
-  return String(text||"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-/* =========================================================
-   QUOTES
-========================================================= */
-
-const quotes=[
-  "Every day is a new page in the story of life.",
-  "Small moments become beautiful memories.",
-  "Be grateful for today.",
-  "Peace begins with a calm mind.",
-  "Enjoy the simple things.",
-  "A beautiful life is made of meaningful moments.",
-  "Write today. Remember tomorrow.",
-  "Every sunrise brings a fresh beginning.",
-  "Keep faith and keep moving forward.",
-  "Life is better when we notice the little things."
-];
-
-function quoteForDate(date){
-
-  let n=0;
-
-  for(let i=0;i<date.length;i++){
-    n+=date.charCodeAt(i);
+  if(!pages[id]){
+    pages[id]={
+      id,
+      date:currentDate,
+      page:currentPage,
+      content:"",
+      mood:"",
+      quote:defaultQuote(),
+      strokes:[]
+    };
   }
 
-  return quotes[n%quotes.length];
+  if(!Array.isArray(pages[id].strokes)){
+    pages[id].strokes=[];
+  }
+
+  return pages[id];
 }
 
-/* =========================================================
-   PAGE
-========================================================= */
+function savePageNow(){
+  const p=getPage();
 
-function createEmptyPage(){
+  p.content=editor.innerHTML;
+  p.mood=document.getElementById("moodDisplay").textContent || "";
+  p.quote=document.getElementById("quoteDisplay").textContent || defaultQuote();
+  p.strokes=drawHistory.slice();
 
-  return {
-    id:pageID(currentDate,currentPage),
-    date:currentDate,
-    page:currentPage,
-    content:"",
-    drawing:"",
-    mood:"",
-    quote:quoteForDate(currentDate),
-    updated:Date.now()
-  };
-
-}
-
-function loadPage(){
-
-  const id=pageID(currentDate,currentPage);
-
-  currentPageData=pages[id] || createEmptyPage();
-
-  $("pageTitle").textContent=displayDate(currentDate);
-
-  $("pageNumber").textContent="Page "+currentPage;
-
-  $("datePicker").value=currentDate;
-
-  $("editor").innerHTML=currentPageData.content || "";
-
-  $("moodSelect").value=currentPageData.mood || "";
-
-  updateMoodDisplay();
-
-  $("quoteDisplay").textContent=
-    "“"+(currentPageData.quote || quoteForDate(currentDate))+"”";
-
-  applySettings();
-
-  loadDrawing(currentPageData.drawing || "");
-
-  $("saveStatus").textContent="Saved";
-}
-
-function savePage(){
-
-  if(!currentPageData)return;
-
-  currentPageData.id=pageID(currentDate,currentPage);
-  currentPageData.date=currentDate;
-  currentPageData.page=currentPage;
-
-  currentPageData.content=$("editor").innerHTML;
-  currentPageData.mood=$("moodSelect").value;
-
-  currentPageData.updated=Date.now();
-
-  pages[currentPageData.id]=currentPageData;
-
+  pages[p.id]=p;
   saveJSON(PAGE_KEY,pages);
 
-  $("saveStatus").textContent="Saved";
+  document.getElementById("saveStatus").textContent="Saved";
+  updateWordCount();
 }
 
-/* Autosave */
-let saveTimer=null;
-
 function scheduleSave(){
-
-  $("saveStatus").textContent="Saving...";
+  document.getElementById("saveStatus").textContent="Saving…";
 
   clearTimeout(saveTimer);
 
   saveTimer=setTimeout(()=>{
-    savePage();
-  },300);
+    savePageNow();
+  },350);
+
+  updateWordCount();
 }
 
-/* =========================================================
-   DATE NAVIGATION
-========================================================= */
+function loadPage(){
+  const p=getPage();
 
-async function goToDate(date){
+  editor.innerHTML=p.content || "";
 
-  savePage();
+  document.getElementById("moodDisplay").textContent=p.mood || "";
+  document.getElementById("quoteDisplay").textContent=p.quote || defaultQuote();
 
-  closeDraw();
+  document.getElementById("pageTitle").textContent=formatLongDate(currentDate);
+  document.getElementById("pageNumber").textContent="Page " + currentPage;
+  document.getElementById("datePicker").value=currentDate;
+
+  drawHistory=Array.isArray(p.strokes) ? JSON.parse(JSON.stringify(p.strokes)) : [];
+  drawRedo=[];
+
+  applyDesign();
+  updateWordCount();
+
+  requestAnimationFrame(()=>{
+    resizeCanvas();
+    redrawCanvas();
+  });
+}
+
+function goToDate(date){
+  if(!date)return;
+
+  savePageNow();
 
   currentDate=date;
   currentPage=1;
 
   loadPage();
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
 }
 
-$("prevBtn").onclick=()=>{
-  goToDate(changeDate(currentDate,-1));
-};
+function changeDate(days){
+  const d=parseISO(currentDate);
+  d.setDate(d.getDate()+days);
 
-$("nextBtn").onclick=()=>{
-  goToDate(changeDate(currentDate,1));
-};
+  goToDate(
+    `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`
+  );
+}
 
-$("datePicker").onchange=()=>{
-  if($("datePicker").value){
-    goToDate($("datePicker").value);
-  }
-};
-
-/* =========================================================
-   NEW PAGE
-========================================================= */
-
-$("newPageBtn").onclick=()=>{
-
-  savePage();
-
-  closeDraw();
-
+function newPage(){
+  savePageNow();
   currentPage++;
-
   loadPage();
+}
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
-  showStatus("New diary page opened");
-};
+function updateWordCount(){
+  const text=editor.innerText.trim();
+  const words=text ? text.split(/\s+/).length : 0;
+  document.getElementById("wordCount").textContent=words+" words";
+}
 
 /* =========================================================
    FORMATTING
-========================================================= */
+   ========================================================= */
 
-function format(command,value=null){
+function formatCmd(e,cmd){
+  e.preventDefault();
 
-  $("editor").focus();
+  editor.focus();
 
   try{
-    document.execCommand(command,false,value);
-  }catch(e){
-    console.error(e);
+    document.execCommand(cmd,false,null);
+  }catch(err){
+    console.error(err);
   }
 
   scheduleSave();
 }
-
-$("boldBtn").onclick=()=>{
-  format("bold");
-};
-
-$("italicBtn").onclick=()=>{
-  format("italic");
-};
-
-$("underlineBtn").onclick=()=>{
-  format("underline");
-};
-
-$("bulletBtn").onclick=()=>{
-  format("insertUnorderedList");
-};
-
-$("leftBtn").onclick=()=>{
-  format("justifyLeft");
-};
-
-$("centerBtn").onclick=()=>{
-  format("justifyCenter");
-};
-
-$("editor").addEventListener("input",()=>{
-  scheduleSave();
-});
 
 /* =========================================================
    MOOD
-========================================================= */
+   ========================================================= */
 
-function updateMoodDisplay(){
-
-  const mood=$("moodSelect").value;
-
-  $("moodDisplay").textContent=mood || "🙂";
-
-  if(currentPageData){
-    currentPageData.mood=mood;
-    currentPageData.updated=Date.now();
-  }
+function openMood(){
+  document.getElementById("moodModal").classList.add("show");
 }
 
-$("moodSelect").onchange=()=>{
-
-  updateMoodDisplay();
-
+function selectMood(mood){
+  document.getElementById("moodDisplay").textContent=mood;
+  closeModal("moodModal");
   scheduleSave();
+}
 
-  showStatus("Mood saved on diary page");
-};
+/* =========================================================
+   QUOTES
+   ========================================================= */
+
+function changeQuote(){
+  const p=getPage();
+  let index=Math.floor(Math.random()*QUOTES.length);
+
+  if(QUOTES.length>1 && QUOTES[index]===p.quote){
+    index=(index+1)%QUOTES.length;
+  }
+
+  document.getElementById("quoteDisplay").textContent=QUOTES[index];
+  scheduleSave();
+}
 
 /* =========================================================
    DRAWING
-========================================================= */
+   ========================================================= */
 
-const canvas=$("drawCanvas");
-const ctx=canvas.getContext("2d");
+function openDraw(){
+  document.getElementById("paper").classList.add("drawMode");
 
-let drawMode=false;
-let drawTool="pen";
-let isDrawing=false;
-
-let startX=0;
-let startY=0;
-let lastX=0;
-let lastY=0;
-
-let undoStack=[];
-let redoStack=[];
-
-function canvasSize(){
-
-  const area=$("editorArea");
-
-  return {
-    width:area.clientWidth,
-    height:area.clientHeight
-  };
+  requestAnimationFrame(()=>{
+    resizeCanvas();
+    redrawCanvas();
+  });
 }
 
-function resizeCanvas(preserve=true){
+function closeDraw(){
+  /*
+    IMPORTANT:
+    Do NOT hide or remove the canvas.
+    It remains on the same paper.
+    Only pointer events are disabled.
+  */
+  document.getElementById("paper").classList.remove("drawMode");
 
-  const old=
-    preserve && canvas.width>0
-      ? canvas.toDataURL("image/png")
-      : "";
-
-  const size=canvasSize();
-
-  const ratio=Math.max(1,window.devicePixelRatio||1);
-
-  canvas.width=Math.floor(size.width*ratio);
-  canvas.height=Math.floor(size.height*ratio);
-
-  canvas.style.width=size.width+"px";
-  canvas.style.height=size.height+"px";
-
-  ctx.setTransform(
-    ratio,
-    0,
-    0,
-    ratio,
-    0,
-    0
-  );
-
-  if(old){
-
-    const img=new Image();
-
-    img.onload=()=>{
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        size.width,
-        size.height
-      );
-    };
-
-    img.src=old;
-  }
+  savePageNow();
 }
 
-function clearCanvas(){
+function setDrawTool(tool){
+  drawTool=tool;
 
-  const size=canvasSize();
+  document.querySelectorAll(".drawToolbar button").forEach(b=>{
+    b.classList.remove("selected");
+  });
 
-  ctx.clearRect(
-    0,
-    0,
-    size.width,
-    size.height
-  );
+  if(tool==="pen")document.getElementById("penBtn").classList.add("selected");
+  if(tool==="line")document.getElementById("lineBtn").classList.add("selected");
+  if(tool==="circle")document.getElementById("circleBtn").classList.add("selected");
+  if(tool==="eraser")document.getElementById("eraserBtn").classList.add("selected");
 }
 
-function loadDrawing(data){
+function resizeCanvas(){
+  const rect=canvas.parentElement.getBoundingClientRect();
 
-  resizeCanvas(false);
+  const old=document.createElement("canvas");
+  old.width=canvas.width;
+  old.height=canvas.height;
 
-  clearCanvas();
-
-  undoStack=[];
-  redoStack=[];
-
-  if(!data)return;
-
-  const img=new Image();
-
-  img.onload=()=>{
-    const size=canvasSize();
-
-    ctx.drawImage(
-      img,
-      0,
-      0,
-      size.width,
-      size.height
-    );
-  };
-
-  img.src=data;
-}
-
-function snapshot(){
-
-  undoStack.push(
-    canvas.toDataURL("image/png")
-  );
-
-  if(undoStack.length>40){
-    undoStack.shift();
+  if(canvas.width && canvas.height){
+    old.getContext("2d").drawImage(canvas,0,0);
   }
 
-  redoStack=[];
-}
+  const dpr=Math.max(1,window.devicePixelRatio || 1);
 
-function restoreImage(data){
+  canvasWidth=rect.width;
+  canvasHeight=rect.height;
 
-  clearCanvas();
+  canvas.width=Math.round(rect.width*dpr);
+  canvas.height=Math.round(rect.height*dpr);
 
-  if(!data)return;
+  canvas.style.width=rect.width+"px";
+  canvas.style.height=rect.height+"px";
 
-  const img=new Image();
+  drawCtx=canvas.getContext("2d");
+  drawCtx.setTransform(dpr,0,0,dpr,0,0);
 
-  img.onload=()=>{
-    const size=canvasSize();
-
-    ctx.drawImage(
-      img,
-      0,
-      0,
-      size.width,
-      size.height
-    );
-  };
-
-  img.src=data;
+  redrawCanvas();
 }
 
 function pointerPosition(e){
-
   const r=canvas.getBoundingClientRect();
 
   return {
@@ -1609,543 +1377,285 @@ function pointerPosition(e){
   };
 }
 
-function prepareBrush(){
+function beginDrawing(e){
+  if(!document.getElementById("paper").classList.contains("drawMode"))return;
 
-  ctx.lineCap="round";
-  ctx.lineJoin="round";
-  ctx.lineWidth=3;
+  e.preventDefault();
+
+  try{
+    canvas.setPointerCapture(e.pointerId);
+  }catch(err){}
+
+  drawing=true;
+  drawStart=pointerPosition(e);
 
   if(drawTool==="eraser"){
-
-    ctx.globalCompositeOperation="destination-out";
-    ctx.strokeStyle="rgba(0,0,0,1)";
-
-  }else{
-
-    ctx.globalCompositeOperation="source-over";
-    ctx.strokeStyle=$("drawColor").value;
-  }
-}
-
-function beginDrawing(e){
-
-  if(!drawMode)return;
-
-  e.preventDefault();
-
-  if(e.pointerId!==undefined){
-    try{
-      canvas.setPointerCapture(e.pointerId);
-    }catch(err){}
-  }
-
-  const p=pointerPosition(e);
-
-  isDrawing=true;
-
-  startX=p.x;
-  startY=p.y;
-
-  lastX=p.x;
-  lastY=p.y;
-
-  snapshot();
-
-  prepareBrush();
-
-  if(
-    drawTool==="pen" ||
-    drawTool==="eraser"
-  ){
-
-    ctx.beginPath();
-    ctx.moveTo(p.x,p.y);
-    ctx.lineTo(p.x+.01,p.y+.01);
-    ctx.stroke();
-  }
-}
-
-function moveDrawing(e){
-
-  if(!isDrawing)return;
-
-  e.preventDefault();
-
-  const p=pointerPosition(e);
-
-  if(
-    drawTool==="pen" ||
-    drawTool==="eraser"
-  ){
-
-    prepareBrush();
-
-    ctx.beginPath();
-    ctx.moveTo(lastX,lastY);
-    ctx.lineTo(p.x,p.y);
-    ctx.stroke();
-
-    lastX=p.x;
-    lastY=p.y;
-
+    eraseAt(drawStart.x,drawStart.y);
     return;
   }
 
-  /* restore previous image for shape preview */
-  restoreImage(
-    undoStack[undoStack.length-1]
-  );
+  currentStroke={
+    type:drawTool,
+    color:drawTool==="circle" ? "#b52b2b" : "#292019",
+    size:drawTool==="circle" ? 3 : 3,
+    points:[{x:drawStart.x,y:drawStart.y}],
+    start:{x:drawStart.x,y:drawStart.y},
+    end:{x:drawStart.x,y:drawStart.y}
+  };
+}
 
-  prepareBrush();
+function moveDrawing(e){
+  if(!drawing)return;
 
-  if(drawTool==="line"){
+  e.preventDefault();
 
-    ctx.beginPath();
+  const p=pointerPosition(e);
 
-    ctx.moveTo(startX,startY);
-    ctx.lineTo(p.x,p.y);
-
-    ctx.stroke();
+  if(drawTool==="eraser"){
+    eraseAt(p.x,p.y);
+    return;
   }
 
-  if(drawTool==="circle"){
+  if(!currentStroke)return;
 
-    const rx=Math.abs(p.x-startX)/2;
-    const ry=Math.abs(p.y-startY)/2;
+  if(drawTool==="pen"){
+    currentStroke.points.push({x:p.x,y:p.y});
+    redrawCanvas();
 
-    const cx=(p.x+startX)/2;
-    const cy=(p.y+startY)/2;
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-      cx,
-      cy,
-      Math.max(rx,2),
-      Math.max(ry,2),
-      0,
-      0,
-      Math.PI*2
-    );
-
-    ctx.stroke();
+    drawStroke(currentStroke);
+  }else{
+    currentStroke.end={x:p.x,y:p.y};
+    redrawCanvas();
+    drawStroke(currentStroke);
   }
 }
 
 function endDrawing(e){
+  if(!drawing)return;
 
-  if(!isDrawing)return;
+  drawing=false;
 
-  isDrawing=false;
+  if(drawTool!=="eraser" && currentStroke){
+    drawHistory.push(JSON.parse(JSON.stringify(currentStroke)));
+    drawRedo=[];
+  }
 
-  if(
-    drawTool==="line" ||
-    drawTool==="circle"
-  ){
+  currentStroke=null;
+  drawStart=null;
 
-    const p=pointerPosition(e);
+  redrawCanvas();
+  scheduleSave();
+}
 
-    restoreImage(
-      undoStack[undoStack.length-1]
-    );
+function drawStroke(stroke){
+  if(!stroke)return;
 
-    prepareBrush();
+  drawCtx.save();
 
-    if(drawTool==="line"){
+  drawCtx.strokeStyle=stroke.color || "#292019";
+  drawCtx.fillStyle="transparent";
+  drawCtx.lineWidth=stroke.size || 3;
+  drawCtx.lineCap="round";
+  drawCtx.lineJoin="round";
 
-      ctx.beginPath();
-      ctx.moveTo(startX,startY);
-      ctx.lineTo(p.x,p.y);
-      ctx.stroke();
-
-    }else{
-
-      const rx=Math.abs(p.x-startX)/2;
-      const ry=Math.abs(p.y-startY)/2;
-
-      const cx=(p.x+startX)/2;
-      const cy=(p.y+startY)/2;
-
-      ctx.beginPath();
-
-      ctx.ellipse(
-        cx,
-        cy,
-        Math.max(rx,2),
-        Math.max(ry,2),
-        0,
+  if(stroke.type==="pen"){
+    if(stroke.points.length<2){
+      drawCtx.beginPath();
+      drawCtx.arc(
+        stroke.points[0].x,
+        stroke.points[0].y,
+        1.5,
         0,
         Math.PI*2
       );
+      drawCtx.fillStyle=stroke.color || "#292019";
+      drawCtx.fill();
+    }else{
+      drawCtx.beginPath();
+      drawCtx.moveTo(stroke.points[0].x,stroke.points[0].y);
 
-      ctx.stroke();
+      for(let i=1;i<stroke.points.length;i++){
+        drawCtx.lineTo(
+          stroke.points[i].x,
+          stroke.points[i].y
+        );
+      }
+
+      drawCtx.stroke();
     }
   }
 
-  ctx.globalCompositeOperation="source-over";
+  if(stroke.type==="line"){
+    drawCtx.beginPath();
+    drawCtx.moveTo(stroke.start.x,stroke.start.y);
+    drawCtx.lineTo(stroke.end.x,stroke.end.y);
+    drawCtx.stroke();
+  }
 
-  if(currentPageData){
+  if(stroke.type==="circle"){
+    const cx=(stroke.start.x+stroke.end.x)/2;
+    const cy=(stroke.start.y+stroke.end.y)/2;
+    const rx=Math.abs(stroke.end.x-stroke.start.x)/2;
+    const ry=Math.abs(stroke.end.y-stroke.start.y)/2;
 
-    currentPageData.drawing=
-      canvas.toDataURL("image/png");
+    drawCtx.beginPath();
+    drawCtx.ellipse(cx,cy,Math.max(rx,3),Math.max(ry,3),0,0,Math.PI*2);
+    drawCtx.stroke();
+  }
 
+  drawCtx.restore();
+}
+
+function redrawCanvas(){
+  if(!drawCtx)return;
+
+  drawCtx.clearRect(0,0,canvasWidth,canvasHeight);
+
+  for(const s of drawHistory){
+    drawStroke(s);
+  }
+
+  if(currentStroke){
+    drawStroke(currentStroke);
+  }
+}
+
+/* Fast vector eraser */
+function eraseAt(x,y){
+  const radius=24;
+
+  const before=drawHistory.length;
+
+  drawHistory=drawHistory.filter(stroke=>{
+    return !strokeHitByEraser(stroke,x,y,radius);
+  });
+
+  if(before!==drawHistory.length){
+    redrawCanvas();
     scheduleSave();
   }
 }
 
-canvas.addEventListener(
-  "pointerdown",
-  beginDrawing,
-  {passive:false}
-);
+function strokeHitByEraser(stroke,x,y,r){
+  if(stroke.type==="line" || stroke.type==="circle"){
+    const minX=Math.min(stroke.start.x,stroke.end.x)-r;
+    const maxX=Math.max(stroke.start.x,stroke.end.x)+r;
+    const minY=Math.min(stroke.start.y,stroke.end.y)-r;
+    const maxY=Math.max(stroke.start.y,stroke.end.y)+r;
 
-canvas.addEventListener(
-  "pointermove",
-  moveDrawing,
-  {passive:false}
-);
+    return x>=minX && x<=maxX && y>=minY && y<=maxY;
+  }
 
-canvas.addEventListener(
-  "pointerup",
-  endDrawing,
-  {passive:false}
-);
+  for(const p of stroke.points){
+    const dx=p.x-x;
+    const dy=p.y-y;
 
-canvas.addEventListener(
-  "pointercancel",
-  endDrawing,
-  {passive:false}
-);
+    if(Math.sqrt(dx*dx+dy*dy)<=r){
+      return true;
+    }
+  }
 
-/* Select drawing tool */
-
-function selectTool(tool){
-
-  drawTool=tool;
-
-  ["penBtn","lineBtn","circleBtn","eraserBtn"]
-    .forEach(id=>{
-      $(id).classList.remove("active");
-    });
-
-  const ids={
-    pen:"penBtn",
-    line:"lineBtn",
-    circle:"circleBtn",
-    eraser:"eraserBtn"
-  };
-
-  $(ids[tool]).classList.add("active");
+  return false;
 }
 
-$("penBtn").onclick=()=>{
-  selectTool("pen");
-};
+function undoDraw(){
+  if(!drawHistory.length)return;
 
-$("lineBtn").onclick=()=>{
-  selectTool("line");
-};
-
-$("circleBtn").onclick=()=>{
-  selectTool("circle");
-};
-
-$("eraserBtn").onclick=()=>{
-  selectTool("eraser");
-};
-
-$("drawColor").onchange=()=>{
-  if(drawTool==="eraser"){
-    selectTool("pen");
-  }
-};
-
-/* Undo */
-
-$("undoBtn").onclick=()=>{
-
-  if(!undoStack.length){
-    showStatus("Nothing to undo");
-    return;
-  }
-
-  const current=canvas.toDataURL("image/png");
-
-  redoStack.push(current);
-
-  const previous=undoStack.pop();
-
-  restoreImage(previous);
-
-  if(currentPageData){
-
-    currentPageData.drawing=
-      previous || "";
-
-    scheduleSave();
-  }
-};
-
-/* Redo */
-
-$("redoBtn").onclick=()=>{
-
-  if(!redoStack.length){
-    showStatus("Nothing to redo");
-    return;
-  }
-
-  const current=canvas.toDataURL("image/png");
-
-  undoStack.push(current);
-
-  const next=redoStack.pop();
-
-  restoreImage(next);
-
-  if(currentPageData){
-
-    currentPageData.drawing=next;
-
-    scheduleSave();
-  }
-};
-
-/* Clear */
-
-$("clearDrawingBtn").onclick=()=>{
-
-  if(!confirm("Clear all drawings from this page?")){
-    return;
-  }
-
-  snapshot();
-
-  clearCanvas();
-
-  if(currentPageData){
-
-    currentPageData.drawing="";
-
-    scheduleSave();
-  }
-
-  showStatus("Drawing cleared");
-};
-
-/* OPEN DRAW */
-
-function openDraw(){
-
-  if(drawMode)return;
-
-  savePage();
-
-  resizeCanvas(true);
-
-  drawMode=true;
-
-  $("page").classList.add("drawMode");
-
-  $("drawBar").hidden=false;
-
-  $("drawBtn").textContent="✕ Close Draw";
-
-  selectTool("pen");
-
-  showStatus("Draw directly on your diary page");
+  drawRedo.push(drawHistory.pop());
+  redrawCanvas();
+  scheduleSave();
 }
 
-/* CLOSE DRAW */
+function redoDraw(){
+  if(!drawRedo.length)return;
 
-function closeDraw(){
+  drawHistory.push(drawRedo.pop());
+  redrawCanvas();
+  scheduleSave();
+}
 
-  if(!drawMode)return;
+function clearDraw(){
+  if(!drawHistory.length)return;
 
-  drawMode=false;
-
-  isDrawing=false;
-
-  ctx.globalCompositeOperation="source-over";
-
-  $("page").classList.remove("drawMode");
-
-  $("drawBar").hidden=true;
-
-  $("drawBtn").textContent="✏️ Draw";
-
-  if(currentPageData){
-
-    currentPageData.drawing=
-      canvas.toDataURL("image/png");
-
-    savePage();
+  if(confirm("Clear all drawings from this page?")){
+    drawHistory=[];
+    drawRedo=[];
+    redrawCanvas();
+    scheduleSave();
   }
 }
 
-$("drawBtn").onclick=()=>{
-
-  if(drawMode){
-    closeDraw();
-  }else{
-    openDraw();
-  }
-};
-
-$("closeDrawBtn").onclick=closeDraw;
+canvas.addEventListener("pointerdown",beginDrawing);
+canvas.addEventListener("pointermove",moveDrawing);
+canvas.addEventListener("pointerup",endDrawing);
+canvas.addEventListener("pointercancel",endDrawing);
 
 window.addEventListener("resize",()=>{
-
-  if(drawMode){
-    resizeCanvas(true);
-  }
-
+  clearTimeout(window.__resizeTimer);
+  window.__resizeTimer=setTimeout(()=>{
+    resizeCanvas();
+  },150);
 });
 
 /* =========================================================
    CALENDAR
-========================================================= */
+   ========================================================= */
 
-let calendarDate=new Date();
-
-$("calendarBtn").onclick=()=>{
-
-  calendarDate=
-    new Date(currentDate+"T00:00:00");
-
+function openCalendar(){
+  calendarCursor=parseISO(currentDate);
   renderCalendar();
+  document.getElementById("calendarModal").classList.add("show");
+}
 
-  $("calendarModal").hidden=false;
-};
-
-$("calendarClose").onclick=()=>{
-  $("calendarModal").hidden=true;
-};
-
-$("calendarPrevious").onclick=()=>{
-
-  calendarDate.setMonth(
-    calendarDate.getMonth()-1
-  );
-
+function calendarMonth(delta){
+  calendarCursor.setMonth(calendarCursor.getMonth()+delta);
   renderCalendar();
-};
-
-$("calendarNext").onclick=()=>{
-
-  calendarDate.setMonth(
-    calendarDate.getMonth()+1
-  );
-
-  renderCalendar();
-};
+}
 
 function renderCalendar(){
+  const y=calendarCursor.getFullYear();
+  const m=calendarCursor.getMonth();
 
-  const year=calendarDate.getFullYear();
-  const month=calendarDate.getMonth();
+  document.getElementById("calendarTitle").textContent=
+    calendarCursor.toLocaleDateString("en-IN",{
+      month:"long",
+      year:"numeric"
+    });
 
-  $("calendarTitle").textContent=
-    calendarDate.toLocaleDateString(
-      "en-IN",
-      {
-        month:"long",
-        year:"numeric"
-      }
-    );
-
-  const grid=$("calendarGrid");
-
+  const grid=document.getElementById("calendarGrid");
   grid.innerHTML="";
 
-  [
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat"
-  ].forEach(day=>{
-
-    const div=document.createElement("div");
-
-    div.className="calendarWeek";
-
-    div.textContent=day;
-
-    grid.appendChild(div);
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(x=>{
+    const h=document.createElement("div");
+    h.className="calDay head";
+    h.textContent=x;
+    grid.appendChild(h);
   });
 
-  const first=new Date(year,month,1);
+  const first=new Date(y,m,1).getDay();
+  const last=new Date(y,m+1,0).getDate();
 
-  const last=new Date(
-    year,
-    month+1,
-    0
-  );
-
-  for(
-    let i=0;
-    i<first.getDay();
-    i++
-  ){
-
-    grid.appendChild(
-      document.createElement("div")
-    );
+  for(let i=0;i<first;i++){
+    grid.appendChild(document.createElement("div"));
   }
 
-  for(
-    let day=1;
-    day<=last.getDate();
-    day++
-  ){
+  for(let day=1;day<=last;day++){
+    const iso=
+      `${y}-${String(m+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
 
-    const d=new Date(
-      year,
-      month,
-      day
-    );
+    const cell=document.createElement("button");
+    cell.className="calDay";
+    cell.textContent=day;
 
-    const iso=localISO(d);
+    if(iso===todayISO())cell.classList.add("today");
 
-    const cell=document.createElement("div");
-
-    cell.className="calendarDay";
-
-    if(iso===todayISO()){
-      cell.classList.add("today");
+    if(events.some(e=>e.date===iso)){
+      cell.classList.add("hasEvent");
     }
-
-    if(iso===currentDate){
-      cell.classList.add("selected");
-    }
-
-    cell.innerHTML=
-      `<div class="calendarNumber">${day}</div>`;
-
-    events
-      .filter(e=>e.date===iso)
-      .slice(0,3)
-      .forEach(e=>{
-
-        const ev=document.createElement("div");
-
-        ev.className="calendarEvent";
-
-        ev.textContent=
-          (e.time ? e.time+" " : "")+
-          e.title;
-
-        cell.appendChild(ev);
-      });
 
     cell.onclick=()=>{
-
-      $("calendarModal").hidden=true;
-
       goToDate(iso);
+      closeModal("calendarModal");
     };
 
     grid.appendChild(cell);
@@ -2154,1175 +1664,574 @@ function renderCalendar(){
 
 /* =========================================================
    EVENTS
-========================================================= */
+   ========================================================= */
 
-$("eventBtn").onclick=()=>{
+function isPastDate(date){
+  return date < todayISO();
+}
 
-  $("eventDate").value=currentDate;
+function openEvents(){
+  document.getElementById("eventDate").value=currentDate;
+  document.getElementById("eventText").value="";
+  document.getElementById("eventTime").value="";
+  document.getElementById("eventReminder").value="0";
 
-  $("eventTime").value="";
-
-  $("eventTitle").value="";
-
-  $("eventNotes").value="";
-
+  updateEventEditingState();
   renderEvents();
 
-  $("eventModal").hidden=false;
-};
+  document.getElementById("eventModal").classList.add("show");
+}
 
-$("eventClose").onclick=()=>{
-  $("eventModal").hidden=true;
-};
+function updateEventEditingState(){
+  const past=isPastDate(document.getElementById("eventDate").value);
 
-$("eventSave").onclick=()=>{
+  document.getElementById("eventText").disabled=past;
+  document.getElementById("eventTime").disabled=past;
+  document.getElementById("eventReminder").disabled=past;
+  document.getElementById("saveEventBtn").disabled=past;
 
-  const date=$("eventDate").value;
-  const time=$("eventTime").value;
-  const title=$("eventTitle").value.trim();
-  const notes=$("eventNotes").value.trim();
+  document.getElementById("eventReadOnlyNote").style.display=
+    past ? "block" : "none";
+}
 
-  if(!date){
+document.getElementById("eventDate").addEventListener(
+  "change",
+  updateEventEditingState
+);
 
-    alert("Please select an event date.");
+function saveEvent(){
+  const date=document.getElementById("eventDate").value;
+  const text=document.getElementById("eventText").value.trim();
+  const time=document.getElementById("eventTime").value;
+  const reminder=Number(document.getElementById("eventReminder").value);
 
+  if(!date || !text){
+    alert("Please enter event date and event name.");
     return;
   }
 
-  if(!title){
-
-    alert("Please enter the event title.");
-
+  if(isPastDate(date)){
+    alert("Previous dates are read-only.");
     return;
   }
 
-  const event={
-    id:
-      Date.now().toString()+
-      Math.random().toString(36).slice(2),
-
+  events.push({
+    id:"e_"+Date.now()+"_"+Math.random().toString(36).slice(2),
     date,
+    text,
     time,
-    title,
-    notes,
-    created:Date.now()
-  };
-
-  events.push(event);
+    reminder,
+    createdAt:Date.now()
+  });
 
   saveJSON(EVENT_KEY,events);
 
-  /* Immediately refresh event list */
-  renderEvents();
+  document.getElementById("eventText").value="";
+  document.getElementById("eventTime").value="";
 
-  /* Immediately refresh calendar if open */
+  renderEvents();
   renderCalendar();
 
-  $("eventTitle").value="";
-  $("eventNotes").value="";
-  $("eventTime").value="";
-
-  showStatus("Event added successfully");
-};
+  alert("Event saved successfully.");
+}
 
 function renderEvents(){
+  const box=document.getElementById("eventList");
 
-  const box=$("eventList");
-
-  box.innerHTML="";
-
-  const sorted=[...events].sort((a,b)=>{
-
-    const x=(a.date||"")+" "+(a.time||"");
-    const y=(b.date||"")+" "+(b.time||"");
-
-    return x.localeCompare(y);
-  });
+  const sorted=events
+    .slice()
+    .sort((a,b)=>
+      (a.date+a.time).localeCompare(b.date+b.time)
+    );
 
   if(!sorted.length){
-
-    box.innerHTML=
-      "<p>No events added yet.</p>";
-
+    box.innerHTML="<p>No events added yet.</p>";
     return;
   }
 
-  sorted.forEach(event=>{
+  box.innerHTML=sorted.map(e=>`
+    <div class="itemRow">
+      <span>
+        <strong>${escapeHTML(e.text)}</strong><br>
+        <span class="eventDate">
+          ${escapeHTML(formatLongDate(e.date))}
+          ${e.time ? " • "+escapeHTML(e.time) : ""}
+        </span>
+      </span>
+      <button class="secondary" onclick="deleteEvent('${e.id}')">Delete</button>
+    </div>
+  `).join("");
+}
 
-    const div=document.createElement("div");
-
-    div.className="eventItem";
-
-    div.innerHTML=`
-      <strong>${escapeHTML(event.title)}</strong>
-      <div>
-        ${escapeHTML(event.date)}
-        ${event.time ? " • "+escapeHTML(event.time) : ""}
-      </div>
-      ${
-        event.notes
-        ? `<div>${escapeHTML(event.notes)}</div>`
-        : ""
-      }
-      <button style="margin-top:7px">
-        🗑 Delete
-      </button>
-    `;
-
-    div.querySelector("button").onclick=()=>{
-
-      if(!confirm("Delete this event?")){
-        return;
-      }
-
-      events=events.filter(
-        x=>x.id!==event.id
-      );
-
-      saveJSON(EVENT_KEY,events);
-
-      renderEvents();
-      renderCalendar();
-
-      showStatus("Event deleted");
-    };
-
-    box.appendChild(div);
-  });
+function deleteEvent(id){
+  events=events.filter(e=>e.id!==id);
+  saveJSON(EVENT_KEY,events);
+  renderEvents();
+  renderCalendar();
 }
 
 /* =========================================================
-   TODO
-========================================================= */
+   EVENT ALERT ENGINE
+   ========================================================= */
 
-$("todoBtn").onclick=()=>{
+function checkEventAlerts(){
+  if(!settings.alerts)return;
 
-  carryForwardTodos();
+  const now=new Date();
 
-  renderTodos();
+  for(const e of events){
+    if(e.date!==todayISO())continue;
 
-  $("todoModal").hidden=false;
-};
+    if(!e.time)continue;
 
-$("todoClose").onclick=()=>{
-  $("todoModal").hidden=true;
-};
+    const [hh,mm]=e.time.split(":").map(Number);
 
-$("todoAdd").onclick=addTodo;
+    const eventTime=new Date();
+    eventTime.setHours(hh,mm,0,0);
 
-$("todoInput").addEventListener(
-  "keydown",
-  e=>{
-    if(e.key==="Enter"){
-      addTodo();
+    const reminderMs=(Number(e.reminder)||0)*60000;
+    const alertTime=new Date(eventTime.getTime()-reminderMs);
+
+    const diff=Math.abs(now.getTime()-alertTime.getTime());
+
+    if(diff<=30000 && !alertedEvents[e.id]){
+      alertedEvents[e.id]=true;
+
+      localStorage.setItem(
+        "myPersonalDiary.alertedEvents",
+        JSON.stringify(alertedEvents)
+      );
+
+      showEventAlert(e);
     }
   }
-);
+}
+
+function showEventAlert(e){
+  document.getElementById("alertContent").innerHTML=`
+    <div class="alertBox">
+      <strong>${escapeHTML(e.text)}</strong><br>
+      ${e.time ? "Time: "+escapeHTML(e.time) : ""}
+    </div>
+  `;
+
+  document.getElementById("alertModal").classList.add("show");
+}
+
+setInterval(checkEventAlerts,15000);
+
+/* =========================================================
+   TO-DO
+   ========================================================= */
+
+function openTodo(){
+  renderTodos();
+
+  const past=isPastDate(currentDate);
+
+  document.getElementById("todoText").disabled=past;
+  document.getElementById("addTodoBtn").disabled=past;
+
+  document.getElementById("todoReadOnlyNote").style.display=
+    past ? "block" : "none";
+
+  document.getElementById("todoModal").classList.add("show");
+}
 
 function addTodo(){
+  if(isPastDate(currentDate)){
+    alert("Previous dates are read-only.");
+    return;
+  }
 
-  const text=$("todoInput").value.trim();
+  const input=document.getElementById("todoText");
+  const text=input.value.trim();
 
   if(!text)return;
 
   todos.push({
-
-    id:
-      Date.now().toString()+
-      Math.random().toString(36).slice(2),
-
+    id:"t_"+Date.now()+"_"+Math.random().toString(36).slice(2),
     date:currentDate,
     text,
-    done:false,
-    created:Date.now()
+    done:false
   });
 
   saveJSON(TODO_KEY,todos);
 
-  $("todoInput").value="";
-
+  input.value="";
   renderTodos();
-
-  showStatus("Task added");
 }
 
 function renderTodos(){
-
-  const box=$("todoList");
-
-  box.innerHTML="";
+  const box=document.getElementById("todoList");
 
   const list=todos
-    .filter(t=>t.date===currentDate)
-    .sort((a,b)=>a.created-b.created);
+    .filter(t=>t.date===currentDate);
 
   if(!list.length){
-
-    box.innerHTML=
-      "<p>No tasks for this date.</p>";
-
+    box.innerHTML="<p>No To-do items for this date.</p>";
     return;
   }
 
-  list.forEach(task=>{
+  box.innerHTML=list.map(t=>`
+    <div class="itemRow">
+      <input
+        type="checkbox"
+        ${t.done ? "checked" : ""}
+        onchange="toggleTodo('${t.id}')">
 
-    const row=document.createElement("div");
+      <span class="${t.done ? "done" : ""}">
+        ${escapeHTML(t.text)}
+      </span>
 
-    row.className=
-      "todoItem"+
-      (task.done ? " done":"");
-
-    row.innerHTML=`
-      <input type="checkbox"
-        ${task.done ? "checked":""}>
-
-      <span>${escapeHTML(task.text)}</span>
-
-      <button>🗑</button>
-    `;
-
-    row.querySelector("input").onchange=e=>{
-
-      task.done=e.target.checked;
-
-      saveJSON(TODO_KEY,todos);
-
-      renderTodos();
-    };
-
-    row.querySelector("button").onclick=()=>{
-
-      if(!confirm("Delete this task?")){
-        return;
-      }
-
-      todos=todos.filter(
-        x=>x.id!==task.id
-      );
-
-      saveJSON(TODO_KEY,todos);
-
-      renderTodos();
-
-      showStatus("Task deleted");
-    };
-
-    box.appendChild(row);
-  });
+      <button class="secondary"
+        onclick="deleteTodo('${t.id}')">
+        Delete
+      </button>
+    </div>
+  `).join("");
 }
 
-/* Carry unfinished tasks forward */
+function toggleTodo(id){
+  const item=todos.find(t=>t.id===id);
 
-function carryForwardTodos(){
+  if(!item)return;
 
-  const previous=changeDate(
-    currentDate,
-    -1
+  item.done=!item.done;
+
+  saveJSON(TODO_KEY,todos);
+  renderTodos();
+}
+
+function deleteTodo(id){
+  todos=todos.filter(t=>t.id!==id);
+  saveJSON(TODO_KEY,todos);
+  renderTodos();
+}
+
+/* Carry unfinished tasks forward when moving to next date */
+function carryTodosForward(fromDate,toDate){
+  const pending=todos.filter(
+    t=>t.date===fromDate && !t.done
   );
 
-  const previousTasks=todos.filter(
-    t=>
-      t.date===previous &&
-      !t.done
-  );
-
-  const todayTasks=todos.filter(
-    t=>t.date===currentDate
-  );
-
-  previousTasks.forEach(task=>{
-
-    const exists=todayTasks.some(
-      t=>
-        !t.done &&
-        t.text===task.text
+  for(const task of pending){
+    const exists=todos.some(
+      x=>x.date===toDate &&
+         x.text===task.text &&
+         !x.done
     );
 
     if(!exists){
-
       todos.push({
-
-        id:
-          Date.now().toString()+
-          Math.random().toString(36).slice(2),
-
-        date:currentDate,
+        id:"t_"+Date.now()+"_"+Math.random().toString(36).slice(2),
+        date:toDate,
         text:task.text,
         done:false,
-        carriedFrom:previous,
-        created:Date.now()
+        carriedFrom:fromDate
       });
     }
-  });
+  }
 
   saveJSON(TODO_KEY,todos);
 }
 
 /* =========================================================
-   MEMORIES
-========================================================= */
+   SETTINGS / DESIGN
+   ========================================================= */
 
-let memoryDB=null;
+function openSettings(){
+  document.getElementById("pageDesign").value=settings.design||"classic";
+  document.getElementById("alertsEnabled").checked=settings.alerts!==false;
 
-function openMemoryDB(){
-
-  return new Promise((resolve,reject)=>{
-
-    const request=
-      indexedDB.open(MEMORY_DB,1);
-
-    request.onupgradeneeded=e=>{
-
-      const d=e.target.result;
-
-      if(!d.objectStoreNames.contains("memories")){
-
-        const store=
-          d.createObjectStore(
-            "memories",
-            {
-              keyPath:"id",
-              autoIncrement:true
-            }
-          );
-
-        store.createIndex(
-          "date",
-          "date",
-          {unique:false}
-        );
-      }
-    };
-
-    request.onsuccess=()=>{
-
-      memoryDB=request.result;
-
-      resolve(memoryDB);
-    };
-
-    request.onerror=()=>{
-      reject(request.error);
-    };
-  });
+  document.getElementById("settingsModal").classList.add("show");
 }
 
-function memoryAdd(record){
-
-  return new Promise((resolve,reject)=>{
-
-    const store=
-      memoryDB
-        .transaction(
-          "memories",
-          "readwrite"
-        )
-        .objectStore("memories");
-
-    const request=store.add(record);
-
-    request.onsuccess=()=>{
-      resolve(request.result);
-    };
-
-    request.onerror=()=>{
-      reject(request.error);
-    };
-  });
+function setDesign(value){
+  settings.design=value;
+  saveSettings();
+  applyDesign();
 }
 
-function memoryAll(){
+function saveSettings(){
+  settings.design=document.getElementById("pageDesign").value;
+  settings.alerts=document.getElementById("alertsEnabled").checked;
 
-  return new Promise((resolve,reject)=>{
-
-    const store=
-      memoryDB
-        .transaction("memories")
-        .objectStore("memories");
-
-    const request=store.getAll();
-
-    request.onsuccess=()=>{
-      resolve(request.result||[]);
-    };
-
-    request.onerror=()=>{
-      reject(request.error);
-    };
-  });
+  saveJSON(SETTINGS_KEY,settings);
+  applyDesign();
 }
 
-function memoryDelete(id){
+function applyDesign(){
+  const paper=document.getElementById("paper");
 
-  return new Promise((resolve,reject)=>{
+  paper.style.background="";
 
-    const store=
-      memoryDB
-        .transaction(
-          "memories",
-          "readwrite"
-        )
-        .objectStore("memories");
+  if(settings.design==="vintage"){
+    paper.style.background=
+      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(130,95,55,.25) 32px,transparent 33px),linear-gradient(#f8ecd0,#f4dfb5)";
+  }
 
-    const request=store.delete(id);
+  if(settings.design==="cream"){
+    paper.style.background=
+      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(130,110,75,.2) 32px,transparent 33px),linear-gradient(#fffef5,#fffbed)";
+  }
 
-    request.onsuccess=()=>{
-      resolve();
-    };
+  if(settings.design==="forest"){
+    paper.style.background=
+      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(75,110,75,.19) 32px,transparent 33px),linear-gradient(#f8fbef,#edf4df)";
+  }
 
-    request.onerror=()=>{
-      reject(request.error);
-    };
-  });
+  if(settings.design==="classic"){
+    paper.style.background=
+      "repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(100,75,40,.22) 32px,transparent 33px),linear-gradient(#fffef7,#fff9e9)";
+  }
 }
 
-async function handleMemory(file){
+/* =========================================================
+   BACKUP / RESTORE
+   ========================================================= */
+
+function backupDiary(){
+  savePageNow();
+
+  const data={
+    version:"8.5",
+    exportedAt:new Date().toISOString(),
+    pages,
+    events,
+    todos,
+    settings
+  };
+
+  const blob=new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="my-personal-diary-backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function restoreDiary(){
+  document.getElementById("restoreFile").click();
+}
+
+function restoreFileSelected(e){
+  const file=e.target.files[0];
 
   if(!file)return;
 
   const reader=new FileReader();
 
-  reader.onload=async()=>{
-
+  reader.onload=function(){
     try{
-
-      await memoryAdd({
-
-        date:currentDate,
-        name:file.name,
-        type:file.type,
-        data:reader.result,
-        created:Date.now()
-      });
-
-      $("cameraInput").value="";
-      $("memoryInput").value="";
-
-      await renderMemories();
-
-      showStatus("Memory saved");
-
-    }catch(e){
-
-      console.error(e);
-
-      alert("Memory could not be saved.");
-    }
-  };
-
-  reader.readAsDataURL(file);
-}
-
-$("cameraInput").onchange=e=>{
-  handleMemory(e.target.files[0]);
-};
-
-$("memoryInput").onchange=e=>{
-  handleMemory(e.target.files[0]);
-};
-
-$("memoryBtn").onclick=async()=>{
-
-  await renderMemories();
-
-  $("memoryModal").hidden=false;
-};
-
-$("memoryClose").onclick=()=>{
-  $("memoryModal").hidden=true;
-};
-
-async function renderMemories(){
-
-  const box=$("memoryGrid");
-
-  box.innerHTML="";
-
-  const all=await memoryAll();
-
-  const list=all.filter(
-    x=>x.date===currentDate
-  );
-
-  if(!list.length){
-
-    box.innerHTML=
-      "<p>No memories attached to this date.</p>";
-
-    return;
-  }
-
-  list.forEach(memory=>{
-
-    const div=document.createElement("div");
-
-    div.className="memoryItem";
-
-    if(
-      (memory.type||"")
-        .startsWith("image/")
-    ){
-
-      div.innerHTML=`
-        <div class="memoryCard">
-          <img src="${memory.data}" alt="">
-          <div>${escapeHTML(memory.name)}</div>
-          <button>🗑 Delete</button>
-        </div>
-      `;
-
-    }else{
-
-      div.innerHTML=`
-        <div>
-          📄 ${escapeHTML(memory.name)}
-        </div>
-        <button>🗑 Delete</button>
-      `;
-    }
-
-    div.querySelector("button").onclick=async()=>{
-
-      if(!confirm("Delete this memory?")){
-        return;
-      }
-
-      await memoryDelete(memory.id);
-
-      await renderMemories();
-
-      showStatus("Memory deleted");
-    };
-
-    box.appendChild(div);
-  });
-}
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-function applySettings(){
-
-  $("page").classList.remove(
-    "classic",
-    "vintage",
-    "natural",
-    "blue",
-    "night"
-  );
-
-  $("page").classList.add(
-    settings.design || "classic"
-  );
-
-  $("editor").style.fontSize=
-    (settings.fontSize || "20")+"px";
-}
-
-$("settingsBtn").onclick=()=>{
-
-  $("designSelect").value=
-    settings.design || "classic";
-
-  $("fontSizeSelect").value=
-    settings.fontSize || "20";
-
-  $("settingsModal").hidden=false;
-};
-
-$("settingsClose").onclick=()=>{
-  $("settingsModal").hidden=true;
-};
-
-$("settingsSave").onclick=()=>{
-
-  settings.design=
-    $("designSelect").value;
-
-  settings.fontSize=
-    $("fontSizeSelect").value;
-
-  saveJSON(
-    SETTINGS_KEY,
-    settings
-  );
-
-  applySettings();
-
-  $("settingsModal").hidden=true;
-
-  showStatus("Settings saved");
-};
-
-$("clearPageBtn").onclick=()=>{
-
-  if(!confirm(
-    "Clear all writing and drawing from this page?"
-  )){
-    return;
-  }
-
-  $("editor").innerHTML="";
-
-  clearCanvas();
-
-  currentPageData.content="";
-  currentPageData.drawing="";
-
-  savePage();
-
-  $("settingsModal").hidden=true;
-
-  showStatus("Page cleared");
-};
-
-/* =========================================================
-   BACKUP
-========================================================= */
-
-$("backupBtn").onclick=async()=>{
-
-  savePage();
-
-  const memories=await memoryAll();
-
-  const backup={
-
-    version:"8.4",
-
-    created:new Date().toISOString(),
-
-    pages,
-
-    events,
-
-    todos,
-
-    settings,
-
-    memories
-  };
-
-  const blob=new Blob(
-    [JSON.stringify(backup)],
-    {
-      type:"application/json"
-    }
-  );
-
-  const url=
-    URL.createObjectURL(blob);
-
-  const a=document.createElement("a");
-
-  a.href=url;
-
-  a.download=
-    "my-personal-diary-backup-"+
-    todayISO()+
-    ".json";
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
-
-  setTimeout(()=>{
-    URL.revokeObjectURL(url);
-  },1000);
-
-  showStatus("Backup created");
-};
-
-/* =========================================================
-   RESTORE
-========================================================= */
-
-$("restoreBtn").onclick=()=>{
-  $("restoreInput").click();
-};
-
-$("restoreInput").onchange=async e=>{
-
-  const file=e.target.files[0];
-
-  if(!file)return;
-
-  try{
-
-    const text=await file.text();
-
-    const data=JSON.parse(text);
-
-    if(!data || typeof data!=="object"){
-      throw new Error("Invalid backup");
-    }
-
-    if(!confirm(
-      "Restore this diary backup?"
-    )){
-      e.target.value="";
-      return;
-    }
-
-    if(data.pages){
-
-      pages={
-        ...pages,
-        ...data.pages
-      };
+      const data=JSON.parse(reader.result);
+
+      if(data.pages)pages=data.pages;
+      if(data.events)events=data.events;
+      if(data.todos)todos=data.todos;
+      if(data.settings)settings=data.settings;
 
       saveJSON(PAGE_KEY,pages);
-    }
-
-    if(Array.isArray(data.events)){
-
-      events=data.events;
-
       saveJSON(EVENT_KEY,events);
-    }
-
-    if(Array.isArray(data.todos)){
-
-      todos=data.todos;
-
       saveJSON(TODO_KEY,todos);
+      saveJSON(SETTINGS_KEY,settings);
+
+      loadPage();
+
+      alert("Diary restored successfully.");
+    }catch(err){
+      alert("The backup file is not valid.");
     }
+  };
 
-    if(data.settings){
-
-      settings={
-        ...settings,
-        ...data.settings
-      };
-
-      saveJSON(
-        SETTINGS_KEY,
-        settings
-      );
-    }
-
-    if(Array.isArray(data.memories)){
-
-      for(
-        const memory of data.memories
-      ){
-
-        const copy={...memory};
-
-        delete copy.id;
-
-        await memoryAdd(copy);
-      }
-    }
-
-    applySettings();
-
-    loadPage();
-
-    showStatus("Diary restored");
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "The backup file could not be restored."
-    );
-  }
-
+  reader.readAsText(file);
   e.target.value="";
-};
+}
 
 /* =========================================================
    PRINT
-========================================================= */
+   ========================================================= */
 
-$("printBtn").onclick=()=>{
+function printPage(){
+  savePageNow();
 
-  savePage();
+  const drawing=canvas.toDataURL("image/png");
 
-  const printWindow=
-    window.open("","_blank");
+  const win=window.open("","_blank");
 
-  if(!printWindow){
-
-    alert(
-      "Please allow pop-ups for printing."
-    );
-
+  if(!win){
+    alert("Please allow pop-ups for printing.");
     return;
   }
 
-  const drawing=
-    currentPageData.drawing
-      ? `
-        <img
-          src="${currentPageData.drawing}"
-          style="
-            position:absolute;
-            inset:0;
-            width:100%;
-            height:100%;
-            object-fit:contain;
-          ">
-      `
-      : "";
-
-  const mood=
-    currentPageData.mood
-      ? `<div class="mood">${currentPageData.mood}</div>`
-      : "";
-
-  const quote=
-    currentPageData.quote
-      ? `<div class="quote">
-          “${escapeHTML(currentPageData.quote)}”
-        </div>`
-      : "";
-
-  printWindow.document.write(`
-<!DOCTYPE html>
-<html>
-<head>
-<title>${escapeHTML(displayDate(currentDate))}</title>
-
-<style>
-
-body{
-  margin:35px;
-  font-family:Georgia,serif;
-  color:#3c2a1d;
-}
-
-.paper{
-  position:relative;
-  min-height:1050px;
-  padding:50px;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent 39px,
-      #c9d8d8 40px,
-      transparent 41px
-    );
-}
-
-.content{
-  position:relative;
-  z-index:3;
-  font-size:${settings.fontSize}px;
-  line-height:40px;
-}
-
-.drawing{
-  position:absolute;
-  inset:0;
-  z-index:2;
-}
-
-.mood{
-  font-size:32px;
-}
-
-.quote{
-  margin:15px 0;
-  font-style:italic;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="paper">
-
-<h1>${escapeHTML(displayDate(currentDate))}</h1>
-
-${mood}
-
-${quote}
-
-<div class="content">
-${$("editor").innerHTML}
-</div>
-
-<div class="drawing">
-${drawing}
-</div>
-
-</div>
-
-<script>
-window.onload=function(){
-  window.print();
-};
-<\/script>
-
-</body>
-</html>
+  win.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <title>Diary - ${escapeHTML(formatLongDate(currentDate))}</title>
+    <style>
+      body{
+        margin:30px;
+        font-family:Georgia,serif;
+        color:#302116;
+        background:#fffdf3;
+      }
+      h1{font-size:28px}
+      .quote{
+        border-left:3px solid #8a633d;
+        padding:8px 12px;
+        font-style:italic;
+      }
+      .content{
+        font-size:18px;
+        line-height:1.8;
+        white-space:normal;
+      }
+      img{
+        max-width:100%;
+      }
+    </style>
+    </head>
+    <body>
+      <h1>${escapeHTML(formatLongDate(currentDate))}</h1>
+      <div>${escapeHTML(document.getElementById("moodDisplay").textContent)}</div>
+      <div class="quote">${escapeHTML(document.getElementById("quoteDisplay").textContent)}</div>
+      <div class="content">${editor.innerHTML}</div>
+      <br>
+      <img src="${drawing}">
+    </body>
+    </html>
   `);
 
-  printWindow.document.close();
+  win.document.close();
+  win.focus();
+
+  setTimeout(()=>{
+    win.print();
+  },400);
+}
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+
+function closeModal(id){
+  document.getElementById(id).classList.remove("show");
+}
+
+document.querySelectorAll(".modal").forEach(modal=>{
+  modal.addEventListener("click",e=>{
+    if(e.target===modal){
+      modal.classList.remove("show");
+    }
+  });
+});
+
+/* =========================================================
+   SAFETY
+   ========================================================= */
+
+function escapeHTML(value){
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+/* =========================================================
+   MIGRATION FROM OLDER SIMPLE STORAGE
+   ========================================================= */
+
+function migrateOldData(){
+  try{
+    const old=localStorage.getItem("myPersonalDiaryEntries");
+
+    if(old && Object.keys(pages).length===0){
+      const data=JSON.parse(old);
+
+      Object.keys(data).forEach(date=>{
+        const value=data[date];
+
+        pages[date+"_1"]={
+          id:date+"_1",
+          date,
+          page:1,
+          content:
+            typeof value==="string"
+              ? value
+              : (value.content||""),
+          mood:
+            typeof value==="object"
+              ? (value.mood||"")
+              : "",
+          quote:defaultQuote(),
+          strokes:[]
+        };
+      });
+
+      saveJSON(PAGE_KEY,pages);
+    }
+  }catch(e){
+    console.log("Migration skipped",e);
+  }
+}
+
+/* =========================================================
+   NAVIGATION WITH TODO CARRY FORWARD
+   ========================================================= */
+
+const originalGoToDate=goToDate;
+
+goToDate=function(date){
+  const oldDate=currentDate;
+
+  if(date>oldDate){
+    carryTodosForward(oldDate,date);
+  }
+
+  savePageNow();
+
+  currentDate=date;
+  currentPage=1;
+
+  loadPage();
 };
 
 /* =========================================================
-   MODAL BACKDROP
-========================================================= */
+   INITIALISE
+   ========================================================= */
 
-document
-  .querySelectorAll(".modal")
-  .forEach(modal=>{
+migrateOldData();
 
-    modal.addEventListener(
-      "click",
-      e=>{
-        if(e.target===modal){
-          modal.hidden=true;
-        }
-      }
-    );
-  });
+document.getElementById("datePicker").value=currentDate;
 
-/* =========================================================
-   EVENT REMINDER
-========================================================= */
+loadPage();
 
-function checkEvents(){
+setInterval(()=>{
+  savePageNow();
+},10000);
 
-  const now=new Date();
-
-  const date=localISO(now);
-
-  const time=
-    String(now.getHours()).padStart(2,"0")+
-    ":"+
-    String(now.getMinutes()).padStart(2,"0");
-
-  const due=events.filter(
-    e=>
-      e.date===date &&
-      e.time===time
-  );
-
-  due.forEach(e=>{
-
-    alert(
-      "🗓️ Diary Event\n\n"+
-      e.title+
-      (e.notes
-        ? "\n\n"+e.notes
-        : "")
-    );
-  });
-}
-
-setInterval(
-  checkEvents,
-  60000
-);
-
-/* =========================================================
-   MIGRATE OLD v8 INDEXEDDB PAGES
-   ---------------------------------------------------------
-   This tries to recover pages created by the previous
-   versions. It does not delete the old database.
-========================================================= */
-
-async function migrateOldPages(){
-
-  try{
-
-    const request=
-      indexedDB.open(
-        "myPersonalDiaryDB"
-      );
-
-    request.onsuccess=()=>{
-
-      const oldDB=request.result;
-
-      if(
-        !oldDB.objectStoreNames.contains("pages")
-      ){
-
-        oldDB.close();
-
-        return;
-      }
-
-      try{
-
-        const transaction=
-          oldDB.transaction(
-            "pages",
-            "readonly"
-          );
-
-        const store=
-          transaction.objectStore("pages");
-
-        const getAll=
-          store.getAll();
-
-        getAll.onsuccess=()=>{
-
-          const oldPages=
-            getAll.result||[];
-
-          let imported=0;
-
-          oldPages.forEach(old=>{
-
-            if(
-              !old ||
-              !old.date
-            ){
-              return;
-            }
-
-            const p=
-              Number(old.page||1);
-
-            const id=
-              pageID(old.date,p);
-
-            if(!pages[id]){
-
-              pages[id]={
-
-                id,
-
-                date:old.date,
-
-                page:p,
-
-                content:
-                  old.content||"",
-
-                drawing:
-                  old.drawing||"",
-
-                mood:
-                  old.mood||"",
-
-                quote:
-                  old.quote||
-                  quoteForDate(old.date),
-
-                updated:
-                  old.updated||
-                  Date.now()
-              };
-
-              imported++;
-            }
-          });
-
-          if(imported){
-
-            saveJSON(
-              PAGE_KEY,
-              pages
-            );
-
-            if(
-              currentDate &&
-              currentPage
-            ){
-              loadPage();
-            }
-
-            showStatus(
-              imported+
-              " old diary page(s) recovered"
-            );
-          }
-
-          oldDB.close();
-        };
-
-      }catch(err){
-
-        console.log(
-          "Old page migration skipped",
-          err
-        );
-
-        oldDB.close();
-      }
-    };
-
-    request.onerror=()=>{
-      console.log(
-        "No previous diary database"
-      );
-    };
-
-  }catch(e){
-
-    console.log(
-      "Migration unavailable",
-      e
-    );
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){
+    savePageNow();
   }
-}
+});
 
-/* =========================================================
-   START APPLICATION
-========================================================= */
+window.addEventListener("beforeunload",()=>{
+  savePageNow();
+});
 
-async function start(){
-
-  loadStorage();
-
-  try{
-    await openMemoryDB();
-  }catch(e){
-    console.error(
-      "Memory database unavailable",
-      e
-    );
-  }
-
-  currentDate=todayISO();
-
-  currentPage=1;
-
-  applySettings();
-
-  loadPage();
-
-  await migrateOldPages();
-
-  if(
-    "serviceWorker" in navigator
-  ){
-
-    try{
-
-      await navigator.serviceWorker.register(
-        "./service-worker.js"
-      );
-
-    }catch(e){
-
-      console.log(
-        "Service worker registration failed",
-        e
-      );
-    }
-  }
-
-  checkEvents();
-}
-
-start();
+checkEventAlerts();
 
 </script>
-
 </body>
 </html>

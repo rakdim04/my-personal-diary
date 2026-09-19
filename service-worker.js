@@ -1,4 +1,4 @@
-const CACHE_NAME = "my-personal-diary-v8-3";
+const CACHE_NAME = "my-personal-diary-v8-4";
 
 const CORE_FILES = [
   "./",
@@ -9,93 +9,171 @@ const CORE_FILES = [
 
 /* INSTALL */
 self.addEventListener("install", event => {
+
   event.waitUntil(
+
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(CORE_FILES))
-      .then(() => self.skipWaiting())
+
+      .then(cache =>
+        cache.addAll(CORE_FILES)
+      )
+
+      .then(() =>
+        self.skipWaiting()
+      )
   );
+
 });
 
 /* ACTIVATE */
 self.addEventListener("activate", event => {
+
   event.waitUntil(
+
     caches.keys()
+
       .then(keys =>
+
         Promise.all(
+
           keys
-            .filter(key => key !== CACHE_NAME)
-            .map(key => caches.delete(key))
+
+            .filter(
+              key => key !== CACHE_NAME
+            )
+
+            .map(
+              key => caches.delete(key)
+            )
         )
       )
-      .then(() => self.clients.claim())
+
+      .then(() =>
+        self.clients.claim()
+      )
   );
+
 });
 
-/* FETCH */
+/*
+   IMPORTANT:
+   For index.html always try the network first.
+   This prevents GitHub Pages from repeatedly showing
+   an old diary version.
+*/
+
 self.addEventListener("fetch", event => {
 
-  if(event.request.method !== "GET") return;
+  if(event.request.method !== "GET"){
+    return;
+  }
 
-  const url = new URL(event.request.url);
+  const url=
+    new URL(event.request.url);
 
-  /* Only handle this GitHub Pages site */
-  if(url.origin !== self.location.origin) return;
+  if(
+    url.origin !==
+    self.location.origin
+  ){
+    return;
+  }
 
-  /* HTML/document:
-     Always try the newest GitHub version first.
-     If offline, use cached version. */
   if(
     event.request.mode === "navigate" ||
     event.request.destination === "document"
   ){
+
     event.respondWith(
+
       fetch(event.request)
+
         .then(response => {
 
-          if(response && response.ok){
-            const copy=response.clone();
+          if(
+            response &&
+            response.ok
+          ){
+
+            const copy=
+              response.clone();
 
             caches.open(CACHE_NAME)
-              .then(cache=>{
-                cache.put(event.request,copy);
+              .then(cache => {
+
+                cache.put(
+                  event.request,
+                  copy
+                );
+
               });
           }
 
           return response;
         })
-        .catch(()=>{
-          return caches.match(event.request)
-            .then(cached=>{
-              return cached || caches.match("./index.html");
-            });
-        })
+
+        .catch(() =>
+
+          caches.match(
+            event.request
+          ).then(cached =>
+
+            cached ||
+            caches.match(
+              "./index.html"
+            )
+          )
+        )
     );
 
     return;
   }
 
-  /* Other local files:
-     cache first, then network. */
+  /*
+     Other local resources:
+     cache first, then network.
+  */
+
   event.respondWith(
-    caches.match(event.request)
-      .then(cached=>{
 
-        if(cached) return cached;
+    caches.match(
+      event.request
+    )
 
-        return fetch(event.request)
-          .then(response=>{
+      .then(cached => {
 
-            if(response && response.ok){
-              const copy=response.clone();
+        if(cached){
+          return cached;
+        }
 
-              caches.open(CACHE_NAME)
-                .then(cache=>{
-                  cache.put(event.request,copy);
-                });
+        return fetch(
+          event.request
+        )
+
+          .then(response => {
+
+            if(
+              response &&
+              response.ok
+            ){
+
+              const copy=
+                response.clone();
+
+              caches.open(
+                CACHE_NAME
+              ).then(cache => {
+
+                cache.put(
+                  event.request,
+                  copy
+                );
+
+              });
             }
 
             return response;
           });
       })
   );
+
 });

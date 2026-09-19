@@ -1,11 +1,9 @@
-const CACHE_NAME =
-  "my-personal-diary-v8-4";
+const CACHE_NAME = "my-personal-diary-v8-5";
 
-const CORE_FILES = [
+const FILES_TO_CACHE = [
   "./",
   "./index.html",
-  "./manifest.json",
-  "./service-worker.js"
+  "./manifest.json"
 ];
 
 
@@ -18,18 +16,12 @@ self.addEventListener(
     event.waitUntil(
 
       caches
-        .open(
-          CACHE_NAME
+        .open(CACHE_NAME)
+        .then(cache =>
+          cache.addAll(FILES_TO_CACHE)
         )
-        .then(
-          cache =>
-            cache.addAll(
-              CORE_FILES
-            )
-        )
-        .then(
-          () =>
-            self.skipWaiting()
+        .then(() =>
+          self.skipWaiting()
         )
 
     );
@@ -48,30 +40,25 @@ self.addEventListener(
 
       caches
         .keys()
-        .then(
-          keys =>
+        .then(keys =>
 
-            Promise.all(
+          Promise.all(
 
-              keys
-                .filter(
-                  key =>
-                    key !==
-                    CACHE_NAME
-                )
-                .map(
-                  key =>
-                    caches.delete(
-                      key
-                    )
-                )
+            keys
+              .filter(
+                key =>
+                  key !== CACHE_NAME
+              )
+              .map(
+                key =>
+                  caches.delete(key)
+              )
 
-            )
+          )
 
         )
-        .then(
-          () =>
-            self.clients.claim()
+        .then(() =>
+          self.clients.claim()
         )
 
     );
@@ -87,132 +74,51 @@ self.addEventListener(
   event => {
 
     if(
-      event.request.method !==
-      "GET"
-    )
-      return;
-
-    const url =
-      new URL(
-        event.request.url
-      );
-
-    /*
-      Only handle files belonging
-      to this GitHub Pages site.
-    */
-
-    if(
-      url.origin !==
-      self.location.origin
-    )
-      return;
-
-
-    /*
-      HTML navigation:
-      network first so GitHub Pages
-      updates reach the tablet/mobile.
-    */
-
-    if(
-      event.request.mode ===
-      "navigate"
+      event.request.method !== "GET"
     ){
-
-      event.respondWith(
-
-        fetch(
-          event.request
-        )
-        .then(
-          response => {
-
-            const copy =
-              response.clone();
-
-            caches
-              .open(
-                CACHE_NAME
-              )
-              .then(
-                cache =>
-                  cache.put(
-                    event.request,
-                    copy
-                  )
-              );
-
-            return response;
-
-          }
-        )
-        .catch(
-          () =>
-            caches.match(
-              "./index.html"
-            )
-        )
-
-      );
-
       return;
-
     }
 
-
-    /*
-      Other local files:
-      cache first, then network.
-    */
 
     event.respondWith(
 
       caches
-        .match(
-          event.request
-        )
-        .then(
-          cached => {
+        .match(event.request)
+        .then(cached => {
 
-            if(cached)
-              return cached;
-
-            return fetch(
-              event.request
-            )
-            .then(
-              response => {
-
-                if(
-                  response &&
-                  response.ok
-                ){
-
-                  const copy =
-                    response.clone();
-
-                  caches
-                    .open(
-                      CACHE_NAME
-                    )
-                    .then(
-                      cache =>
-                        cache.put(
-                          event.request,
-                          copy
-                        )
-                    );
-
-                }
-
-                return response;
-
-              }
-            );
-
+          if(cached){
+            return cached;
           }
-        )
+
+
+          return fetch(
+            event.request
+          )
+          .then(response => {
+
+            const copy=
+              response.clone();
+
+            caches
+              .open(CACHE_NAME)
+              .then(cache =>
+                cache.put(
+                  event.request,
+                  copy
+                )
+              );
+
+            return response;
+
+          })
+          .catch(
+            () =>
+              caches.match(
+                "./index.html"
+              )
+          );
+
+        })
 
     );
 

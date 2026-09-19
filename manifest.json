@@ -1,14 +1,14 @@
 {
   "name": "My Personal Diary",
   "short_name": "My Diary",
-  "description": "Professional paper-style personal diary with writing, drawing, calendar, events, mood, quotes and to-do list.",
+  "description": "A professional paper-style personal diary with writing, drawing, memories, events, calendar and tasks.",
   "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#c9ad80",
-  "theme_color": "#5a371f",
+  "background_color": "#c7a77d",
+  "theme_color": "#5b3825",
   "lang": "en-IN",
   "categories": [
     "lifestyle",

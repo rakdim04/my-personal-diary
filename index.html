@@ -2,1129 +2,561 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<meta name="theme-color" content="#5b3825">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5b402b">
 <link rel="manifest" href="manifest.json">
-
-<title>My Personal Diary</title>
+<title>My Personal Diary v8.5</title>
 
 <style>
+*{box-sizing:border-box}
 
-:root{
-  --paper:#fbf8ea;
-  --paper2:#f5efd9;
-  --ink:#3d2b20;
-  --line:#d8cfb7;
-  --brown:#5b3825;
-  --brown2:#74482e;
-  --gold:#b68a55;
-  --shadow:rgba(50,30,15,.28);
-  --fontSize:20px;
-  --lineHeight:36px;
+html,body{
+ margin:0;
+ padding:0;
+ background:#d8d0c4;
+ color:#33281f;
+ font-family:Georgia,"Times New Roman",serif;
 }
 
-/* ---------- BASIC ---------- */
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
 
-*{
-  box-sizing:border-box;
-}
+.app{min-height:100vh}
 
-html,
-body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-}
-
-body{
-  color:var(--ink);
-  font-family:Georgia,"Times New Roman",serif;
-
-  background:
-    radial-gradient(circle at 20% 10%,#ffffff22,transparent 30%),
-    linear-gradient(135deg,#b78d60,#dfc69b 50%,#b98e60);
-
-  overflow-x:hidden;
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-/* ---------- TOP BAR ---------- */
-
-.app{
-  min-height:100vh;
-  padding:10px;
-}
-
+/* TOP BAR */
 .topbar{
-  position:sticky;
-  top:8px;
-  z-index:100;
+ position:sticky;
+ top:0;
+ z-index:1000;
+ background:#5b402b;
+ color:white;
+ padding:8px 10px;
+ box-shadow:0 3px 12px #0005;
+}
 
-  display:flex;
-  align-items:center;
-  gap:7px;
-  flex-wrap:wrap;
+.toprow{
+ display:flex;
+ align-items:center;
+ gap:6px;
+ max-width:1250px;
+ margin:auto;
+ overflow-x:auto;
+ scrollbar-width:none;
+}
 
-  padding:10px 13px;
+.toprow::-webkit-scrollbar{display:none}
 
-  border-radius:17px;
-
-  background:
-    linear-gradient(
-      180deg,
-      #70472d,
-      #4b2d1d
-    );
-
-  box-shadow:
-    0 8px 22px rgba(40,20,10,.35);
-
-  color:white;
+.toprow button{
+ border:1px solid #ffffff55;
+ background:#76573c;
+ color:white;
+ border-radius:7px;
+ padding:8px 10px;
+ white-space:nowrap;
 }
 
 .brand{
-  font-size:23px;
-  font-weight:bold;
-  margin-right:auto;
-  white-space:nowrap;
+ font-weight:bold;
+ font-size:18px;
+ margin-right:auto;
+ white-space:nowrap;
 }
 
-.topbar button{
-  border:0;
-  border-radius:11px;
-
-  background:#fffaf0;
-  color:#4b3020;
-
-  padding:8px 11px;
-
-  box-shadow:
-    0 2px 5px rgba(0,0,0,.18);
+/* BOOK */
+.workspace{
+ max-width:1280px;
+ margin:auto;
+ padding:14px 10px 40px;
 }
 
-/* ---------- DATE NAVIGATION ---------- */
-
-.nav{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  gap:9px;
-
-  margin:11px auto;
-
-  max-width:1150px;
+.book{
+ position:relative;
+ display:flex;
+ min-height:calc(100vh - 90px);
+ filter:drop-shadow(0 10px 18px #0002);
 }
 
-.nav button,
-.nav select{
-  border:1px solid #c8b38d;
-  background:#fff9ec;
-  color:#4d3323;
-
-  border-radius:10px;
-
-  padding:9px 13px;
-}
-
-/* ---------- NOTEBOOK ---------- */
-
-.notebook{
-  position:relative;
-
-  width:100%;
-  max-width:1280px;
-
-  margin:0 auto 30px;
-
-  padding-left:0;
-}
-
-/*
-  Open notebook appearance.
-  The binding is deliberately visible at the left edge,
-  while the paper extends almost full width.
-*/
-
-.bookPage{
-  position:relative;
-
-  height:calc(100vh - 175px);
-  min-height:720px;
-
-  overflow-y:auto;
-  overflow-x:hidden;
-
-  border-radius:
-    17px
-    28px
-    28px
-    17px;
-
-  padding:
-    0
-    48px
-    90px
-    78px;
-
-  background-color:var(--paper);
-
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent calc(var(--lineHeight) - 1px),
-      var(--line) var(--lineHeight)
-    ),
-    radial-gradient(
-      rgba(80,50,20,.035) .7px,
-      transparent .8px
-    );
-
-  background-size:
-    100% var(--lineHeight),
-    7px 7px;
-
-  box-shadow:
-    0 12px 30px var(--shadow),
-    inset 0 0 45px rgba(120,90,40,.08);
-
-  scroll-behavior:smooth;
-}
-
-/* central paper crease gives open-notebook appearance */
-
-.bookPage:after{
-  content:"";
-
-  position:absolute;
-
-  top:0;
-  bottom:0;
-
-  left:50%;
-
-  width:2px;
-
-  background:
-    linear-gradient(
-      transparent,
-      rgba(80,50,30,.08),
-      transparent
-    );
-
-  pointer-events:none;
-}
-
-/* ---------- NATURAL SPIRAL ---------- */
-
+/* SPIRAL / SPINE */
 .spine{
-  position:absolute;
-
-  left:12px;
-  top:0;
-  bottom:0;
-
-  width:48px;
-
-  z-index:20;
-
-  pointer-events:none;
+ width:54px;
+ flex:0 0 54px;
+ background:linear-gradient(
+   90deg,
+   #493221,
+   #76543a 35%,
+   #3f2b1e 70%,
+   #6e4c34
+ );
+ border-radius:18px 0 0 18px;
+ position:relative;
+ overflow:hidden;
 }
-
-.spine:before{
-  content:"";
-
-  position:absolute;
-
-  left:19px;
-  top:0;
-  bottom:0;
-
-  width:5px;
-
-  background:
-    linear-gradient(
-      90deg,
-      #5c402e,
-      #a68b6e,
-      #4b3426
-    );
-
-  border-radius:5px;
-
-  box-shadow:
-    1px 0 2px #0005;
-}
-
-/*
-  Natural notebook rings
-*/
 
 .spine:after{
-  content:"";
-
-  position:absolute;
-
-  left:0;
-  right:0;
-  top:14px;
-  bottom:14px;
-
-  background:
-
-    radial-gradient(
-      ellipse 18px 8px at 50% 0,
-      #777 0 45%,
-      #282828 48% 57%,
-      transparent 60%
-    );
-
-  background-size:
-    40px 58px;
-
-  background-repeat:repeat-y;
-
-  filter:
-    drop-shadow(
-      1px 2px 1px rgba(0,0,0,.45)
-    );
+ content:"";
+ position:absolute;
+ inset:0;
+ background:
+ repeating-radial-gradient(
+   ellipse at 35% 18px,
+   transparent 0 8px,
+   #1e130c 9px 11px,
+   transparent 12px 24px
+ );
+ opacity:.9;
 }
 
-/* ---------- STICKY PAGE HEADER ---------- */
+/* PAGE */
+.page{
+ position:relative;
+ flex:1;
+ min-width:0;
+ min-height:calc(100vh - 90px);
+ border-radius:0 12px 12px 0;
+ padding:0 22px 50px;
+ background-color:#fffdf4;
+ background-image:
+   repeating-linear-gradient(
+     to bottom,
+     transparent 0,
+     transparent 31px,
+     #b8d2e4 32px,
+     #b8d2e4 33px
+   );
+ overflow:hidden;
+}
 
+.page.classic{background-color:#fffdf4}
+.page.vintage{background-color:#f5e6c8}
+.page.blue{background-color:#eef7ff}
+.page.green{background-color:#eff8ee}
+.page.rose{background-color:#fff1f4}
+.page.night{
+ background-color:#292726;
+ color:#eee;
+ background-image:
+ repeating-linear-gradient(
+   to bottom,
+   transparent 0,
+   transparent 31px,
+   #555 32px,
+   #555 33px
+ );
+}
+
+/* STICKY HEADER */
 .pageHeader{
-  position:sticky;
-
-  top:0;
-
-  z-index:15;
-
-  padding:
-    15px
-    5px
-    7px;
-
-  background:
-    linear-gradient(
-      rgba(251,248,234,.98),
-      rgba(251,248,234,.93) 75%,
-      rgba(251,248,234,0)
-    );
-
-  backdrop-filter:blur(3px);
+ position:sticky;
+ top:0;
+ z-index:50;
+ margin:0 -22px 6px;
+ padding:9px 14px 5px;
+ background:#fffdf4ee;
+ backdrop-filter:blur(7px);
+ border-bottom:1px solid #8c765c55;
 }
 
-.headrow{
-  display:flex;
-  align-items:center;
+.night .pageHeader{
+ background:#292726ee;
+}
 
-  min-width:0;
-
-  gap:8px;
+.headerLine{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ min-height:30px;
 }
 
 .dateTitle{
-  min-width:0;
-
-  flex:1;
-
-  font-size:
-    clamp(
-      25px,
-      3vw,
-      39px
-    );
-
-  line-height:1.08;
-
-  font-weight:bold;
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
+ font-weight:bold;
+ font-size:18px;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
 }
 
-.pageNo{
-  font-size:14px;
-
-  color:#766555;
-
-  white-space:nowrap;
-}
-
-/* ---------- MOOD ---------- */
-
-.moodWrap{
-  position:relative;
-}
-
-.moodButton{
-  border:0;
-
-  background:transparent;
-
-  font-size:25px;
-
-  padding:2px 4px;
-
-  border-radius:8px;
-}
-
-.moodMenu{
-  position:absolute;
-
-  right:0;
-  top:100%;
-
-  display:none;
-
-  z-index:100;
-
-  padding:6px;
-
-  background:#fffaf0;
-
-  border:
-    1px solid
-    #c8b38e;
-
-  border-radius:11px;
-
-  box-shadow:
-    0 8px 20px #0004;
-}
-
-.moodMenu.open{
-  display:flex;
-
-  gap:3px;
-}
-
-.moodMenu button{
-  border:0;
-  background:transparent;
-
-  font-size:25px;
-
-  padding:5px;
-
-  border-radius:7px;
-}
-
-/* ---------- QUOTE ---------- */
-
-.quoteRow{
-  display:flex;
-
-  align-items:center;
-
-  gap:8px;
-
-  height:31px;
-
-  margin-top:3px;
+.moodMark{
+ font-size:19px;
+ min-width:20px;
 }
 
 .quote{
-  flex:1;
-
-  min-width:0;
-
-  height:27px;
-
-  line-height:27px;
-
-  overflow:hidden;
-
-  white-space:nowrap;
-
-  text-overflow:ellipsis;
-
-  font-size:16px;
-
-  font-style:italic;
-
-  padding-left:9px;
-
-  border-left:
-    4px solid
-    #ad8355;
+ font-size:13px;
+ font-style:italic;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ max-width:75%;
 }
 
-.quoteBtn{
-  flex:none;
-
-  border:
-    1px solid
-    #c2ad86;
-
-  background:#fff9ee;
-
-  border-radius:9px;
-
-  padding:4px 9px;
+.headerActions{
+ margin-left:auto;
+ display:flex;
+ gap:4px;
 }
 
-/* ---------- TOOLBAR ---------- */
+.headerActions button{
+ border:0;
+ background:#ffffff88;
+ border-radius:6px;
+ padding:5px 7px;
+}
 
+/* FORMATTING TOOLBAR */
 .toolbar{
-  display:flex;
+ position:sticky;
+ top:62px;
+ z-index:49;
+ display:flex;
+ align-items:center;
+ gap:4px;
+ flex-wrap:wrap;
+ background:#f7f0e4ee;
+ border:1px solid #9d836566;
+ border-radius:8px;
+ padding:5px;
+ margin:0 0 9px;
+}
 
-  align-items:center;
-
-  flex-wrap:wrap;
-
-  gap:5px;
-
-  padding:6px;
-
-  margin:
-    2px
-    0
-    7px;
-
-  border:
-    1px solid
-    #cbb78f;
-
-  border-radius:11px;
-
-  background:
-    rgba(247,239,217,.92);
+.night .toolbar{
+ background:#393635ee;
 }
 
 .toolbar button{
-  min-width:36px;
-
-  height:35px;
-
-  border:
-    1px solid
-    #c4ae86;
-
-  border-radius:8px;
-
-  background:#fffaf0;
-
-  color:#493124;
+ min-width:34px;
+ border:1px solid #987d64;
+ background:#fffaf1;
+ border-radius:6px;
+ padding:6px 8px;
 }
 
-.toolbar button:active{
-  transform:scale(.97);
+.night .toolbar button{
+ background:#444;
+ color:white;
+ border-color:#777;
 }
 
-.drawTools{
-  display:none;
-
-  align-items:center;
-
-  flex-wrap:wrap;
-
-  gap:4px;
+.toolbar .sep{
+ width:1px;
+ height:25px;
+ background:#987d64;
+ margin:0 2px;
 }
 
-.drawTools.open{
-  display:flex;
+.drawtools{
+ display:flex;
+ gap:4px;
+ flex-wrap:wrap;
 }
 
-.drawTools button.active{
-  background:#d8b477;
+.drawtools button.active{
+ outline:2px solid #b24d2b;
 }
 
-.drawClose{
-  background:#9b4d32!important;
-  color:#fff!important;
+/* EDITOR */
+.pagesBar{
+ display:flex;
+ gap:5px;
+ overflow:auto;
+ margin:8px 0;
 }
 
-/* ---------- EDITOR ---------- */
+.pagesBar button{
+ border:1px solid #92765c;
+ background:#fff7e9;
+ border-radius:5px;
+ padding:5px 9px;
+}
+
+.pagesBar button.active{
+ background:#6b4f36;
+ color:white;
+}
 
 .editorWrap{
-  position:relative;
-
-  min-height:
-    calc(
-      var(--lineHeight) * 22
-    );
+ position:relative;
+ min-height:720px;
 }
 
 .editor{
-  position:relative;
-
-  z-index:2;
-
-  min-height:
-    calc(
-      var(--lineHeight) * 22
-    );
-
-  outline:none;
-
-  font-size:var(--fontSize);
-
-  line-height:var(--lineHeight);
-
-  white-space:pre-wrap;
-
-  word-break:normal;
-
-  overflow-wrap:break-word;
-
-  padding:
-    0
-    5px
-    100px
-    4px;
-
-  background:transparent;
+ min-height:720px;
+ outline:0;
+ padding:1px 8px 40px 4px;
+ font-family:"Segoe Print","Comic Sans MS",cursive;
+ font-size:18px;
+ line-height:32px;
+ white-space:pre-wrap;
+ word-break:break-word;
+ caret-color:#492e20;
 }
 
-/*
-  This alignment is important:
-  text baseline now sits on the ruled paper line.
-*/
-
-.editor p,
-.editor div{
-  margin:0;
-  padding:0;
-  line-height:var(--lineHeight);
+.editor:empty:before{
+ content:"Write your diary here...";
+ color:#8e7d6b;
+ pointer-events:none;
 }
+
+.night .editor{color:#eee}
 
 .editor ul,
 .editor ol{
-  margin:0;
-  padding-left:30px;
+ margin-top:0;
+ margin-bottom:0;
+ padding-left:30px;
 }
 
 .editor li{
-  line-height:var(--lineHeight);
-  margin:0;
+ line-height:32px;
 }
 
-/* ---------- DRAWING ---------- */
-
+/* DRAWING */
 .drawCanvas{
-  position:absolute;
-
-  inset:0;
-
-  width:100%;
-  height:100%;
-
-  z-index:5;
-
-  background:transparent;
-
-  touch-action:none;
-
-  pointer-events:none;
+ position:absolute;
+ inset:0;
+ width:100%;
+ height:100%;
+ z-index:20;
+ pointer-events:none;
 }
 
-.drawCanvas.enabled{
-  pointer-events:auto;
+.drawing .drawCanvas{
+ pointer-events:auto;
 }
 
-.drawHint{
-  position:absolute;
-
-  right:10px;
-  top:8px;
-
-  z-index:7;
-
-  display:none;
-
-  padding:4px 8px;
-
-  font-size:12px;
-
-  background:#fff8e9dd;
-
-  border:1px solid #c4ae86;
-
-  border-radius:7px;
+.newPageTab{
+ position:absolute;
+ right:8px;
+ bottom:12px;
+ z-index:40;
+ border:1px solid #8b6b4e;
+ background:#ead5b9;
+ border-radius:7px;
+ padding:8px 12px;
 }
 
-.drawHint.show{
-  display:block;
-}
-
-/* ---------- NEW PAGE ---------- */
-
-.newPage{
-  position:absolute;
-
-  right:-1px;
-  top:45%;
-
-  z-index:20;
-
-  border:
-    1px solid
-    #a47a4d;
-
-  border-right:0;
-
-  background:
-    linear-gradient(
-      #f0d5a7,
-      #dfbd88
-    );
-
-  color:#4d3020;
-
-  padding:
-    15px
-    8px;
-
-  border-radius:
-    10px
-    0
-    0
-    10px;
-
-  box-shadow:
-    -3px 4px 8px #0002;
-
-  writing-mode:vertical-rl;
-}
-
-/* ---------- MODALS ---------- */
-
-.modalBack{
-  position:fixed;
-
-  inset:0;
-
-  z-index:200;
-
-  display:none;
-
-  align-items:center;
-  justify-content:center;
-
-  padding:14px;
-
-  background:#0008;
-}
-
-.modalBack.open{
-  display:flex;
-}
-
+/* MODALS */
 .modal{
-  width:min(650px,96vw);
-
-  max-height:90vh;
-
-  overflow:auto;
-
-  padding:18px;
-
-  border-radius:17px;
-
-  background:#fffaf0;
-
-  box-shadow:
-    0 20px 50px #0007;
+ position:fixed;
+ inset:0;
+ z-index:2000;
+ background:#0008;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:14px;
 }
 
-.modal h2{
-  margin-top:0;
+.modalBox{
+ background:#fffaf0;
+ color:#34271e;
+ width:min(720px,96vw);
+ max-height:90vh;
+ overflow:auto;
+ border-radius:12px;
+ padding:16px;
+ box-shadow:0 15px 45px #0006;
 }
 
-.form{
-  display:grid;
-  gap:9px;
+.modalBox h2{margin-top:0}
+
+.grid2{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
 }
 
-.form input,
-.form textarea,
-.form select{
-  width:100%;
-
-  padding:9px;
-
-  border:
-    1px solid
-    #c8b58e;
-
-  border-radius:8px;
-
-  background:white;
+.field{
+ display:flex;
+ flex-direction:column;
+ gap:4px;
+ margin:7px 0;
 }
 
-.actions{
-  display:flex;
-
-  justify-content:flex-end;
-
-  flex-wrap:wrap;
-
-  gap:7px;
-
-  margin-top:13px;
+.field input,
+.field textarea,
+.field select{
+ border:1px solid #b29b82;
+ border-radius:6px;
+ padding:8px;
+ background:#fff;
 }
 
-.actions button{
-  border:0;
+.field textarea{min-height:80px}
 
-  border-radius:9px;
-
-  padding:9px 13px;
-
-  background:#e4cea5;
+.modalActions{
+ display:flex;
+ justify-content:flex-end;
+ gap:7px;
+ margin-top:12px;
 }
 
-.actions .primary{
-  background:#654029;
-  color:#fff;
+.modalActions button{
+ padding:8px 12px;
+ border-radius:7px;
+ border:1px solid #94765b;
+ background:#f0e0ca;
 }
 
-/* ---------- CALENDAR ---------- */
-
+/* CALENDAR */
 .calendarHead{
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  gap:8px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
 }
 
-.calendarGrid{
-  display:grid;
-
-  grid-template-columns:
-    repeat(7,1fr);
-
-  gap:4px;
+.calGrid{
+ display:grid;
+ grid-template-columns:repeat(7,1fr);
+ gap:4px;
+ margin-top:8px;
 }
 
 .calCell{
-  min-height:55px;
-
-  padding:5px;
-
-  border:
-    1px solid
-    #d8c9aa;
-
-  border-radius:8px;
-
-  background:#fffdf7;
-
-  cursor:pointer;
+ min-height:70px;
+ border:1px solid #cdbba5;
+ border-radius:6px;
+ background:#fff;
+ padding:5px;
+ position:relative;
+ text-align:left;
 }
 
 .calCell.today{
-  outline:
-    2px solid
-    #a96f32;
+ outline:2px solid #7c5436;
 }
 
-.calCell.event{
-  background:#efdfbd;
+.calEvent{
+ display:block;
+ font-size:11px;
+ background:#ead2b5;
+ border-radius:3px;
+ padding:2px;
+ margin-top:2px;
+ overflow:hidden;
+ white-space:nowrap;
+ text-overflow:ellipsis;
 }
 
-.eventDot{
-  display:inline-block;
-
-  width:7px;
-  height:7px;
-
-  border-radius:50%;
-
-  margin-left:4px;
-
-  background:#9b4b31;
+/* MEMORY */
+.memoryGrid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+ gap:10px;
 }
 
-/* ---------- TODO ---------- */
-
-.todoAdd{
-  display:flex;
-
-  gap:6px;
+.memory{
+ border:1px solid #c7b299;
+ border-radius:8px;
+ padding:6px;
+ background:#fff;
 }
 
-.todoAdd input{
-  flex:1;
-
-  padding:9px;
-
-  border:
-    1px solid
-    #c8b58e;
-
-  border-radius:8px;
+.memory img{
+ width:100%;
+ height:150px;
+ object-fit:cover;
+ border-radius:5px;
 }
 
-.todoList{
-  max-height:45vh;
-
-  overflow:auto;
-
-  margin-top:10px;
+/* TODO */
+.todoRow{
+ display:flex;
+ gap:8px;
+ align-items:center;
+ padding:7px;
+ border-bottom:1px solid #ddcdb9;
 }
 
-.todoItem{
-  display:flex;
+.todoRow span{flex:1}
 
-  align-items:center;
-
-  gap:8px;
-
-  padding:8px 2px;
-
-  border-bottom:
-    1px solid
-    #d8ccb5;
-
-  line-height:1.4;
+.done{
+ text-decoration:line-through;
+ opacity:.55;
 }
 
-.todoItem span{
-  flex:1;
-
-  min-width:0;
-
-  word-break:break-word;
-}
-
-.todoItem.done span{
-  text-decoration:line-through;
-  opacity:.5;
-}
-
-/* ---------- SETTINGS ---------- */
-
+/* SETTINGS */
 .designs{
-  display:grid;
-
-  grid-template-columns:
-    repeat(3,1fr);
-
-  gap:8px;
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:8px;
 }
 
 .design{
-  height:65px;
-
-  border:
-    2px solid
-    #c9b48e;
-
-  border-radius:10px;
-
-  cursor:pointer;
+ border:2px solid transparent;
+ border-radius:8px;
+ padding:18px;
+ text-align:center;
 }
 
-.design.selected{
-  outline:
-    3px solid
-    #a96f32;
+.design.sel{
+ border-color:#7b4d2d;
 }
 
-.design.classic{
-  background:
-    repeating-linear-gradient(
-      #fbf8ea 0 35px,
-      #d8cfb7 36px
-    );
+.toast{
+ position:fixed;
+ bottom:20px;
+ left:50%;
+ transform:translateX(-50%);
+ z-index:3000;
+ background:#4d3524;
+ color:white;
+ padding:10px 16px;
+ border-radius:20px;
+ box-shadow:0 5px 20px #0005;
 }
 
-.design.vintage{
-  background:
-    repeating-linear-gradient(
-      #ead8b5 0 35px,
-      #c7ae86 36px
-    );
-}
-
-.design.blue{
-  background:
-    repeating-linear-gradient(
-      #edf5f4 0 35px,
-      #b9d3d2 36px
-    );
-}
-
-.design.green{
-  background:
-    repeating-linear-gradient(
-      #eef1df 0 35px,
-      #c7d0ae 36px
-    );
-}
-
-.design.rose{
-  background:
-    repeating-linear-gradient(
-      #f5e9e6 0 35px,
-      #d9bfc0 36px
-    );
-}
-
-.design.night{
-  background:
-    repeating-linear-gradient(
-      #363d43 0 35px,
-      #5d6870 36px
-    );
-}
-
-/* ---------- UTILITY ---------- */
-
-.hidden{
-  display:none!important;
-}
-
-/* ---------- MOBILE ---------- */
-
+/* MOBILE */
 @media(max-width:700px){
 
-  .app{
-    padding:4px;
-  }
+ .workspace{
+  padding:5px 3px 25px;
+ }
 
-  .topbar{
-    position:relative;
+ .spine{
+  width:30px;
+  flex-basis:30px;
+ }
 
-    border-radius:11px;
+ .page{
+  padding:0 10px 45px;
+ }
 
-    padding:6px;
-  }
+ .pageHeader{
+  margin:0 -10px 5px;
+  padding-left:8px;
+  padding-right:8px;
+ }
 
-  .brand{
-    width:100%;
+ .toolbar{
+  top:57px;
+ }
 
-    font-size:18px;
-  }
+ .editor{
+  font-size:17px;
+ }
 
-  .topbar button{
-    padding:6px 8px;
+ .grid2{
+  grid-template-columns:1fr;
+ }
 
-    font-size:12px;
-  }
+ .calCell{
+  min-height:58px;
+  font-size:12px;
+ }
 
-  .nav{
-    gap:5px;
-    margin:6px auto;
-  }
+ .calEvent{
+  font-size:9px;
+ }
 
-  .nav button,
-  .nav select{
-    padding:7px 8px;
-    font-size:13px;
-  }
+ .brand{
+  font-size:15px;
+ }
 
-  .bookPage{
-    height:calc(100vh - 145px);
-
-    min-height:600px;
-
-    padding:
-      0
-      16px
-      75px
-      48px;
-
-    border-radius:
-      11px
-      17px
-      17px
-      11px;
-  }
-
-  .spine{
-    left:3px;
-    width:38px;
-  }
-
-  .spine:before{
-    left:16px;
-  }
-
-  .dateTitle{
-    font-size:25px;
-  }
-
-  .pageNo{
-    font-size:11px;
-  }
-
-  .quote{
-    font-size:13px;
-  }
-
-  .quoteBtn{
-    padding:3px 6px;
-    font-size:12px;
-  }
-
-  .toolbar{
-    gap:3px;
-  }
-
-  .toolbar button{
-    min-width:32px;
-    height:32px;
-  }
-
-  .editor{
-    font-size:
-      clamp(
-        17px,
-        4.7vw,
-        19px
-      );
-
-    line-height:
-      var(--lineHeight);
-
-    min-height:
-      calc(
-        var(--lineHeight) * 20
-      );
-  }
-
-  .newPage{
-    right:-1px;
-    padding:12px 7px;
-  }
-
-  .designs{
-    grid-template-columns:
-      repeat(2,1fr);
-  }
-
-  .calendarGrid .calCell{
-    min-height:43px;
-    font-size:12px;
-  }
-
+ .toprow button{
+  padding:7px 8px;
+ }
 }
-
 </style>
 </head>
 
@@ -1133,3466 +565,2504 @@ button{
 <div class="app">
 
 <header class="topbar">
+<div class="toprow">
 
-<div class="brand">
-📖 My Personal Diary
-</div>
+<div class="brand">📖 My Diary</div>
 
 <button id="calendarBtn">📅 Calendar</button>
-<button id="eventBtn">🗓️ Event</button>
-<button id="memoryBtn">🖼️ Memories</button>
-<button id="todoBtn">☑️ To-do</button>
-<button id="drawBtn">✏️ Draw</button>
-<button id="settingsBtn">⚙️ Settings</button>
-<button id="printBtn">🖨️ Print</button>
+<button id="eventsBtn">📌 Events</button>
+<button id="todoBtn">☑ To-Do</button>
+<button id="memoryBtn">🖼 Memories</button>
+<button id="settingsBtn">⚙ Settings</button>
 <button id="backupBtn">💾 Backup</button>
-<button id="restoreBtn">↩️ Restore</button>
+<button id="restoreBtn">↩ Restore</button>
 
-<input
-  id="restoreInput"
-  type="file"
-  accept=".json,application/json"
-  hidden
->
+<input id="restoreInput" type="file" accept=".json" hidden>
 
-</header>
-
-
-<div class="nav">
-
-<button id="prevBtn">
-‹ Previous
-</button>
-
-<select id="dateSelect"></select>
-
-<button id="nextBtn">
-Next ›
-</button>
+<button id="printBtn">🖨 Print</button>
 
 </div>
+</header>
 
+<main class="workspace">
 
-<main class="notebook">
+<div class="book">
 
 <div class="spine"></div>
 
-<section
-  class="bookPage"
-  id="bookPage"
->
+<section id="page" class="page classic">
 
-<header class="pageHeader">
+<div class="pageHeader">
 
-<div class="headrow">
+<div class="headerLine">
 
-<div
-  class="dateTitle"
-  id="dateTitle"
-></div>
+<div id="dateTitle" class="dateTitle"></div>
 
-<div class="moodWrap">
+<span id="moodMark" class="moodMark"></span>
 
-<button
-  class="moodButton"
-  id="moodButton"
->
-🙂
-</button>
+<div class="headerActions">
 
-<div
-  class="moodMenu"
-  id="moodMenu"
-></div>
+<button id="prevDay">‹</button>
+<button id="todayBtn">Today</button>
+<button id="nextDay">›</button>
 
-</div>
-
-<div
-  class="pageNo"
-  id="pageNo"
->
-Page 1
 </div>
 
 </div>
 
+<div class="headerLine">
 
-<div class="quoteRow">
+<div id="quote" class="quote"></div>
 
-<div
-  class="quote"
-  id="quoteText"
-></div>
-
-<button
-  class="quoteBtn"
-  id="quoteBtn"
->
-💬 Quote
-</button>
-
-</div>
-
-</header>
-
-
-<div class="toolbar">
-
-<button data-command="bold">
-<b>B</b>
-</button>
-
-<button data-command="italic">
-<i>I</i>
-</button>
-
-<button data-command="underline">
-<u>U</u>
-</button>
-
-<button data-command="insertUnorderedList">
-•
-</button>
-
-<button data-command="insertOrderedList">
-1.
-</button>
-
-<button data-command="justifyLeft">
-≡
-</button>
-
-<button data-command="justifyCenter">
-≡
-</button>
-
-<button data-command="removeFormat">
-Tx
-</button>
-
-<button id="drawToolbarButton">
-✏️
-</button>
-
-
-<div
-  class="drawTools"
-  id="drawTools"
->
-
-<button data-tool="pen">
-✎ Pen
-</button>
-
-<button data-tool="line">
-╱ Line
-</button>
-
-<button data-tool="circle">
-◯ Circle
-</button>
-
-<button data-tool="eraser">
-⌫ Eraser
-</button>
-
-<button id="drawUndo">
-↶
-</button>
-
-<button id="drawRedo">
-↷
-</button>
-
-<button id="drawClear">
-Clear
-</button>
-
-<button
-  id="drawClose"
-  class="drawClose"
->
-Close
-</button>
+<button id="changeQuote">↻</button>
 
 </div>
 
 </div>
 
 
-<div
-  class="editorWrap"
-  id="editorWrap"
->
+<!-- FIXED B/I/U/DRAW TOOLBAR -->
 
-<div
-  class="drawHint"
-  id="drawHint"
->
-Draw mode
+<div class="toolbar" id="toolbar">
+
+<button data-cmd="bold"><b>B</b></button>
+
+<button data-cmd="italic"><i>I</i></button>
+
+<button data-cmd="underline"><u>U</u></button>
+
+<button data-cmd="insertUnorderedList">• List</button>
+
+<button data-cmd="insertOrderedList">1. List</button>
+
+<button data-cmd="justifyLeft">≡</button>
+
+<button data-cmd="justifyCenter">≡</button>
+
+<button data-cmd="removeFormat">Clear</button>
+
+<span class="sep"></span>
+
+<button id="drawToggle">✏ Draw</button>
+
+<div id="drawtools" class="drawtools" hidden>
+
+<button data-draw="pen">Pen</button>
+<button data-draw="line">Line</button>
+<button data-draw="circle">Circle</button>
+<button data-draw="eraser">Eraser</button>
+<button data-draw="undo">↶</button>
+<button data-draw="redo">↷</button>
+<button data-draw="clear">Clear Ink</button>
+
 </div>
 
-<div
-  id="editor"
-  class="editor"
-  contenteditable="true"
-  spellcheck="true"
-></div>
+</div>
 
-<canvas
-  id="drawCanvas"
-  class="drawCanvas"
-></canvas>
+
+<div class="pagesBar" id="pagesBar"></div>
+
+
+<div class="editorWrap" id="editorWrap">
+
+<div
+ id="editor"
+ class="editor"
+ contenteditable="true"
+ spellcheck="true">
+</div>
+
+<canvas id="drawCanvas" class="drawCanvas"></canvas>
 
 </div>
 
 
-<button
-  id="newPageBtn"
-  class="newPage"
->
+<button class="newPageTab" id="newPageBtn">
 ＋ New Page
 </button>
 
 </section>
+
+</div>
 
 </main>
 
 </div>
 
 
-<!-- CALENDAR -->
+<div id="modal" class="modal" hidden>
 
-<div
-  class="modalBack"
-  id="calendarModal"
->
-
-<div class="modal">
-
-<div class="calendarHead">
-
-<h2>📅 Diary Calendar</h2>
-
-<button data-close="calendarModal">
-Close
-</button>
-
-</div>
-
-<div class="calendarHead">
-
-<button id="calPrev">
-‹
-</button>
-
-<h3 id="calTitle"></h3>
-
-<button id="calNext">
-›
-</button>
-
-</div>
-
-<div
-  class="calendarGrid"
-  id="calendarGrid"
-></div>
-
-<div id="calendarEvents"></div>
-
-</div>
+<div class="modalBox" id="modalBox"></div>
 
 </div>
 
 
-<!-- EVENT -->
-
-<div
-  class="modalBack"
-  id="eventModal"
->
-
-<div class="modal">
-
-<h2>
-🗓️ Diary Event
-</h2>
-
-<p
-  id="eventPastMessage"
-  class="hidden"
->
-Events cannot be added to a previous date.
-</p>
-
-<div class="form">
-
-<input
-  id="eventTitle"
-  placeholder="Event title"
->
-
-<input
-  id="eventDate"
-  type="date"
->
-
-<input
-  id="eventTime"
-  type="time"
->
-
-<textarea
-  id="eventNotes"
-  rows="3"
-  placeholder="Notes"
-></textarea>
-
-</div>
-
-<div id="eventList"></div>
-
-<div class="actions">
-
-<button data-close="eventModal">
-Close
-</button>
-
-<button
-  id="saveEvent"
-  class="primary"
->
-Save Event
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- TODO -->
-
-<div
-  class="modalBack"
-  id="todoModal"
->
-
-<div class="modal">
-
-<h2>
-☑️ To-do List
-</h2>
-
-<p
-  id="todoPastMessage"
-  class="hidden"
->
-Previous-date To-do items cannot be changed.
-</p>
-
-<div class="todoAdd">
-
-<input
-  id="todoText"
-  placeholder="New task"
->
-
-<button
-  id="addTodo"
-  class="primary"
->
-Add
-</button>
-
-</div>
-
-<div
-  id="todoList"
-  class="todoList"
-></div>
-
-<div class="actions">
-
-<button data-close="todoModal">
-Close
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- MEMORIES -->
-
-<div
-  class="modalBack"
-  id="memoryModal"
->
-
-<div class="modal">
-
-<h2>
-🖼️ Memories
-</h2>
-
-<input
-  id="memoryInput"
-  type="file"
-  accept="image/*,application/pdf,.doc,.docx,.txt"
-  multiple
->
-
-<div id="memoryList"></div>
-
-<div class="actions">
-
-<button data-close="memoryModal">
-Close
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- SETTINGS -->
-
-<div
-  class="modalBack"
-  id="settingsModal"
->
-
-<div class="modal">
-
-<h2>
-⚙️ Diary Settings
-</h2>
-
-<h3>
-Page Design
-</h3>
-
-<div class="designs">
-
-<div
-  class="design classic"
-  data-design="classic"
-></div>
-
-<div
-  class="design vintage"
-  data-design="vintage"
-></div>
-
-<div
-  class="design blue"
-  data-design="blue"
-></div>
-
-<div
-  class="design green"
-  data-design="green"
-></div>
-
-<div
-  class="design rose"
-  data-design="rose"
-></div>
-
-<div
-  class="design night"
-  data-design="night"
-></div>
-
-</div>
-
-
-<h3>
-Page Adjustments
-</h3>
-
-<div class="form">
-
-<label>
-Writing Size
-<input
-  id="fontSize"
-  type="range"
-  min="16"
-  max="25"
-  value="20"
->
-</label>
-
-<label>
-Line Spacing
-<input
-  id="lineSize"
-  type="range"
-  min="30"
-  max="42"
-  value="36"
->
-</label>
-
-<label>
-Page Width
-<input
-  id="pageWidth"
-  type="range"
-  min="900"
-  max="1400"
-  value="1250"
->
-</label>
-
-</div>
-
-<div class="actions">
-
-<button data-close="settingsModal">
-Close
-</button>
-
-</div>
-
-</div>
-
-</div>
+<div id="toast" class="toast" hidden></div>
 
 
 <script>
 
-/* =========================================================
-   DIARY DATABASE
-========================================================= */
-
-const DB_NAME = "myPersonalDiaryDB";
-const DB_VERSION = 8;
+const DB="myPersonalDiaryDB";
+const VER=6;
 
 let db;
-
-let currentDate = localISO();
-let currentPage = 1;
-
-let pageRecord = null;
-
-let saveTimer = null;
-
-
-/* =========================================================
-   DATE
-========================================================= */
-
-function localISO(date = new Date()){
-
-  const d =
-    new Date(
-      date.getTime() -
-      date.getTimezoneOffset()*60000
-    );
-
-  return d.toISOString().slice(0,10);
-}
-
-function today(){
-
-  return localISO();
-
-}
-
-function isPastDate(){
-
-  return currentDate < today();
-
-}
-
-function formatDate(iso){
-
-  return new Date(
-    iso+"T12:00:00"
-  ).toLocaleDateString(
-    undefined,
-    {
-      weekday:"long",
-      day:"numeric",
-      month:"long",
-      year:"numeric"
-    }
-  );
-
-}
-
-
-/* =========================================================
-   DATABASE
-========================================================= */
-
-function openDB(){
-
- return new Promise(
-  (resolve,reject)=>{
-
-   const request =
-     indexedDB.open(
-       DB_NAME,
-       DB_VERSION
-     );
-
-   request.onupgradeneeded =
-     event => {
-
-       const database =
-         event.target.result;
-
-       if(
-         !database.objectStoreNames.contains(
-           "pages"
-         )
-       ){
-
-         const store =
-           database.createObjectStore(
-             "pages",
-             {keyPath:"id"}
-           );
-
-         store.createIndex(
-           "date",
-           "date"
-         );
-
-       }
-
-       if(
-         !database.objectStoreNames.contains(
-           "events"
-         )
-       ){
-
-         const store =
-           database.createObjectStore(
-             "events",
-             {
-               keyPath:"id",
-               autoIncrement:true
-             }
-           );
-
-         store.createIndex(
-           "date",
-           "date"
-         );
-
-       }
-
-       if(
-         !database.objectStoreNames.contains(
-           "todos"
-         )
-       ){
-
-         const store =
-           database.createObjectStore(
-             "todos",
-             {
-               keyPath:"id",
-               autoIncrement:true
-             }
-           );
-
-         store.createIndex(
-           "date",
-           "date"
-         );
-
-       }
-
-       if(
-         !database.objectStoreNames.contains(
-           "attachments"
-         )
-       ){
-
-         const store =
-           database.createObjectStore(
-             "attachments",
-             {
-               keyPath:"id",
-               autoIncrement:true
-             }
-           );
-
-         store.createIndex(
-           "date",
-           "date"
-         );
-
-       }
-
-     };
-
-   request.onsuccess =
-     () => {
-
-       db =
-         request.result;
-
-       resolve(db);
-
-     };
-
-   request.onerror =
-     () => reject(request.error);
-
-  }
- );
-
-}
-
-
-function store(name,mode="readonly"){
-
- return db
-   .transaction(
-     name,
-     mode
-   )
-   .objectStore(name);
-
-}
-
-
-function getRecord(name,key){
-
- return new Promise(
-  (resolve,reject)=>{
-
-   const r =
-     store(name).get(key);
-
-   r.onsuccess =
-     () => resolve(r.result);
-
-   r.onerror =
-     () => reject(r.error);
-
-  }
- );
-
-}
-
-
-function saveRecord(name,data){
-
- return new Promise(
-  (resolve,reject)=>{
-
-   const r =
-     store(
-       name,
-       "readwrite"
-     ).put(data);
-
-   r.onsuccess =
-     () => resolve(r.result);
-
-   r.onerror =
-     () => reject(r.error);
-
-  }
- );
-
-}
-
-
-function getAll(name){
-
- return new Promise(
-  (resolve,reject)=>{
-
-   const r =
-     store(name).getAll();
-
-   r.onsuccess =
-     () => resolve(r.result);
-
-   r.onerror =
-     () => reject(r.error);
-
-  }
- );
-
-}
-
-
-function deleteRecord(name,key){
-
- return new Promise(
-  (resolve,reject)=>{
-
-   const r =
-     store(
-       name,
-       "readwrite"
-     ).delete(key);
-
-   r.onsuccess =
-     () => resolve();
-
-   r.onerror =
-     () => reject(r.error);
-
-  }
- );
-
-}
-
-
-/* =========================================================
-   PAGE
-========================================================= */
-
-function pageId(){
-
- return currentDate+
-        "-"+
-        currentPage;
-
-}
-
-
-const quotes = [
-
- "A peaceful mind makes a beautiful day.",
-
- "Small steps create lasting memories.",
-
- "Today is a page worth remembering.",
-
- "Gratitude turns ordinary moments into treasures.",
-
- "Write it down; let the memory live.",
-
- "A calm heart sees beauty everywhere.",
-
- "Every day is a new page."
-
+let currentDate=isoToday();
+let currentPage=1;
+let currentPageId="";
+let currentRec=null;
+
+let drawMode=false;
+let drawTool="pen";
+let drawing=false;
+
+let sx=0;
+let sy=0;
+let ox=0;
+let oy=0;
+
+let history=[];
+let future=[];
+
+const $=id=>document.getElementById(id);
+
+
+const quotes=[
+ "Write it down. Remember it forever.",
+ "Small moments become great memories.",
+ "A day worth living is a day worth remembering.",
+ "Your story deserves a page.",
+ "Gratitude turns ordinary days into memories.",
+ "Begin where you are."
 ];
 
 
-async function ensurePage(){
+function isoToday(){
 
- const id =
-   pageId();
+ return new Date().toISOString().slice(0,10);
 
- pageRecord =
-   await getRecord(
+}
+
+
+function esc(s){
+
+ return String(s??"").replace(
+  /[&<>"']/g,
+  m=>({
+   "&":"&amp;",
+   "<":"&lt;",
+   ">":"&gt;",
+   '"':"&quot;",
+   "'":"&#39;"
+  }[m])
+ );
+
+}
+
+
+function fmtDate(d){
+
+ return new Date(d+"T12:00:00").toLocaleDateString(
+  undefined,
+  {
+   weekday:"short",
+   day:"2-digit",
+   month:"short",
+   year:"numeric"
+  }
+ );
+
+}
+
+
+function addDays(d,n){
+
+ let x=new Date(d+"T12:00:00");
+
+ x.setDate(x.getDate()+n);
+
+ return x.toISOString().slice(0,10);
+
+}
+
+
+function toast(t){
+
+ const el=$("toast");
+
+ el.textContent=t;
+
+ el.hidden=false;
+
+ clearTimeout(toast.timer);
+
+ toast.timer=setTimeout(
+  ()=>el.hidden=true,
+  2200
+ );
+
+}
+
+
+/* DATABASE */
+
+function openDB(){
+
+ return new Promise((resolve,reject)=>{
+
+  const request=indexedDB.open(DB,VER);
+
+  request.onupgradeneeded=e=>{
+
+   const database=e.target.result;
+
+   const stores=[
+    ["pages","id"],
+    ["events","id"],
+    ["todos","id"],
+    ["attachments","id"],
+    ["settings","key"]
+   ];
+
+   stores.forEach(([name,key])=>{
+
+    if(!database.objectStoreNames.contains(name)){
+
+     database.createObjectStore(
+      name,
+      {
+       keyPath:key,
+       autoIncrement:name!=="settings"
+      }
+     );
+
+    }
+
+   });
+
+  };
+
+  request.onsuccess=()=>{
+
+   db=request.result;
+
+   resolve(db);
+
+  };
+
+  request.onerror=()=>reject(request.error);
+
+ });
+
+}
+
+
+function req(store,mode="readonly"){
+
+ return db
+  .transaction(store,mode)
+  .objectStore(store);
+
+}
+
+
+function put(store,value){
+
+ return new Promise((resolve,reject)=>{
+
+  const r=req(store,"readwrite").put(value);
+
+  r.onsuccess=()=>resolve(r.result);
+
+  r.onerror=()=>reject(r.error);
+
+ });
+
+}
+
+
+function get(store,key){
+
+ return new Promise((resolve,reject)=>{
+
+  const r=req(store).get(key);
+
+  r.onsuccess=()=>resolve(r.result);
+
+  r.onerror=()=>reject(r.error);
+
+ });
+
+}
+
+
+function all(store){
+
+ return new Promise((resolve,reject)=>{
+
+  const r=req(store).getAll();
+
+  r.onsuccess=()=>resolve(r.result);
+
+  r.onerror=()=>reject(r.error);
+
+ });
+
+}
+
+
+function del(store,key){
+
+ return new Promise((resolve,reject)=>{
+
+  const r=req(store,"readwrite").delete(key);
+
+  r.onsuccess=()=>resolve();
+
+  r.onerror=()=>reject(r.error);
+
+ });
+
+}
+
+
+/* OLD VERSION MIGRATION */
+
+async function migrateOld(){
+
+ const old=localStorage.getItem("myPersonalDiaryEntries");
+
+ if(!old)return;
+
+ try{
+
+  const obj=JSON.parse(old);
+
+  for(const [date,value] of Object.entries(obj)){
+
+   const id=date+"-1";
+
+   if(!await get("pages",id)){
+
+    await put(
      "pages",
-     id
-   );
+     {
+      id:id,
+      date:date,
+      page:1,
+      content:
+       typeof value==="string"
+        ?value
+        :(value.content||""),
+      drawing:null,
+      mood:value.mood||""
+     }
+    );
 
- if(!pageRecord){
+   }
 
-   pageRecord = {
+  }
 
-     id:id,
+ }catch(e){
 
-     date:currentDate,
-
-     page:currentPage,
-
-     content:"",
-
-     mood:"🙂",
-
-     quote:
-       quotes[
-         Math.floor(
-           Math.random()*
-           quotes.length
-         )
-       ],
-
-     design:"classic",
-
-     drawing:""
-
-   };
-
-   await saveRecord(
-     "pages",
-     pageRecord
-   );
+  console.log("Old diary migration:",e);
 
  }
 
 }
 
 
-async function savePage(){
+/* SETTINGS */
 
- if(!pageRecord)
-   return;
+async function loadSettings(){
 
- pageRecord.content =
-   document
-     .getElementById("editor")
-     .innerHTML;
+ const settings=
+  await get("settings","prefs")||{};
 
- pageRecord.mood =
-   document
-     .getElementById("moodButton")
-     .textContent;
+ applyDesign(settings.design||"classic");
 
- pageRecord.quote =
-   document
-     .getElementById("quoteText")
-     .textContent;
+ if(settings.font){
 
- await saveRecord(
-   "pages",
-   pageRecord
+  $("editor").style.fontSize=
+   settings.font+"px";
+
+ }
+
+ if(settings.line){
+
+  $("editor").style.lineHeight=
+   settings.line+"px";
+
+ }
+
+}
+
+
+async function saveSettings(values){
+
+ await put(
+  "settings",
+  Object.assign(
+   {key:"prefs"},
+   values
+  )
  );
-
-}
-
-
-function scheduleSave(){
-
- clearTimeout(saveTimer);
-
- saveTimer =
-   setTimeout(
-     savePage,
-     300
-   );
-
-}
-
-
-/* =========================================================
-   PAGE SETTINGS
-========================================================= */
-
-function lineHeight(){
-
- return Number(
-   localStorage.getItem(
-     "lineHeight"
-   ) || 36
- );
-
-}
-
-
-function applyPageSettings(){
-
- const fs =
-   Number(
-     localStorage.getItem(
-       "fontSize"
-     ) || 20
-   );
-
- const lh =
-   lineHeight();
-
- const width =
-   Number(
-     localStorage.getItem(
-       "pageWidth"
-     ) || 1250
-   );
-
- document.documentElement
-   .style.setProperty(
-     "--fontSize",
-     fs+"px"
-   );
-
- document.documentElement
-   .style.setProperty(
-     "--lineHeight",
-     lh+"px"
-   );
-
- document
-   .querySelector(
-     ".notebook"
-   )
-   .style.maxWidth =
-     width+"px";
 
 }
 
 
 function applyDesign(design){
 
- const page =
-   document.getElementById(
-     "bookPage"
-   );
-
- let paper="#fbf8ea";
- let line="#d8cfb7";
-
- if(design==="vintage"){
-
-   paper="#ead8b5";
-   line="#c7ae86";
-
- }
-
- if(design==="blue"){
-
-   paper="#edf5f4";
-   line="#b9d3d2";
-
- }
-
- if(design==="green"){
-
-   paper="#eef1df";
-   line="#c7d0ae";
-
- }
-
- if(design==="rose"){
-
-   paper="#f5e9e6";
-   line="#d9bfc0";
-
- }
-
- if(design==="night"){
-
-   paper="#363d43";
-   line="#5d6870";
-
- }
-
- document.documentElement
-   .style.setProperty(
-     "--paper",
-     paper
-   );
-
- document.documentElement
-   .style.setProperty(
-     "--line",
-     line
-   );
-
- page.style.color =
-   design==="night"
-   ? "#f3eadb"
-   : "";
-
- pageRecord.design =
-   design;
-
- document
-   .querySelectorAll(
-     ".design"
-   )
-   .forEach(
-     x =>
-       x.classList.toggle(
-         "selected",
-         x.dataset.design===design
-       )
-   );
+ $("page").className=
+  "page "+design;
 
 }
 
 
-/* =========================================================
-   RENDER PAGE
-========================================================= */
+/* PAGE */
 
-async function renderPage(){
+function pageId(){
 
- await ensurePage();
+ return currentDate+"-"+currentPage;
 
- document
-   .getElementById(
-     "dateTitle"
+}
+
+
+async function loadPage(){
+
+ currentPageId=pageId();
+
+ let record=
+  await get(
+   "pages",
+   currentPageId
+  );
+
+ if(!record){
+
+  record={
+   id:currentPageId,
+   date:currentDate,
+   page:currentPage,
+   content:"",
+   drawing:null,
+   mood:""
+  };
+
+ }
+
+ currentRec=record;
+
+ $("editor").innerHTML=
+  record.content||"";
+
+ $("moodMark").textContent=
+  record.mood||"";
+
+ $("dateTitle").textContent=
+  fmtDate(currentDate);
+
+ const index=
+  Math.abs(
+   [...currentDate].reduce(
+    (a,c)=>a+c.charCodeAt(0),
+    0
    )
-   .textContent =
-     formatDate(
-       currentDate
-     );
+  )%quotes.length;
 
- document
-   .getElementById(
-     "pageNo"
-   )
-   .textContent =
-     "Page "+
-     currentPage;
+ $("quote").textContent=
+  record.quote||quotes[index];
 
- document
-   .getElementById(
-     "editor"
-   )
-   .innerHTML =
-     pageRecord.content || "";
+ await put("pages",record);
 
- document
-   .getElementById(
-     "moodButton"
-   )
-   .textContent =
-     pageRecord.mood || "🙂";
+ history=[];
+ future=[];
 
- document
-   .getElementById(
-     "quoteText"
-   )
-   .textContent =
-     pageRecord.quote ||
-     quotes[0];
+ loadDrawing(record.drawing);
 
- applyPageSettings();
+ await renderPages();
 
- applyDesign(
-   pageRecord.design ||
-   "classic"
+}
+
+
+let saveTimer;
+
+function scheduleSave(){
+
+ clearTimeout(saveTimer);
+
+ saveTimer=
+  setTimeout(
+   savePage,
+   500
+  );
+
+}
+
+
+async function savePage(){
+
+ if(!currentRec)return;
+
+ currentRec.content=
+  $("editor").innerHTML;
+
+ currentRec.date=
+  currentDate;
+
+ currentRec.page=
+  currentPage;
+
+ currentRec.mood=
+  $("moodMark").textContent;
+
+ currentRec.quote=
+  $("quote").textContent;
+
+ currentRec.drawing=
+  $("drawCanvas").toDataURL("image/png");
+
+ await put(
+  "pages",
+  currentRec
  );
 
- await loadDrawing();
-
- buildDateSelect();
-
- updateDateControls();
-
 }
 
 
-/* =========================================================
-   DATE NAVIGATION
-========================================================= */
+async function renderPages(){
 
-function buildDateSelect(){
+ const pages=
+  (await all("pages"))
+  .filter(x=>x.date===currentDate)
+  .sort((a,b)=>a.page-b.page);
 
- const select =
-   document.getElementById(
-     "dateSelect"
-   );
+ if(!pages.some(x=>x.page===currentPage)){
 
- select.innerHTML="";
-
- const base =
-   new Date(
-     currentDate+
-     "T12:00:00"
-   );
-
- for(
-   let i=-30;
-   i<=30;
-   i++
- ){
-
-   const d =
-     new Date(base);
-
-   d.setDate(
-     base.getDate()+i
-   );
-
-   const iso =
-     localISO(d);
-
-   const option =
-     document.createElement(
-       "option"
-     );
-
-   option.value=iso;
-
-   option.textContent=
-     formatDate(iso);
-
-   if(
-     iso===currentDate
-   )
-     option.selected=true;
-
-   select.appendChild(
-     option
-   );
+  currentPage=1;
 
  }
 
+ $("pagesBar").innerHTML=
+  pages.map(
+   x=>
+   `<button class="${
+    x.page===currentPage?"active":""
+   }"
+   data-page="${x.page}">
+   Page ${x.page}
+   </button>`
+  ).join("");
+
+ $("pagesBar")
+  .querySelectorAll("button")
+  .forEach(button=>{
+
+   button.onclick=async()=>{
+
+    await savePage();
+
+    currentPage=
+     Number(button.dataset.page);
+
+    await loadPage();
+
+   };
+
+  });
+
 }
 
 
-async function goDate(date){
+/* WRITING */
 
- await savePage();
+$("editor").addEventListener(
+ "input",
+ scheduleSave
+);
 
- currentDate =
-   date;
+$("editor").addEventListener(
+ "keydown",
+ e=>{
 
- currentPage=1;
+  if(e.key==="Tab"){
 
- await renderPage();
+   e.preventDefault();
 
-}
-
-
-document
-  .getElementById(
-    "dateSelect"
-  )
-  .onchange =
-    e =>
-      goDate(
-        e.target.value
-      );
-
-
-document
-  .getElementById(
-    "prevBtn"
-  )
-  .onclick =
-    () => {
-
-      const d =
-        new Date(
-          currentDate+
-          "T12:00:00"
-        );
-
-      d.setDate(
-        d.getDate()-1
-      );
-
-      goDate(
-        localISO(d)
-      );
-
-    };
-
-
-document
-  .getElementById(
-    "nextBtn"
-  )
-  .onclick =
-    () => {
-
-      const d =
-        new Date(
-          currentDate+
-          "T12:00:00"
-        );
-
-      d.setDate(
-        d.getDate()+1
-      );
-
-      goDate(
-        localISO(d)
-      );
-
-    };
-
-
-document
-  .getElementById(
-    "newPageBtn"
-  )
-  .onclick =
-    async () => {
-
-      await savePage();
-
-      currentPage++;
-
-      await renderPage();
-
-      document
-        .getElementById(
-          "bookPage"
-        )
-        .scrollTop=0;
-
-    };
-
-
-function updateDateControls(){
-
- const past =
-   isPastDate();
-
- document
-   .getElementById(
-     "saveEvent"
-   )
-   .disabled =
-     past;
-
- document
-   .getElementById(
-     "addTodo"
-   )
-   .disabled =
-     past;
-
- document
-   .getElementById(
-     "eventPastMessage"
-   )
-   .classList
-   .toggle(
-     "hidden",
-     !past
+   document.execCommand(
+    "insertText",
+    false,
+    "    "
    );
-
- document
-   .getElementById(
-     "todoPastMessage"
-   )
-   .classList
-   .toggle(
-     "hidden",
-     !past
-   );
-
-}
-
-
-/* =========================================================
-   TEXT FORMATTING
-========================================================= */
-
-document
-  .querySelectorAll(
-    "[data-command]"
-  )
-  .forEach(
-    button => {
-
-      button.onclick =
-        () => {
-
-          document
-            .getElementById(
-              "editor"
-            )
-            .focus();
-
-          document.execCommand(
-            button.dataset.command,
-            false,
-            null
-          );
-
-          scheduleSave();
-
-        };
-
-    }
-  );
-
-
-document
-  .getElementById(
-    "editor"
-  )
-  .addEventListener(
-    "input",
-    scheduleSave
-  );
-
-
-/* =========================================================
-   QUOTE
-========================================================= */
-
-document
-  .getElementById(
-    "quoteBtn"
-  )
-  .onclick =
-    async () => {
-
-      pageRecord.quote =
-        quotes[
-          Math.floor(
-            Math.random()*
-            quotes.length
-          )
-        ];
-
-      document
-        .getElementById(
-          "quoteText"
-        )
-        .textContent =
-          pageRecord.quote;
-
-      await saveRecord(
-        "pages",
-        pageRecord
-      );
-
-    };
-
-
-/* =========================================================
-   MOOD
-========================================================= */
-
-const moodList = [
- "🙂",
- "😀",
- "😍",
- "😊",
- "😂",
- "😌",
- "😢",
- "😡",
- "😴",
- "🙏",
- "❤️",
- "🌟",
- "😎",
- "🤔",
- "🥳"
-];
-
-
-moodList.forEach(
-  mood => {
-
-    const button =
-      document.createElement(
-        "button"
-      );
-
-    button.textContent=mood;
-
-    button.onclick =
-      async () => {
-
-        document
-          .getElementById(
-            "moodButton"
-          )
-          .textContent =
-            mood;
-
-        pageRecord.mood =
-          mood;
-
-        await saveRecord(
-          "pages",
-          pageRecord
-        );
-
-        document
-          .getElementById(
-            "moodMenu"
-          )
-          .classList
-          .remove(
-            "open"
-          );
-
-      };
-
-    document
-      .getElementById(
-        "moodMenu"
-      )
-      .appendChild(
-        button
-      );
 
   }
+
+ }
 );
 
 
 document
-  .getElementById(
-    "moodButton"
-  )
-  .onclick =
-    () =>
-      document
-        .getElementById(
-          "moodMenu"
-        )
-        .classList
-        .toggle(
-          "open"
-        );
+ .querySelectorAll("[data-cmd]")
+ .forEach(button=>{
 
+  button.onclick=()=>{
 
-/* =========================================================
-   DRAWING
-========================================================= */
+   $("editor").focus();
 
-const canvas =
-  document.getElementById(
-    "drawCanvas"
-  );
-
-const ctx =
-  canvas.getContext(
-    "2d"
-  );
-
-const editorWrap =
-  document.getElementById(
-    "editorWrap"
-  );
-
-let drawing=false;
-let drawTool="pen";
-let startX=0;
-let startY=0;
-let baseImage=null;
-
-
-/*
-  Canvas is transparent and lives
-  directly over the writing page.
-*/
-
-function resizeCanvas(){
-
- const rect =
-   editorWrap
-     .getBoundingClientRect();
-
- const old =
-   document.createElement(
-     "canvas"
+   document.execCommand(
+    button.dataset.cmd,
+    false,
+    null
    );
 
- old.width =
-   canvas.width;
+   scheduleSave();
 
- old.height =
-   canvas.height;
+  };
 
- if(
-   old.width &&
-   old.height
- ){
+ });
 
-   old
-     .getContext("2d")
-     .drawImage(
-       canvas,
-       0,
-       0
-     );
 
- }
+/* DATE */
 
- const ratio =
-   window.devicePixelRatio || 1;
+$("prevDay").onclick=async()=>{
 
- canvas.width =
-   rect.width*
-   ratio;
+ await savePage();
 
- canvas.height =
-   rect.height*
-   ratio;
+ currentDate=
+  addDays(currentDate,-1);
 
- canvas.style.width =
-   rect.width+"px";
+ currentPage=1;
 
- canvas.style.height =
-   rect.height+"px";
+ await loadPage();
 
- ctx.setTransform(
-   ratio,
+};
+
+
+$("nextDay").onclick=async()=>{
+
+ await savePage();
+
+ currentDate=
+  addDays(currentDate,1);
+
+ currentPage=1;
+
+ await loadPage();
+
+};
+
+
+$("todayBtn").onclick=async()=>{
+
+ await savePage();
+
+ currentDate=
+  isoToday();
+
+ currentPage=1;
+
+ await loadPage();
+
+};
+
+
+$("newPageBtn").onclick=async()=>{
+
+ await savePage();
+
+ const pages=
+  (await all("pages"))
+  .filter(x=>x.date===currentDate);
+
+ currentPage=
+  Math.max(
+   0,
+   ...pages.map(x=>x.page||1)
+  )+1;
+
+ await loadPage();
+
+};
+
+
+$("changeQuote").onclick=()=>{
+
+ const current=
+  quotes.indexOf(
+   $("quote").textContent
+  );
+
+ $("quote").textContent=
+  quotes[
+   (current+1)%quotes.length
+  ];
+
+ scheduleSave();
+
+};
+
+
+/* DRAWING */
+
+let inkSnapshot=null;
+
+
+function setupCanvas(){
+
+ const canvas=$("drawCanvas");
+
+ const wrapper=$("editorWrap");
+
+
+ function resize(){
+
+  const old=
+   canvas.width
+    ?canvas.toDataURL()
+    :null;
+
+  const width=
+   wrapper.clientWidth;
+
+  const height=
+   wrapper.clientHeight;
+
+  canvas.width=
+   width*devicePixelRatio;
+
+  canvas.height=
+   height*devicePixelRatio;
+
+  canvas.style.width="100%";
+
+  canvas.style.height="100%";
+
+  const ctx=
+   canvas.getContext("2d");
+
+  ctx.setTransform(
+   devicePixelRatio,
    0,
    0,
-   ratio,
+   devicePixelRatio,
    0,
    0
- );
+  );
 
- if(
-   old.width
- ){
+  if(old){
 
-   ctx.drawImage(
-     old,
+   const image=new Image();
+
+   image.onload=()=>{
+
+    ctx.drawImage(
+     image,
      0,
      0,
-     old.width/ratio,
-     old.height/ratio
-   );
+     width,
+     height
+    );
+
+   };
+
+   image.src=old;
+
+  }
 
  }
 
-}
-
-
-function clearCanvas(){
-
- ctx.clearRect(
-   0,
-   0,
-   canvas.clientWidth,
-   canvas.clientHeight
+ window.addEventListener(
+  "resize",
+  resize
  );
 
-}
+ resize();
 
 
-async function loadDrawing(){
+ canvas.onpointerdown=e=>{
 
- resizeCanvas();
+  if(!drawMode)return;
 
- clearCanvas();
+  drawing=true;
 
- if(
-   pageRecord &&
-   pageRecord.drawing
- ){
+  canvas.setPointerCapture(
+   e.pointerId
+  );
 
-   const image =
-     new Image();
-
-   image.onload =
-     () => {
-
-       ctx.drawImage(
-         image,
-         0,
-         0,
-         canvas.clientWidth,
-         canvas.clientHeight
-       );
-
-     };
-
-   image.src =
-     pageRecord.drawing;
-
- }
-
-}
-
-
-function saveDrawing(){
-
- pageRecord.drawing =
-   canvas.toDataURL(
-     "image/png"
-   );
-
- return saveRecord(
-   "pages",
-   pageRecord
- );
-
-}
-
-
-function getPoint(event){
-
- const r =
+  const rect=
    canvas.getBoundingClientRect();
 
- return {
+  sx=
+   e.clientX-rect.left;
 
-   x:
-     event.clientX-r.left,
+  sy=
+   e.clientY-rect.top;
 
-   y:
-     event.clientY-r.top
+  ox=sx;
+  oy=sy;
+
+  saveInk();
+
+ };
+
+
+ canvas.onpointermove=e=>{
+
+  if(!drawing||!drawMode)return;
+
+  const rect=
+   canvas.getBoundingClientRect();
+
+  const x=
+   e.clientX-rect.left;
+
+  const y=
+   e.clientY-rect.top;
+
+  const ctx=
+   canvas.getContext("2d");
+
+  ctx.lineWidth=
+   drawTool==="eraser"
+    ?34
+    :2.6;
+
+  ctx.lineCap="round";
+
+  ctx.lineJoin="round";
+
+  if(drawTool==="eraser"){
+
+   ctx.globalCompositeOperation=
+    "destination-out";
+
+   ctx.beginPath();
+
+   ctx.moveTo(ox,oy);
+
+   ctx.lineTo(x,y);
+
+   ctx.stroke();
+
+   ctx.globalCompositeOperation=
+    "source-over";
+
+  }
+
+  else if(drawTool==="pen"){
+
+   ctx.beginPath();
+
+   ctx.moveTo(ox,oy);
+
+   ctx.lineTo(x,y);
+
+   ctx.stroke();
+
+  }
+
+  else{
+
+   loadSnapshot();
+
+   ctx.beginPath();
+
+   if(drawTool==="line"){
+
+    ctx.moveTo(sx,sy);
+
+    ctx.lineTo(x,y);
+
+   }
+
+   else{
+
+    ctx.ellipse(
+     (sx+x)/2,
+     (sy+y)/2,
+     Math.abs(x-sx)/2,
+     Math.abs(y-sy)/2,
+     0,
+     0,
+     Math.PI*2
+    );
+
+   }
+
+   ctx.stroke();
+
+  }
+
+  ox=x;
+  oy=y;
+
+ };
+
+
+ canvas.onpointerup=e=>{
+
+  if(!drawing)return;
+
+  drawing=false;
+
+  if(
+   drawTool==="line"||
+   drawTool==="circle"
+  ){
+
+   const rect=
+    canvas.getBoundingClientRect();
+
+   const x=
+    e.clientX-rect.left;
+
+   const y=
+    e.clientY-rect.top;
+
+   const ctx=
+    canvas.getContext("2d");
+
+   loadSnapshot();
+
+   ctx.lineWidth=2.6;
+
+   ctx.lineCap="round";
+
+   ctx.beginPath();
+
+   if(drawTool==="line"){
+
+    ctx.moveTo(sx,sy);
+
+    ctx.lineTo(x,y);
+
+   }
+   else{
+
+    ctx.ellipse(
+     (sx+x)/2,
+     (sy+y)/2,
+     Math.abs(x-sx)/2,
+     Math.abs(y-sy)/2,
+     0,
+     0,
+     Math.PI*2
+    );
+
+   }
+
+   ctx.stroke();
+
+  }
+
+  saveInk();
+
+  scheduleSave();
 
  };
 
 }
 
 
-function startDrawing(event){
+function saveInk(){
 
- if(!drawing)
-   return;
-
- const p =
-   getPoint(event);
-
- startX=p.x;
- startY=p.y;
-
- canvas.setPointerCapture(
-   event.pointerId
- );
-
- if(
-   drawTool==="pen" ||
-   drawTool==="eraser"
- ){
-
-   ctx.beginPath();
-
-   ctx.moveTo(
-     p.x,
-     p.y
-   );
-
- }
+ inkSnapshot=
+  $("drawCanvas").toDataURL();
 
 }
 
 
-function moveDrawing(event){
+function loadSnapshot(){
 
- if(
-   !drawing ||
-   drawTool==="line" ||
-   drawTool==="circle"
- )
-   return;
+ if(!inkSnapshot)return;
 
- const p =
-   getPoint(event);
+ const canvas=
+  $("drawCanvas");
 
- ctx.lineCap="round";
- ctx.lineJoin="round";
+ const ctx=
+  canvas.getContext("2d");
 
- if(
-   drawTool==="eraser"
- ){
+ const image=
+  new Image();
 
-   ctx.globalCompositeOperation =
-     "destination-out";
+ image.onload=()=>{
 
-   ctx.lineWidth=38;
-
- }else{
-
-   ctx.globalCompositeOperation =
-     "source-over";
-
-   ctx.lineWidth=3;
-
-   ctx.strokeStyle="#21170f";
-
- }
-
- ctx.lineTo(
-   p.x,
-   p.y
- );
-
- ctx.stroke();
-
- event.preventDefault();
-
-}
-
-
-function finishDrawing(event){
-
- if(!drawing)
-   return;
-
- const p =
-   getPoint(event);
-
- /*
-   Line and circle are drawn once,
-   avoiding the previous disappearing/race problem.
- */
-
- if(
-   drawTool==="line"
- ){
-
-   ctx.globalCompositeOperation =
-     "source-over";
-
-   ctx.strokeStyle="#21170f";
-
-   ctx.lineWidth=3;
-
-   ctx.lineCap="round";
-
-   ctx.beginPath();
-
-   ctx.moveTo(
-     startX,
-     startY
-   );
-
-   ctx.lineTo(
-     p.x,
-     p.y
-   );
-
-   ctx.stroke();
-
- }
-
-
- if(
-   drawTool==="circle"
- ){
-
-   ctx.globalCompositeOperation =
-     "source-over";
-
-   ctx.strokeStyle="#21170f";
-
-   ctx.lineWidth=3;
-
-   const cx =
-     (startX+p.x)/2;
-
-   const cy =
-     (startY+p.y)/2;
-
-   const rx =
-     Math.abs(
-       p.x-startX
-     )/2;
-
-   const ry =
-     Math.abs(
-       p.y-startY
-     )/2;
-
-   ctx.beginPath();
-
-   ctx.ellipse(
-     cx,
-     cy,
-     Math.max(rx,3),
-     Math.max(ry,3),
-     0,
-     0,
-     Math.PI*2
-   );
-
-   ctx.stroke();
-
- }
-
- drawing=false;
-
- ctx.globalCompositeOperation =
-   "source-over";
-
- saveDrawing();
-
- event.preventDefault();
-
-}
-
-
-canvas.addEventListener(
-  "pointerdown",
-  event => {
-
-    if(!drawing)
-      return;
-
-    startDrawing(event);
-
-  }
-);
-
-
-canvas.addEventListener(
-  "pointermove",
-  moveDrawing
-);
-
-
-canvas.addEventListener(
-  "pointerup",
-  finishDrawing
-);
-
-
-canvas.addEventListener(
-  "pointercancel",
-  finishDrawing
-);
-
-
-/*
-  Open Draw.
-  The canvas stays on the page.
-*/
-
-function openDraw(){
-
- drawing=true;
-
- canvas.classList.add(
-   "enabled"
- );
-
- document
-   .getElementById(
-     "drawHint"
-   )
-   .classList
-   .add(
-     "show"
-   );
-
- document
-   .getElementById(
-     "drawTools"
-   )
-   .classList
-   .add(
-     "open"
-   );
-
-}
-
-
-/*
-  Close Draw only disables drawing.
-  It NEVER clears the canvas.
-*/
-
-function closeDraw(){
-
- drawing=false;
-
- canvas.classList.remove(
-   "enabled"
- );
-
- document
-   .getElementById(
-     "drawHint"
-   )
-   .classList
-   .remove(
-     "show"
-   );
-
- document
-   .getElementById(
-     "drawTools"
-   )
-   .classList
-   .remove(
-     "open"
-   );
-
- saveDrawing();
-
-}
-
-
-/*
-  Selecting a drawing tool:
-  - activates the tool
-  - keeps drawing active
-  - immediately hides the toolbar
-*/
-
-document
-  .querySelectorAll(
-    "[data-tool]"
-  )
-  .forEach(
-    button => {
-
-      button.onclick =
-        () => {
-
-          drawTool =
-            button.dataset.tool;
-
-          document
-            .querySelectorAll(
-              "[data-tool]"
-            )
-            .forEach(
-              b =>
-                b.classList
-                 .remove(
-                   "active"
-                 )
-            );
-
-          button.classList
-            .add("active");
-
-          drawing=true;
-
-          canvas.classList
-            .add("enabled");
-
-          document
-            .getElementById(
-              "drawTools"
-            )
-            .classList
-            .remove(
-              "open"
-            );
-
-        };
-
-    }
+  ctx.drawImage(
+   image,
+   0,
+   0,
+   canvas.clientWidth,
+   canvas.clientHeight
   );
 
+ };
 
-document
-  .getElementById(
-    "drawBtn"
-  )
-  .onclick =
-    openDraw;
+ image.src=inkSnapshot;
+
+}
 
 
-document
-  .getElementById(
-    "drawToolbarButton"
-  )
-  .onclick =
-    () => {
+function loadDrawing(data){
 
-      document
-        .getElementById(
-          "drawTools"
-        )
-        .classList
-        .toggle(
-          "open"
-        );
+ const canvas=
+  $("drawCanvas");
 
-    };
+ const ctx=
+  canvas.getContext("2d");
 
+ ctx.clearRect(
+  0,
+  0,
+  canvas.clientWidth,
+  canvas.clientHeight
+ );
 
-document
-  .getElementById(
-    "drawClose"
-  )
-  .onclick =
-    closeDraw;
+ inkSnapshot=null;
 
+ if(data){
 
-document
-  .getElementById(
-    "drawClear"
-  )
-  .onclick =
-    async () => {
+  const image=
+   new Image();
 
-      clearCanvas();
+  image.onload=()=>{
 
-      pageRecord.drawing="";
+   ctx.drawImage(
+    image,
+    0,
+    0,
+    canvas.clientWidth,
+    canvas.clientHeight
+   );
 
-      await saveRecord(
-        "pages",
-        pageRecord
-      );
+   saveInk();
 
-    };
+  };
 
-
-window.addEventListener(
-  "resize",
-  () => {
-
-    if(!drawing)
-      loadDrawing();
-
-  }
-);
-
-
-/* =========================================================
-   MODALS
-========================================================= */
-
-function openModal(id){
-
- document
-   .getElementById(id)
-   .classList
-   .add("open");
-
- if(
-   id==="calendarModal"
- )
-   renderCalendar();
-
- if(
-   id==="eventModal"
- )
-   renderEvents();
-
- if(
-   id==="todoModal"
- )
-   renderTodos();
-
- if(
-   id==="memoryModal"
- )
-   renderMemories();
-
- if(
-   id==="settingsModal"
- ){
-
-   document
-     .getElementById(
-       "fontSize"
-     )
-     .value =
-       localStorage.getItem(
-         "fontSize"
-       ) || 20;
-
-   document
-     .getElementById(
-       "lineSize"
-     )
-     .value =
-       lineHeight();
-
-   document
-     .getElementById(
-       "pageWidth"
-     )
-     .value =
-       localStorage.getItem(
-         "pageWidth"
-       ) || 1250;
+  image.src=data;
 
  }
 
- updateDateControls();
-
 }
 
 
-function closeModal(id){
+/* DRAW BUTTON */
 
- document
-   .getElementById(id)
-   .classList
-   .remove("open");
+$("drawToggle").onclick=()=>{
 
-}
+ drawMode=!drawMode;
 
-
-document
-  .querySelectorAll(
-    "[data-close]"
-  )
-  .forEach(
-    button => {
-
-      button.onclick =
-        () =>
-          closeModal(
-            button.dataset.close
-          );
-
-    }
+ $("page")
+  .classList
+  .toggle(
+   "drawing",
+   drawMode
   );
 
+ $("drawtools").hidden=
+  !drawMode;
 
-document
-  .getElementById(
-    "calendarBtn"
-  )
-  .onclick =
-    () =>
-      openModal(
-        "calendarModal"
-      );
+ $("drawToggle")
+  .classList
+  .toggle(
+   "active",
+   drawMode
+  );
 
+};
 
-document
-  .getElementById(
-    "eventBtn"
-  )
-  .onclick =
-    () =>
-      openModal(
-        "eventModal"
-      );
 
+/*
+ Selecting Pen / Line / Circle / Eraser
+ closes the small draw menu BUT
+ drawing mode remains active.
+*/
 
-document
-  .getElementById(
-    "todoBtn"
-  )
-  .onclick =
-    () =>
-      openModal(
-        "todoModal"
-      );
+$("drawtools").addEventListener(
+ "click",
+ async e=>{
 
+  const button=
+   e.target.closest("button");
 
-document
-  .getElementById(
-    "memoryBtn"
-  )
-  .onclick =
-    () =>
-      openModal(
-        "memoryModal"
-      );
+  if(!button)return;
 
+  const tool=
+   button.dataset.draw;
 
-document
-  .getElementById(
-    "settingsBtn"
-  )
-  .onclick =
-    () =>
-      openModal(
-        "settingsModal"
-      );
+  if(tool==="undo"){
 
+   const previous=
+    history.pop();
 
-/* =========================================================
-   EVENTS
-========================================================= */
+   if(previous){
 
-async function renderEvents(){
+    future.push(
+     $("drawCanvas").toDataURL()
+    );
 
- const all =
-   await getAll(
-     "events"
-   );
-
- const events =
-   all
-     .filter(
-       e =>
-         e.date===
-         currentDate
-     )
-     .sort(
-       (a,b) =>
-         (a.time||"")
-         .localeCompare(
-           b.time||""
-         )
-     );
-
- const list =
-   document
-     .getElementById(
-       "eventList"
-     );
-
- list.innerHTML =
-   events.length
-   ?
-   events.map(
-     e => `
-
-       <div class="todoItem">
-
-         <span>
-           🗓️
-           <b>${escapeHTML(e.title)}</b>
-           ${e.time||""}
-           ${e.notes
-             ? " — "+escapeHTML(e.notes)
-             : ""}
-         </span>
-
-         ${
-           !isPastDate()
-           ?
-           `<button
-              onclick="deleteEvent(${e.id})"
-            >
-             Delete
-            </button>`
-           :
-           ""
-         }
-
-       </div>
-
-     `
-   ).join("")
-   :
-   "<p>No events for this date.</p>";
-
-}
-
-
-async function deleteEvent(id){
-
- if(isPastDate())
-   return;
-
- await deleteRecord(
-   "events",
-   id
- );
-
- await renderEvents();
- await renderCalendar();
-
-}
-
-
-document
-  .getElementById(
-    "eventDate"
-  )
-  .value =
-    currentDate;
-
-
-document
-  .getElementById(
-    "saveEvent"
-  )
-  .onclick =
-    async () => {
-
-      if(isPastDate())
-        return;
-
-      const title =
-        document
-          .getElementById(
-            "eventTitle"
-          )
-          .value
-          .trim();
-
-      if(!title){
-
-        alert(
-          "Please enter an event title."
-        );
-
-        return;
-
-      }
-
-      const eventDate =
-        document
-          .getElementById(
-            "eventDate"
-          )
-          .value ||
-        currentDate;
-
-      if(
-        eventDate <
-        today()
-      ){
-
-        alert(
-          "Events cannot be added to a previous date."
-        );
-
-        return;
-
-      }
-
-      await saveRecord(
-        "events",
-        {
-          date:eventDate,
-
-          time:
-            document
-              .getElementById(
-                "eventTime"
-              )
-              .value,
-
-          title:title,
-
-          notes:
-            document
-              .getElementById(
-                "eventNotes"
-              )
-              .value
-
-        }
-      );
-
-      document
-        .getElementById(
-          "eventTitle"
-        )
-        .value="";
-
-      document
-        .getElementById(
-          "eventNotes"
-        )
-        .value="";
-
-      await renderEvents();
-
-      await renderCalendar();
-
-    };
-
-
-/* =========================================================
-   CALENDAR
-========================================================= */
-
-let calendarDate =
-  new Date();
-
-
-async function renderCalendar(){
-
- const year =
-   calendarDate
-     .getFullYear();
-
- const month =
-   calendarDate
-     .getMonth();
-
- document
-   .getElementById(
-     "calTitle"
-   )
-   .textContent =
-     calendarDate.toLocaleDateString(
-       undefined,
-       {
-         month:"long",
-         year:"numeric"
-       }
-     );
-
- const events =
-   await getAll(
-     "events"
-   );
-
- const grid =
-   document
-     .getElementById(
-       "calendarGrid"
-     );
-
- grid.innerHTML="";
-
- [
-   "Sun",
-   "Mon",
-   "Tue",
-   "Wed",
-   "Thu",
-   "Fri",
-   "Sat"
- ].forEach(
-   day => {
-
-     const h =
-       document.createElement(
-         "div"
-       );
-
-     h.textContent=day;
-
-     h.style.fontWeight="bold";
-
-     grid.appendChild(h);
+    loadDrawing(previous);
 
    }
- );
 
- const firstDay =
-   new Date(
-     year,
-     month,
-     1
-   ).getDay();
+   return;
 
- const days =
-   new Date(
-     year,
-     month+1,
-     0
-   ).getDate();
+  }
 
- for(
-   let i=0;
-   i<firstDay;
-   i++
- ){
 
-   const blank =
-     document.createElement(
-       "div"
-     );
+  if(tool==="redo"){
 
-   grid.appendChild(
-     blank
+   const next=
+    future.pop();
+
+   if(next){
+
+    history.push(
+     $("drawCanvas").toDataURL()
+    );
+
+    loadDrawing(next);
+
+   }
+
+   return;
+
+  }
+
+
+  if(tool==="clear"){
+
+   history.push(
+    $("drawCanvas").toDataURL()
    );
+
+   const canvas=
+    $("drawCanvas");
+
+   const ctx=
+    canvas.getContext("2d");
+
+   ctx.clearRect(
+    0,
+    0,
+    canvas.clientWidth,
+    canvas.clientHeight
+   );
+
+   saveInk();
+
+   scheduleSave();
+
+   $("drawtools").hidden=true;
+
+   return;
+
+  }
+
+
+  drawTool=tool;
+
+  $("drawtools").hidden=true;
+
+  toast(
+   tool.charAt(0).toUpperCase()+
+   tool.slice(1)+
+   " selected"
+  );
+
+ });
+
+
+/* MODAL */
+
+function openModal(html){
+
+ $("modalBox").innerHTML=
+  html;
+
+ $("modal").hidden=false;
+
+}
+
+
+function closeModal(){
+
+ $("modal").hidden=true;
+
+}
+
+
+$("modal").addEventListener(
+ "click",
+ e=>{
+
+  if(e.target===$("modal")){
+
+   closeModal();
+
+  }
+
+ });
+
+
+/* EVENTS */
+
+async function showEvents(){
+
+ const events=
+  (await all("events"))
+  .sort(
+   (a,b)=>
+    (a.date+a.time)
+    .localeCompare(
+     b.date+b.time
+    )
+  );
+
+ openModal(`
+
+ <h2>📌 Diary Events</h2>
+
+ <button id="addEvent">
+ ＋ Add Event
+ </button>
+
+ <div id="eventList">
+
+ ${
+ events.map(
+  event=>`
+
+  <div class="todoRow">
+
+   <span>
+
+   <b>
+   ${esc(event.date)}
+   ${esc(event.time||"")}
+   </b>
+
+   — ${esc(event.title)}
+
+   <br>
+
+   <small>
+   ${esc(event.notes||"")}
+   </small>
+
+   </span>
+
+   <button data-del="${event.id}">
+   Delete
+   </button>
+
+  </div>
+
+  `
+ ).join("")
+ ||
+ "<p>No events saved.</p>"
+ }
+
+ </div>
+
+ `);
+
+
+ $("addEvent").onclick=
+  ()=>eventForm();
+
+
+ $("eventList")
+  .querySelectorAll("[data-del]")
+  .forEach(button=>{
+
+   button.onclick=async()=>{
+
+    await del(
+     "events",
+     Number(button.dataset.del)
+    );
+
+    showEvents();
+
+   };
+
+  });
+
+}
+
+
+function eventForm(existing=null){
+
+ const minimum=
+  isoToday();
+
+ openModal(`
+
+ <h2>
+ ${existing?"Edit":"Add"} Diary Event
+ </h2>
+
+ <div class="grid2">
+
+ <div class="field">
+
+ <label>Event</label>
+
+ <input
+  id="evTitle"
+  value="${esc(existing?.title||"")}"
+ >
+
+ </div>
+
+
+ <div class="field">
+
+ <label>Date</label>
+
+ <input
+  id="evDate"
+  type="date"
+  min="${minimum}"
+  value="${existing?.date||minimum}"
+ >
+
+ </div>
+
+ </div>
+
+
+ <div class="grid2">
+
+ <div class="field">
+
+ <label>Time</label>
+
+ <input
+  id="evTime"
+  type="time"
+  value="${existing?.time||""}"
+ >
+
+ </div>
+
+
+ <div class="field">
+
+ <label>Notes</label>
+
+ <input
+  id="evNotes"
+  value="${esc(existing?.notes||"")}"
+ >
+
+ </div>
+
+ </div>
+
+
+ <div class="modalActions">
+
+ <button id="cancelEv">
+ Cancel
+ </button>
+
+ <button id="saveEv">
+ Save Event
+ </button>
+
+ </div>
+
+ `);
+
+
+ $("cancelEv").onclick=
+  showEvents;
+
+
+ $("saveEv").onclick=
+  async()=>{
+
+   const date=
+    $("evDate").value;
+
+   if(date<isoToday()){
+
+    toast(
+     "Past-date events cannot be changed"
+    );
+
+    return;
+
+   }
+
+
+   const title=
+    $("evTitle")
+    .value
+    .trim();
+
+   if(!title){
+
+    toast(
+     "Enter an event title"
+    );
+
+    return;
+
+   }
+
+
+   const record={
+
+    id:existing
+     ?existing.id
+     :undefined,
+
+    title:title,
+
+    date:date,
+
+    time:$("evTime").value,
+
+    notes:
+     $("evNotes")
+     .value
+     .trim()
+
+   };
+
+
+   await put(
+    "events",
+    record
+   );
+
+
+   toast(
+    "Event saved"
+   );
+
+
+   closeModal();
+
+   await showCalendar(date);
+
+  };
+
+}
+
+
+/* CALENDAR */
+
+async function showCalendar(){
+
+ const selected=
+  new Date(
+   currentDate+"T12:00:00"
+  );
+
+ const year=
+  selected.getFullYear();
+
+ const month=
+  selected.getMonth();
+
+ const events=
+  await all("events");
+
+ const byDate={};
+
+ events.forEach(event=>{
+
+  if(!byDate[event.date]){
+
+   byDate[event.date]=[];
+
+  }
+
+  byDate[event.date].push(event);
+
+ });
+
+
+ const first=
+  new Date(
+   year,
+   month,
+   1
+  );
+
+ const start=
+  (first.getDay()+6)%7;
+
+ const days=
+  new Date(
+   year,
+   month+1,
+   0
+  ).getDate();
+
+
+ let cells="";
+
+
+ for(let i=0;i<start;i++){
+
+  cells+="<div></div>";
 
  }
 
+
  for(
-   let day=1;
-   day<=days;
-   day++
+  let day=1;
+  day<=days;
+  day++
  ){
 
-   const iso =
-     localISO(
-       new Date(
-         year,
-         month,
-         day
-       )
-     );
+  const date=
+   `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
 
-   const hasEvent =
-     events.some(
-       e =>
-         e.date===iso
-     );
+  const dayEvents=
+   byDate[date]||[];
 
-   const cell =
-     document.createElement(
-       "div"
-     );
 
-   cell.className =
-     "calCell";
+  cells+=`
 
-   if(
-     iso===today()
+  <button
+   class="calCell ${
+    date===isoToday()
+     ?"today"
+     :""
+   }"
+   data-caldate="${date}"
+  >
+
+  <b>${day}</b>
+
+  ${
+   dayEvents.map(
+    event=>`
+
+    <span class="calEvent">
+    📌 ${esc(event.title)}
+    </span>
+
+    `
+   ).join("")
+  }
+
+  </button>
+
+  `;
+
+ }
+
+
+ openModal(`
+
+ <div class="calendarHead">
+
+ <button id="prevM">‹</button>
+
+ <h2>
+ 📅 ${selected.toLocaleDateString(
+  undefined,
+  {
+   month:"long",
+   year:"numeric"
+  }
+ )}
+ </h2>
+
+ <button id="nextM">›</button>
+
+ </div>
+
+
+ <div class="calGrid">
+
+ ${[
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun"
+ ].map(
+  x=>`<b>${x}</b>`
+ ).join("")}
+
+ ${cells}
+
+ </div>
+
+
+ <div id="calDetails"></div>
+
+
+ <div class="modalActions">
+
+ <button id="closeCal">
+ Close
+ </button>
+
+ </div>
+
+ `);
+
+
+ $("closeCal").onclick=
+  closeModal;
+
+
+ $("prevM").onclick=()=>{
+
+  const x=
+   new Date(
+    year,
+    month-1,
+    1
+   );
+
+  currentDate=
+   x.toISOString()
+    .slice(0,7)+"-01";
+
+  showCalendar();
+
+ };
+
+
+ $("nextM").onclick=()=>{
+
+  const x=
+   new Date(
+    year,
+    month+1,
+    1
+   );
+
+  currentDate=
+   x.toISOString()
+    .slice(0,7)+"-01";
+
+  showCalendar();
+
+ };
+
+
+ $("modalBox")
+  .querySelectorAll(
+   "[data-caldate]"
+  )
+  .forEach(button=>{
+
+   button.onclick=()=>{
+
+    calendarDateDetails(
+     button.dataset.caldate
+    );
+
+   };
+
+  });
+
+}
+
+
+async function calendarDateDetails(date){
+
+ const events=
+  (await all("events"))
+  .filter(
+   event=>event.date===date
+  );
+
+
+ $("calDetails").innerHTML=`
+
+ <h3>
+ ${fmtDate(date)}
+ </h3>
+
+ ${
+  events.map(
+   event=>`
+
+   <div class="todoRow">
+
+   <span>
+
+   📌
+
+   <b>
+   ${esc(event.time||"")}
+   </b>
+
+   ${esc(event.title)}
+
+   <br>
+
+   ${esc(event.notes||"")}
+
+   </span>
+
+   </div>
+
+   `
+  ).join("")
+  ||
+  "<p>No diary events.</p>"
+ }
+
+ `;
+
+}
+
+
+/* TODO */
+
+async function showTodos(){
+
+ const past=
+  currentDate<isoToday();
+
+ const todos=
+  (await all("todos"))
+  .filter(
+   x=>x.date===currentDate
+  );
+
+
+ openModal(`
+
+ <h2>
+ ☑ To-Do — ${fmtDate(currentDate)}
+ </h2>
+
+ ${
+  past
+   ?"<p>This date is read-only.</p>"
+   :""
+ }
+
+
+ <div id="todoList">
+
+ ${
+  todos.map(
+   todo=>`
+
+   <div class="todoRow">
+
+   <input
+    type="checkbox"
+    data-todo="${todo.id}"
+    ${todo.done?"checked":""}
+    ${past?"disabled":""}
+   >
+
+   <span class="${
+    todo.done
+     ?"done"
+     :""
+   }">
+
+   ${esc(todo.text)}
+
+   </span>
+
+   ${
+    past
+     ?""
+     :`
+      <button data-tdel="${todo.id}">
+      ×
+      </button>
+     `
+   }
+
+   </div>
+
+   `
+  ).join("")
+  ||
+  "<p>No tasks.</p>"
+ }
+
+ </div>
+
+
+ ${
+  past
+   ?""
+   :`
+
+   <div class="field">
+
+   <input
+    id="newTodo"
+    placeholder="New task"
+   >
+
+   <button id="addTodo">
+   Add task
+   </button>
+
+   </div>
+
+   `
+ }
+
+
+ <div class="modalActions">
+
+ <button id="closeTodo">
+ Close
+ </button>
+
+ </div>
+
+ `);
+
+
+ $("closeTodo").onclick=
+  closeModal;
+
+
+ if(!past){
+
+  $("addTodo").onclick=
+   async()=>{
+
+    const text=
+     $("newTodo")
+     .value
+     .trim();
+
+    if(!text)return;
+
+    await put(
+     "todos",
+     {
+      text:text,
+      date:currentDate,
+      done:false
+     }
+    );
+
+    showTodos();
+
+   };
+
+
+  $("todoList")
+   .querySelectorAll(
+    "[data-todo]"
    )
-     cell.classList.add(
-       "today"
-     );
+   .forEach(check=>{
 
-   if(hasEvent)
-     cell.classList.add(
-       "event"
-     );
+    check.onchange=
+     async()=>{
 
-   cell.innerHTML =
-     "<b>"+
-     day+
-     "</b>"+
-     (
-       hasEvent
-       ?
-       '<span class="eventDot"></span>'
-       :
-       ""
-     );
-
-   cell.onclick =
-     async () => {
-
-       await goDate(
-         iso
+      const todo=
+       await get(
+        "todos",
+        Number(check.dataset.todo)
        );
 
-       closeModal(
-         "calendarModal"
-       );
+      todo.done=
+       check.checked;
+
+      await put(
+       "todos",
+       todo
+      );
+
+      showTodos();
 
      };
 
-   grid.appendChild(
-     cell
-   );
+   });
+
+
+  $("todoList")
+   .querySelectorAll(
+    "[data-tdel]"
+   )
+   .forEach(button=>{
+
+    button.onclick=
+     async()=>{
+
+      await del(
+       "todos",
+       Number(button.dataset.tdel)
+      );
+
+      showTodos();
+
+     };
+
+   });
 
  }
 
- const monthEvents =
-   events.filter(
-     e =>
-       e.date.startsWith(
-         year+
-         "-"+
-         String(
-           month+1
-         ).padStart(
-           2,
-           "0"
-         )
-       )
-   );
-
- document
-   .getElementById(
-     "calendarEvents"
-   )
-   .innerHTML =
-     monthEvents.length
-     ?
-     monthEvents
-       .sort(
-         (a,b) =>
-           a.date.localeCompare(
-             b.date
-           )
-       )
-       .map(
-         e =>
-           `<p>
-             🗓️
-             <b>${e.date}</b>
-             ${e.time||""}
-             —
-             ${escapeHTML(e.title)}
-           </p>`
-       )
-       .join("")
-     :
-     "<p>No diary events this month.</p>";
-
 }
 
 
-document
-  .getElementById(
-    "calPrev"
-  )
-  .onclick =
-    () => {
-
-      calendarDate.setMonth(
-        calendarDate.getMonth()-1
-      );
-
-      renderCalendar();
-
-    };
-
-
-document
-  .getElementById(
-    "calNext"
-  )
-  .onclick =
-    () => {
-
-      calendarDate.setMonth(
-        calendarDate.getMonth()+1
-      );
-
-      renderCalendar();
-
-    };
-
-
-/* =========================================================
-   TODO
-========================================================= */
-
-async function renderTodos(){
-
- const todos =
-   (
-     await getAll(
-       "todos"
-     )
-   )
-   .filter(
-     x =>
-       x.date===
-       currentDate
-   );
-
- const list =
-   document
-     .getElementById(
-       "todoList"
-     );
-
- if(!todos.length){
-
-   list.innerHTML =
-     "<p>No tasks for this date.</p>";
-
-   return;
-
- }
-
- list.innerHTML =
-   todos
-     .map(
-       item => `
-
-       <div
-         class="todoItem
-         ${item.done?"done":""}"
-       >
-
-         <input
-           type="checkbox"
-           ${item.done?"checked":""}
-           ${isPastDate()?"disabled":""}
-           onchange="
-             toggleTodo(
-               ${item.id},
-               this.checked
-             )
-           "
-         >
-
-         <span>
-           ${escapeHTML(item.text)}
-         </span>
-
-         ${
-           !isPastDate()
-           ?
-           `<button
-              onclick="
-                deleteTodo(
-                  ${item.id}
-                )
-              "
-            >
-              ×
-            </button>`
-           :
-           ""
-         }
-
-       </div>
-
-     `
-     )
-     .join("");
-
-}
-
-
-document
-  .getElementById(
-    "addTodo"
-  )
-  .onclick =
-    async () => {
-
-      if(isPastDate())
-        return;
-
-      const input =
-        document
-          .getElementById(
-            "todoText"
-          );
-
-      const text =
-        input.value.trim();
-
-      if(!text)
-        return;
-
-      await saveRecord(
-        "todos",
-        {
-          date:currentDate,
-
-          text:text,
-
-          done:false
-        }
-      );
-
-      input.value="";
-
-      await renderTodos();
-
-    };
-
-
-async function toggleTodo(
-  id,
-  done
-){
-
- if(isPastDate())
-   return;
-
- const item =
-   await getRecord(
-     "todos",
-     id
-   );
-
- if(!item)
-   return;
-
- item.done =
-   done;
-
- await saveRecord(
-   "todos",
-   item
- );
-
- await renderTodos();
-
-}
-
-
-async function deleteTodo(id){
-
- if(isPastDate())
-   return;
-
- await deleteRecord(
-   "todos",
-   id
- );
-
- await renderTodos();
-
-}
-
-
-/* =========================================================
-   MEMORIES
-========================================================= */
-
-async function renderMemories(){
-
- const memories =
-   (
-     await getAll(
-       "attachments"
-     )
-   )
-   .filter(
-     x =>
-       x.date===
-       currentDate
-   );
-
- document
-   .getElementById(
-     "memoryList"
-   )
-   .innerHTML =
-     memories.length
-     ?
-     memories
-       .map(
-         m =>
-           `<div class="todoItem">
-             <span>
-               ${escapeHTML(m.name)}
-             </span>
-
-             <button
-               onclick="
-                 deleteMemory(
-                   ${m.id}
-                 )
-               "
-             >
-               Delete
-             </button>
-
-           </div>`
-       )
-       .join("")
-     :
-     "<p>No memories attached.</p>";
-
-}
-
-
-document
-  .getElementById(
-    "memoryInput"
-  )
-  .onchange =
-    event => {
-
-      [...event.target.files]
-        .forEach(
-          file => {
-
-            const reader =
-              new FileReader();
-
-            reader.onload =
-              async () => {
-
-                await saveRecord(
-                  "attachments",
-                  {
-                    date:currentDate,
-
-                    name:file.name,
-
-                    type:file.type,
-
-                    data:
-                      reader.result
-                  }
-                );
-
-                renderMemories();
-
-              };
-
-            reader.readAsDataURL(
-              file
-            );
-
-          }
-        );
-
-      event.target.value="";
-
-    };
-
-
-async function deleteMemory(id){
-
- await deleteRecord(
-   "attachments",
-   id
- );
-
- renderMemories();
-
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-document
-  .querySelectorAll(
-    ".design"
-  )
-  .forEach(
-    design => {
-
-      design.onclick =
-        async () => {
-
-          pageRecord.design =
-            design.dataset.design;
-
-          await saveRecord(
-            "pages",
-            pageRecord
-          );
-
-          applyDesign(
-            pageRecord.design
-          );
-
-        };
-
-    }
+/* TODO CARRY FORWARD */
+
+async function carryTodos(){
+
+ const tomorrow=
+  addDays(
+   isoToday(),
+   1
+  );
+
+ const todayTodos=
+  await all("todos");
+
+ const unfinished=
+  todayTodos.filter(
+   x=>
+    x.date===isoToday() &&
+    !x.done
   );
 
 
-document
-  .getElementById(
-    "fontSize"
-  )
-  .oninput =
-    event => {
-
-      localStorage.setItem(
-        "fontSize",
-        event.target.value
-      );
-
-      applyPageSettings();
-
-    };
-
-
-document
-  .getElementById(
-    "lineSize"
-  )
-  .oninput =
-    event => {
-
-      localStorage.setItem(
-        "lineHeight",
-        event.target.value
-      );
-
-      applyPageSettings();
-
-    };
-
-
-document
-  .getElementById(
-    "pageWidth"
-  )
-  .oninput =
-    event => {
-
-      localStorage.setItem(
-        "pageWidth",
-        event.target.value
-      );
-
-      applyPageSettings();
-
-    };
-
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-document
-  .getElementById(
-    "printBtn"
-  )
-  .onclick =
-    async () => {
-
-      await savePage();
-
-      const w =
-        window.open(
-          "",
-          "_blank"
-        );
-
-      if(!w){
-
-        alert(
-          "Please allow pop-ups for printing."
-        );
-
-        return;
-
-      }
-
-      w.document.write(
-        `
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <title>
-        ${escapeHTML(
-          formatDate(
-            currentDate
-          )
-        )}
-        </title>
-
-        <style>
-
-        body{
-          font-family:Georgia;
-          padding:40px;
-          line-height:1.8;
-        }
-
-        h1{
-          font-size:30px;
-        }
-
-        .quote{
-          font-style:italic;
-        }
-
-        </style>
-
-        </head>
-
-        <body>
-
-        <h1>
-        ${escapeHTML(
-          formatDate(
-            currentDate
-          )
-        )}
-        </h1>
-
-        <p class="quote">
-        ${escapeHTML(
-          pageRecord.quote
-        )}
-        </p>
-
-        ${pageRecord.content}
-
-        </body>
-
-        </html>
-        `
-      );
-
-      w.document.close();
-
-      setTimeout(
-        () => w.print(),
-        300
-      );
-
-    };
-
-
-/* =========================================================
-   BACKUP
-========================================================= */
-
-document
-  .getElementById(
-    "backupBtn"
-  )
-  .onclick =
-    async () => {
-
-      await savePage();
-
-      const data = {
-
-        version:8,
-
-        pages:
-          await getAll(
-            "pages"
-          ),
-
-        events:
-          await getAll(
-            "events"
-          ),
-
-        todos:
-          await getAll(
-            "todos"
-          ),
-
-        attachments:
-          await getAll(
-            "attachments"
-          ),
-
-        settings:{
-
-          fontSize:
-            localStorage.getItem(
-              "fontSize"
-            ),
-
-          lineHeight:
-            localStorage.getItem(
-              "lineHeight"
-            ),
-
-          pageWidth:
-            localStorage.getItem(
-              "pageWidth"
-            )
-
-        }
-
-      };
-
-      const blob =
-        new Blob(
-          [
-            JSON.stringify(
-              data
-            )
-          ],
-          {
-            type:
-              "application/json"
-          }
-        );
-
-      const url =
-        URL.createObjectURL(
-          blob
-        );
-
-      const a =
-        document.createElement(
-          "a"
-        );
-
-      a.href=url;
-
-      a.download =
-        "my-personal-diary-backup.json";
-
-      a.click();
-
-      URL.revokeObjectURL(
-        url
-      );
-
-    };
-
-
-/* =========================================================
-   RESTORE
-========================================================= */
-
-document
-  .getElementById(
-    "restoreBtn"
-  )
-  .onclick =
-    () =>
-      document
-        .getElementById(
-          "restoreInput"
-        )
-        .click();
-
-
-document
-  .getElementById(
-    "restoreInput"
-  )
-  .onchange =
-    async event => {
-
-      const file =
-        event.target.files[0];
-
-      if(!file)
-        return;
-
-      try{
-
-        const data =
-          JSON.parse(
-            await file.text()
-          );
-
-        for(
-          const item
-          of
-          data.pages || []
-        )
-          await saveRecord(
-            "pages",
-            item
-          );
-
-        for(
-          const item
-          of
-          data.events || []
-        )
-          await saveRecord(
-            "events",
-            item
-          );
-
-        for(
-          const item
-          of
-          data.todos || []
-        )
-          await saveRecord(
-            "todos",
-            item
-          );
-
-        for(
-          const item
-          of
-          data.attachments || []
-        )
-          await saveRecord(
-            "attachments",
-            item
-          );
-
-        if(data.settings){
-
-          Object.entries(
-            data.settings
-          ).forEach(
-            ([key,value]) => {
-
-              if(value!==null)
-                localStorage.setItem(
-                  key,
-                  value
-                );
-
-            }
-          );
-
-        }
-
-        await renderPage();
-
-        alert(
-          "Diary restored successfully."
-        );
-
-      }catch(error){
-
-        alert(
-          "Invalid diary backup."
-        );
-
-      }
-
-      event.target.value="";
-
-    };
-
-
-/* =========================================================
-   EVENT ALERT
-========================================================= */
-
-setInterval(
-  async () => {
-
-    const events =
-      await getAll(
-        "events"
-      );
-
-    const now =
-      new Date();
-
-    const currentTime =
-      now.toTimeString()
-        .slice(0,5);
-
-    events
-      .filter(
-        e =>
-          e.date===
-          today() &&
-          e.time===
-          currentTime
-      )
-      .forEach(
-        e => {
-
-          const key =
-            "diaryAlert-"+
-            e.id+
-            "-"+
-            today();
-
-          if(
-            !sessionStorage.getItem(
-              key
-            )
-          ){
-
-            sessionStorage.setItem(
-              key,
-              "1"
-            );
-
-            alert(
-              "🗓️ Diary Event\n\n"+
-              e.title+
-              (
-                e.notes
-                ?
-                "\n\n"+
-                e.notes
-                :
-                ""
-              )
-            );
-
-          }
-
-        }
-      );
-
-  },
-  30000
-);
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function escapeHTML(value){
-
- return String(
-   value ?? ""
- )
- .replace(
-   /[&<>"']/g,
-   character => ({
-     "&":"&amp;",
-     "<":"&lt;",
-     ">":"&gt;",
-     '"':"&quot;",
-     "'":"&#039;"
-   })[character]
- );
+ for(const todo of unfinished){
+
+  const exists=
+   todayTodos.some(
+    x=>
+     x.date===tomorrow &&
+     x.text===todo.text &&
+     !x.done
+   );
+
+  if(!exists){
+
+   await put(
+    "todos",
+    {
+     text:todo.text,
+     date:tomorrow,
+     done:false,
+     carriedFrom:todo.id
+    }
+   );
+
+  }
+
+ }
 
 }
 
 
-/* =========================================================
-   START
-========================================================= */
+/* MEMORIES */
 
-(async function(){
+async function showMemories(){
+
+ const attachments=
+  await all("attachments");
+
+ const memories=
+  attachments.filter(
+   x=>x.kind==="memory"
+  );
+
+
+ openModal(`
+
+ <h2>
+ 🖼 Memories
+ </h2>
+
+ <input
+  id="memoryInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+ >
+
+
+ <div
+  class="memoryGrid"
+  id="memoryGrid"
+ >
+
+ ${
+  memories.map(
+   memory=>`
+
+   <div class="memory">
+
+   <img
+    src="${memory.data}"
+    alt="Memory"
+   >
+
+   <div>
+   ${esc(memory.name||"Memory")}
+   </div>
+
+   <button
+    data-md="${memory.id}"
+   >
+   Delete
+   </button>
+
+   </div>
+
+   `
+  ).join("")
+  ||
+  "<p>No memories yet.</p>"
+ }
+
+ </div>
+
+ `);
+
+
+ $("memoryInput").onchange=
+  async e=>{
+
+   const file=
+    e.target.files[0];
+
+   if(!file)return;
+
+
+   const data=
+    await new Promise(resolve=>{
+
+     const reader=
+      new FileReader();
+
+     reader.onload=
+      ()=>resolve(
+       reader.result
+      );
+
+     reader.readAsDataURL(
+      file
+     );
+
+    });
+
+
+   await put(
+    "attachments",
+    {
+     kind:"memory",
+     name:file.name,
+     data:data,
+     date:currentDate
+    }
+   );
+
+
+   showMemories();
+
+  };
+
+
+ $("memoryGrid")
+  .querySelectorAll(
+   "[data-md]"
+  )
+  .forEach(button=>{
+
+   button.onclick=
+    async()=>{
+
+     await del(
+      "attachments",
+      Number(button.dataset.md)
+     );
+
+     showMemories();
+
+    };
+
+  });
+
+}
+
+
+/* SETTINGS */
+
+async function showSettings(){
+
+ const settings=
+  await get(
+   "settings",
+   "prefs"
+  )||{};
+
+ const designs=[
+  "classic",
+  "vintage",
+  "blue",
+  "green",
+  "rose",
+  "night"
+ ];
+
+
+ openModal(`
+
+ <h2>
+ ⚙ Settings
+ </h2>
+
+ <h3>
+ Page design
+ </h3>
+
+ <div class="designs">
+
+ ${
+  designs.map(
+   design=>`
+
+   <button
+    class="design ${
+     design===settings.design
+      ?"sel"
+      :""
+    }"
+    data-design="${design}"
+   >
+
+   ${design}
+
+   </button>
+
+   `
+  ).join("")
+ }
+
+ </div>
+
+
+ <div class="field">
+
+ <label>
+
+ Font size:
+
+ <span id="fontVal">
+ ${settings.font||18}
+ </span>
+
+ px
+
+ </label>
+
+ <input
+  id="fontRange"
+  type="range"
+  min="15"
+  max="25"
+  value="${settings.font||18}"
+ >
+
+ </div>
+
+
+ <div class="field">
+
+ <label>
+
+ Line spacing:
+
+ <span id="lineVal">
+ ${settings.line||32}
+ </span>
+
+ px
+
+ </label>
+
+ <input
+  id="lineRange"
+  type="range"
+  min="28"
+  max="40"
+  value="${settings.line||32}"
+ >
+
+ </div>
+
+
+ <div class="modalActions">
+
+ <button id="closeSet">
+ Close
+ </button>
+
+ </div>
+
+ `);
+
+
+ $("closeSet").onclick=
+  closeModal;
+
+
+ $("modalBox")
+  .querySelectorAll(
+   "[data-design]"
+  )
+  .forEach(button=>{
+
+   button.onclick=
+    async()=>{
+
+     applyDesign(
+      button.dataset.design
+     );
+
+     await saveSettings({
+      design:button.dataset.design,
+      font:
+       Number(
+        $("fontRange").value
+       ),
+      line:
+       Number(
+        $("lineRange").value
+       )
+     });
+
+     showSettings();
+
+    };
+
+  });
+
+
+ $("fontRange").oninput=
+  e=>{
+
+   $("fontVal").textContent=
+    e.target.value;
+
+   $("editor").style.fontSize=
+    e.target.value+"px";
+
+   scheduleSave();
+
+  };
+
+
+ $("lineRange").oninput=
+  e=>{
+
+   $("lineVal").textContent=
+    e.target.value;
+
+   $("editor").style.lineHeight=
+    e.target.value+"px";
+
+   document
+    .querySelectorAll(".editor li")
+    .forEach(
+     li=>
+      li.style.lineHeight=
+       e.target.value+"px"
+    );
+
+   scheduleSave();
+
+  };
+
+}
+
+
+/* TOP BUTTONS */
+
+$("calendarBtn").onclick=
+ ()=>showCalendar();
+
+
+$("eventsBtn").onclick=
+ ()=>showEvents();
+
+
+$("todoBtn").onclick=
+ ()=>showTodos();
+
+
+$("memoryBtn").onclick=
+ ()=>showMemories();
+
+
+$("settingsBtn").onclick=
+ ()=>showSettings();
+
+
+/* BACKUP */
+
+$("backupBtn").onclick=
+ async()=>{
+
+  await savePage();
+
+  const backup={
+
+   version:6,
+
+   pages:
+    await all("pages"),
+
+   events:
+    await all("events"),
+
+   todos:
+    await all("todos"),
+
+   attachments:
+    await all("attachments"),
+
+   settings:
+    await all("settings")
+
+  };
+
+
+  const link=
+   document.createElement("a");
+
+  link.href=
+   URL.createObjectURL(
+    new Blob(
+     [JSON.stringify(backup)],
+     {
+      type:"application/json"
+     }
+    )
+   );
+
+  link.download=
+   "my-diary-backup.json";
+
+  link.click();
+
+ };
+
+
+/* RESTORE */
+
+$("restoreBtn").onclick=
+ ()=>$("restoreInput").click();
+
+
+$("restoreInput").onchange=
+ async e=>{
+
+  const file=
+   e.target.files[0];
+
+  if(!file)return;
+
+  try{
+
+   const backup=
+    JSON.parse(
+     await file.text()
+    );
+
+
+   for(
+    const store of [
+     "pages",
+     "events",
+     "todos",
+     "attachments",
+     "settings"
+    ]
+   ){
+
+    for(
+     const record of
+      backup[store]||[]
+    ){
+
+     await put(
+      store,
+      record
+     );
+
+    }
+
+   }
+
+
+   toast(
+    "Backup restored"
+   );
+
+   await loadPage();
+
+  }
+  catch(error){
+
+   console.error(error);
+
+   toast(
+    "Invalid backup file"
+   );
+
+  }
+
+ };
+
+
+/* PRINT */
+
+$("printBtn").onclick=
+ async()=>{
+
+  await savePage();
+
+  window.print();
+
+ };
+
+
+/* START */
+
+(async()=>{
 
  try{
 
-   await openDB();
+  await openDB();
 
-   await renderPage();
+  await migrateOld();
 
- }catch(error){
+  await loadSettings();
 
-   console.error(
-     error
-   );
+  setupCanvas();
 
-   alert(
-     "Diary database could not be opened. Please reload the diary."
-   );
+  await carryTodos();
+
+  await loadPage();
+
+ }
+ catch(error){
+
+  console.error(error);
+
+  toast(
+   "Diary storage could not be opened. Please reload the app."
+  );
 
  }
 

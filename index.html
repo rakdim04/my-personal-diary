@@ -2,59 +2,88 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#654321">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#5b3a24">
 <link rel="manifest" href="manifest.json">
 <title>My Personal Diary</title>
 
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;min-height:100%;font-family:Georgia,"Times New Roman",serif}
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+}
+
 body{
+  font-family:Georgia,"Times New Roman",serif;
+  color:#3c2a1d;
   background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.35),transparent 28%),
-    linear-gradient(135deg,#d9c09a,#b89568 50%,#d4b98c);
-  color:#3b281b;
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.35),transparent 30%),
+    radial-gradient(circle at 80% 80%,rgba(120,75,30,.15),transparent 35%),
+    linear-gradient(135deg,#d9bf96,#b99364,#d8bd91);
 }
 
-button,input,select,textarea{font:inherit}
+button,input,select,textarea{
+  font:inherit;
+}
+
 button{
-  border:1px solid #b99b73;
-  border-radius:10px;
-  background:#fffdf8;
-  color:#4a3220;
-  padding:9px 14px;
+  border:1px solid #b9976d;
+  background:#fffdf7;
+  color:#493322;
+  border-radius:9px;
+  padding:9px 13px;
   cursor:pointer;
-  box-shadow:0 2px 4px rgba(0,0,0,.12);
+  box-shadow:0 2px 4px rgba(0,0,0,.13);
 }
-button:hover{background:#f5ead8}
-button:active{transform:translateY(1px)}
 
-[hidden]{display:none!important}
+button:hover{
+  background:#f4e8d3;
+}
 
-/* TOP BAR */
+button:active{
+  transform:translateY(1px);
+}
+
+[hidden]{
+  display:none!important;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
 .topbar{
-  margin:16px auto 12px;
   width:96%;
-  background:linear-gradient(#5a351e,#3f2515);
-  color:#fff8eb;
+  margin:16px auto 10px;
+  padding:10px 13px;
   border-radius:18px;
-  padding:10px 14px;
   display:flex;
   align-items:center;
-  gap:8px;
+  gap:7px;
   flex-wrap:wrap;
-  box-shadow:0 7px 18px rgba(60,35,15,.25);
+  background:linear-gradient(#634027,#432817);
+  color:#fff8ec;
+  box-shadow:0 8px 20px rgba(60,35,15,.28);
 }
+
 .brand{
   font-size:24px;
   font-weight:bold;
   margin-right:auto;
   white-space:nowrap;
 }
-.topbar button{font-size:16px}
 
-/* DATE BAR */
+.topbar button{
+  font-size:15px;
+}
+
+/* =========================================================
+   DATE BAR
+========================================================= */
+
 .datebar{
   width:96%;
   margin:0 auto 18px;
@@ -64,298 +93,444 @@ button:active{transform:translateY(1px)}
   gap:10px;
   flex-wrap:wrap;
 }
+
 .datebar input{
-  width:205px;
+  width:210px;
   padding:10px;
-  border:1px solid #b99b73;
+  border:1px solid #b9976d;
   border-radius:9px;
-  background:#fffdf7;
-  color:#493321;
+  background:#fffdf8;
 }
 
-/* DIARY */
+/* =========================================================
+   DIARY BOOK
+========================================================= */
+
 .diary{
   width:94%;
-  max-width:1450px;
+  max-width:1500px;
   margin:0 auto 40px;
   position:relative;
-  padding:0 0 30px 78px;
+  padding-left:82px;
 }
 
-/* natural holes */
+/* Natural binding area */
 .binding{
   position:absolute;
-  left:12px;
-  top:22px;
-  bottom:22px;
-  width:58px;
-  z-index:5;
+  left:5px;
+  top:18px;
+  bottom:18px;
+  width:72px;
+  z-index:20;
   pointer-events:none;
 }
-.hole{
+
+.binding-hole{
   position:absolute;
-  left:0;
-  width:45px;
-  height:27px;
+  left:3px;
+  width:47px;
+  height:29px;
   border-radius:50%;
   background:
-    radial-gradient(ellipse at 45% 35%,#e8e8e8 0,#999 38%,#444 62%,#ddd 70%,#777 100%);
+    radial-gradient(
+      ellipse at 42% 30%,
+      #f3f3f3 0,
+      #b8b8b8 25%,
+      #555 52%,
+      #252525 65%,
+      #aaa 78%,
+      #444 100%
+    );
   box-shadow:
     inset 2px 2px 4px rgba(0,0,0,.65),
-    2px 4px 4px rgba(0,0,0,.25);
+    3px 4px 5px rgba(0,0,0,.25);
 }
-.hole:after{
+
+.binding-hole:before{
   content:"";
   position:absolute;
-  left:8px;
+  left:7px;
   top:10px;
-  width:30px;
-  height:5px;
+  width:33px;
+  height:7px;
   border-radius:50%;
-  background:rgba(40,30,20,.45);
-  filter:blur(1px);
+  background:rgba(30,20,10,.55);
 }
-.hole:nth-child(1){top:0}
-.hole:nth-child(2){top:9%}
-.hole:nth-child(3){top:18%}
-.hole:nth-child(4){top:27%}
-.hole:nth-child(5){top:36%}
-.hole:nth-child(6){top:45%}
-.hole:nth-child(7){top:54%}
-.hole:nth-child(8){top:63%}
-.hole:nth-child(9){top:72%}
-.hole:nth-child(10){top:81%}
-.hole:nth-child(11){top:90%}
+
+.binding-hole:nth-child(1){top:0}
+.binding-hole:nth-child(2){top:9%}
+.binding-hole:nth-child(3){top:18%}
+.binding-hole:nth-child(4){top:27%}
+.binding-hole:nth-child(5){top:36%}
+.binding-hole:nth-child(6){top:45%}
+.binding-hole:nth-child(7){top:54%}
+.binding-hole:nth-child(8){top:63%}
+.binding-hole:nth-child(9){top:72%}
+.binding-hole:nth-child(10){top:81%}
+.binding-hole:nth-child(11){top:90%}
 
 .page{
   position:relative;
-  min-height:1180px;
-  padding:72px 70px 90px 95px;
+  min-height:1250px;
+  padding:70px 75px 100px 95px;
   overflow:hidden;
-  border:1px solid #b99768;
-  border-radius:6px 18px 18px 6px;
-  box-shadow:
-    0 14px 25px rgba(61,38,18,.30),
-    inset 0 0 25px rgba(139,95,45,.12);
-  background-color:#fff9df;
+
+  border:1px solid #b49367;
+  border-radius:5px 20px 20px 5px;
+
+  background-color:#fff8dd;
+
   background-image:
     repeating-linear-gradient(
       to bottom,
       transparent 0,
       transparent 39px,
-      rgba(108,145,150,.25) 40px,
+      rgba(93,133,143,.22) 40px,
       transparent 41px
     ),
-    radial-gradient(circle at 30% 20%,rgba(130,90,40,.05),transparent 40%);
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(120,80,35,.06),
+      transparent 38%
+    );
+
+  box-shadow:
+    0 18px 32px rgba(62,39,20,.32),
+    inset 0 0 35px rgba(115,75,30,.13);
 }
 
-/* different diary designs */
+/* page designs */
+
 .page.classic{
-  background-color:#fff9df;
+  background-color:#fff8dd;
 }
+
 .page.vintage{
-  background-color:#f2dfb9;
+  background-color:#f0dfba;
   background-image:
-    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(120,90,50,.22) 40px,transparent 41px),
-    radial-gradient(circle at 80% 30%,rgba(90,55,20,.08),transparent 35%);
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 39px,
+      rgba(115,88,55,.22) 40px,
+      transparent 41px
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(110,70,25,.09),
+      transparent 35%
+    );
 }
-.page.floral{
-  background-color:#fff7e7;
+
+.page.natural{
+  background-color:#fff7e5;
   background-image:
-    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(126,145,110,.20) 40px,transparent 41px);
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 39px,
+      rgba(105,135,105,.21) 40px,
+      transparent 41px
+    );
 }
+
 .page.blue{
   background-color:#edf5f3;
   background-image:
-    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(77,119,130,.22) 40px,transparent 41px);
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 39px,
+      rgba(70,115,125,.22) 40px,
+      transparent 41px
+    );
 }
-.page.dark{
-  background-color:#27231e;
-  color:#eee3cc;
+
+.page.night{
+  background-color:#29251f;
+  color:#eee1c7;
   background-image:
-    repeating-linear-gradient(to bottom,transparent 0,transparent 39px,rgba(220,190,130,.15) 40px,transparent 41px);
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 39px,
+      rgba(220,190,130,.13) 40px,
+      transparent 41px
+    );
 }
 
-/* page top */
-.pagehead{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:20px;
-  position:relative;
-  z-index:4;
-}
-.pagehead h1{
-  margin:0 0 3px;
-  font-size:32px;
-}
-.pageNo{
-  font-size:15px;
-  opacity:.75;
-}
-.quote{
-  font-size:14px;
-  padding:8px 12px;
-  margin-top:4px;
-}
+/* =========================================================
+   PAGE HEADER
+========================================================= */
 
-/* emoji strip */
-.emojiBar{
+.pageHeader{
   position:relative;
   z-index:5;
   display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  padding:9px 12px;
-  margin:15px 0 10px;
-  border:1px solid #d1b487;
-  border-radius:13px;
-  background:rgba(255,252,239,.86);
-  box-shadow:inset 0 1px 5px rgba(100,60,20,.08);
-}
-.emojiBar button{
-  border:0;
-  background:transparent;
-  box-shadow:none;
-  padding:2px 4px;
-  font-size:25px;
-  line-height:1;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:20px;
 }
 
-/* writing area */
-.editorWrap{
-  position:relative;
-  min-height:790px;
+.pageHeader h1{
+  margin:0 0 2px;
+  font-size:34px;
 }
+
+.pageNumber{
+  font-size:15px;
+  opacity:.7;
+}
+
+/* Mood and quote directly on diary */
+
+.pageTopRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.moodDisplay{
+  min-width:58px;
+  min-height:45px;
+  padding:4px 9px;
+  border:1px solid #c7aa7d;
+  border-radius:12px;
+  background:rgba(255,252,240,.78);
+  text-align:center;
+  font-size:30px;
+  box-shadow:0 2px 5px rgba(80,50,20,.12);
+}
+
+.quoteDisplay{
+  max-width:330px;
+  padding:9px 13px;
+  border-left:3px solid #a67b45;
+  border-radius:6px;
+  background:rgba(255,252,239,.55);
+  font-style:italic;
+  font-size:14px;
+  line-height:20px;
+}
+
+/* =========================================================
+   FORMATTING BAR - SEPARATE FROM DIARY
+========================================================= */
+
+.formatBar{
+  position:relative;
+  z-index:15;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin:17px 0 8px;
+  padding:7px 9px;
+  border:1px solid #cdb185;
+  border-radius:10px;
+  background:rgba(255,252,239,.88);
+  box-shadow:0 2px 6px rgba(80,50,20,.08);
+}
+
+.formatBar button{
+  min-width:38px;
+  padding:6px 9px;
+}
+
+.formatBar .separator{
+  width:1px;
+  height:25px;
+  background:#cbb28c;
+}
+
+/* =========================================================
+   WRITING AREA
+========================================================= */
+
+.editorArea{
+  position:relative;
+  min-height:900px;
+}
+
+/*
+   The editor is deliberately above the canvas.
+   In normal mode it receives typing.
+   In draw mode the canvas receives touch/stylus input.
+*/
+
 .editor{
   position:relative;
   z-index:2;
-  min-height:790px;
+  min-height:900px;
   outline:none;
   font-size:20px;
   line-height:40px;
-  white-space:normal;
-  padding:2px 5px;
+  padding:0 5px;
+  word-wrap:break-word;
 }
+
 .editor:empty:before{
   content:"Start writing here...";
-  color:rgba(100,70,40,.35);
+  color:rgba(90,60,30,.34);
   pointer-events:none;
 }
 
-/* DRAW CANVAS
-   It covers the entire writing/page area but is invisible until draw mode. */
+/* =========================================================
+   DRAWING LAYER
+========================================================= */
+
 #drawCanvas{
   position:absolute;
-  z-index:8;
-  inset:0;
+  z-index:30;
+  left:0;
+  top:0;
   width:100%;
   height:100%;
   display:none;
   background:transparent;
   touch-action:none;
 }
-.draw-active #drawCanvas{
+
+.page.drawMode #drawCanvas{
   display:block;
   cursor:crosshair;
 }
 
-/* draw controls */
-.drawTools{
+.page.drawMode .editor{
+  pointer-events:none;
+}
+
+.page.drawMode .formatBar{
+  opacity:.45;
+}
+
+/* Draw controls are NOT a modal */
+
+.drawBar{
   position:fixed;
-  z-index:1000;
+  z-index:3000;
   left:50%;
-  bottom:15px;
+  bottom:14px;
   transform:translateX(-50%);
-  background:rgba(60,38,23,.97);
-  color:white;
-  padding:10px;
-  border-radius:14px;
+  width:max-content;
+  max-width:96vw;
   display:flex;
-  gap:6px;
+  gap:5px;
   flex-wrap:wrap;
   justify-content:center;
-  max-width:96%;
-  box-shadow:0 8px 30px rgba(0,0,0,.35);
+  align-items:center;
+  padding:9px;
+  border-radius:14px;
+  background:rgba(61,39,23,.97);
+  box-shadow:0 10px 35px rgba(0,0,0,.4);
 }
-.drawTools button{
+
+.drawBar button{
   padding:7px 10px;
   font-size:14px;
 }
-.drawTools button.active{
-  background:#d9b878;
-  color:#2d1c10;
+
+.drawBar button.active{
+  background:#dfbd7c;
+  color:#2f1c0e;
   font-weight:bold;
 }
-.drawTools input[type=color]{
+
+.drawBar input[type=color]{
   width:38px;
   height:34px;
   padding:2px;
 }
 
-/* New page tab */
-.newPage{
+/* =========================================================
+   NEW PAGE TAB
+========================================================= */
+
+.newPageTab{
   position:absolute;
   right:-1px;
   bottom:25px;
-  z-index:10;
-  border-radius:12px 0 0 12px;
-  background:#ead2a5;
+  z-index:50;
+  border-radius:13px 0 0 13px;
+  background:#e7ce9d;
   font-weight:bold;
+  box-shadow:-2px 3px 7px rgba(60,40,20,.18);
 }
 
-/* footer */
+/* =========================================================
+   FOOTER
+========================================================= */
+
 .pageFooter{
   position:absolute;
+  z-index:5;
   left:95px;
-  right:70px;
-  bottom:25px;
-  z-index:4;
+  right:75px;
+  bottom:30px;
   display:flex;
   justify-content:space-between;
   font-size:13px;
-  opacity:.65;
+  opacity:.62;
 }
 
-/* MODALS */
+/* =========================================================
+   MODALS
+========================================================= */
+
 .modal{
   position:fixed;
   inset:0;
-  z-index:2000;
-  background:rgba(25,15,8,.55);
+  z-index:5000;
   display:flex;
   justify-content:center;
   align-items:center;
   padding:15px;
+  background:rgba(25,15,8,.58);
 }
+
 .modalBox{
-  width:min(720px,96vw);
+  width:min(760px,96vw);
   max-height:92vh;
   overflow:auto;
-  background:#fffaf0;
-  border-radius:18px;
   padding:22px;
-  box-shadow:0 20px 60px rgba(0,0,0,.4);
+  border-radius:18px;
+  background:#fffaf0;
+  box-shadow:0 20px 65px rgba(0,0,0,.42);
 }
+
 .modalBox h2{
   margin-top:0;
-  color:#59381f;
+  color:#5a3921;
 }
+
 .formRow{
   display:flex;
   gap:10px;
-  margin:10px 0;
   flex-wrap:wrap;
+  margin:10px 0;
 }
-.formRow>*{flex:1}
-.modal input,.modal textarea,.modal select{
+
+.formRow>*{
+  flex:1;
+  min-width:150px;
+}
+
+.modal input,
+.modal select,
+.modal textarea{
   width:100%;
   padding:10px;
-  border:1px solid #c5aa80;
+  margin:5px 0 10px;
+  border:1px solid #c6aa7d;
   border-radius:8px;
-  background:white;
+  background:#fff;
 }
-.modal textarea{min-height:100px}
+
+.modal textarea{
+  min-height:100px;
+}
+
 .modalActions{
   display:flex;
   justify-content:flex-end;
@@ -363,70 +538,110 @@ button:active{transform:translateY(1px)}
   margin-top:15px;
 }
 
-/* calendar */
-.calendarTitle{
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+.calendarHeader{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:10px;
 }
+
 .calendarGrid{
   display:grid;
   grid-template-columns:repeat(7,1fr);
   gap:4px;
 }
-.calHead{
+
+.calendarWeek{
   text-align:center;
   font-weight:bold;
-  padding:7px 2px;
-}
-.calDay{
-  min-height:70px;
-  background:#fff;
-  border:1px solid #ddc7a2;
-  border-radius:7px;
-  padding:5px;
-  cursor:pointer;
-}
-.calDay:hover{background:#f7ecd9}
-.calDay.today{border:2px solid #7c4e28}
-.calDay.selected{background:#ead5b0}
-.calDay .num{font-weight:bold}
-.calEvent{
-  font-size:11px;
-  margin-top:4px;
-  background:#e6d2aa;
-  border-radius:4px;
-  padding:2px;
-  overflow:hidden;
-  white-space:nowrap;
+  padding:8px 2px;
 }
 
-/* events */
-.eventItem,.todoItem,.memoryItem{
+.calendarDay{
+  min-height:78px;
+  padding:5px;
+  border:1px solid #dcc39d;
+  border-radius:7px;
+  background:#fff;
+  cursor:pointer;
+}
+
+.calendarDay:hover{
+  background:#f5ead8;
+}
+
+.calendarDay.today{
+  border:2px solid #8a5a30;
+}
+
+.calendarDay.selected{
+  background:#ead5ac;
+}
+
+.calendarNumber{
+  font-weight:bold;
+}
+
+.calendarEvent{
+  margin-top:4px;
+  padding:2px 4px;
+  border-radius:4px;
+  background:#e7d0a5;
+  font-size:11px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* =========================================================
+   EVENT / TODO
+========================================================= */
+
+.eventItem,
+.todoItem,
+.memoryItem{
   padding:9px;
-  margin:6px 0;
-  border:1px solid #dcc39b;
+  margin:7px 0;
+  border:1px solid #ddc29a;
   border-radius:8px;
   background:#fff;
 }
-.eventItem strong{display:block}
+
+.eventItem strong{
+  display:block;
+  font-size:17px;
+  margin-bottom:4px;
+}
+
 .todoItem{
   display:flex;
   align-items:center;
   gap:8px;
 }
+
+.todoItem span{
+  flex:1;
+}
+
 .todoItem.done span{
   text-decoration:line-through;
   opacity:.55;
 }
-.todoItem span{flex:1}
 
-/* memories */
+/* =========================================================
+   MEMORY
+========================================================= */
+
 .memoryGrid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
   gap:10px;
 }
+
 .memoryCard img{
   width:100%;
   height:120px;
@@ -434,41 +649,120 @@ button:active{transform:translateY(1px)}
   border-radius:8px;
 }
 
-/* toast */
+/* =========================================================
+   STATUS
+========================================================= */
+
 #status{
   position:fixed;
   right:15px;
   bottom:15px;
-  z-index:3000;
+  z-index:6000;
+  display:none;
+  padding:10px 15px;
+  border-radius:9px;
   background:#3d291b;
   color:white;
-  padding:10px 14px;
-  border-radius:9px;
-  display:none;
 }
 
-/* mobile */
-@media(max-width:700px){
-  .topbar{width:98%;justify-content:center}
-  .brand{width:100%;text-align:center;margin-bottom:4px}
-  .topbar button{font-size:14px;padding:7px 9px}
-  .diary{width:98%;padding-left:43px}
-  .binding{left:3px;width:38px}
-  .hole{width:31px;height:21px}
-  .page{padding:55px 25px 80px 50px;min-height:1050px}
-  .pagehead h1{font-size:24px}
-  .editor,.editorWrap{min-height:730px}
-  .editor{font-size:18px;line-height:40px}
-  .pageFooter{left:50px;right:25px}
-  .newPage{font-size:13px;padding:7px 10px}
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:750px){
+
+  .topbar{
+    width:98%;
+    justify-content:center;
+  }
+
+  .brand{
+    width:100%;
+    text-align:center;
+    margin-bottom:4px;
+  }
+
+  .topbar button{
+    font-size:13px;
+    padding:7px 8px;
+  }
+
+  .diary{
+    width:98%;
+    padding-left:43px;
+  }
+
+  .binding{
+    left:2px;
+    width:39px;
+  }
+
+  .binding-hole{
+    width:32px;
+    height:22px;
+  }
+
+  .page{
+    min-height:1150px;
+    padding:55px 25px 90px 50px;
+  }
+
+  .pageHeader h1{
+    font-size:24px;
+  }
+
+  .pageTopRight{
+    gap:5px;
+  }
+
+  .quoteDisplay{
+    max-width:170px;
+    font-size:12px;
+    line-height:17px;
+  }
+
+  .editorArea,
+  .editor{
+    min-height:850px;
+  }
+
+  .editor{
+    font-size:18px;
+    line-height:40px;
+  }
+
+  .pageFooter{
+    left:50px;
+    right:25px;
+  }
+
+  .newPageTab{
+    font-size:13px;
+    padding:7px 10px;
+  }
+
+  .drawBar{
+    bottom:7px;
+  }
+
+  .drawBar button{
+    font-size:12px;
+    padding:6px 8px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- =======================================================
+     TOP BAR
+======================================================= -->
+
 <header class="topbar">
+
   <div class="brand">📖 My Personal Diary</div>
+
   <button id="calendarBtn">📅 Calendar</button>
   <button id="eventBtn">🗓️ Events</button>
   <button id="memoryBtn">🖼️ Memories</button>
@@ -478,8 +772,12 @@ button:active{transform:translateY(1px)}
   <button id="printBtn">🖨️ Print</button>
   <button id="backupBtn">💾 Backup</button>
   <button id="restoreBtn">↩️ Restore</button>
+
   <input id="restoreInput" type="file" accept=".json,application/json" hidden>
+
 </header>
+
+<!-- DATE -->
 
 <div class="datebar">
   <button id="prevBtn">‹ Previous</button>
@@ -487,82 +785,137 @@ button:active{transform:translateY(1px)}
   <button id="nextBtn">Next ›</button>
 </div>
 
-<main class="diary" id="diary">
+<!-- =======================================================
+     DIARY
+======================================================= -->
 
-  <div class="binding" aria-hidden="true">
-    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
-    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
-    <div class="hole"></div><div class="hole"></div><div class="hole"></div>
-    <div class="hole"></div><div class="hole"></div>
+<main class="diary">
+
+  <div class="binding">
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
+    <div class="binding-hole"></div>
   </div>
 
   <section class="page classic" id="page">
 
-    <div class="pagehead">
+    <div class="pageHeader">
+
       <div>
-        <h1 id="pageTitle">Friday, 18 September 2026</h1>
-        <div class="pageNo" id="pageNo">Page 1</div>
+        <h1 id="pageTitle"></h1>
+        <div class="pageNumber" id="pageNumber">Page 1</div>
       </div>
-      <div>
-        <select id="mood" title="Mood">
+
+      <div class="pageTopRight">
+
+        <!-- Mood selector -->
+        <select id="moodSelect" title="Select mood">
           <option value="">Mood</option>
-          <option>😊 Happy</option>
-          <option>😌 Peaceful</option>
-          <option>😍 Excited</option>
-          <option>🙏 Grateful</option>
-          <option>😐 Normal</option>
-          <option>😔 Sad</option>
-          <option>😡 Angry</option>
-          <option>😴 Tired</option>
+          <option value="😊">😊 Happy</option>
+          <option value="😌">😌 Peaceful</option>
+          <option value="😍">😍 Excited</option>
+          <option value="🙏">🙏 Grateful</option>
+          <option value="😐">😐 Normal</option>
+          <option value="😔">😔 Sad</option>
+          <option value="😡">😡 Angry</option>
+          <option value="😴">😴 Tired</option>
         </select>
-        <button class="quote" id="quoteBtn">💬 Quote</button>
+
+        <!-- Selected mood appears here -->
+        <div class="moodDisplay" id="moodDisplay">🙂</div>
+
+        <!-- Quote appears directly on paper -->
+        <div class="quoteDisplay" id="quoteDisplay"></div>
+
       </div>
+
     </div>
 
-    <div class="emojiBar" id="emojiBar">
-      <button>😀</button><button>😊</button><button>😂</button><button>❤️</button>
-      <button>🙏</button><button>🌸</button><button>🌿</button><button>✨</button>
-      <button>⭐</button><button>🎉</button><button>🎂</button><button>🎁</button>
-      <button>☀️</button><button>🌙</button><button>☕</button><button>🍀</button>
-      <button>📌</button><button>💡</button><button>👍</button><button>👏</button>
-      <button>😍</button><button>🥰</button><button>😁</button><button>😌</button>
-      <button>🕉️</button><button>🪔</button><button>🎵</button><button>📚</button>
+    <!-- SEPARATE FORMATTING TOOLBAR -->
+    <div class="formatBar">
+
+      <button id="boldBtn" title="Bold"><b>B</b></button>
+      <button id="italicBtn" title="Italic"><i>I</i></button>
+      <button id="underlineBtn" title="Underline"><u>U</u></button>
+
+      <div class="separator"></div>
+
+      <button id="bulletBtn" title="Bullet list">• List</button>
+      <button id="leftBtn" title="Align left">≡</button>
+      <button id="centerBtn" title="Center">≡</button>
+
     </div>
 
-    <div class="editorWrap" id="editorWrap">
-      <div id="editor" class="editor" contenteditable="true" spellcheck="true"></div>
+    <!-- WRITING + DRAWING -->
+    <div class="editorArea" id="editorArea">
+
+      <div
+        id="editor"
+        class="editor"
+        contenteditable="true"
+        spellcheck="true">
+      </div>
+
+      <!-- transparent drawing canvas -->
       <canvas id="drawCanvas"></canvas>
+
     </div>
 
-    <button class="newPage" id="newPageBtn">＋ New Page</button>
+    <!-- NEW PAGE AT RIGHT -->
+    <button class="newPageTab" id="newPageBtn">
+      ＋ New Page
+    </button>
 
     <div class="pageFooter">
       <span id="saveStatus">Ready</span>
       <span>My Personal Diary</span>
     </div>
+
   </section>
+
 </main>
 
-<!-- DRAW TOOLBAR -->
-<div class="drawTools" id="drawTools" hidden>
-  <button id="penTool" class="active">✏️ Pen</button>
-  <button id="lineTool">╱ Line</button>
-  <button id="circleTool">◯ Circle</button>
-  <button id="eraserTool">⌫ Eraser</button>
-  <input type="color" id="drawColor" value="#222222" title="Pen colour">
-  <button id="undoDraw">↶ Undo</button>
-  <button id="redoDraw">↷ Redo</button>
-  <button id="clearDraw">🗑 Clear</button>
-  <button id="closeDraw">✕ Close Draw</button>
+<!-- =======================================================
+     DRAW TOOLBAR
+======================================================= -->
+
+<div class="drawBar" id="drawBar" hidden>
+
+  <button id="penBtn" class="active">✏️ Pen</button>
+  <button id="lineBtn">╱ Line</button>
+  <button id="circleBtn">◯ Circle</button>
+  <button id="eraserBtn">⌫ Eraser</button>
+
+  <input id="drawColor" type="color" value="#222222">
+
+  <button id="undoBtn">↶ Undo</button>
+  <button id="redoBtn">↷ Redo</button>
+  <button id="clearDrawingBtn">🗑 Clear</button>
+
+  <button id="closeDrawBtn">✕ Close Draw</button>
+
 </div>
 
-<!-- CALENDAR MODAL -->
+<!-- =======================================================
+     CALENDAR
+======================================================= -->
+
 <div class="modal" id="calendarModal" hidden>
+
   <div class="modalBox">
-    <div class="calendarTitle">
-      <button id="calPrev">‹</button>
-      <h2 id="calendarMonth">Calendar</h2>
-      <button id="calNext">›</button>
+
+    <div class="calendarHeader">
+      <button id="calendarPrevious">‹</button>
+      <h2 id="calendarTitle">Calendar</h2>
+      <button id="calendarNext">›</button>
     </div>
 
     <div class="calendarGrid" id="calendarGrid"></div>
@@ -570,30 +923,37 @@ button:active{transform:translateY(1px)}
     <div class="modalActions">
       <button id="calendarClose">Close</button>
     </div>
+
   </div>
+
 </div>
 
-<!-- EVENT MODAL -->
+<!-- =======================================================
+     EVENTS
+======================================================= -->
+
 <div class="modal" id="eventModal" hidden>
+
   <div class="modalBox">
+
     <h2>🗓️ Diary Events</h2>
 
-    <div class="formRow">
-      <div>
-        <label>Date</label>
-        <input type="date" id="eventDate">
-      </div>
-      <div>
-        <label>Time</label>
-        <input type="time" id="eventTime">
-      </div>
-    </div>
+    <label>Date</label>
+    <input type="date" id="eventDate">
+
+    <label>Time</label>
+    <input type="time" id="eventTime">
 
     <label>Event title</label>
-    <input id="eventTitle" placeholder="Example: Doctor appointment">
+    <input
+      type="text"
+      id="eventTitle"
+      placeholder="Example: Doctor appointment">
 
     <label>Notes</label>
-    <textarea id="eventNotes" placeholder="Event details..."></textarea>
+    <textarea
+      id="eventNotes"
+      placeholder="Event details..."></textarea>
 
     <div class="modalActions">
       <button id="eventClose">Close</button>
@@ -601,18 +961,30 @@ button:active{transform:translateY(1px)}
     </div>
 
     <hr>
+
     <h3>Saved Events</h3>
     <div id="eventList"></div>
+
   </div>
+
 </div>
 
-<!-- TODO MODAL -->
+<!-- =======================================================
+     TODO
+======================================================= -->
+
 <div class="modal" id="todoModal" hidden>
+
   <div class="modalBox">
+
     <h2>☑️ To-do List</h2>
 
     <div class="formRow">
-      <input id="todoText" placeholder="Write a task...">
+      <input
+        type="text"
+        id="todoInput"
+        placeholder="Write a task...">
+
       <button id="todoAdd">＋ Add</button>
     </div>
 
@@ -621,50 +993,66 @@ button:active{transform:translateY(1px)}
     <div class="modalActions">
       <button id="todoClose">Close</button>
     </div>
+
   </div>
+
 </div>
 
-<!-- MEMORIES MODAL -->
+<!-- =======================================================
+     MEMORIES
+======================================================= -->
+
 <div class="modal" id="memoryModal" hidden>
+
   <div class="modalBox">
+
     <h2>🖼️ Memories</h2>
 
-    <div class="formRow">
-      <label>
-        📷 Camera / Photo
-        <input id="memoryCamera" type="file" accept="image/*" capture="environment">
-      </label>
-      <label>
-        📄 Document / Scan
-        <input id="memoryFile" type="file" accept="image/*,.pdf,.jpg,.jpeg,.png">
-      </label>
-    </div>
+    <label>📷 Camera / Photo</label>
+    <input
+      id="cameraInput"
+      type="file"
+      accept="image/*"
+      capture="environment">
+
+    <label>📄 Document / Image</label>
+    <input
+      id="memoryInput"
+      type="file"
+      accept="image/*,.pdf">
 
     <div class="memoryGrid" id="memoryGrid"></div>
 
     <div class="modalActions">
       <button id="memoryClose">Close</button>
     </div>
+
   </div>
+
 </div>
 
-<!-- SETTINGS -->
+<!-- =======================================================
+     SETTINGS
+======================================================= -->
+
 <div class="modal" id="settingsModal" hidden>
+
   <div class="modalBox">
+
     <h2>⚙️ Diary Settings</h2>
 
-    <label>Diary page design</label>
+    <label>Diary design</label>
+
     <select id="designSelect">
       <option value="classic">Classic Cream</option>
       <option value="vintage">Vintage Paper</option>
-      <option value="floral">Natural Floral</option>
+      <option value="natural">Natural Paper</option>
       <option value="blue">Soft Blue</option>
-      <option value="dark">Night Diary</option>
+      <option value="night">Night Diary</option>
     </select>
 
-    <br><br>
-
     <label>Writing size</label>
+
     <select id="fontSizeSelect">
       <option value="18">18</option>
       <option value="20">20</option>
@@ -673,21 +1061,19 @@ button:active{transform:translateY(1px)}
       <option value="26">26</option>
     </select>
 
-    <br><br>
-
-    <button id="boldBtn"><b>B</b> Bold</button>
-    <button id="underlineBtn"><u>U</u> Underline</button>
-    <button id="italicBtn"><i>I</i> Italic</button>
-
     <hr>
 
-    <button id="clearPageBtn">🗑 Clear Current Page</button>
+    <button id="clearPageBtn">
+      🗑 Clear Current Page
+    </button>
 
     <div class="modalActions">
       <button id="settingsClose">Close</button>
       <button id="settingsSave">💾 Save Settings</button>
     </div>
+
   </div>
+
 </div>
 
 <div id="status"></div>
@@ -696,166 +1082,131 @@ button:active{transform:translateY(1px)}
 "use strict";
 
 /* =========================================================
-   DATABASE
+   STORAGE
+   ---------------------------------------------------------
+   Core diary data is kept in localStorage because it is
+   extremely reliable for a GitHub Pages PWA and avoids the
+   tablet IndexedDB refresh problem of the previous version.
 ========================================================= */
 
-const DB_NAME = "myPersonalDiaryDB";
-const DB_VERSION = 8;
+const PAGE_KEY="myPersonalDiary.pages.v84";
+const EVENT_KEY="myPersonalDiary.events.v84";
+const TODO_KEY="myPersonalDiary.todos.v84";
+const SETTINGS_KEY="myPersonalDiary.settings.v84";
+const MEMORY_DB="myPersonalDiaryMemoriesV84";
 
-let db = null;
+let pages={};
+let events=[];
+let todos=[];
+let settings={
+  design:"classic",
+  fontSize:"20"
+};
 
-function openDB(){
-  return new Promise((resolve,reject)=>{
-    const request=indexedDB.open(DB_NAME,DB_VERSION);
-
-    request.onupgradeneeded=e=>{
-      const d=e.target.result;
-
-      if(!d.objectStoreNames.contains("pages")){
-        const s=d.createObjectStore("pages",{keyPath:"id"});
-        s.createIndex("date","date",{unique:false});
-      }
-
-      if(!d.objectStoreNames.contains("events")){
-        const s=d.createObjectStore("events",{keyPath:"id",autoIncrement:true});
-        s.createIndex("date","date",{unique:false});
-      }
-
-      if(!d.objectStoreNames.contains("todos")){
-        const s=d.createObjectStore("todos",{keyPath:"id",autoIncrement:true});
-        s.createIndex("date","date",{unique:false});
-      }
-
-      if(!d.objectStoreNames.contains("attachments")){
-        const s=d.createObjectStore("attachments",{keyPath:"id",autoIncrement:true});
-        s.createIndex("date","date",{unique:false});
-      }
-
-      if(!d.objectStoreNames.contains("settings")){
-        d.createObjectStore("settings",{keyPath:"key"});
-      }
-    };
-
-    request.onsuccess=()=>{
-      db=request.result;
-      resolve(db);
-    };
-
-    request.onerror=()=>reject(request.error);
-  });
-}
-
-function tx(store,mode="readonly"){
-  return db.transaction(store,mode).objectStore(store);
-}
-
-function dbGet(store,key){
-  return new Promise((resolve,reject)=>{
-    const r=tx(store).get(key);
-    r.onsuccess=()=>resolve(r.result);
-    r.onerror=()=>reject(r.error);
-  });
-}
-
-function dbPut(store,value){
-  return new Promise((resolve,reject)=>{
-    const r=tx(store,"readwrite").put(value);
-    r.onsuccess=()=>resolve(r.result);
-    r.onerror=()=>reject(r.error);
-  });
-}
-
-function dbDelete(store,key){
-  return new Promise((resolve,reject)=>{
-    const r=tx(store,"readwrite").delete(key);
-    r.onsuccess=()=>resolve();
-    r.onerror=()=>reject(r.error);
-  });
-}
-
-function dbAll(store){
-  return new Promise((resolve,reject)=>{
-    const r=tx(store).getAll();
-    r.onsuccess=()=>resolve(r.result||[]);
-    r.onerror=()=>reject(r.error);
-  });
-}
-
-function dbAdd(store,value){
-  return new Promise((resolve,reject)=>{
-    const r=tx(store,"readwrite").add(value);
-    r.onsuccess=()=>resolve(r.result);
-    r.onerror=()=>reject(r.error);
-  });
-}
+let currentDate="";
+let currentPage=1;
+let currentPageData=null;
 
 /* =========================================================
-   APP STATE
+   BASIC STORAGE
 ========================================================= */
 
-let currentDate = "";
-let currentPage = 1;
-let pageRecord = null;
+function loadJSON(key,fallback){
+  try{
+    const x=localStorage.getItem(key);
+    return x ? JSON.parse(x) : fallback;
+  }catch(e){
+    console.error(e);
+    return fallback;
+  }
+}
 
-let drawMode = false;
-let drawTool = "pen";
-let drawing = false;
-let startX=0,startY=0;
-let lastX=0,lastY=0;
+function saveJSON(key,value){
+  try{
+    localStorage.setItem(key,JSON.stringify(value));
+    return true;
+  }catch(e){
+    console.error(e);
+    showStatus("Storage error");
+    return false;
+  }
+}
 
-let undoStack=[];
-let redoStack=[];
+function loadStorage(){
 
-let calendarDate = new Date();
+  pages=loadJSON(PAGE_KEY,{});
+  events=loadJSON(EVENT_KEY,[]);
+  todos=loadJSON(TODO_KEY,[]);
+  settings=loadJSON(
+    SETTINGS_KEY,
+    {
+      design:"classic",
+      fontSize:"20"
+    }
+  );
+
+}
 
 /* =========================================================
    HELPERS
 ========================================================= */
 
-const $=id=>document.getElementById(id);
-
-function todayISO(){
-  const d=new Date();
-  return localISO(d);
+function $(id){
+  return document.getElementById(id);
 }
 
-function localISO(d){
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  const day=String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
+function localISO(date){
+  const y=date.getFullYear();
+  const m=String(date.getMonth()+1).padStart(2,"0");
+  const d=String(date.getDate()).padStart(2,"0");
+  return y+"-"+m+"-"+d;
+}
+
+function todayISO(){
+  return localISO(new Date());
 }
 
 function displayDate(iso){
   const d=new Date(iso+"T00:00:00");
-  return d.toLocaleDateString("en-IN",{
-    weekday:"long",
-    day:"numeric",
-    month:"long",
-    year:"numeric"
-  });
+
+  return d.toLocaleDateString(
+    "en-IN",
+    {
+      weekday:"long",
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    }
+  );
 }
 
-function dateChange(days){
-  const d=new Date(currentDate+"T00:00:00");
+function changeDate(iso,days){
+  const d=new Date(iso+"T00:00:00");
   d.setDate(d.getDate()+days);
   return localISO(d);
 }
 
-function pageID(){
-  return `${currentDate}-${currentPage}`;
+function pageID(date,page){
+  return date+"-page-"+page;
 }
 
 function showStatus(message){
+
   const s=$("status");
+
   s.textContent=message;
   s.style.display="block";
+
   clearTimeout(showStatus.timer);
-  showStatus.timer=setTimeout(()=>s.style.display="none",1800);
+
+  showStatus.timer=setTimeout(()=>{
+    s.style.display="none";
+  },1800);
 }
 
-function escapeHTML(s){
-  return String(s||"")
+function escapeHTML(text){
+
+  return String(text||"")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
@@ -864,156 +1215,239 @@ function escapeHTML(s){
 }
 
 /* =========================================================
-   PAGE LOADING / SAVING
+   QUOTES
 ========================================================= */
 
-async function loadPage(){
-  $("pageTitle").textContent=displayDate(currentDate);
-  $("datePicker").value=currentDate;
+const quotes=[
+  "Every day is a new page in the story of life.",
+  "Small moments become beautiful memories.",
+  "Be grateful for today.",
+  "Peace begins with a calm mind.",
+  "Enjoy the simple things.",
+  "A beautiful life is made of meaningful moments.",
+  "Write today. Remember tomorrow.",
+  "Every sunrise brings a fresh beginning.",
+  "Keep faith and keep moving forward.",
+  "Life is better when we notice the little things."
+];
 
-  const rec=await dbGet("pages",pageID());
+function quoteForDate(date){
 
-  pageRecord=rec || {
-    id:pageID(),
+  let n=0;
+
+  for(let i=0;i<date.length;i++){
+    n+=date.charCodeAt(i);
+  }
+
+  return quotes[n%quotes.length];
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+function createEmptyPage(){
+
+  return {
+    id:pageID(currentDate,currentPage),
     date:currentDate,
     page:currentPage,
     content:"",
     drawing:"",
     mood:"",
-    quote:getQuote(currentDate)
+    quote:quoteForDate(currentDate),
+    updated:Date.now()
   };
 
-  $("editor").innerHTML=pageRecord.content||"";
-  $("mood").value=pageRecord.mood||"";
-  $("pageNo").textContent="Page "+currentPage;
+}
 
-  applyDesign();
-  applyFontSize();
-  loadDrawing(pageRecord.drawing);
+function loadPage(){
 
-  await carryForwardTodos();
+  const id=pageID(currentDate,currentPage);
+
+  currentPageData=pages[id] || createEmptyPage();
+
+  $("pageTitle").textContent=displayDate(currentDate);
+
+  $("pageNumber").textContent="Page "+currentPage;
+
+  $("datePicker").value=currentDate;
+
+  $("editor").innerHTML=currentPageData.content || "";
+
+  $("moodSelect").value=currentPageData.mood || "";
+
+  updateMoodDisplay();
+
+  $("quoteDisplay").textContent=
+    "“"+(currentPageData.quote || quoteForDate(currentDate))+"”";
+
+  applySettings();
+
+  loadDrawing(currentPageData.drawing || "");
 
   $("saveStatus").textContent="Saved";
 }
 
+function savePage(){
+
+  if(!currentPageData)return;
+
+  currentPageData.id=pageID(currentDate,currentPage);
+  currentPageData.date=currentDate;
+  currentPageData.page=currentPage;
+
+  currentPageData.content=$("editor").innerHTML;
+  currentPageData.mood=$("moodSelect").value;
+
+  currentPageData.updated=Date.now();
+
+  pages[currentPageData.id]=currentPageData;
+
+  saveJSON(PAGE_KEY,pages);
+
+  $("saveStatus").textContent="Saved";
+}
+
+/* Autosave */
 let saveTimer=null;
 
 function scheduleSave(){
+
   $("saveStatus").textContent="Saving...";
+
   clearTimeout(saveTimer);
-  saveTimer=setTimeout(savePage,400);
-}
 
-async function savePage(){
-  if(!db || !pageRecord)return;
-
-  pageRecord.id=pageID();
-  pageRecord.date=currentDate;
-  pageRecord.page=currentPage;
-  pageRecord.content=$("editor").innerHTML;
-  pageRecord.mood=$("mood").value;
-
-  try{
-    await dbPut("pages",pageRecord);
-    $("saveStatus").textContent="Saved";
-  }catch(e){
-    console.error(e);
-    $("saveStatus").textContent="Save error";
-  }
+  saveTimer=setTimeout(()=>{
+    savePage();
+  },300);
 }
 
 /* =========================================================
-   PAGE NAVIGATION
+   DATE NAVIGATION
 ========================================================= */
 
 async function goToDate(date){
-  await savePage();
+
+  savePage();
+
+  closeDraw();
+
   currentDate=date;
   currentPage=1;
-  calendarDate=new Date(currentDate+"T00:00:00");
-  await loadPage();
+
+  loadPage();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 }
 
-$("prevBtn").onclick=()=>goToDate(dateChange(-1));
-$("nextBtn").onclick=()=>goToDate(dateChange(1));
-
-$("datePicker").onchange=()=>{
-  if($("datePicker").value)goToDate($("datePicker").value);
+$("prevBtn").onclick=()=>{
+  goToDate(changeDate(currentDate,-1));
 };
 
-$("newPageBtn").onclick=async()=>{
-  await savePage();
+$("nextBtn").onclick=()=>{
+  goToDate(changeDate(currentDate,1));
+};
+
+$("datePicker").onchange=()=>{
+  if($("datePicker").value){
+    goToDate($("datePicker").value);
+  }
+};
+
+/* =========================================================
+   NEW PAGE
+========================================================= */
+
+$("newPageBtn").onclick=()=>{
+
+  savePage();
+
+  closeDraw();
+
   currentPage++;
-  await loadPage();
-  window.scrollTo({top:0,behavior:"smooth"});
+
+  loadPage();
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
   showStatus("New diary page opened");
 };
 
 /* =========================================================
-   WRITING
+   FORMATTING
 ========================================================= */
+
+function format(command,value=null){
+
+  $("editor").focus();
+
+  try{
+    document.execCommand(command,false,value);
+  }catch(e){
+    console.error(e);
+  }
+
+  scheduleSave();
+}
+
+$("boldBtn").onclick=()=>{
+  format("bold");
+};
+
+$("italicBtn").onclick=()=>{
+  format("italic");
+};
+
+$("underlineBtn").onclick=()=>{
+  format("underline");
+};
+
+$("bulletBtn").onclick=()=>{
+  format("insertUnorderedList");
+};
+
+$("leftBtn").onclick=()=>{
+  format("justifyLeft");
+};
+
+$("centerBtn").onclick=()=>{
+  format("justifyCenter");
+};
 
 $("editor").addEventListener("input",()=>{
   scheduleSave();
 });
 
-$("mood").onchange=()=>scheduleSave();
-
-$("boldBtn").onclick=()=>{
-  $("editor").focus();
-  document.execCommand("bold");
-  scheduleSave();
-};
-
-$("underlineBtn").onclick=()=>{
-  $("editor").focus();
-  document.execCommand("underline");
-  scheduleSave();
-};
-
-$("italicBtn").onclick=()=>{
-  $("editor").focus();
-  document.execCommand("italic");
-  scheduleSave();
-};
-
 /* =========================================================
-   EMOJIS
+   MOOD
 ========================================================= */
 
-document.querySelectorAll("#emojiBar button").forEach(btn=>{
-  btn.onclick=()=>{
-    $("editor").focus();
-    document.execCommand("insertText",false,btn.textContent);
-    scheduleSave();
-  };
-});
+function updateMoodDisplay(){
 
-/* =========================================================
-   QUOTES
-========================================================= */
+  const mood=$("moodSelect").value;
 
-const quotes=[
-  "The best time to start is today.",
-  "Small steps every day create big changes.",
-  "Gratitude turns ordinary days into meaningful memories.",
-  "Life is made of moments. Preserve the beautiful ones.",
-  "Peace begins with a calm mind.",
-  "Every new day is a fresh page.",
-  "What you write today becomes tomorrow's memory.",
-  "Enjoy the simple things.",
-  "Be present. Be grateful. Be kind.",
-  "A beautiful life is a collection of beautiful moments."
-];
+  $("moodDisplay").textContent=mood || "🙂";
 
-function getQuote(date){
-  let n=0;
-  for(let i=0;i<date.length;i++)n+=date.charCodeAt(i);
-  return quotes[n%quotes.length];
+  if(currentPageData){
+    currentPageData.mood=mood;
+    currentPageData.updated=Date.now();
+  }
 }
 
-$("quoteBtn").onclick=()=>{
-  alert("💬 "+(pageRecord?.quote||getQuote(currentDate)));
+$("moodSelect").onchange=()=>{
+
+  updateMoodDisplay();
+
+  scheduleSave();
+
+  showStatus("Mood saved on diary page");
 };
 
 /* =========================================================
@@ -1023,29 +1457,89 @@ $("quoteBtn").onclick=()=>{
 const canvas=$("drawCanvas");
 const ctx=canvas.getContext("2d");
 
+let drawMode=false;
+let drawTool="pen";
+let isDrawing=false;
+
+let startX=0;
+let startY=0;
+let lastX=0;
+let lastY=0;
+
+let undoStack=[];
+let redoStack=[];
+
+function canvasSize(){
+
+  const area=$("editorArea");
+
+  return {
+    width:area.clientWidth,
+    height:area.clientHeight
+  };
+}
+
 function resizeCanvas(preserve=true){
-  const old=preserve && canvas.width>0 ? canvas.toDataURL() : null;
-  const r=$("editorWrap").getBoundingClientRect();
 
-  canvas.width=Math.max(1,Math.floor(r.width*devicePixelRatio));
-  canvas.height=Math.max(1,Math.floor(r.height*devicePixelRatio));
-  canvas.style.width=r.width+"px";
-  canvas.style.height=r.height+"px";
+  const old=
+    preserve && canvas.width>0
+      ? canvas.toDataURL("image/png")
+      : "";
 
-  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  const size=canvasSize();
+
+  const ratio=Math.max(1,window.devicePixelRatio||1);
+
+  canvas.width=Math.floor(size.width*ratio);
+  canvas.height=Math.floor(size.height*ratio);
+
+  canvas.style.width=size.width+"px";
+  canvas.style.height=size.height+"px";
+
+  ctx.setTransform(
+    ratio,
+    0,
+    0,
+    ratio,
+    0,
+    0
+  );
 
   if(old){
+
     const img=new Image();
+
     img.onload=()=>{
-      ctx.drawImage(img,0,0,r.width,r.height);
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        size.width,
+        size.height
+      );
     };
+
     img.src=old;
   }
 }
 
+function clearCanvas(){
+
+  const size=canvasSize();
+
+  ctx.clearRect(
+    0,
+    0,
+    size.width,
+    size.height
+  );
+}
+
 function loadDrawing(data){
+
   resizeCanvas(false);
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  clearCanvas();
 
   undoStack=[];
   redoStack=[];
@@ -1053,63 +1547,117 @@ function loadDrawing(data){
   if(!data)return;
 
   const img=new Image();
+
   img.onload=()=>{
-    ctx.drawImage(img,0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
+    const size=canvasSize();
+
+    ctx.drawImage(
+      img,
+      0,
+      0,
+      size.width,
+      size.height
+    );
   };
+
   img.src=data;
 }
 
 function snapshot(){
-  undoStack.push(canvas.toDataURL());
-  if(undoStack.length>30)undoStack.shift();
+
+  undoStack.push(
+    canvas.toDataURL("image/png")
+  );
+
+  if(undoStack.length>40){
+    undoStack.shift();
+  }
+
   redoStack=[];
 }
 
-function restoreSnapshot(data){
-  ctx.clearRect(0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
+function restoreImage(data){
+
+  clearCanvas();
 
   if(!data)return;
 
   const img=new Image();
+
   img.onload=()=>{
-    ctx.drawImage(img,0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
+    const size=canvasSize();
+
+    ctx.drawImage(
+      img,
+      0,
+      0,
+      size.width,
+      size.height
+    );
   };
+
   img.src=data;
 }
 
 function pointerPosition(e){
+
   const r=canvas.getBoundingClientRect();
+
   return {
     x:e.clientX-r.left,
     y:e.clientY-r.top
   };
 }
 
-function setupBrush(){
+function prepareBrush(){
+
   ctx.lineCap="round";
   ctx.lineJoin="round";
   ctx.lineWidth=3;
-  ctx.strokeStyle=$("drawColor").value;
-  ctx.globalCompositeOperation=
-    drawTool==="eraser" ? "destination-out" : "source-over";
+
+  if(drawTool==="eraser"){
+
+    ctx.globalCompositeOperation="destination-out";
+    ctx.strokeStyle="rgba(0,0,0,1)";
+
+  }else{
+
+    ctx.globalCompositeOperation="source-over";
+    ctx.strokeStyle=$("drawColor").value;
+  }
 }
 
-function beginDraw(e){
+function beginDrawing(e){
+
   if(!drawMode)return;
 
   e.preventDefault();
-  canvas.setPointerCapture(e.pointerId);
+
+  if(e.pointerId!==undefined){
+    try{
+      canvas.setPointerCapture(e.pointerId);
+    }catch(err){}
+  }
 
   const p=pointerPosition(e);
 
-  drawing=true;
-  startX=lastX=p.x;
-  startY=lastY=p.y;
+  isDrawing=true;
+
+  startX=p.x;
+  startY=p.y;
+
+  lastX=p.x;
+  lastY=p.y;
 
   snapshot();
-  setupBrush();
 
-  if(drawTool==="pen" || drawTool==="eraser"){
+  prepareBrush();
+
+  if(
+    drawTool==="pen" ||
+    drawTool==="eraser"
+  ){
+
     ctx.beginPath();
     ctx.moveTo(p.x,p.y);
     ctx.lineTo(p.x+.01,p.y+.01);
@@ -1117,180 +1665,356 @@ function beginDraw(e){
   }
 }
 
-function moveDraw(e){
-  if(!drawing)return;
+function moveDrawing(e){
+
+  if(!isDrawing)return;
 
   e.preventDefault();
 
   const p=pointerPosition(e);
 
-  if(drawTool==="pen" || drawTool==="eraser"){
-    setupBrush();
+  if(
+    drawTool==="pen" ||
+    drawTool==="eraser"
+  ){
+
+    prepareBrush();
+
     ctx.beginPath();
     ctx.moveTo(lastX,lastY);
     ctx.lineTo(p.x,p.y);
     ctx.stroke();
+
     lastX=p.x;
     lastY=p.y;
+
     return;
   }
 
-  /* line and circle use a temporary redraw */
-  restoreSnapshot(undoStack[undoStack.length-1]);
+  /* restore previous image for shape preview */
+  restoreImage(
+    undoStack[undoStack.length-1]
+  );
 
-  setupBrush();
+  prepareBrush();
 
   if(drawTool==="line"){
+
     ctx.beginPath();
+
     ctx.moveTo(startX,startY);
     ctx.lineTo(p.x,p.y);
+
     ctx.stroke();
   }
 
   if(drawTool==="circle"){
+
     const rx=Math.abs(p.x-startX)/2;
     const ry=Math.abs(p.y-startY)/2;
+
     const cx=(p.x+startX)/2;
     const cy=(p.y+startY)/2;
 
     ctx.beginPath();
-    ctx.ellipse(cx,cy,Math.max(rx,2),Math.max(ry,2),0,0,Math.PI*2);
+
+    ctx.ellipse(
+      cx,
+      cy,
+      Math.max(rx,2),
+      Math.max(ry,2),
+      0,
+      0,
+      Math.PI*2
+    );
+
     ctx.stroke();
   }
 }
 
-function endDraw(e){
-  if(!drawing)return;
-  drawing=false;
+function endDrawing(e){
 
-  if(drawTool==="line" || drawTool==="circle"){
+  if(!isDrawing)return;
+
+  isDrawing=false;
+
+  if(
+    drawTool==="line" ||
+    drawTool==="circle"
+  ){
+
     const p=pointerPosition(e);
-    restoreSnapshot(undoStack[undoStack.length-1]);
-    setupBrush();
+
+    restoreImage(
+      undoStack[undoStack.length-1]
+    );
+
+    prepareBrush();
 
     if(drawTool==="line"){
+
       ctx.beginPath();
       ctx.moveTo(startX,startY);
       ctx.lineTo(p.x,p.y);
       ctx.stroke();
+
     }else{
+
       const rx=Math.abs(p.x-startX)/2;
       const ry=Math.abs(p.y-startY)/2;
+
       const cx=(p.x+startX)/2;
       const cy=(p.y+startY)/2;
+
       ctx.beginPath();
-      ctx.ellipse(cx,cy,Math.max(rx,2),Math.max(ry,2),0,0,Math.PI*2);
+
+      ctx.ellipse(
+        cx,
+        cy,
+        Math.max(rx,2),
+        Math.max(ry,2),
+        0,
+        0,
+        Math.PI*2
+      );
+
       ctx.stroke();
     }
   }
 
   ctx.globalCompositeOperation="source-over";
-  pageRecord.drawing=canvas.toDataURL("image/png");
-  scheduleSave();
+
+  if(currentPageData){
+
+    currentPageData.drawing=
+      canvas.toDataURL("image/png");
+
+    scheduleSave();
+  }
 }
 
-canvas.addEventListener("pointerdown",beginDraw);
-canvas.addEventListener("pointermove",moveDraw);
-canvas.addEventListener("pointerup",endDraw);
-canvas.addEventListener("pointercancel",endDraw);
+canvas.addEventListener(
+  "pointerdown",
+  beginDrawing,
+  {passive:false}
+);
 
-function selectDrawTool(tool){
+canvas.addEventListener(
+  "pointermove",
+  moveDrawing,
+  {passive:false}
+);
+
+canvas.addEventListener(
+  "pointerup",
+  endDrawing,
+  {passive:false}
+);
+
+canvas.addEventListener(
+  "pointercancel",
+  endDrawing,
+  {passive:false}
+);
+
+/* Select drawing tool */
+
+function selectTool(tool){
+
   drawTool=tool;
 
-  ["penTool","lineTool","circleTool","eraserTool"].forEach(id=>{
-    $(id).classList.remove("active");
-  });
+  ["penBtn","lineBtn","circleBtn","eraserBtn"]
+    .forEach(id=>{
+      $(id).classList.remove("active");
+    });
 
-  const map={
-    pen:"penTool",
-    line:"lineTool",
-    circle:"circleTool",
-    eraser:"eraserTool"
+  const ids={
+    pen:"penBtn",
+    line:"lineBtn",
+    circle:"circleBtn",
+    eraser:"eraserBtn"
   };
 
-  $(map[tool]).classList.add("active");
+  $(ids[tool]).classList.add("active");
 }
 
-$("penTool").onclick=()=>selectDrawTool("pen");
-$("lineTool").onclick=()=>selectDrawTool("line");
-$("circleTool").onclick=()=>selectDrawTool("circle");
-$("eraserTool").onclick=()=>selectDrawTool("eraser");
+$("penBtn").onclick=()=>{
+  selectTool("pen");
+};
+
+$("lineBtn").onclick=()=>{
+  selectTool("line");
+};
+
+$("circleBtn").onclick=()=>{
+  selectTool("circle");
+};
+
+$("eraserBtn").onclick=()=>{
+  selectTool("eraser");
+};
 
 $("drawColor").onchange=()=>{
-  if(drawTool==="eraser")selectDrawTool("pen");
+  if(drawTool==="eraser"){
+    selectTool("pen");
+  }
 };
 
-$("undoDraw").onclick=()=>{
-  if(!undoStack.length)return;
+/* Undo */
 
-  const current=canvas.toDataURL();
-  redoStack.push(current);
+$("undoBtn").onclick=()=>{
 
-  const previous=undoStack.pop();
-  restoreSnapshot(previous);
-
-  pageRecord.drawing=canvas.toDataURL("image/png");
-  scheduleSave();
-};
-
-$("redoDraw").onclick=()=>{
-  if(!redoStack.length)return;
-
-  const current=canvas.toDataURL();
-  undoStack.push(current);
-
-  const next=redoStack.pop();
-  restoreSnapshot(next);
-
-  pageRecord.drawing=canvas.toDataURL("image/png");
-  scheduleSave();
-};
-
-$("clearDraw").onclick=()=>{
-  if(!confirm("Clear all drawings from this page?"))return;
-
-  snapshot();
-  ctx.clearRect(0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
-  pageRecord.drawing="";
-  scheduleSave();
-};
-
-function closeDrawing(){
-  drawMode=false;
-  $("page").classList.remove("draw-active");
-  $("drawTools").hidden=true;
-  $("drawBtn").textContent="✏️ Draw";
-  ctx.globalCompositeOperation="source-over";
-  savePage();
-}
-
-$("drawBtn").onclick=()=>{
-  if(drawMode){
-    closeDrawing();
+  if(!undoStack.length){
+    showStatus("Nothing to undo");
     return;
   }
 
-  resizeCanvas(true);
-  drawMode=true;
-  $("page").classList.add("draw-active");
-  $("drawTools").hidden=false;
-  $("drawBtn").textContent="✕ Close Draw";
-  showStatus("Draw directly on your diary page");
+  const current=canvas.toDataURL("image/png");
+
+  redoStack.push(current);
+
+  const previous=undoStack.pop();
+
+  restoreImage(previous);
+
+  if(currentPageData){
+
+    currentPageData.drawing=
+      previous || "";
+
+    scheduleSave();
+  }
 };
 
-$("closeDraw").onclick=closeDrawing;
+/* Redo */
+
+$("redoBtn").onclick=()=>{
+
+  if(!redoStack.length){
+    showStatus("Nothing to redo");
+    return;
+  }
+
+  const current=canvas.toDataURL("image/png");
+
+  undoStack.push(current);
+
+  const next=redoStack.pop();
+
+  restoreImage(next);
+
+  if(currentPageData){
+
+    currentPageData.drawing=next;
+
+    scheduleSave();
+  }
+};
+
+/* Clear */
+
+$("clearDrawingBtn").onclick=()=>{
+
+  if(!confirm("Clear all drawings from this page?")){
+    return;
+  }
+
+  snapshot();
+
+  clearCanvas();
+
+  if(currentPageData){
+
+    currentPageData.drawing="";
+
+    scheduleSave();
+  }
+
+  showStatus("Drawing cleared");
+};
+
+/* OPEN DRAW */
+
+function openDraw(){
+
+  if(drawMode)return;
+
+  savePage();
+
+  resizeCanvas(true);
+
+  drawMode=true;
+
+  $("page").classList.add("drawMode");
+
+  $("drawBar").hidden=false;
+
+  $("drawBtn").textContent="✕ Close Draw";
+
+  selectTool("pen");
+
+  showStatus("Draw directly on your diary page");
+}
+
+/* CLOSE DRAW */
+
+function closeDraw(){
+
+  if(!drawMode)return;
+
+  drawMode=false;
+
+  isDrawing=false;
+
+  ctx.globalCompositeOperation="source-over";
+
+  $("page").classList.remove("drawMode");
+
+  $("drawBar").hidden=true;
+
+  $("drawBtn").textContent="✏️ Draw";
+
+  if(currentPageData){
+
+    currentPageData.drawing=
+      canvas.toDataURL("image/png");
+
+    savePage();
+  }
+}
+
+$("drawBtn").onclick=()=>{
+
+  if(drawMode){
+    closeDraw();
+  }else{
+    openDraw();
+  }
+};
+
+$("closeDrawBtn").onclick=closeDraw;
 
 window.addEventListener("resize",()=>{
-  if(!drawMode)resizeCanvas(true);
+
+  if(drawMode){
+    resizeCanvas(true);
+  }
+
 });
 
 /* =========================================================
    CALENDAR
 ========================================================= */
 
-$("calendarBtn").onclick=async()=>{
-  calendarDate=new Date(currentDate+"T00:00:00");
-  await renderCalendar();
+let calendarDate=new Date();
+
+$("calendarBtn").onclick=()=>{
+
+  calendarDate=
+    new Date(currentDate+"T00:00:00");
+
+  renderCalendar();
+
   $("calendarModal").hidden=false;
 };
 
@@ -1298,66 +2022,130 @@ $("calendarClose").onclick=()=>{
   $("calendarModal").hidden=true;
 };
 
-$("calPrev").onclick=async()=>{
-  calendarDate.setMonth(calendarDate.getMonth()-1);
-  await renderCalendar();
+$("calendarPrevious").onclick=()=>{
+
+  calendarDate.setMonth(
+    calendarDate.getMonth()-1
+  );
+
+  renderCalendar();
 };
 
-$("calNext").onclick=async()=>{
-  calendarDate.setMonth(calendarDate.getMonth()+1);
-  await renderCalendar();
+$("calendarNext").onclick=()=>{
+
+  calendarDate.setMonth(
+    calendarDate.getMonth()+1
+  );
+
+  renderCalendar();
 };
 
-async function renderCalendar(){
+function renderCalendar(){
+
   const year=calendarDate.getFullYear();
   const month=calendarDate.getMonth();
 
-  $("calendarMonth").textContent=
-    calendarDate.toLocaleDateString("en-IN",{month:"long",year:"numeric"});
+  $("calendarTitle").textContent=
+    calendarDate.toLocaleDateString(
+      "en-IN",
+      {
+        month:"long",
+        year:"numeric"
+      }
+    );
 
   const grid=$("calendarGrid");
+
   grid.innerHTML="";
 
-  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(x=>{
-    const h=document.createElement("div");
-    h.className="calHead";
-    h.textContent=x;
-    grid.appendChild(h);
+  [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ].forEach(day=>{
+
+    const div=document.createElement("div");
+
+    div.className="calendarWeek";
+
+    div.textContent=day;
+
+    grid.appendChild(div);
   });
 
   const first=new Date(year,month,1);
-  const last=new Date(year,month+1,0);
-  const events=await dbAll("events");
 
-  for(let i=0;i<first.getDay();i++){
-    grid.appendChild(document.createElement("div"));
+  const last=new Date(
+    year,
+    month+1,
+    0
+  );
+
+  for(
+    let i=0;
+    i<first.getDay();
+    i++
+  ){
+
+    grid.appendChild(
+      document.createElement("div")
+    );
   }
 
-  for(let day=1;day<=last.getDate();day++){
-    const d=new Date(year,month,day);
+  for(
+    let day=1;
+    day<=last.getDate();
+    day++
+  ){
+
+    const d=new Date(
+      year,
+      month,
+      day
+    );
+
     const iso=localISO(d);
 
     const cell=document.createElement("div");
-    cell.className="calDay";
 
-    if(iso===todayISO())cell.classList.add("today");
-    if(iso===currentDate)cell.classList.add("selected");
+    cell.className="calendarDay";
 
-    cell.innerHTML=`<div class="num">${day}</div>`;
+    if(iso===todayISO()){
+      cell.classList.add("today");
+    }
+
+    if(iso===currentDate){
+      cell.classList.add("selected");
+    }
+
+    cell.innerHTML=
+      `<div class="calendarNumber">${day}</div>`;
 
     events
       .filter(e=>e.date===iso)
       .slice(0,3)
       .forEach(e=>{
+
         const ev=document.createElement("div");
-        ev.className="calEvent";
-        ev.textContent=(e.time?e.time+" ":"")+e.title;
+
+        ev.className="calendarEvent";
+
+        ev.textContent=
+          (e.time ? e.time+" " : "")+
+          e.title;
+
         cell.appendChild(ev);
       });
 
-    cell.onclick=async()=>{
+    cell.onclick=()=>{
+
       $("calendarModal").hidden=true;
-      await goToDate(iso);
+
+      goToDate(iso);
     };
 
     grid.appendChild(cell);
@@ -1368,12 +2156,18 @@ async function renderCalendar(){
    EVENTS
 ========================================================= */
 
-$("eventBtn").onclick=async()=>{
+$("eventBtn").onclick=()=>{
+
   $("eventDate").value=currentDate;
+
   $("eventTime").value="";
+
   $("eventTitle").value="";
+
   $("eventNotes").value="";
-  await renderEvents();
+
+  renderEvents();
+
   $("eventModal").hidden=false;
 };
 
@@ -1381,69 +2175,116 @@ $("eventClose").onclick=()=>{
   $("eventModal").hidden=true;
 };
 
-$("eventSave").onclick=async()=>{
+$("eventSave").onclick=()=>{
+
   const date=$("eventDate").value;
+  const time=$("eventTime").value;
   const title=$("eventTitle").value.trim();
+  const notes=$("eventNotes").value.trim();
 
   if(!date){
-    alert("Please select the event date.");
+
+    alert("Please select an event date.");
+
     return;
   }
 
   if(!title){
-    alert("Please enter an event title.");
+
+    alert("Please enter the event title.");
+
     return;
   }
 
-  await dbAdd("events",{
+  const event={
+    id:
+      Date.now().toString()+
+      Math.random().toString(36).slice(2),
+
     date,
-    time:$("eventTime").value,
+    time,
     title,
-    notes:$("eventNotes").value.trim(),
+    notes,
     created:Date.now()
-  });
+  };
+
+  events.push(event);
+
+  saveJSON(EVENT_KEY,events);
+
+  /* Immediately refresh event list */
+  renderEvents();
+
+  /* Immediately refresh calendar if open */
+  renderCalendar();
 
   $("eventTitle").value="";
   $("eventNotes").value="";
   $("eventTime").value="";
 
-  await renderEvents();
-  showStatus("Event saved");
+  showStatus("Event added successfully");
 };
 
-async function renderEvents(){
-  const all=await dbAll("events");
+function renderEvents(){
 
-  all.sort((a,b)=>{
+  const box=$("eventList");
+
+  box.innerHTML="";
+
+  const sorted=[...events].sort((a,b)=>{
+
     const x=(a.date||"")+" "+(a.time||"");
     const y=(b.date||"")+" "+(b.time||"");
+
     return x.localeCompare(y);
   });
 
-  const box=$("eventList");
-  box.innerHTML="";
+  if(!sorted.length){
 
-  if(!all.length){
-    box.innerHTML="<p>No events added yet.</p>";
+    box.innerHTML=
+      "<p>No events added yet.</p>";
+
     return;
   }
 
-  all.forEach(e=>{
+  sorted.forEach(event=>{
+
     const div=document.createElement("div");
+
     div.className="eventItem";
 
     div.innerHTML=`
-      <strong>${escapeHTML(e.title)}</strong>
-      <span>${escapeHTML(e.date)} ${escapeHTML(e.time||"")}</span>
-      ${e.notes?`<div>${escapeHTML(e.notes)}</div>`:""}
-      <button data-id="${e.id}" style="margin-top:6px">🗑 Delete</button>
+      <strong>${escapeHTML(event.title)}</strong>
+      <div>
+        ${escapeHTML(event.date)}
+        ${event.time ? " • "+escapeHTML(event.time) : ""}
+      </div>
+      ${
+        event.notes
+        ? `<div>${escapeHTML(event.notes)}</div>`
+        : ""
+      }
+      <button style="margin-top:7px">
+        🗑 Delete
+      </button>
     `;
 
-    div.querySelector("button").onclick=async()=>{
-      if(confirm("Delete this event?")){
-        await dbDelete("events",e.id);
-        await renderEvents();
+    div.querySelector("button").onclick=()=>{
+
+      if(!confirm("Delete this event?")){
+        return;
       }
+
+      events=events.filter(
+        x=>x.id!==event.id
+      );
+
+      saveJSON(EVENT_KEY,events);
+
+      renderEvents();
+      renderCalendar();
+
+      showStatus("Event deleted");
     };
 
     box.appendChild(div);
@@ -1454,9 +2295,12 @@ async function renderEvents(){
    TODO
 ========================================================= */
 
-$("todoBtn").onclick=async()=>{
-  await carryForwardTodos();
-  await renderTodos();
+$("todoBtn").onclick=()=>{
+
+  carryForwardTodos();
+
+  renderTodos();
+
   $("todoModal").hidden=false;
 };
 
@@ -1466,79 +2310,142 @@ $("todoClose").onclick=()=>{
 
 $("todoAdd").onclick=addTodo;
 
-$("todoText").addEventListener("keydown",e=>{
-  if(e.key==="Enter")addTodo();
-});
+$("todoInput").addEventListener(
+  "keydown",
+  e=>{
+    if(e.key==="Enter"){
+      addTodo();
+    }
+  }
+);
 
-async function addTodo(){
-  const text=$("todoText").value.trim();
+function addTodo(){
+
+  const text=$("todoInput").value.trim();
+
   if(!text)return;
 
-  await dbAdd("todos",{
+  todos.push({
+
+    id:
+      Date.now().toString()+
+      Math.random().toString(36).slice(2),
+
     date:currentDate,
     text,
     done:false,
     created:Date.now()
   });
 
-  $("todoText").value="";
-  await renderTodos();
+  saveJSON(TODO_KEY,todos);
+
+  $("todoInput").value="";
+
+  renderTodos();
+
   showStatus("Task added");
 }
 
-async function renderTodos(){
-  const all=await dbAll("todos");
-  const list=all.filter(t=>t.date===currentDate);
-
-  list.sort((a,b)=>a.id-b.id);
+function renderTodos(){
 
   const box=$("todoList");
+
   box.innerHTML="";
 
+  const list=todos
+    .filter(t=>t.date===currentDate)
+    .sort((a,b)=>a.created-b.created);
+
   if(!list.length){
-    box.innerHTML="<p>No tasks for this date.</p>";
+
+    box.innerHTML=
+      "<p>No tasks for this date.</p>";
+
     return;
   }
 
-  list.forEach(t=>{
-    const div=document.createElement("div");
-    div.className="todoItem"+(t.done?" done":"");
+  list.forEach(task=>{
 
-    div.innerHTML=`
-      <input type="checkbox" ${t.done?"checked":""}>
-      <span>${escapeHTML(t.text)}</span>
+    const row=document.createElement("div");
+
+    row.className=
+      "todoItem"+
+      (task.done ? " done":"");
+
+    row.innerHTML=`
+      <input type="checkbox"
+        ${task.done ? "checked":""}>
+
+      <span>${escapeHTML(task.text)}</span>
+
       <button>🗑</button>
     `;
 
-    div.querySelector("input").onchange=async()=>{
-      t.done=div.querySelector("input").checked;
-      await dbPut("todos",t);
-      await renderTodos();
+    row.querySelector("input").onchange=e=>{
+
+      task.done=e.target.checked;
+
+      saveJSON(TODO_KEY,todos);
+
+      renderTodos();
     };
 
-    div.querySelector("button").onclick=async()=>{
-      await dbDelete("todos",t.id);
-      await renderTodos();
+    row.querySelector("button").onclick=()=>{
+
+      if(!confirm("Delete this task?")){
+        return;
+      }
+
+      todos=todos.filter(
+        x=>x.id!==task.id
+      );
+
+      saveJSON(TODO_KEY,todos);
+
+      renderTodos();
+
+      showStatus("Task deleted");
     };
 
-    box.appendChild(div);
+    box.appendChild(row);
   });
 }
 
-/* Automatically carry unfinished tasks from previous date */
-async function carryForwardTodos(){
-  if(!currentDate)return;
+/* Carry unfinished tasks forward */
 
-  const previous=dateChange(-1);
-  const all=await dbAll("todos");
+function carryForwardTodos(){
 
-  const pending=all.filter(t=>t.date===previous && !t.done);
-  const today=all.filter(t=>t.date===currentDate);
+  const previous=changeDate(
+    currentDate,
+    -1
+  );
 
-  for(const task of pending){
-    const already=today.some(t=>t.text===task.text && !t.done);
-    if(!already){
-      await dbAdd("todos",{
+  const previousTasks=todos.filter(
+    t=>
+      t.date===previous &&
+      !t.done
+  );
+
+  const todayTasks=todos.filter(
+    t=>t.date===currentDate
+  );
+
+  previousTasks.forEach(task=>{
+
+    const exists=todayTasks.some(
+      t=>
+        !t.done &&
+        t.text===task.text
+    );
+
+    if(!exists){
+
+      todos.push({
+
+        id:
+          Date.now().toString()+
+          Math.random().toString(36).slice(2),
+
         date:currentDate,
         text:task.text,
         done:false,
@@ -1546,15 +2453,178 @@ async function carryForwardTodos(){
         created:Date.now()
       });
     }
-  }
+  });
+
+  saveJSON(TODO_KEY,todos);
 }
 
 /* =========================================================
    MEMORIES
 ========================================================= */
 
+let memoryDB=null;
+
+function openMemoryDB(){
+
+  return new Promise((resolve,reject)=>{
+
+    const request=
+      indexedDB.open(MEMORY_DB,1);
+
+    request.onupgradeneeded=e=>{
+
+      const d=e.target.result;
+
+      if(!d.objectStoreNames.contains("memories")){
+
+        const store=
+          d.createObjectStore(
+            "memories",
+            {
+              keyPath:"id",
+              autoIncrement:true
+            }
+          );
+
+        store.createIndex(
+          "date",
+          "date",
+          {unique:false}
+        );
+      }
+    };
+
+    request.onsuccess=()=>{
+
+      memoryDB=request.result;
+
+      resolve(memoryDB);
+    };
+
+    request.onerror=()=>{
+      reject(request.error);
+    };
+  });
+}
+
+function memoryAdd(record){
+
+  return new Promise((resolve,reject)=>{
+
+    const store=
+      memoryDB
+        .transaction(
+          "memories",
+          "readwrite"
+        )
+        .objectStore("memories");
+
+    const request=store.add(record);
+
+    request.onsuccess=()=>{
+      resolve(request.result);
+    };
+
+    request.onerror=()=>{
+      reject(request.error);
+    };
+  });
+}
+
+function memoryAll(){
+
+  return new Promise((resolve,reject)=>{
+
+    const store=
+      memoryDB
+        .transaction("memories")
+        .objectStore("memories");
+
+    const request=store.getAll();
+
+    request.onsuccess=()=>{
+      resolve(request.result||[]);
+    };
+
+    request.onerror=()=>{
+      reject(request.error);
+    };
+  });
+}
+
+function memoryDelete(id){
+
+  return new Promise((resolve,reject)=>{
+
+    const store=
+      memoryDB
+        .transaction(
+          "memories",
+          "readwrite"
+        )
+        .objectStore("memories");
+
+    const request=store.delete(id);
+
+    request.onsuccess=()=>{
+      resolve();
+    };
+
+    request.onerror=()=>{
+      reject(request.error);
+    };
+  });
+}
+
+async function handleMemory(file){
+
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=async()=>{
+
+    try{
+
+      await memoryAdd({
+
+        date:currentDate,
+        name:file.name,
+        type:file.type,
+        data:reader.result,
+        created:Date.now()
+      });
+
+      $("cameraInput").value="";
+      $("memoryInput").value="";
+
+      await renderMemories();
+
+      showStatus("Memory saved");
+
+    }catch(e){
+
+      console.error(e);
+
+      alert("Memory could not be saved.");
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+
+$("cameraInput").onchange=e=>{
+  handleMemory(e.target.files[0]);
+};
+
+$("memoryInput").onchange=e=>{
+  handleMemory(e.target.files[0]);
+};
+
 $("memoryBtn").onclick=async()=>{
+
   await renderMemories();
+
   $("memoryModal").hidden=false;
 };
 
@@ -1562,72 +2632,69 @@ $("memoryClose").onclick=()=>{
   $("memoryModal").hidden=true;
 };
 
-$("memoryCamera").onchange=e=>handleMemoryFile(e.target.files[0]);
-$("memoryFile").onchange=e=>handleMemoryFile(e.target.files[0]);
-
-async function handleMemoryFile(file){
-  if(!file)return;
-
-  const reader=new FileReader();
-
-  reader.onload=async()=>{
-    await dbAdd("attachments",{
-      date:currentDate,
-      name:file.name,
-      type:file.type,
-      data:reader.result,
-      created:Date.now()
-    });
-
-    $("memoryCamera").value="";
-    $("memoryFile").value="";
-
-    await renderMemories();
-    showStatus("Memory saved");
-  };
-
-  reader.readAsDataURL(file);
-}
-
 async function renderMemories(){
-  const all=await dbAll("attachments");
-  const list=all.filter(x=>x.date===currentDate);
 
   const box=$("memoryGrid");
+
   box.innerHTML="";
 
+  const all=await memoryAll();
+
+  const list=all.filter(
+    x=>x.date===currentDate
+  );
+
   if(!list.length){
-    box.innerHTML="<p>No memories attached to this date.</p>";
+
+    box.innerHTML=
+      "<p>No memories attached to this date.</p>";
+
     return;
   }
 
-  list.forEach(m=>{
-    const card=document.createElement("div");
-    card.className="memoryItem";
+  list.forEach(memory=>{
 
-    if((m.type||"").startsWith("image/")){
-      card.innerHTML=`
+    const div=document.createElement("div");
+
+    div.className="memoryItem";
+
+    if(
+      (memory.type||"")
+        .startsWith("image/")
+    ){
+
+      div.innerHTML=`
         <div class="memoryCard">
-          <img src="${m.data}" alt="">
-          <div>${escapeHTML(m.name)}</div>
+          <img src="${memory.data}" alt="">
+          <div>${escapeHTML(memory.name)}</div>
           <button>🗑 Delete</button>
         </div>
       `;
+
     }else{
-      card.innerHTML=`
-        <div>📄 ${escapeHTML(m.name)}</div>
+
+      div.innerHTML=`
+        <div>
+          📄 ${escapeHTML(memory.name)}
+        </div>
         <button>🗑 Delete</button>
       `;
     }
 
-    card.querySelector("button").onclick=async()=>{
-      if(confirm("Delete this memory?")){
-        await dbDelete("attachments",m.id);
-        await renderMemories();
+    div.querySelector("button").onclick=async()=>{
+
+      if(!confirm("Delete this memory?")){
+        return;
       }
+
+      await memoryDelete(memory.id);
+
+      await renderMemories();
+
+      showStatus("Memory deleted");
     };
 
-    box.appendChild(card);
+    box.appendChild(div);
   });
 }
 
@@ -1635,38 +2702,32 @@ async function renderMemories(){
    SETTINGS
 ========================================================= */
 
-let settings={
-  design:"classic",
-  fontSize:"20"
-};
+function applySettings(){
 
-async function loadSettings(){
-  const saved=await dbGet("settings","main");
+  $("page").classList.remove(
+    "classic",
+    "vintage",
+    "natural",
+    "blue",
+    "night"
+  );
 
-  if(saved){
-    settings={
-      design:saved.design||"classic",
-      fontSize:saved.fontSize||"20"
-    };
-  }
+  $("page").classList.add(
+    settings.design || "classic"
+  );
 
-  applyDesign();
-  applyFontSize();
+  $("editor").style.fontSize=
+    (settings.fontSize || "20")+"px";
 }
 
-function applyDesign(){
-  const classes=["classic","vintage","floral","blue","dark"];
-  $("page").classList.remove(...classes);
-  $("page").classList.add(settings.design||"classic");
-}
+$("settingsBtn").onclick=()=>{
 
-function applyFontSize(){
-  $("editor").style.fontSize=(settings.fontSize||20)+"px";
-}
+  $("designSelect").value=
+    settings.design || "classic";
 
-$("settingsBtn").onclick=async()=>{
-  $("designSelect").value=settings.design;
-  $("fontSizeSelect").value=settings.fontSize;
+  $("fontSizeSelect").value=
+    settings.fontSize || "20";
+
   $("settingsModal").hidden=false;
 };
 
@@ -1674,95 +2735,46 @@ $("settingsClose").onclick=()=>{
   $("settingsModal").hidden=true;
 };
 
-$("settingsSave").onclick=async()=>{
-  settings.design=$("designSelect").value;
-  settings.fontSize=$("fontSizeSelect").value;
+$("settingsSave").onclick=()=>{
 
-  await dbPut("settings",{
-    key:"main",
-    ...settings
-  });
+  settings.design=
+    $("designSelect").value;
 
-  applyDesign();
-  applyFontSize();
+  settings.fontSize=
+    $("fontSizeSelect").value;
+
+  saveJSON(
+    SETTINGS_KEY,
+    settings
+  );
+
+  applySettings();
 
   $("settingsModal").hidden=true;
+
   showStatus("Settings saved");
 };
 
-$("clearPageBtn").onclick=async()=>{
-  if(!confirm("Clear the writing and drawing from the current page?"))return;
+$("clearPageBtn").onclick=()=>{
 
-  $("editor").innerHTML="";
-  ctx.clearRect(0,0,canvas.width/devicePixelRatio,canvas.height/devicePixelRatio);
-
-  pageRecord.content="";
-  pageRecord.drawing="";
-
-  await savePage();
-
-  $("settingsModal").hidden=true;
-  showStatus("Current page cleared");
-};
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-$("printBtn").onclick=async()=>{
-  await savePage();
-
-  const drawing=pageRecord.drawing
-    ? `<img src="${pageRecord.drawing}" style="position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain">`
-    : "";
-
-  const w=window.open("","_blank");
-
-  if(!w){
-    alert("Please allow pop-ups for printing the diary.");
+  if(!confirm(
+    "Clear all writing and drawing from this page?"
+  )){
     return;
   }
 
-  w.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>${escapeHTML(displayDate(currentDate))}</title>
-      <style>
-        body{
-          margin:40px;
-          font-family:Georgia,serif;
-          background:#fffdf2;
-        }
-        .paper{
-          position:relative;
-          min-height:1000px;
-          padding:50px;
-          background:
-            repeating-linear-gradient(
-              to bottom,
-              transparent 0,
-              transparent 39px,
-              #c9d9d8 40px,
-              transparent 41px
-            );
-        }
-        .content{position:relative;z-index:2;font-size:${settings.fontSize}px;line-height:40px}
-        .drawing{position:absolute;inset:0;z-index:1}
-      </style>
-    </head>
-    <body>
-      <div class="paper">
-        <h1>${escapeHTML(displayDate(currentDate))}</h1>
-        <div class="content">${$("editor").innerHTML}</div>
-        <div class="drawing">${drawing}</div>
-      </div>
-      <script>window.onload=()=>window.print();<\/script>
-    </body>
-    </html>
-  `);
+  $("editor").innerHTML="";
 
-  w.document.close();
+  clearCanvas();
+
+  currentPageData.content="";
+  currentPageData.drawing="";
+
+  savePage();
+
+  $("settingsModal").hidden=true;
+
+  showStatus("Page cleared");
 };
 
 /* =========================================================
@@ -1770,31 +2782,57 @@ $("printBtn").onclick=async()=>{
 ========================================================= */
 
 $("backupBtn").onclick=async()=>{
-  await savePage();
+
+  savePage();
+
+  const memories=await memoryAll();
 
   const backup={
-    version:8,
+
+    version:"8.4",
+
     created:new Date().toISOString(),
-    pages:await dbAll("pages"),
-    events:await dbAll("events"),
-    todos:await dbAll("todos"),
-    attachments:await dbAll("attachments"),
-    settings:await dbAll("settings")
+
+    pages,
+
+    events,
+
+    todos,
+
+    settings,
+
+    memories
   };
 
   const blob=new Blob(
     [JSON.stringify(backup)],
-    {type:"application/json"}
+    {
+      type:"application/json"
+    }
   );
 
-  const url=URL.createObjectURL(blob);
+  const url=
+    URL.createObjectURL(blob);
+
   const a=document.createElement("a");
 
   a.href=url;
-  a.download="my-personal-diary-backup-"+todayISO()+".json";
+
+  a.download=
+    "my-personal-diary-backup-"+
+    todayISO()+
+    ".json";
+
+  document.body.appendChild(a);
+
   a.click();
 
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  a.remove();
+
+  setTimeout(()=>{
+    URL.revokeObjectURL(url);
+  },1000);
+
   showStatus("Backup created");
 };
 
@@ -1807,122 +2845,483 @@ $("restoreBtn").onclick=()=>{
 };
 
 $("restoreInput").onchange=async e=>{
+
   const file=e.target.files[0];
+
   if(!file)return;
 
   try{
+
     const text=await file.text();
+
     const data=JSON.parse(text);
 
-    if(!confirm("Restore this diary backup? Existing matching pages may be replaced.")){
+    if(!data || typeof data!=="object"){
+      throw new Error("Invalid backup");
+    }
+
+    if(!confirm(
+      "Restore this diary backup?"
+    )){
       e.target.value="";
       return;
     }
 
-    for(const x of (data.pages||[]))await dbPut("pages",x);
-    for(const x of (data.events||[])){
-      if(x.id!=null)await dbPut("events",x);
-    }
-    for(const x of (data.todos||[])){
-      if(x.id!=null)await dbPut("todos",x);
-    }
-    for(const x of (data.attachments||[])){
-      if(x.id!=null)await dbPut("attachments",x);
-    }
-    for(const x of (data.settings||[]))await dbPut("settings",x);
+    if(data.pages){
 
-    await loadSettings();
-    await loadPage();
+      pages={
+        ...pages,
+        ...data.pages
+      };
+
+      saveJSON(PAGE_KEY,pages);
+    }
+
+    if(Array.isArray(data.events)){
+
+      events=data.events;
+
+      saveJSON(EVENT_KEY,events);
+    }
+
+    if(Array.isArray(data.todos)){
+
+      todos=data.todos;
+
+      saveJSON(TODO_KEY,todos);
+    }
+
+    if(data.settings){
+
+      settings={
+        ...settings,
+        ...data.settings
+      };
+
+      saveJSON(
+        SETTINGS_KEY,
+        settings
+      );
+    }
+
+    if(Array.isArray(data.memories)){
+
+      for(
+        const memory of data.memories
+      ){
+
+        const copy={...memory};
+
+        delete copy.id;
+
+        await memoryAdd(copy);
+      }
+    }
+
+    applySettings();
+
+    loadPage();
 
     showStatus("Diary restored");
-  }catch(err){
-    console.error(err);
-    alert("This backup file could not be restored.");
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "The backup file could not be restored."
+    );
   }
 
   e.target.value="";
 };
 
 /* =========================================================
+   PRINT
+========================================================= */
+
+$("printBtn").onclick=()=>{
+
+  savePage();
+
+  const printWindow=
+    window.open("","_blank");
+
+  if(!printWindow){
+
+    alert(
+      "Please allow pop-ups for printing."
+    );
+
+    return;
+  }
+
+  const drawing=
+    currentPageData.drawing
+      ? `
+        <img
+          src="${currentPageData.drawing}"
+          style="
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            object-fit:contain;
+          ">
+      `
+      : "";
+
+  const mood=
+    currentPageData.mood
+      ? `<div class="mood">${currentPageData.mood}</div>`
+      : "";
+
+  const quote=
+    currentPageData.quote
+      ? `<div class="quote">
+          “${escapeHTML(currentPageData.quote)}”
+        </div>`
+      : "";
+
+  printWindow.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+<title>${escapeHTML(displayDate(currentDate))}</title>
+
+<style>
+
+body{
+  margin:35px;
+  font-family:Georgia,serif;
+  color:#3c2a1d;
+}
+
+.paper{
+  position:relative;
+  min-height:1050px;
+  padding:50px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 39px,
+      #c9d8d8 40px,
+      transparent 41px
+    );
+}
+
+.content{
+  position:relative;
+  z-index:3;
+  font-size:${settings.fontSize}px;
+  line-height:40px;
+}
+
+.drawing{
+  position:absolute;
+  inset:0;
+  z-index:2;
+}
+
+.mood{
+  font-size:32px;
+}
+
+.quote{
+  margin:15px 0;
+  font-style:italic;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="paper">
+
+<h1>${escapeHTML(displayDate(currentDate))}</h1>
+
+${mood}
+
+${quote}
+
+<div class="content">
+${$("editor").innerHTML}
+</div>
+
+<div class="drawing">
+${drawing}
+</div>
+
+</div>
+
+<script>
+window.onload=function(){
+  window.print();
+};
+<\/script>
+
+</body>
+</html>
+  `);
+
+  printWindow.document.close();
+};
+
+/* =========================================================
+   MODAL BACKDROP
+========================================================= */
+
+document
+  .querySelectorAll(".modal")
+  .forEach(modal=>{
+
+    modal.addEventListener(
+      "click",
+      e=>{
+        if(e.target===modal){
+          modal.hidden=true;
+        }
+      }
+    );
+  });
+
+/* =========================================================
    EVENT REMINDER
 ========================================================= */
 
-async function checkEvents(){
+function checkEvents(){
+
   const now=new Date();
-  const iso=localISO(now);
-  const hm=
-    String(now.getHours()).padStart(2,"0")+":"+
+
+  const date=localISO(now);
+
+  const time=
+    String(now.getHours()).padStart(2,"0")+
+    ":"+
     String(now.getMinutes()).padStart(2,"0");
 
-  const events=await dbAll("events");
-
-  const due=events.filter(e=>
-    e.date===iso &&
-    e.time===hm
+  const due=events.filter(
+    e=>
+      e.date===date &&
+      e.time===time
   );
 
-  if(due.length){
-    due.forEach(e=>{
-      alert("🗓️ Diary Event\n\n"+e.title+
-        (e.notes?"\n\n"+e.notes:""));
-    });
+  due.forEach(e=>{
+
+    alert(
+      "🗓️ Diary Event\n\n"+
+      e.title+
+      (e.notes
+        ? "\n\n"+e.notes
+        : "")
+    );
+  });
+}
+
+setInterval(
+  checkEvents,
+  60000
+);
+
+/* =========================================================
+   MIGRATE OLD v8 INDEXEDDB PAGES
+   ---------------------------------------------------------
+   This tries to recover pages created by the previous
+   versions. It does not delete the old database.
+========================================================= */
+
+async function migrateOldPages(){
+
+  try{
+
+    const request=
+      indexedDB.open(
+        "myPersonalDiaryDB"
+      );
+
+    request.onsuccess=()=>{
+
+      const oldDB=request.result;
+
+      if(
+        !oldDB.objectStoreNames.contains("pages")
+      ){
+
+        oldDB.close();
+
+        return;
+      }
+
+      try{
+
+        const transaction=
+          oldDB.transaction(
+            "pages",
+            "readonly"
+          );
+
+        const store=
+          transaction.objectStore("pages");
+
+        const getAll=
+          store.getAll();
+
+        getAll.onsuccess=()=>{
+
+          const oldPages=
+            getAll.result||[];
+
+          let imported=0;
+
+          oldPages.forEach(old=>{
+
+            if(
+              !old ||
+              !old.date
+            ){
+              return;
+            }
+
+            const p=
+              Number(old.page||1);
+
+            const id=
+              pageID(old.date,p);
+
+            if(!pages[id]){
+
+              pages[id]={
+
+                id,
+
+                date:old.date,
+
+                page:p,
+
+                content:
+                  old.content||"",
+
+                drawing:
+                  old.drawing||"",
+
+                mood:
+                  old.mood||"",
+
+                quote:
+                  old.quote||
+                  quoteForDate(old.date),
+
+                updated:
+                  old.updated||
+                  Date.now()
+              };
+
+              imported++;
+            }
+          });
+
+          if(imported){
+
+            saveJSON(
+              PAGE_KEY,
+              pages
+            );
+
+            if(
+              currentDate &&
+              currentPage
+            ){
+              loadPage();
+            }
+
+            showStatus(
+              imported+
+              " old diary page(s) recovered"
+            );
+          }
+
+          oldDB.close();
+        };
+
+      }catch(err){
+
+        console.log(
+          "Old page migration skipped",
+          err
+        );
+
+        oldDB.close();
+      }
+    };
+
+    request.onerror=()=>{
+      console.log(
+        "No previous diary database"
+      );
+    };
+
+  }catch(e){
+
+    console.log(
+      "Migration unavailable",
+      e
+    );
   }
 }
 
-setInterval(checkEvents,60000);
-
 /* =========================================================
-   CLOSE MODALS WHEN CLICKING BACKDROP
-========================================================= */
-
-document.querySelectorAll(".modal").forEach(modal=>{
-  modal.addEventListener("click",e=>{
-    if(e.target===modal)modal.hidden=true;
-  });
-});
-
-/* =========================================================
-   START
+   START APPLICATION
 ========================================================= */
 
 async function start(){
+
+  loadStorage();
+
   try{
-    await openDB();
-
-    currentDate=todayISO();
-    currentPage=1;
-
-    await loadSettings();
-    await loadPage();
-
-    resizeCanvas(false);
-
-    if("serviceWorker" in navigator){
-      try{
-        await navigator.serviceWorker.register("./service-worker.js");
-      }catch(e){
-        console.log("Service worker registration failed",e);
-      }
-    }
-
-    checkEvents();
+    await openMemoryDB();
   }catch(e){
-    console.error(e);
-    alert("Diary could not start. Please refresh the page.");
+    console.error(
+      "Memory database unavailable",
+      e
+    );
   }
+
+  currentDate=todayISO();
+
+  currentPage=1;
+
+  applySettings();
+
+  loadPage();
+
+  await migrateOldPages();
+
+  if(
+    "serviceWorker" in navigator
+  ){
+
+    try{
+
+      await navigator.serviceWorker.register(
+        "./service-worker.js"
+      );
+
+    }catch(e){
+
+      console.log(
+        "Service worker registration failed",
+        e
+      );
+    }
+  }
+
+  checkEvents();
 }
 
-window.addEventListener("beforeunload",()=>{
-  if(pageRecord){
-    pageRecord.content=$("editor").innerHTML;
-    pageRecord.mood=$("mood").value;
-
-    /* Best-effort synchronous-ish save is not possible with IndexedDB.
-       Normal autosave handles regular closing. */
-  }
-});
-
 start();
+
 </script>
 
 </body>

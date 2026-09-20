@@ -1,13 +1,15 @@
-const CACHE_NAME = "my-personal-diary-v8-5";
+const CACHE_NAME = "my-personal-diary-v9";
 
-const FILES_TO_CACHE = [
+const FILES = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./service-worker.js"
 ];
 
-
-/* INSTALL */
+/* ==============================
+   INSTALL
+============================== */
 
 self.addEventListener(
   "install",
@@ -15,22 +17,24 @@ self.addEventListener(
 
     event.waitUntil(
 
-      caches
-        .open(CACHE_NAME)
-        .then(cache =>
-          cache.addAll(FILES_TO_CACHE)
-        )
-        .then(() =>
-          self.skipWaiting()
-        )
+      caches.open(
+        CACHE_NAME
+      ).then(
+        cache =>
+          cache.addAll(
+            FILES
+          )
+      )
 
     );
 
+    self.skipWaiting();
   }
 );
 
-
-/* ACTIVATE */
+/* ==============================
+   ACTIVATE
+============================== */
 
 self.addEventListener(
   "activate",
@@ -38,40 +42,41 @@ self.addEventListener(
 
     event.waitUntil(
 
-      caches
-        .keys()
-        .then(keys =>
+      caches.keys()
+        .then(
+          keys =>
+            Promise.all(
 
-          Promise.all(
+              keys
+                .filter(
+                  key =>
+                    key !== CACHE_NAME
+                )
+                .map(
+                  key =>
+                    caches.delete(key)
+                )
 
-            keys
-              .filter(
-                key =>
-                  key !== CACHE_NAME
-              )
-              .map(
-                key =>
-                  caches.delete(key)
-              )
-
-          )
-
-        )
-        .then(() =>
-          self.clients.claim()
+            )
         )
 
     );
 
+    self.clients.claim();
   }
 );
 
-
-/* FETCH */
+/* ==============================
+   FETCH
+============================== */
 
 self.addEventListener(
   "fetch",
   event => {
+
+    /*
+      Only handle GET requests.
+    */
 
     if(
       event.request.method !== "GET"
@@ -79,46 +84,47 @@ self.addEventListener(
       return;
     }
 
-
     event.respondWith(
 
-      caches
-        .match(event.request)
-        .then(cached => {
+      fetch(
+        event.request
+      )
+      .then(
+        response => {
 
-          if(cached){
-            return cached;
-          }
+          /*
+            Save the newest version
+            in cache.
+          */
 
+          if(
+            response &&
+            response.status === 200
+          ){
 
-          return fetch(
-            event.request
-          )
-          .then(response => {
-
-            const copy=
+            const copy =
               response.clone();
 
-            caches
-              .open(CACHE_NAME)
-              .then(cache =>
+            caches.open(
+              CACHE_NAME
+            ).then(
+              cache =>
                 cache.put(
                   event.request,
                   copy
                 )
-              );
+            );
+          }
 
-            return response;
-
-          })
-          .catch(
-            () =>
-              caches.match(
-                "./index.html"
-              )
-          );
-
-        })
+          return response;
+        }
+      )
+      .catch(
+        () =>
+          caches.match(
+            event.request
+          )
+      )
 
     );
 

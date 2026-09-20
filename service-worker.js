@@ -1,15 +1,13 @@
-const CACHE_NAME = "my-personal-diary-v9";
+const CACHE_NAME = "my-personal-diary-v10-1";
 
-const FILES = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./service-worker.js"
+const STATIC_FILES = [
+  "./manifest.json"
 ];
 
-/* ==============================
+
+/* =========================================================
    INSTALL
-============================== */
+========================================================= */
 
 self.addEventListener(
   "install",
@@ -17,24 +15,28 @@ self.addEventListener(
 
     event.waitUntil(
 
-      caches.open(
-        CACHE_NAME
-      ).then(
-        cache =>
-          cache.addAll(
-            FILES
-          )
-      )
+      caches
+        .open(CACHE_NAME)
+        .then(
+          cache =>
+            cache.addAll(
+              STATIC_FILES
+            )
+        )
+        .then(
+          () =>
+            self.skipWaiting()
+        )
 
     );
 
-    self.skipWaiting();
   }
 );
 
-/* ==============================
+
+/* =========================================================
    ACTIVATE
-============================== */
+========================================================= */
 
 self.addEventListener(
   "activate",
@@ -42,9 +44,11 @@ self.addEventListener(
 
     event.waitUntil(
 
-      caches.keys()
+      caches
+        .keys()
         .then(
           keys =>
+
             Promise.all(
 
               keys
@@ -54,77 +58,158 @@ self.addEventListener(
                 )
                 .map(
                   key =>
-                    caches.delete(key)
+                    caches.delete(
+                      key
+                    )
                 )
 
             )
+
+        )
+        .then(
+          () =>
+            self.clients.claim()
         )
 
     );
 
-    self.clients.claim();
   }
 );
 
-/* ==============================
+
+/* =========================================================
    FETCH
-============================== */
+========================================================= */
 
 self.addEventListener(
   "fetch",
   event => {
 
+    const request =
+      event.request;
+
+
     /*
-      Only handle GET requests.
+      HTML is NETWORK FIRST.
+
+      This is deliberately different from
+      the old service worker.
+
+      GitHub Pages must deliver the newest
+      index.html instead of an old cached copy.
     */
 
     if(
-      event.request.method !== "GET"
+      request.mode === "navigate" ||
+      request.destination === "document"
     ){
+
+      event.respondWith(
+
+        fetch(
+          request,
+          {
+            cache:"no-store"
+          }
+        )
+        .then(
+          response => {
+
+            if(
+              response &&
+              response.ok
+            ){
+
+              const copy =
+                response.clone();
+
+              caches
+                .open(CACHE_NAME)
+                .then(
+                  cache =>
+                    cache.put(
+                      request,
+                      copy
+                    )
+                );
+
+            }
+
+            return response;
+
+          }
+        )
+        .catch(
+          () =>
+            caches
+              .match(request)
+              .then(
+                cached =>
+                  cached ||
+                  caches.match(
+                    "./index.html"
+                  )
+              )
+        )
+
+      );
+
       return;
+
     }
+
+
+    /*
+      Non-HTML files:
+      cache first, then network.
+    */
 
     event.respondWith(
 
-      fetch(
-        event.request
-      )
-      .then(
-        response => {
+      caches
+        .match(request)
+        .then(
+          cached => {
 
-          /*
-            Save the newest version
-            in cache.
-          */
+            if(cached)
+              return cached;
 
-          if(
-            response &&
-            response.status === 200
-          ){
 
-            const copy =
-              response.clone();
+            return fetch(
+              request
+            )
+            .then(
+              response => {
 
-            caches.open(
-              CACHE_NAME
-            ).then(
-              cache =>
-                cache.put(
-                  event.request,
-                  copy
-                )
+                if(
+                  response &&
+                  response.ok
+                ){
+
+                  const copy =
+                    response.clone();
+
+                  caches
+                    .open(
+                      CACHE_NAME
+                    )
+                    .then(
+                      cache =>
+                        cache.put(
+                          request,
+                          copy
+                        )
+                    );
+
+                }
+
+                return response;
+
+              }
             );
-          }
 
-          return response;
-        }
-      )
-      .catch(
-        () =>
-          caches.match(
-            event.request
-          )
-      )
+          }
+        )
 
     );
 

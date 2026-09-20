@@ -2813,4 +2813,2595 @@ function goToday(){
   currentDate =
     todayISO();
 
-  current
+  currentPage=1;
+
+  loadPage();
+
+}
+
+
+/* =========================================================
+   TEXT EDITING
+========================================================= */
+
+function formatText(command){
+
+  const editor =
+    document.getElementById("editor");
+
+  editor.focus();
+
+  document.execCommand(
+    command,
+    false,
+    null
+  );
+
+  savePage();
+
+}
+
+
+function clearFormatting(){
+
+  const editor =
+    document.getElementById("editor");
+
+  editor.focus();
+
+  document.execCommand(
+    "removeFormat",
+    false,
+    null
+  );
+
+  savePage();
+
+}
+
+
+document
+  .getElementById("editor")
+  .addEventListener(
+    "input",
+    savePage
+  );
+
+
+/* =========================================================
+   DRAWING
+========================================================= */
+
+const canvas =
+  document.getElementById(
+    "drawCanvas"
+  );
+
+const editorWrap =
+  document.getElementById(
+    "editorWrap"
+  );
+
+const ctx =
+  canvas.getContext(
+    "2d"
+  );
+
+
+function resizeCanvas(){
+
+  const rect =
+    editorWrap.getBoundingClientRect();
+
+  const dpr =
+    window.devicePixelRatio || 1;
+
+  const oldCanvas =
+    document.createElement(
+      "canvas"
+    );
+
+  if(canvas.width && canvas.height){
+
+    oldCanvas.width =
+      canvas.width;
+
+    oldCanvas.height =
+      canvas.height;
+
+    oldCanvas
+      .getContext("2d")
+      .drawImage(
+        canvas,
+        0,
+        0
+      );
+
+  }
+
+
+  canvas.width =
+    Math.max(
+      1,
+      Math.floor(
+        rect.width*dpr
+      )
+    );
+
+  canvas.height =
+    Math.max(
+      1,
+      Math.floor(
+        rect.height*dpr
+      )
+    );
+
+
+  canvas.style.width =
+    rect.width+"px";
+
+  canvas.style.height =
+    rect.height+"px";
+
+
+  ctx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+
+  ctx.lineCap =
+    "round";
+
+  ctx.lineJoin =
+    "round";
+
+
+  if(oldCanvas.width){
+
+    ctx.drawImage(
+      oldCanvas,
+      0,
+      0,
+      oldCanvas.width,
+      oldCanvas.height,
+      0,
+      0,
+      rect.width,
+      rect.height
+    );
+
+  }
+
+}
+
+
+function getDrawingData(){
+
+  if(!canvas.width)
+    return null;
+
+  return canvas.toDataURL(
+    "image/png"
+  );
+
+}
+
+
+function loadDrawing(data){
+
+  resizeCanvas();
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  drawHistory=[];
+  drawRedo=[];
+
+  if(!data)
+    return;
+
+
+  const image =
+    new Image();
+
+  image.onload =
+    function(){
+
+      const rect =
+        editorWrap
+          .getBoundingClientRect();
+
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        rect.width,
+        rect.height
+      );
+
+    };
+
+  image.src=data;
+
+}
+
+
+function snapshot(){
+
+  return canvas.toDataURL(
+    "image/png"
+  );
+
+}
+
+
+function restoreSnapshot(data){
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  if(!data){
+
+    savePage();
+
+    return;
+
+  }
+
+
+  const image =
+    new Image();
+
+  image.onload =
+    function(){
+
+      const rect =
+        editorWrap
+          .getBoundingClientRect();
+
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        rect.width,
+        rect.height
+      );
+
+      savePage();
+
+    };
+
+  image.src=data;
+
+}
+
+
+/* draw menu */
+
+function toggleDrawMenu(){
+
+  const menu =
+    document.getElementById(
+      "drawMenu"
+    );
+
+  menu.hidden =
+    !menu.hidden;
+
+}
+
+
+/*
+  Selecting a drawing tool closes
+  the menu but DOES NOT close drawing mode.
+*/
+
+function selectDrawTool(tool){
+
+  drawTool =
+    tool;
+
+  drawingMode=true;
+
+  editorWrap
+    .classList
+    .add("drawing");
+
+  document
+    .getElementById("drawButton")
+    .classList
+    .add("active");
+
+  document
+    .getElementById("drawMenu")
+    .hidden=true;
+
+}
+
+
+/* Clicking Draw again exits drawing */
+
+function toggleDrawing(){
+
+  drawingMode =
+    !drawingMode;
+
+  editorWrap
+    .classList
+    .toggle(
+      "drawing",
+      drawingMode
+    );
+
+}
+
+
+/* position */
+
+function pointerPosition(e){
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  return {
+
+    x:
+      e.clientX -
+      rect.left,
+
+    y:
+      e.clientY -
+      rect.top
+
+  };
+
+}
+
+
+/* pointer down */
+
+canvas.addEventListener(
+  "pointerdown",
+  function(e){
+
+    if(!drawingMode)
+      return;
+
+    e.preventDefault();
+
+    canvas.setPointerCapture(
+      e.pointerId
+    );
+
+
+    drawHistory.push(
+      snapshot()
+    );
+
+    drawRedo=[];
+
+
+    const p =
+      pointerPosition(e);
+
+    drawStart=p;
+    drawLast=p;
+
+
+    if(drawTool==="pen"){
+
+      ctx.globalCompositeOperation =
+        "source-over";
+
+      ctx.strokeStyle =
+        drawColor;
+
+      ctx.lineWidth =
+        drawSize;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        p.x,
+        p.y
+      );
+
+      ctx.lineTo(
+        p.x+.1,
+        p.y+.1
+      );
+
+      ctx.stroke();
+
+    }
+
+
+    if(drawTool==="eraser"){
+
+      ctx.globalCompositeOperation =
+        "destination-out";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        p.x,
+        p.y,
+        24,
+        0,
+        Math.PI*2
+      );
+
+      ctx.fill();
+
+    }
+
+  },
+  {passive:false}
+);
+
+
+/* pointer move */
+
+canvas.addEventListener(
+  "pointermove",
+  function(e){
+
+    if(
+      !drawingMode ||
+      !drawLast
+    )
+      return;
+
+    e.preventDefault();
+
+    const p =
+      pointerPosition(e);
+
+
+    /* PEN */
+
+    if(drawTool==="pen"){
+
+      ctx.globalCompositeOperation =
+        "source-over";
+
+      ctx.strokeStyle =
+        drawColor;
+
+      ctx.lineWidth =
+        drawSize;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        drawLast.x,
+        drawLast.y
+      );
+
+      ctx.lineTo(
+        p.x,
+        p.y
+      );
+
+      ctx.stroke();
+
+    }
+
+
+    /* ERASER */
+
+    else if(
+      drawTool==="eraser"
+    ){
+
+      ctx.globalCompositeOperation =
+        "destination-out";
+
+      ctx.beginPath();
+
+      ctx.arc(
+        p.x,
+        p.y,
+        25,
+        0,
+        Math.PI*2
+      );
+
+      ctx.fill();
+
+    }
+
+
+    /*
+      LINE/CIRCLE:
+      preview is drawn directly.
+    */
+
+    else{
+
+      redrawHistoryBase();
+
+      ctx.globalCompositeOperation =
+        "source-over";
+
+      ctx.strokeStyle =
+        drawColor;
+
+      ctx.lineWidth =
+        drawSize;
+
+      ctx.beginPath();
+
+
+      if(drawTool==="line"){
+
+        ctx.moveTo(
+          drawStart.x,
+          drawStart.y
+        );
+
+        ctx.lineTo(
+          p.x,
+          p.y
+        );
+
+      }
+
+
+      if(drawTool==="circle"){
+
+        const rx =
+          Math.abs(
+            p.x -
+            drawStart.x
+          ) / 2;
+
+        const ry =
+          Math.abs(
+            p.y -
+            drawStart.y
+          ) / 2;
+
+        const cx =
+          (
+            p.x +
+            drawStart.x
+          ) / 2;
+
+        const cy =
+          (
+            p.y +
+            drawStart.y
+          ) / 2;
+
+        ctx.ellipse(
+          cx,
+          cy,
+          Math.max(2,rx),
+          Math.max(2,ry),
+          0,
+          0,
+          Math.PI*2
+        );
+
+      }
+
+      ctx.stroke();
+
+    }
+
+
+    drawLast=p;
+
+  },
+  {passive:false}
+);
+
+
+/* pointer up */
+
+canvas.addEventListener(
+  "pointerup",
+  function(e){
+
+    if(!drawingMode)
+      return;
+
+    e.preventDefault();
+
+
+    if(
+      drawTool==="line" ||
+      drawTool==="circle"
+    ){
+
+      const p =
+        pointerPosition(e);
+
+      redrawHistoryBase();
+
+
+      ctx.globalCompositeOperation =
+        "source-over";
+
+      ctx.strokeStyle =
+        drawColor;
+
+      ctx.lineWidth =
+        drawSize;
+
+      ctx.beginPath();
+
+
+      if(drawTool==="line"){
+
+        ctx.moveTo(
+          drawStart.x,
+          drawStart.y
+        );
+
+        ctx.lineTo(
+          p.x,
+          p.y
+        );
+
+      }
+
+
+      if(drawTool==="circle"){
+
+        const rx =
+          Math.abs(
+            p.x -
+            drawStart.x
+          ) / 2;
+
+        const ry =
+          Math.abs(
+            p.y -
+            drawStart.y
+          ) / 2;
+
+        const cx =
+          (
+            p.x +
+            drawStart.x
+          ) / 2;
+
+        const cy =
+          (
+            p.y +
+            drawStart.y
+          ) / 2;
+
+        ctx.ellipse(
+          cx,
+          cy,
+          Math.max(2,rx),
+          Math.max(2,ry),
+          0,
+          0,
+          Math.PI*2
+        );
+
+      }
+
+      ctx.stroke();
+
+    }
+
+
+    drawLast=null;
+    drawStart=null;
+
+    savePage();
+
+  },
+  {passive:false}
+);
+
+
+/* redraw previous drawing */
+
+function redrawHistoryBase(){
+
+  const previous =
+    drawHistory[
+      drawHistory.length-1
+    ];
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  if(!previous)
+    return;
+
+
+  const image =
+    new Image();
+
+  image.onload =
+    function(){
+
+      const rect =
+        editorWrap
+          .getBoundingClientRect();
+
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        rect.width,
+        rect.height
+      );
+
+    };
+
+  image.src=previous;
+
+}
+
+
+/* undo */
+
+function undoDrawing(){
+
+  if(!drawHistory.length)
+    return;
+
+  drawRedo.push(
+    snapshot()
+  );
+
+  const old =
+    drawHistory.pop();
+
+  restoreSnapshot(old);
+
+}
+
+
+/* redo */
+
+function redoDrawing(){
+
+  if(!drawRedo.length)
+    return;
+
+  drawHistory.push(
+    snapshot()
+  );
+
+  const next =
+    drawRedo.pop();
+
+  restoreSnapshot(next);
+
+}
+
+
+/* clear */
+
+function clearDrawing(){
+
+  drawHistory.push(
+    snapshot()
+  );
+
+  drawRedo=[];
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  savePage();
+
+}
+
+
+window.addEventListener(
+  "resize",
+  function(){
+
+    const data =
+      getDrawingData();
+
+    resizeCanvas();
+
+    if(data)
+      loadDrawing(data);
+
+  }
+);
+
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+async function openCalendar(){
+
+  calendarDate =
+    dateObj(currentDate);
+
+  openModal(
+    "calendarModal"
+  );
+
+  await renderCalendar();
+
+}
+
+
+function changeMonth(amount){
+
+  calendarDate.setMonth(
+    calendarDate.getMonth()+amount
+  );
+
+  renderCalendar();
+
+}
+
+
+async function renderCalendar(){
+
+  const year =
+    calendarDate.getFullYear();
+
+  const month =
+    calendarDate.getMonth();
+
+
+  document
+    .getElementById(
+      "calendarTitle"
+    )
+    .textContent =
+      calendarDate.toLocaleDateString(
+        undefined,
+        {
+          month:"long",
+          year:"numeric"
+        }
+      );
+
+
+  const grid =
+    document.getElementById(
+      "calendarGrid"
+    );
+
+  grid.innerHTML="";
+
+
+  [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ].forEach(
+    function(day){
+
+      const el =
+        document.createElement(
+          "div"
+        );
+
+      el.className=
+        "calhead";
+
+      el.textContent=
+        day;
+
+      grid.appendChild(el);
+
+    }
+  );
+
+
+  /*
+    IMPORTANT:
+    Calendar reads directly from
+    the same Events database.
+  */
+
+  const events =
+    await all("events");
+
+
+  const monthEvents =
+    events.filter(
+      function(ev){
+
+        const d =
+          dateObj(ev.date);
+
+        return (
+          d.getFullYear()===year &&
+          d.getMonth()===month
+        );
+
+      }
+    );
+
+
+  const firstDay =
+    new Date(
+      year,
+      month,
+      1
+    ).getDay();
+
+
+  const numberOfDays =
+    new Date(
+      year,
+      month+1,
+      0
+    ).getDate();
+
+
+  for(
+    let i=0;
+    i<firstDay;
+    i++
+  ){
+
+    grid.appendChild(
+      document.createElement("div")
+    );
+
+  }
+
+
+  for(
+    let day=1;
+    day<=numberOfDays;
+    day++
+  ){
+
+    const iso =
+      year +
+      "-" +
+      String(month+1).padStart(2,"0") +
+      "-" +
+      String(day).padStart(2,"0");
+
+
+    const cell =
+      document.createElement(
+        "div"
+      );
+
+    cell.className=
+      "calday";
+
+
+    if(
+      iso===
+      todayISO()
+    ){
+
+      cell.classList.add(
+        "today"
+      );
+
+    }
+
+
+    const number =
+      document.createElement(
+        "div"
+      );
+
+    number.className=
+      "caldaynum";
+
+    number.textContent=
+      day;
+
+    cell.appendChild(
+      number
+    );
+
+
+    monthEvents
+      .filter(
+        ev =>
+          ev.date===iso
+      )
+      .forEach(
+        ev=>{
+
+          const dot =
+            document.createElement(
+              "div"
+            );
+
+          dot.className=
+            "eventdot";
+
+          dot.textContent =
+            (
+              ev.time
+              ? ev.time+" "
+              : ""
+            ) +
+            ev.title;
+
+          cell.appendChild(
+            dot
+          );
+
+        }
+      );
+
+
+    cell.onclick =
+      function(){
+
+        currentDate=
+          iso;
+
+        currentPage=1;
+
+        closeModal(
+          "calendarModal"
+        );
+
+        loadPage();
+
+      };
+
+
+    grid.appendChild(
+      cell
+    );
+
+  }
+
+
+  const list =
+    document.getElementById(
+      "calendarEvents"
+    );
+
+  list.innerHTML="";
+
+
+  if(!monthEvents.length){
+
+    list.innerHTML=
+      "<p>No diary events this month.</p>";
+
+  }else{
+
+    monthEvents
+      .sort(
+        (a,b)=>
+          (
+            a.date+
+            (a.time||"")
+          )
+          .localeCompare(
+            b.date+
+            (b.time||"")
+          )
+      )
+      .forEach(
+        ev=>{
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+          card.className=
+            "eventcard";
+
+          card.innerHTML =
+            "<strong>"+
+            escapeHTML(
+              ev.title
+            )+
+            "</strong>"+
+            "<small>"+
+            formatDate(
+              ev.date
+            )+
+            (
+              ev.time
+              ? " · "+ev.time
+              : ""
+            )+
+            "</small>"+
+            "<small>"+
+            escapeHTML(
+              ev.notes||""
+            )+
+            "</small>";
+
+          list.appendChild(
+            card
+          );
+
+        }
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+async function openEvents(){
+
+  const dateInput =
+    document.getElementById(
+      "eventDate"
+    );
+
+  dateInput.min=
+    todayISO();
+
+  dateInput.value =
+    currentDate>=todayISO()
+    ? currentDate
+    : todayISO();
+
+
+  document.getElementById(
+    "eventTitle"
+  ).value="";
+
+
+  document.getElementById(
+    "eventNotes"
+  ).value="";
+
+
+  document.getElementById(
+    "eventTime"
+  ).value="";
+
+
+  openModal(
+    "eventsModal"
+  );
+
+  await renderEvents();
+
+}
+
+
+async function renderEvents(){
+
+  const events =
+    await all("events");
+
+
+  events.sort(
+    (a,b)=>
+      (
+        a.date+
+        (a.time||"")
+      )
+      .localeCompare(
+        b.date+
+        (b.time||"")
+      )
+  );
+
+
+  const list =
+    document.getElementById(
+      "eventList"
+    );
+
+  list.innerHTML="";
+
+
+  if(!events.length){
+
+    list.innerHTML=
+      "<p>No diary events yet.</p>";
+
+    return;
+
+  }
+
+
+  events.forEach(
+    function(ev){
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+      card.className=
+        "eventcard";
+
+
+      card.innerHTML =
+        "<strong>"+
+        escapeHTML(
+          ev.title
+        )+
+        "</strong>"+
+        "<small>"+
+        formatDate(
+          ev.date
+        )+
+        (
+          ev.time
+          ? " · "+ev.time
+          : ""
+        )+
+        "</small>"+
+        "<small>"+
+        escapeHTML(
+          ev.notes||""
+        )+
+        "</small>"+
+        "<button class='smallbtn' "+
+        "onclick='deleteEvent("+
+        ev.id+
+        ")'>Delete</button>";
+
+
+      list.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+async function saveEvent(){
+
+  const date =
+    document.getElementById(
+      "eventDate"
+    ).value;
+
+
+  const title =
+    document.getElementById(
+      "eventTitle"
+    ).value.trim();
+
+
+  const time =
+    document.getElementById(
+      "eventTime"
+    ).value;
+
+
+  const notes =
+    document.getElementById(
+      "eventNotes"
+    ).value.trim();
+
+
+  if(
+    !date ||
+    !title
+  ){
+
+    alert(
+      "Please enter event date and title."
+    );
+
+    return;
+
+  }
+
+
+  if(
+    date<todayISO()
+  ){
+
+    alert(
+      "Past dates cannot be changed."
+    );
+
+    return;
+
+  }
+
+
+  await put(
+    "events",
+    {
+      date:date,
+      title:title,
+      time:time,
+      notes:notes,
+      created:Date.now()
+    }
+  );
+
+
+  document.getElementById(
+    "eventTitle"
+  ).value="";
+
+
+  document.getElementById(
+    "eventNotes"
+  ).value="";
+
+
+  document.getElementById(
+    "eventTime"
+  ).value="";
+
+
+  await renderEvents();
+
+
+  if(
+    !document
+      .getElementById(
+        "calendarModal"
+      ).hidden
+  ){
+
+    await renderCalendar();
+
+  }
+
+}
+
+
+async function deleteEvent(id){
+
+  if(
+    !confirm(
+      "Delete this event?"
+    )
+  )
+    return;
+
+
+  await remove(
+    "events",
+    id
+  );
+
+
+  await renderEvents();
+
+
+  if(
+    !document
+      .getElementById(
+        "calendarModal"
+      ).hidden
+  ){
+
+    await renderCalendar();
+
+  }
+
+}
+
+
+/* =========================================================
+   TODO
+========================================================= */
+
+async function openTodo(){
+
+  document.getElementById(
+    "todoDate"
+  ).value =
+    currentDate;
+
+
+  document.getElementById(
+    "todoText"
+  ).value="";
+
+
+  openModal(
+    "todoModal"
+  );
+
+
+  await renderTodos();
+
+}
+
+
+document
+  .getElementById("todoDate")
+  .addEventListener(
+    "change",
+    renderTodos
+  );
+
+
+async function renderTodos(){
+
+  const date =
+    document.getElementById(
+      "todoDate"
+    ).value;
+
+
+  const list =
+    document.getElementById(
+      "todoList"
+    );
+
+
+  list.innerHTML="";
+
+
+  const items =
+    (
+      await all("todos")
+    )
+    .filter(
+      item =>
+        item.date===date
+    )
+    .sort(
+      (a,b)=>
+        (a.created||0)-
+        (b.created||0)
+    );
+
+
+  const past =
+    date<todayISO();
+
+
+  document.getElementById(
+    "todoInfo"
+  ).textContent =
+    past
+    ? "Past-date To-Do is read-only."
+    : "Unfinished tasks are carried forward automatically.";
+
+
+  document.getElementById(
+    "todoAddButton"
+  ).disabled =
+    past;
+
+
+  document.getElementById(
+    "todoText"
+  ).disabled =
+    past;
+
+
+  if(!items.length){
+
+    list.innerHTML=
+      "<p>No To-Do items.</p>";
+
+    return;
+
+  }
+
+
+  items.forEach(
+    item=>{
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+      row.className =
+        "todoitem"+
+        (
+          item.done
+          ? " done"
+          : ""
+        );
+
+
+      row.innerHTML =
+        "<input type='checkbox' "+
+        (
+          item.done
+          ? "checked "
+          : ""
+        )+
+        (
+          past
+          ? "disabled "
+          : ""
+        )+
+        "onchange='toggleTodo("+
+        item.id+
+        ",this.checked)'>"+
+
+        "<span>"+
+        escapeHTML(
+          item.text
+        )+
+        "</span>"+
+
+        (
+          past
+          ? ""
+          :
+          "<button class='smallbtn' "+
+          "onclick='deleteTodo("+
+          item.id+
+          ")'>×</button>"
+        );
+
+
+      list.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
+
+
+async function addTodo(){
+
+  const date =
+    document.getElementById(
+      "todoDate"
+    ).value;
+
+
+  const text =
+    document.getElementById(
+      "todoText"
+    ).value.trim();
+
+
+  if(!text)
+    return;
+
+
+  if(date<todayISO()){
+
+    alert(
+      "You cannot add a To-Do to a past date."
+    );
+
+    return;
+
+  }
+
+
+  await put(
+    "todos",
+    {
+      date:date,
+      text:text,
+      done:false,
+      created:Date.now()
+    }
+  );
+
+
+  document.getElementById(
+    "todoText"
+  ).value="";
+
+
+  await renderTodos();
+
+}
+
+
+async function toggleTodo(
+  id,
+  done
+){
+
+  const item =
+    await get(
+      "todos",
+      id
+    );
+
+  if(!item)
+    return;
+
+
+  item.done=
+    done;
+
+
+  await put(
+    "todos",
+    item
+  );
+
+
+  await renderTodos();
+
+}
+
+
+async function deleteTodo(id){
+
+  await remove(
+    "todos",
+    id
+  );
+
+  await renderTodos();
+
+}
+
+
+/*
+  Carry unfinished items forward
+  when opening a new day.
+*/
+
+async function carryForwardTodos(){
+
+  const allTodos =
+    await all("todos");
+
+
+  const pending =
+    allTodos.filter(
+      item =>
+        !item.done &&
+        item.date<todayISO()
+    );
+
+
+  for(
+    const item
+    of pending
+  ){
+
+    const d =
+      dateObj(
+        item.date
+      );
+
+    d.setDate(
+      d.getDate()+1
+    );
+
+
+    const nextDate =
+      toISO(d);
+
+
+    if(
+      nextDate>todayISO()
+    )
+      continue;
+
+
+    const exists =
+      allTodos.some(
+        x =>
+          x.date===nextDate &&
+          x.text===item.text &&
+          !x.done
+      );
+
+
+    if(!exists){
+
+      await put(
+        "todos",
+        {
+          date:nextDate,
+          text:item.text,
+          done:false,
+          carried:true,
+          created:Date.now()
+        }
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   MEMORIES
+========================================================= */
+
+async function openMemories(){
+
+  openModal(
+    "memoryModal"
+  );
+
+  await renderMemories();
+
+}
+
+
+async function saveMemory(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file)
+    return;
+
+
+  if(
+    !file.type.startsWith(
+      "image/"
+    )
+  ){
+
+    alert(
+      "Please select an image."
+    );
+
+    return;
+
+  }
+
+
+  const reader =
+    new FileReader();
+
+
+  reader.onload =
+    async function(){
+
+      await put(
+        "memories",
+        {
+          date:currentDate,
+          name:file.name,
+          image:reader.result,
+          created:Date.now()
+        }
+      );
+
+
+      event.target.value="";
+
+
+      await renderMemories();
+
+    };
+
+
+  reader.readAsDataURL(file);
+
+}
+
+
+async function renderMemories(){
+
+  const memories =
+    await all(
+      "memories"
+    );
+
+
+  memories.sort(
+    (a,b)=>
+      (b.created||0)-
+      (a.created||0)
+  );
+
+
+  const grid =
+    document.getElementById(
+      "memoryGrid"
+    );
+
+  grid.innerHTML="";
+
+
+  if(!memories.length){
+
+    grid.innerHTML=
+      "<p>No memories saved yet.</p>";
+
+    return;
+
+  }
+
+
+  memories.forEach(
+    memory=>{
+
+      const card =
+        document.createElement(
+          "div"
+        );
+
+      card.className=
+        "memory";
+
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+      /*
+        Actual stored image is used here.
+      */
+
+      image.src =
+        memory.image;
+
+      image.alt =
+        memory.name ||
+        "Diary memory";
+
+
+      const caption =
+        document.createElement(
+          "div"
+        );
+
+      caption.className=
+        "memorycaption";
+
+      caption.textContent =
+        formatDate(
+          memory.date
+        );
+
+
+      const del =
+        document.createElement(
+          "button"
+        );
+
+      del.className=
+        "smallbtn";
+
+      del.textContent=
+        "Delete";
+
+      del.onclick =
+        ()=>deleteMemory(
+          memory.id
+        );
+
+
+      card.appendChild(
+        image
+      );
+
+      card.appendChild(
+        caption
+      );
+
+      card.appendChild(
+        del
+      );
+
+
+      grid.appendChild(
+        card
+      );
+
+    }
+  );
+
+}
+
+
+async function deleteMemory(id){
+
+  if(
+    !confirm(
+      "Delete this memory?"
+    )
+  )
+    return;
+
+
+  await remove(
+    "memories",
+    id
+  );
+
+
+  await renderMemories();
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+async function getSettings(){
+
+  const s =
+    await get(
+      "settings",
+      "preferences"
+    );
+
+
+  return s || {
+
+    key:"preferences",
+
+    design:"classic",
+
+    lines:24,
+
+    font:19,
+
+    spacing:34,
+
+    width:1500
+
+  };
+
+}
+
+
+async function openSettings(){
+
+  const p =
+    await getSettings();
+
+
+  document.getElementById(
+    "lineRange"
+  ).value =
+    p.lines;
+
+
+  document.getElementById(
+    "fontRange"
+  ).value =
+    p.font;
+
+
+  document.getElementById(
+    "spacingRange"
+  ).value =
+    p.spacing;
+
+
+  document.getElementById(
+    "widthRange"
+  ).value =
+    p.width;
+
+
+  applySettings(
+    p
+  );
+
+
+  openModal(
+    "settingsModal"
+  );
+
+}
+
+
+async function saveSettings(){
+
+  const old =
+    await getSettings();
+
+
+  const settings = {
+
+    key:"preferences",
+
+    design:
+      document
+        .getElementById(
+          "diaryPage"
+        )
+        .dataset.design ||
+      old.design,
+
+    lines:
+      Number(
+        document
+          .getElementById(
+            "lineRange"
+          ).value
+      ),
+
+    font:
+      Number(
+        document
+          .getElementById(
+            "fontRange"
+          ).value
+      ),
+
+    spacing:
+      Number(
+        document
+          .getElementById(
+            "spacingRange"
+          ).value
+      ),
+
+    width:
+      Number(
+        document
+          .getElementById(
+            "widthRange"
+          ).value
+      )
+
+  };
+
+
+  await put(
+    "settings",
+    settings
+  );
+
+}
+
+
+function applySettings(p){
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-lines",
+      p.lines
+    );
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--font-size",
+      p.font+"px"
+    );
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--line-height",
+      p.spacing+"px"
+    );
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-width",
+      p.width+"px"
+    );
+
+
+  const page =
+    document.getElementById(
+      "diaryPage"
+    );
+
+
+  page.dataset.design =
+    p.design;
+
+
+  page.className =
+    "page design-"+p.design;
+
+
+  document.getElementById(
+    "lineValue"
+  ).textContent =
+    p.lines;
+
+
+  document.getElementById(
+    "fontValue"
+  ).textContent =
+    p.font+" px";
+
+
+  document.getElementById(
+    "spacingValue"
+  ).textContent =
+    p.spacing+" px";
+
+
+  document.getElementById(
+    "widthValue"
+  ).textContent =
+    p.width+" px";
+
+
+  updateDesignSelection();
+
+}
+
+
+function updateDesignSelection(){
+
+  const page =
+    document.getElementById(
+      "diaryPage"
+    );
+
+  const design =
+    page.dataset.design ||
+    "classic";
+
+
+  document
+    .querySelectorAll(
+      ".design"
+    )
+    .forEach(
+      el=>{
+
+        el.classList.remove(
+          "selected"
+        );
+
+        if(
+          el.classList.contains(
+            "design-"+design
+          )
+        ){
+
+          el.classList.add(
+            "selected"
+          );
+
+        }
+
+      }
+    );
+
+}
+
+
+async function setDesign(name){
+
+  const p =
+    await getSettings();
+
+
+  p.design =
+    name;
+
+
+  await put(
+    "settings",
+    p
+  );
+
+
+  applySettings(
+    p
+  );
+
+}
+
+
+async function changeLines(value){
+
+  document.getElementById(
+    "lineValue"
+  ).textContent =
+    value;
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-lines",
+      value
+    );
+
+
+  await saveSettings();
+
+}
+
+
+async function changeFont(value){
+
+  document.getElementById(
+    "fontValue"
+  ).textContent =
+    value+" px";
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--font-size",
+      value+"px"
+    );
+
+
+  await saveSettings();
+
+}
+
+
+async function changeSpacing(value){
+
+  document.getElementById(
+    "spacingValue"
+  ).textContent =
+    value+" px";
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--line-height",
+      value+"px"
+    );
+
+
+  await saveSettings();
+
+}
+
+
+async function changeWidth(value){
+
+  document.getElementById(
+    "widthValue"
+  ).textContent =
+    value+" px";
+
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-width",
+      value+"px"
+    );
+
+
+  await saveSettings();
+
+}
+
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+async function backupDiary(){
+
+  const data={
+
+    version:"10.1",
+
+    pages:
+      await all("pages"),
+
+    events:
+      await all("events"),
+
+    todos:
+      await all("todos"),
+
+    memories:
+      await all("memories"),
+
+    settings:
+      await all("settings")
+
+  };
+
+
+  const blob =
+    new Blob(
+      [
+        JSON.stringify(
+          data
+        )
+      ],
+      {
+        type:
+          "application/json"
+      }
+    );
+
+
+  const url =
+    URL.createObjectURL(
+      blob
+    );
+
+
+  const a =
+    document.createElement(
+      "a"
+    );
+
+  a.href=url;
+
+  a.download =
+    "my-personal-diary-v10.1-backup.json";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+  setTimeout(
+    ()=>{
+      URL.revokeObjectURL(
+        url
+      );
+    },
+    1000
+  );
+
+}
+
+
+/* =========================================================
+   RESTORE
+========================================================= */
+
+async function restoreDiary(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file)
+    return;
+
+
+  try{
+
+    const text =
+      await file.text();
+
+
+    const data =
+      JSON.parse(text);
+
+
+    if(
+      !data.version
+    ){
+
+      alert(
+        "Invalid diary backup."
+      );
+
+      return;
+
+    }
+
+
+    for(
+      const item
+      of data.pages || []
+    ){
+
+      await put(
+        "pages",
+        item
+      );
+
+    }
+
+
+    for(
+      const item
+      of data.events || []
+    ){
+
+      await put(
+        "events",
+        item
+      );
+
+    }
+
+
+    for(
+      const item
+      of data.todos || []
+    ){
+
+      await put(
+        "todos",
+        item
+      );
+
+    }
+
+
+    for(
+      const item
+      of data.memories || []
+    ){
+
+      await put(
+        "memories",
+        item
+      );
+
+    }
+
+
+    for(
+      const item
+      of data.settings || []
+    ){
+
+      await put(
+        "settings",
+        item
+      );
+
+    }
+
+
+    alert(
+      "Diary restored successfully."
+    );
+
+
+    location.reload();
+
+
+  }catch(error){
+
+    alert(
+      "Restore failed: "+
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+async function start(){
+
+  try{
+
+    await openDB();
+
+
+    await migrateOldDiary();
+
+
+    const settings =
+      await getSettings();
+
+
+    applySettings(
+      settings
+    );
+
+
+    /*
+      Natural spiral rings.
+    */
+
+    const rings =
+      document.getElementById(
+        "rings"
+      );
+
+    rings.innerHTML="";
+
+
+    for(
+      let i=0;
+      i<24;
+      i++
+    ){
+
+      const ring =
+        document.createElement(
+          "div"
+        );
+
+      ring.className=
+        "ring";
+
+      rings.appendChild(
+        ring
+      );
+
+    }
+
+
+    await loadPage();
+
+
+    await carryForwardTodos();
+
+
+    resizeCanvas();
+
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+
+    document.body.innerHTML =
+
+      "<div style='"+
+      "font-family:Arial;"+
+      "padding:30px;"+
+      "color:#721c24;"+
+      "'>"+
+      "<h2>Diary could not be opened</h2>"+
+      "<p>Please reload the page.</p>"+
+      "<p>"+
+      escapeHTML(
+        error.message
+      )+
+      "</p>"+
+      "</div>";
+
+  }
+
+}
+
+
+start();
+
+</script>
+
+</body>
+</html>

@@ -2,3071 +2,5071 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#5b402b">
-<link rel="manifest" href="manifest.json">
-<title>My Personal Diary v8.5</title>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<meta name="theme-color" content="#5b3a29">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<title>My Personal Diary v9</title>
+
+<link rel="manifest" href="./manifest.json">
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html,body{
- margin:0;
- padding:0;
- background:#d8d0c4;
- color:#33281f;
- font-family:Georgia,"Times New Roman",serif;
+  margin:0;
+  padding:0;
+  min-height:100%;
+  background:#d9d1c5;
+  color:#342a24;
+  font-family:Georgia,"Times New Roman",serif;
 }
 
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-[hidden]{display:none!important}
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
 
-.app{min-height:100vh}
+button{
+  cursor:pointer;
+}
 
-/* TOP BAR */
+/* =========================
+   TOP BAR
+========================= */
+
 .topbar{
- position:sticky;
- top:0;
- z-index:1000;
- background:#5b402b;
- color:white;
- padding:8px 10px;
- box-shadow:0 3px 12px #0005;
-}
-
-.toprow{
- display:flex;
- align-items:center;
- gap:6px;
- max-width:1250px;
- margin:auto;
- overflow-x:auto;
- scrollbar-width:none;
-}
-
-.toprow::-webkit-scrollbar{display:none}
-
-.toprow button{
- border:1px solid #ffffff55;
- background:#76573c;
- color:white;
- border-radius:7px;
- padding:8px 10px;
- white-space:nowrap;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:#5b3a29;
+  color:#fff;
+  min-height:64px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  box-shadow:0 3px 10px rgba(0,0,0,.25);
+  overflow-x:auto;
 }
 
 .brand{
- font-weight:bold;
- font-size:18px;
- margin-right:auto;
- white-space:nowrap;
+  font-size:21px;
+  font-weight:bold;
+  white-space:nowrap;
+  margin-right:8px;
 }
 
-/* BOOK */
+.topbar button{
+  flex:0 0 auto;
+  border:1px solid #b99a7b;
+  background:#6c4933;
+  color:#fff;
+  border-radius:8px;
+  padding:9px 13px;
+  font-size:15px;
+}
+
+.topbar button:active{
+  transform:scale(.97);
+}
+
+/* =========================
+   WORKSPACE
+========================= */
+
 .workspace{
- max-width:1280px;
- margin:auto;
- padding:14px 10px 40px;
+  width:100%;
+  padding:12px;
 }
 
 .book{
- position:relative;
- display:flex;
- min-height:calc(100vh - 90px);
- filter:drop-shadow(0 10px 18px #0002);
+  width:100%;
+  max-width:1500px;
+  margin:auto;
+  position:relative;
+  display:flex;
+  background:#3e2418;
+  border-radius:12px;
+  box-shadow:
+    0 10px 35px rgba(0,0,0,.30),
+    inset 0 0 20px rgba(0,0,0,.35);
+  overflow:visible;
 }
 
-/* SPIRAL / SPINE */
+/* =========================
+   SPIRAL / SPINE
+========================= */
+
 .spine{
- width:54px;
- flex:0 0 54px;
- background:linear-gradient(
-   90deg,
-   #493221,
-   #76543a 35%,
-   #3f2b1e 70%,
-   #6e4c34
- );
- border-radius:18px 0 0 18px;
- position:relative;
- overflow:hidden;
+  width:68px;
+  flex:0 0 68px;
+  position:relative;
+  background:
+    linear-gradient(
+      90deg,
+      #2b170f 0%,
+      #6e4229 22%,
+      #9b6945 48%,
+      #55301e 75%,
+      #29150e 100%
+    );
+  border-radius:12px 0 0 12px;
+  overflow:hidden;
 }
 
-.spine:after{
- content:"";
- position:absolute;
- inset:0;
- background:
- repeating-radial-gradient(
-   ellipse at 35% 18px,
-   transparent 0 8px,
-   #1e130c 9px 11px,
-   transparent 12px 24px
- );
- opacity:.9;
+.spine:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 30px,
+      rgba(255,255,255,.18) 31px 33px,
+      transparent 34px 46px
+    );
 }
 
-/* PAGE */
+.ring{
+  position:absolute;
+  left:20px;
+  width:42px;
+  height:23px;
+  border:4px solid #1f1a17;
+  border-left-color:#92765d;
+  border-radius:50%;
+  box-shadow:0 2px 3px rgba(0,0,0,.45);
+}
+
+/* =========================
+   PAPER
+========================= */
+
 .page{
- position:relative;
- flex:1;
- min-width:0;
- min-height:calc(100vh - 90px);
- border-radius:0 12px 12px 0;
- padding:0 22px 50px;
- background-color:#fffdf4;
- background-image:
-   repeating-linear-gradient(
-     to bottom,
-     transparent 0,
-     transparent 31px,
-     #b8d2e4 32px,
-     #b8d2e4 33px
-   );
- overflow:hidden;
+  position:relative;
+  flex:1;
+  min-width:0;
+  min-height:calc(100vh - 88px);
+  background-color:#fffdf5;
+  background-image:
+    radial-gradient(
+      ellipse at center,
+      rgba(255,255,255,.9) 0%,
+      rgba(255,255,255,0) 70%
+    );
+  border-radius:0 12px 12px 0;
+  box-shadow:inset 0 0 30px rgba(90,60,30,.12);
+  overflow:visible;
+  padding-bottom:50px;
 }
 
-.page.classic{background-color:#fffdf4}
-.page.vintage{background-color:#f5e6c8}
-.page.blue{background-color:#eef7ff}
-.page.green{background-color:#eff8ee}
-.page.rose{background-color:#fff1f4}
-.page.night{
- background-color:#292726;
- color:#eee;
- background-image:
- repeating-linear-gradient(
-   to bottom,
-   transparent 0,
-   transparent 31px,
-   #555 32px,
-   #555 33px
- );
+/* designs */
+
+.page.design-classic{
+  background-color:#fffdf5;
 }
 
-/* STICKY HEADER */
-.pageHeader{
- position:sticky;
- top:0;
- z-index:50;
- margin:0 -22px 6px;
- padding:9px 14px 5px;
- background:#fffdf4ee;
- backdrop-filter:blur(7px);
- border-bottom:1px solid #8c765c55;
+.page.design-vintage{
+  background-color:#f7edda;
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(150,100,50,.08),transparent 30%),
+    radial-gradient(circle at 80% 70%,rgba(150,100,50,.06),transparent 30%);
 }
 
-.night .pageHeader{
- background:#292726ee;
+.page.design-blue{
+  background-color:#f4f9ff;
 }
 
-.headerLine{
- display:flex;
- align-items:center;
- gap:8px;
- min-height:30px;
+.page.design-green{
+  background-color:#f4faf3;
 }
 
-.dateTitle{
- font-weight:bold;
- font-size:18px;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
+.page.design-rose{
+  background-color:#fff7f7;
 }
 
-.moodMark{
- font-size:19px;
- min-width:20px;
+.page.design-night{
+  background-color:#25272a;
+  color:#eee;
 }
 
-.quote{
- font-size:13px;
- font-style:italic;
- white-space:nowrap;
- overflow:hidden;
- text-overflow:ellipsis;
- max-width:75%;
+.page.design-night .toolbar,
+.page.design-night .modal-card,
+.page.design-night .panel{
+  background:#303338;
+  color:#eee;
 }
 
-.headerActions{
- margin-left:auto;
- display:flex;
- gap:4px;
+.page.design-night .editor{
+  color:#f5f5f5;
 }
 
-.headerActions button{
- border:0;
- background:#ffffff88;
- border-radius:6px;
- padding:5px 7px;
+.page.design-night .page-header{
+  border-color:#666;
 }
 
-/* FORMATTING TOOLBAR */
+/* =========================
+   PAGE HEADER
+========================= */
+
+.page-header{
+  position:sticky;
+  top:64px;
+  z-index:500;
+  background:rgba(255,253,245,.96);
+  backdrop-filter:blur(5px);
+  border-bottom:1px solid #d5c8b4;
+  padding:10px 18px 7px;
+}
+
+.design-night .page-header{
+  background:rgba(37,39,42,.96);
+}
+
+.date-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  min-height:35px;
+}
+
+.date-title{
+  font-size:23px;
+  font-weight:bold;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.date-actions{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex:0 0 auto;
+}
+
+.small-btn{
+  border:1px solid #bca98e;
+  background:#fffaf0;
+  color:#3d3027;
+  border-radius:6px;
+  padding:5px 9px;
+}
+
+.mood-display{
+  font-size:20px;
+  min-width:25px;
+  text-align:center;
+}
+
+.quote-row{
+  height:26px;
+  line-height:26px;
+  font-style:italic;
+  font-size:14px;
+  color:#725f4d;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  padding-right:80px;
+}
+
+.design-night .quote-row{
+  color:#cfcfcf;
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
 .toolbar{
- position:sticky;
- top:62px;
- z-index:49;
- display:flex;
- align-items:center;
- gap:4px;
- flex-wrap:wrap;
- background:#f7f0e4ee;
- border:1px solid #9d836566;
- border-radius:8px;
- padding:5px;
- margin:0 0 9px;
-}
-
-.night .toolbar{
- background:#393635ee;
+  position:sticky;
+  top:121px;
+  z-index:490;
+  margin:7px 16px;
+  padding:6px;
+  background:rgba(248,242,231,.97);
+  border:1px solid #cbbca6;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  box-shadow:0 2px 5px rgba(0,0,0,.08);
 }
 
 .toolbar button{
- min-width:34px;
- border:1px solid #987d64;
- background:#fffaf1;
- border-radius:6px;
- padding:6px 8px;
+  min-width:42px;
+  height:38px;
+  padding:4px 9px;
+  border:1px solid #aa9a85;
+  background:#fffaf1;
+  border-radius:7px;
+  color:#332a24;
 }
 
-.night .toolbar button{
- background:#444;
- color:white;
- border-color:#777;
+.toolbar button.active{
+  background:#5b3a29;
+  color:white;
 }
 
-.toolbar .sep{
- width:1px;
- height:25px;
- background:#987d64;
- margin:0 2px;
+.toolbar-separator{
+  width:1px;
+  height:28px;
+  background:#c9baa4;
+  margin:0 4px;
 }
 
-.drawtools{
- display:flex;
- gap:4px;
- flex-wrap:wrap;
+.draw-tools{
+  display:none;
+  align-items:center;
+  gap:4px;
 }
 
-.drawtools button.active{
- outline:2px solid #b24d2b;
+.draw-tools.open{
+  display:flex;
 }
 
-/* EDITOR */
-.pagesBar{
- display:flex;
- gap:5px;
- overflow:auto;
- margin:8px 0;
+/* =========================
+   EDITOR
+========================= */
+
+.editor-wrap{
+  position:relative;
+  margin:0 17px 0 18px;
+  min-height:calc(100vh - 255px);
 }
 
-.pagesBar button{
- border:1px solid #92765c;
- background:#fff7e9;
- border-radius:5px;
- padding:5px 9px;
-}
-
-.pagesBar button.active{
- background:#6b4f36;
- color:white;
-}
-
-.editorWrap{
- position:relative;
- min-height:720px;
-}
+/*
+  The text baseline is aligned to the ruled lines by using
+  the same line-height as the repeating background.
+*/
 
 .editor{
- min-height:720px;
- outline:0;
- padding:1px 8px 40px 4px;
- font-family:"Segoe Print","Comic Sans MS",cursive;
- font-size:18px;
- line-height:32px;
- white-space:pre-wrap;
- word-break:break-word;
- caret-color:#492e20;
+  position:relative;
+  z-index:10;
+  min-height:calc(100vh - 255px);
+  padding:0 18px 80px 22px;
+
+  outline:none;
+  font-size:20px;
+  line-height:38px;
+
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 37px,
+      #b8cfdf 38px,
+      transparent 39px
+    );
+
+  word-break:break-word;
 }
 
 .editor:empty:before{
- content:"Write your diary here...";
- color:#8e7d6b;
- pointer-events:none;
+  content:"Start writing your diary...";
+  color:#b7aaa0;
+  font-style:italic;
 }
 
-.night .editor{color:#eee}
+/* =========================
+   DRAWING CANVAS
+========================= */
 
-.editor ul,
-.editor ol{
- margin-top:0;
- margin-bottom:0;
- padding-left:30px;
+#drawCanvas{
+  position:absolute;
+  z-index:30;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  touch-action:none;
 }
 
-.editor li{
- line-height:32px;
+#drawCanvas.active{
+  pointer-events:auto;
+  cursor:crosshair;
 }
 
-/* DRAWING */
-.drawCanvas{
- position:absolute;
- inset:0;
- width:100%;
- height:100%;
- z-index:20;
- pointer-events:none;
+/* =========================
+   NEW PAGE
+========================= */
+
+.new-page-tab{
+  position:absolute;
+  right:-2px;
+  top:220px;
+  z-index:60;
+  border:1px solid #b69a7c;
+  border-right:none;
+  border-radius:8px 0 0 8px;
+  background:#6b4932;
+  color:#fff;
+  padding:12px 9px;
+  writing-mode:vertical-rl;
+  box-shadow:0 3px 7px rgba(0,0,0,.25);
 }
 
-.drawing .drawCanvas{
- pointer-events:auto;
+.page-number{
+  text-align:center;
+  font-size:13px;
+  color:#806f60;
+  margin:10px;
 }
 
-.newPageTab{
- position:absolute;
- right:8px;
- bottom:12px;
- z-index:40;
- border:1px solid #8b6b4e;
- background:#ead5b9;
- border-radius:7px;
- padding:8px 12px;
-}
+/* =========================
+   PANELS / MODALS
+========================= */
 
-/* MODALS */
 .modal{
- position:fixed;
- inset:0;
- z-index:2000;
- background:#0008;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:14px;
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+  background:rgba(0,0,0,.55);
 }
 
-.modalBox{
- background:#fffaf0;
- color:#34271e;
- width:min(720px,96vw);
- max-height:90vh;
- overflow:auto;
- border-radius:12px;
- padding:16px;
- box-shadow:0 15px 45px #0006;
+.modal.show{
+  display:flex;
 }
 
-.modalBox h2{margin-top:0}
-
-.grid2{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:9px;
+.modal-card{
+  width:min(700px,96vw);
+  max-height:90vh;
+  overflow:auto;
+  background:#fffaf0;
+  color:#332a24;
+  border-radius:12px;
+  box-shadow:0 15px 50px rgba(0,0,0,.4);
+  padding:18px;
 }
 
-.field{
- display:flex;
- flex-direction:column;
- gap:4px;
- margin:7px 0;
+.modal-title{
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:12px;
 }
 
-.field input,
-.field textarea,
-.field select{
- border:1px solid #b29b82;
- border-radius:6px;
- padding:8px;
- background:#fff;
+.modal-actions{
+  display:flex;
+  gap:8px;
+  justify-content:flex-end;
+  margin-top:15px;
+  flex-wrap:wrap;
 }
 
-.field textarea{min-height:80px}
-
-.modalActions{
- display:flex;
- justify-content:flex-end;
- gap:7px;
- margin-top:12px;
+.modal-actions button,
+.primary{
+  border:1px solid #9b8065;
+  background:#65442f;
+  color:#fff;
+  border-radius:7px;
+  padding:9px 14px;
 }
 
-.modalActions button{
- padding:8px 12px;
- border-radius:7px;
- border:1px solid #94765b;
- background:#f0e0ca;
+.secondary{
+  border:1px solid #aaa;
+  background:#eee;
+  color:#333;
+  border-radius:7px;
+  padding:9px 14px;
 }
 
-/* CALENDAR */
-.calendarHead{
- display:flex;
- justify-content:space-between;
- align-items:center;
+.form-row{
+  margin-bottom:11px;
 }
 
-.calGrid{
- display:grid;
- grid-template-columns:repeat(7,1fr);
- gap:4px;
- margin-top:8px;
+.form-row label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:4px;
 }
 
-.calCell{
- min-height:70px;
- border:1px solid #cdbba5;
- border-radius:6px;
- background:#fff;
- padding:5px;
- position:relative;
- text-align:left;
+.form-row input,
+.form-row textarea,
+.form-row select{
+  width:100%;
+  padding:9px;
+  border:1px solid #bba991;
+  border-radius:7px;
+  background:white;
 }
 
-.calCell.today{
- outline:2px solid #7c5436;
+.form-row textarea{
+  min-height:80px;
+  resize:vertical;
 }
 
-.calEvent{
- display:block;
- font-size:11px;
- background:#ead2b5;
- border-radius:3px;
- padding:2px;
- margin-top:2px;
- overflow:hidden;
- white-space:nowrap;
- text-overflow:ellipsis;
+/* =========================
+   CALENDAR
+========================= */
+
+.calendar-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
 }
 
-/* MEMORY */
-.memoryGrid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
- gap:10px;
+.calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:4px;
 }
 
-.memory{
- border:1px solid #c7b299;
- border-radius:8px;
- padding:6px;
- background:#fff;
+.cal-day-name{
+  text-align:center;
+  font-weight:bold;
+  font-size:13px;
+  padding:5px;
 }
 
-.memory img{
- width:100%;
- height:150px;
- object-fit:cover;
- border-radius:5px;
+.cal-cell{
+  min-height:70px;
+  border:1px solid #d4c5af;
+  border-radius:7px;
+  padding:5px;
+  background:#fffdf7;
+  position:relative;
 }
 
-/* TODO */
-.todoRow{
- display:flex;
- gap:8px;
- align-items:center;
- padding:7px;
- border-bottom:1px solid #ddcdb9;
+.cal-cell.empty{
+  background:transparent;
+  border:none;
 }
 
-.todoRow span{flex:1}
+.cal-number{
+  font-weight:bold;
+}
+
+.cal-cell.today{
+  outline:2px solid #765238;
+}
+
+.cal-cell.has-event{
+  background:#f4e7d6;
+}
+
+.event-dot{
+  width:7px;
+  height:7px;
+  background:#9b3e32;
+  border-radius:50%;
+  display:inline-block;
+  margin-left:4px;
+}
+
+.event-mini{
+  margin-top:5px;
+  font-size:11px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* =========================
+   EVENT / TODO LISTS
+========================= */
+
+.list-item{
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+  border-bottom:1px solid #ddd0bd;
+  padding:9px 2px;
+}
+
+.list-item-content{
+  flex:1;
+}
+
+.list-item small{
+  color:#806f60;
+}
+
+.list-item button{
+  border:1px solid #b9a58d;
+  background:#f6eee3;
+  border-radius:5px;
+  padding:4px 7px;
+}
 
 .done{
- text-decoration:line-through;
- opacity:.55;
+  text-decoration:line-through;
+  opacity:.55;
 }
 
-/* SETTINGS */
-.designs{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:8px;
+/* =========================
+   MEMORIES
+========================= */
+
+.memory-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:12px;
 }
 
-.design{
- border:2px solid transparent;
- border-radius:8px;
- padding:18px;
- text-align:center;
+.memory-card{
+  border:1px solid #cdbda7;
+  border-radius:8px;
+  overflow:hidden;
+  background:#fff;
 }
 
-.design.sel{
- border-color:#7b4d2d;
+.memory-card img{
+  display:block;
+  width:100%;
+  height:140px;
+  object-fit:cover;
 }
 
-.toast{
- position:fixed;
- bottom:20px;
- left:50%;
- transform:translateX(-50%);
- z-index:3000;
- background:#4d3524;
- color:white;
- padding:10px 16px;
- border-radius:20px;
- box-shadow:0 5px 20px #0005;
+.memory-info{
+  padding:7px;
+  font-size:12px;
 }
 
-/* MOBILE */
+/* =========================
+   SETTINGS
+========================= */
+
+.design-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.design-choice{
+  border:2px solid #c5b49c;
+  border-radius:8px;
+  padding:12px;
+  min-height:70px;
+  text-align:center;
+}
+
+.design-choice.selected{
+  border-color:#65442f;
+  box-shadow:0 0 0 2px #d8c2a7 inset;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+#toast{
+  position:fixed;
+  left:50%;
+  bottom:25px;
+  transform:translateX(-50%) translateY(80px);
+  z-index:5000;
+  background:#34251d;
+  color:white;
+  padding:10px 17px;
+  border-radius:20px;
+  opacity:0;
+  transition:.25s;
+  pointer-events:none;
+}
+
+#toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
 @media(max-width:700px){
 
- .workspace{
-  padding:5px 3px 25px;
- }
+  .topbar{
+    min-height:55px;
+    padding:6px;
+  }
 
- .spine{
-  width:30px;
-  flex-basis:30px;
- }
+  .brand{
+    font-size:17px;
+  }
 
- .page{
-  padding:0 10px 45px;
- }
+  .topbar button{
+    font-size:13px;
+    padding:8px 10px;
+  }
 
- .pageHeader{
-  margin:0 -10px 5px;
-  padding-left:8px;
-  padding-right:8px;
- }
+  .workspace{
+    padding:5px;
+  }
 
- .toolbar{
-  top:57px;
- }
+  .spine{
+    width:42px;
+    flex-basis:42px;
+  }
 
- .editor{
-  font-size:17px;
- }
+  .ring{
+    left:9px;
+    width:31px;
+    height:20px;
+  }
 
- .grid2{
-  grid-template-columns:1fr;
- }
+  .page-header{
+    top:55px;
+    padding:7px 10px 5px;
+  }
 
- .calCell{
-  min-height:58px;
-  font-size:12px;
- }
+  .date-title{
+    font-size:18px;
+  }
 
- .calEvent{
-  font-size:9px;
- }
+  .quote-row{
+    font-size:12px;
+  }
 
- .brand{
-  font-size:15px;
- }
+  .toolbar{
+    top:109px;
+    margin:5px 7px;
+    overflow-x:auto;
+  }
 
- .toprow button{
-  padding:7px 8px;
- }
+  .toolbar button{
+    flex:0 0 auto;
+    min-width:38px;
+  }
+
+  .editor-wrap{
+    margin:0 7px;
+  }
+
+  .editor{
+    font-size:18px;
+    line-height:34px;
+    padding-left:12px;
+    padding-right:10px;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 33px,
+        #b8cfdf 34px,
+        transparent 35px
+      );
+  }
+
+  .new-page-tab{
+    top:185px;
+    padding:10px 7px;
+  }
+
+  .design-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+[hidden]{
+  display:none !important;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- =========================
+     TOP NAVIGATION
+========================= -->
 
-<header class="topbar">
-<div class="toprow">
+<div class="topbar">
 
-<div class="brand">📖 My Diary</div>
+  <div class="brand">📖 My Diary</div>
 
-<button id="calendarBtn">📅 Calendar</button>
-<button id="eventsBtn">📌 Events</button>
-<button id="todoBtn">☑ To-Do</button>
-<button id="memoryBtn">🖼 Memories</button>
-<button id="settingsBtn">⚙ Settings</button>
-<button id="backupBtn">💾 Backup</button>
-<button id="restoreBtn">↩ Restore</button>
+  <button id="calendarBtn">📅 Calendar</button>
+  <button id="eventsBtn">📌 Events</button>
+  <button id="todoBtn">☑ To-Do</button>
+  <button id="memoriesBtn">🖼 Memories</button>
+  <button id="settingsBtn">⚙ Settings</button>
+  <button id="backupBtn">💾 Backup</button>
+  <button id="restoreBtn">↩ Restore</button>
+  <button id="printBtn">🖨 Print</button>
 
-<input id="restoreInput" type="file" accept=".json" hidden>
-
-<button id="printBtn">🖨 Print</button>
+  <input
+    type="file"
+    id="restoreInput"
+    accept=".json"
+    hidden
+  >
 
 </div>
-</header>
 
-<main class="workspace">
+<!-- =========================
+     BOOK
+========================= -->
+
+<div class="workspace">
 
 <div class="book">
 
-<div class="spine"></div>
+  <div class="spine" id="spine"></div>
 
-<section id="page" class="page classic">
+  <main class="page design-classic" id="page">
 
-<div class="pageHeader">
+    <!-- HEADER -->
 
-<div class="headerLine">
+    <div class="page-header">
 
-<div id="dateTitle" class="dateTitle"></div>
+      <div class="date-row">
 
-<span id="moodMark" class="moodMark"></span>
+        <div class="date-title" id="dateTitle">
+          Loading...
+        </div>
 
-<div class="headerActions">
+        <div class="date-actions">
 
-<button id="prevDay">‹</button>
-<button id="todayBtn">Today</button>
-<button id="nextDay">›</button>
+          <button
+            class="small-btn"
+            id="prevDayBtn"
+            title="Previous day">
+            ‹
+          </button>
+
+          <button
+            class="small-btn"
+            id="todayBtn">
+            Today
+          </button>
+
+          <button
+            class="small-btn"
+            id="nextDayBtn"
+            title="Next day">
+            ›
+          </button>
+
+          <span
+            class="mood-display"
+            id="moodDisplay"
+            title="Mood">
+          </span>
+
+          <button
+            class="small-btn"
+            id="moodBtn">
+            Mood
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="quote-row" id="quoteRow">
+        Loading quote...
+      </div>
+
+    </div>
+
+    <!-- FORMATTING TOOLBAR -->
+
+    <div class="toolbar" id="toolbar">
+
+      <button
+        type="button"
+        data-cmd="bold"
+        title="Bold">
+        <b>B</b>
+      </button>
+
+      <button
+        type="button"
+        data-cmd="italic"
+        title="Italic">
+        <i>I</i>
+      </button>
+
+      <button
+        type="button"
+        data-cmd="underline"
+        title="Underline">
+        <u>U</u>
+      </button>
+
+      <button
+        type="button"
+        data-cmd="insertUnorderedList">
+        • List
+      </button>
+
+      <button
+        type="button"
+        data-cmd="insertOrderedList">
+        1. List
+      </button>
+
+      <button
+        type="button"
+        data-cmd="justifyLeft">
+        ≡
+      </button>
+
+      <button
+        type="button"
+        data-cmd="justifyCenter">
+        ≡
+      </button>
+
+      <button
+        type="button"
+        id="clearFormatBtn">
+        Clear
+      </button>
+
+      <span class="toolbar-separator"></span>
+
+      <button
+        type="button"
+        id="drawBtn">
+        ✎ Draw
+      </button>
+
+      <div
+        class="draw-tools"
+        id="drawTools">
+
+        <button data-draw="pen">
+          Pen
+        </button>
+
+        <button data-draw="line">
+          Line
+        </button>
+
+        <button data-draw="circle">
+          Circle
+        </button>
+
+        <button data-draw="eraser">
+          Eraser
+        </button>
+
+        <button id="undoDrawBtn">
+          ↶
+        </button>
+
+        <button id="redoDrawBtn">
+          ↷
+        </button>
+
+        <button id="clearDrawBtn">
+          Clear Drawing
+        </button>
+
+        <button id="closeDrawBtn">
+          Done
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- EDITOR -->
+
+    <div class="editor-wrap" id="editorWrap">
+
+      <div
+        id="editor"
+        class="editor"
+        contenteditable="true"
+        spellcheck="true">
+      </div>
+
+      <canvas
+        id="drawCanvas">
+      </canvas>
+
+    </div>
+
+    <div
+      class="page-number"
+      id="pageNumber">
+      Page 1
+    </div>
+
+    <button
+      class="new-page-tab"
+      id="newPageBtn">
+      + New Page
+    </button>
+
+  </main>
 
 </div>
-
 </div>
 
-<div class="headerLine">
+<!-- =========================
+     CALENDAR MODAL
+========================= -->
 
-<div id="quote" class="quote"></div>
+<div class="modal" id="calendarModal">
 
-<button id="changeQuote">↻</button>
+  <div class="modal-card">
 
-</div>
+    <div class="modal-title">
+      📅 Diary Calendar
+    </div>
 
-</div>
+    <div class="calendar-head">
 
+      <button
+        class="secondary"
+        id="calPrevBtn">
+        ‹
+      </button>
 
-<!-- FIXED B/I/U/DRAW TOOLBAR -->
+      <strong id="calendarMonth">
+        Month
+      </strong>
 
-<div class="toolbar" id="toolbar">
+      <button
+        class="secondary"
+        id="calNextBtn">
+        ›
+      </button>
 
-<button data-cmd="bold"><b>B</b></button>
+    </div>
 
-<button data-cmd="italic"><i>I</i></button>
+    <div
+      class="calendar-grid"
+      id="calendarGrid">
+    </div>
 
-<button data-cmd="underline"><u>U</u></button>
+    <div
+      id="calendarEvents"
+      style="margin-top:15px;">
+    </div>
 
-<button data-cmd="insertUnorderedList">• List</button>
+    <div class="modal-actions">
 
-<button data-cmd="insertOrderedList">1. List</button>
+      <button
+        class="secondary"
+        data-close="calendarModal">
+        Close
+      </button>
 
-<button data-cmd="justifyLeft">≡</button>
-
-<button data-cmd="justifyCenter">≡</button>
-
-<button data-cmd="removeFormat">Clear</button>
-
-<span class="sep"></span>
-
-<button id="drawToggle">✏ Draw</button>
-
-<div id="drawtools" class="drawtools" hidden>
-
-<button data-draw="pen">Pen</button>
-<button data-draw="line">Line</button>
-<button data-draw="circle">Circle</button>
-<button data-draw="eraser">Eraser</button>
-<button data-draw="undo">↶</button>
-<button data-draw="redo">↷</button>
-<button data-draw="clear">Clear Ink</button>
-
-</div>
-
-</div>
-
-
-<div class="pagesBar" id="pagesBar"></div>
-
-
-<div class="editorWrap" id="editorWrap">
-
-<div
- id="editor"
- class="editor"
- contenteditable="true"
- spellcheck="true">
-</div>
-
-<canvas id="drawCanvas" class="drawCanvas"></canvas>
-
-</div>
-
-
-<button class="newPageTab" id="newPageBtn">
-＋ New Page
-</button>
-
-</section>
-
-</div>
-
-</main>
-
-</div>
-
-
-<div id="modal" class="modal" hidden>
-
-<div class="modalBox" id="modalBox"></div>
-
-</div>
-
-
-<div id="toast" class="toast" hidden></div>
-
-
-<script>
-
-const DB="myPersonalDiaryDB";
-const VER=6;
-
-let db;
-let currentDate=isoToday();
-let currentPage=1;
-let currentPageId="";
-let currentRec=null;
-
-let drawMode=false;
-let drawTool="pen";
-let drawing=false;
-
-let sx=0;
-let sy=0;
-let ox=0;
-let oy=0;
-
-let history=[];
-let future=[];
-
-const $=id=>document.getElementById(id);
-
-
-const quotes=[
- "Write it down. Remember it forever.",
- "Small moments become great memories.",
- "A day worth living is a day worth remembering.",
- "Your story deserves a page.",
- "Gratitude turns ordinary days into memories.",
- "Begin where you are."
-];
-
-
-function isoToday(){
-
- return new Date().toISOString().slice(0,10);
-
-}
-
-
-function esc(s){
-
- return String(s??"").replace(
-  /[&<>"']/g,
-  m=>({
-   "&":"&amp;",
-   "<":"&lt;",
-   ">":"&gt;",
-   '"':"&quot;",
-   "'":"&#39;"
-  }[m])
- );
-
-}
-
-
-function fmtDate(d){
-
- return new Date(d+"T12:00:00").toLocaleDateString(
-  undefined,
-  {
-   weekday:"short",
-   day:"2-digit",
-   month:"short",
-   year:"numeric"
-  }
- );
-
-}
-
-
-function addDays(d,n){
-
- let x=new Date(d+"T12:00:00");
-
- x.setDate(x.getDate()+n);
-
- return x.toISOString().slice(0,10);
-
-}
-
-
-function toast(t){
-
- const el=$("toast");
-
- el.textContent=t;
-
- el.hidden=false;
-
- clearTimeout(toast.timer);
-
- toast.timer=setTimeout(
-  ()=>el.hidden=true,
-  2200
- );
-
-}
-
-
-/* DATABASE */
-
-function openDB(){
-
- return new Promise((resolve,reject)=>{
-
-  const request=indexedDB.open(DB,VER);
-
-  request.onupgradeneeded=e=>{
-
-   const database=e.target.result;
-
-   const stores=[
-    ["pages","id"],
-    ["events","id"],
-    ["todos","id"],
-    ["attachments","id"],
-    ["settings","key"]
-   ];
-
-   stores.forEach(([name,key])=>{
-
-    if(!database.objectStoreNames.contains(name)){
-
-     database.createObjectStore(
-      name,
-      {
-       keyPath:key,
-       autoIncrement:name!=="settings"
-      }
-     );
-
-    }
-
-   });
-
-  };
-
-  request.onsuccess=()=>{
-
-   db=request.result;
-
-   resolve(db);
-
-  };
-
-  request.onerror=()=>reject(request.error);
-
- });
-
-}
-
-
-function req(store,mode="readonly"){
-
- return db
-  .transaction(store,mode)
-  .objectStore(store);
-
-}
-
-
-function put(store,value){
-
- return new Promise((resolve,reject)=>{
-
-  const r=req(store,"readwrite").put(value);
-
-  r.onsuccess=()=>resolve(r.result);
-
-  r.onerror=()=>reject(r.error);
-
- });
-
-}
-
-
-function get(store,key){
-
- return new Promise((resolve,reject)=>{
-
-  const r=req(store).get(key);
-
-  r.onsuccess=()=>resolve(r.result);
-
-  r.onerror=()=>reject(r.error);
-
- });
-
-}
-
-
-function all(store){
-
- return new Promise((resolve,reject)=>{
-
-  const r=req(store).getAll();
-
-  r.onsuccess=()=>resolve(r.result);
-
-  r.onerror=()=>reject(r.error);
-
- });
-
-}
-
-
-function del(store,key){
-
- return new Promise((resolve,reject)=>{
-
-  const r=req(store,"readwrite").delete(key);
-
-  r.onsuccess=()=>resolve();
-
-  r.onerror=()=>reject(r.error);
-
- });
-
-}
-
-
-/* OLD VERSION MIGRATION */
-
-async function migrateOld(){
-
- const old=localStorage.getItem("myPersonalDiaryEntries");
-
- if(!old)return;
-
- try{
-
-  const obj=JSON.parse(old);
-
-  for(const [date,value] of Object.entries(obj)){
-
-   const id=date+"-1";
-
-   if(!await get("pages",id)){
-
-    await put(
-     "pages",
-     {
-      id:id,
-      date:date,
-      page:1,
-      content:
-       typeof value==="string"
-        ?value
-        :(value.content||""),
-      drawing:null,
-      mood:value.mood||""
-     }
-    );
-
-   }
-
-  }
-
- }catch(e){
-
-  console.log("Old diary migration:",e);
-
- }
-
-}
-
-
-/* SETTINGS */
-
-async function loadSettings(){
-
- const settings=
-  await get("settings","prefs")||{};
-
- applyDesign(settings.design||"classic");
-
- if(settings.font){
-
-  $("editor").style.fontSize=
-   settings.font+"px";
-
- }
-
- if(settings.line){
-
-  $("editor").style.lineHeight=
-   settings.line+"px";
-
- }
-
-}
-
-
-async function saveSettings(values){
-
- await put(
-  "settings",
-  Object.assign(
-   {key:"prefs"},
-   values
-  )
- );
-
-}
-
-
-function applyDesign(design){
-
- $("page").className=
-  "page "+design;
-
-}
-
-
-/* PAGE */
-
-function pageId(){
-
- return currentDate+"-"+currentPage;
-
-}
-
-
-async function loadPage(){
-
- currentPageId=pageId();
-
- let record=
-  await get(
-   "pages",
-   currentPageId
-  );
-
- if(!record){
-
-  record={
-   id:currentPageId,
-   date:currentDate,
-   page:currentPage,
-   content:"",
-   drawing:null,
-   mood:""
-  };
-
- }
-
- currentRec=record;
-
- $("editor").innerHTML=
-  record.content||"";
-
- $("moodMark").textContent=
-  record.mood||"";
-
- $("dateTitle").textContent=
-  fmtDate(currentDate);
-
- const index=
-  Math.abs(
-   [...currentDate].reduce(
-    (a,c)=>a+c.charCodeAt(0),
-    0
-   )
-  )%quotes.length;
-
- $("quote").textContent=
-  record.quote||quotes[index];
-
- await put("pages",record);
-
- history=[];
- future=[];
-
- loadDrawing(record.drawing);
-
- await renderPages();
-
-}
-
-
-let saveTimer;
-
-function scheduleSave(){
-
- clearTimeout(saveTimer);
-
- saveTimer=
-  setTimeout(
-   savePage,
-   500
-  );
-
-}
-
-
-async function savePage(){
-
- if(!currentRec)return;
-
- currentRec.content=
-  $("editor").innerHTML;
-
- currentRec.date=
-  currentDate;
-
- currentRec.page=
-  currentPage;
-
- currentRec.mood=
-  $("moodMark").textContent;
-
- currentRec.quote=
-  $("quote").textContent;
-
- currentRec.drawing=
-  $("drawCanvas").toDataURL("image/png");
-
- await put(
-  "pages",
-  currentRec
- );
-
-}
-
-
-async function renderPages(){
-
- const pages=
-  (await all("pages"))
-  .filter(x=>x.date===currentDate)
-  .sort((a,b)=>a.page-b.page);
-
- if(!pages.some(x=>x.page===currentPage)){
-
-  currentPage=1;
-
- }
-
- $("pagesBar").innerHTML=
-  pages.map(
-   x=>
-   `<button class="${
-    x.page===currentPage?"active":""
-   }"
-   data-page="${x.page}">
-   Page ${x.page}
-   </button>`
-  ).join("");
-
- $("pagesBar")
-  .querySelectorAll("button")
-  .forEach(button=>{
-
-   button.onclick=async()=>{
-
-    await savePage();
-
-    currentPage=
-     Number(button.dataset.page);
-
-    await loadPage();
-
-   };
-
-  });
-
-}
-
-
-/* WRITING */
-
-$("editor").addEventListener(
- "input",
- scheduleSave
-);
-
-$("editor").addEventListener(
- "keydown",
- e=>{
-
-  if(e.key==="Tab"){
-
-   e.preventDefault();
-
-   document.execCommand(
-    "insertText",
-    false,
-    "    "
-   );
-
-  }
-
- }
-);
-
-
-document
- .querySelectorAll("[data-cmd]")
- .forEach(button=>{
-
-  button.onclick=()=>{
-
-   $("editor").focus();
-
-   document.execCommand(
-    button.dataset.cmd,
-    false,
-    null
-   );
-
-   scheduleSave();
-
-  };
-
- });
-
-
-/* DATE */
-
-$("prevDay").onclick=async()=>{
-
- await savePage();
-
- currentDate=
-  addDays(currentDate,-1);
-
- currentPage=1;
-
- await loadPage();
-
-};
-
-
-$("nextDay").onclick=async()=>{
-
- await savePage();
-
- currentDate=
-  addDays(currentDate,1);
-
- currentPage=1;
-
- await loadPage();
-
-};
-
-
-$("todayBtn").onclick=async()=>{
-
- await savePage();
-
- currentDate=
-  isoToday();
-
- currentPage=1;
-
- await loadPage();
-
-};
-
-
-$("newPageBtn").onclick=async()=>{
-
- await savePage();
-
- const pages=
-  (await all("pages"))
-  .filter(x=>x.date===currentDate);
-
- currentPage=
-  Math.max(
-   0,
-   ...pages.map(x=>x.page||1)
-  )+1;
-
- await loadPage();
-
-};
-
-
-$("changeQuote").onclick=()=>{
-
- const current=
-  quotes.indexOf(
-   $("quote").textContent
-  );
-
- $("quote").textContent=
-  quotes[
-   (current+1)%quotes.length
-  ];
-
- scheduleSave();
-
-};
-
-
-/* DRAWING */
-
-let inkSnapshot=null;
-
-
-function setupCanvas(){
-
- const canvas=$("drawCanvas");
-
- const wrapper=$("editorWrap");
-
-
- function resize(){
-
-  const old=
-   canvas.width
-    ?canvas.toDataURL()
-    :null;
-
-  const width=
-   wrapper.clientWidth;
-
-  const height=
-   wrapper.clientHeight;
-
-  canvas.width=
-   width*devicePixelRatio;
-
-  canvas.height=
-   height*devicePixelRatio;
-
-  canvas.style.width="100%";
-
-  canvas.style.height="100%";
-
-  const ctx=
-   canvas.getContext("2d");
-
-  ctx.setTransform(
-   devicePixelRatio,
-   0,
-   0,
-   devicePixelRatio,
-   0,
-   0
-  );
-
-  if(old){
-
-   const image=new Image();
-
-   image.onload=()=>{
-
-    ctx.drawImage(
-     image,
-     0,
-     0,
-     width,
-     height
-    );
-
-   };
-
-   image.src=old;
-
-  }
-
- }
-
- window.addEventListener(
-  "resize",
-  resize
- );
-
- resize();
-
-
- canvas.onpointerdown=e=>{
-
-  if(!drawMode)return;
-
-  drawing=true;
-
-  canvas.setPointerCapture(
-   e.pointerId
-  );
-
-  const rect=
-   canvas.getBoundingClientRect();
-
-  sx=
-   e.clientX-rect.left;
-
-  sy=
-   e.clientY-rect.top;
-
-  ox=sx;
-  oy=sy;
-
-  saveInk();
-
- };
-
-
- canvas.onpointermove=e=>{
-
-  if(!drawing||!drawMode)return;
-
-  const rect=
-   canvas.getBoundingClientRect();
-
-  const x=
-   e.clientX-rect.left;
-
-  const y=
-   e.clientY-rect.top;
-
-  const ctx=
-   canvas.getContext("2d");
-
-  ctx.lineWidth=
-   drawTool==="eraser"
-    ?34
-    :2.6;
-
-  ctx.lineCap="round";
-
-  ctx.lineJoin="round";
-
-  if(drawTool==="eraser"){
-
-   ctx.globalCompositeOperation=
-    "destination-out";
-
-   ctx.beginPath();
-
-   ctx.moveTo(ox,oy);
-
-   ctx.lineTo(x,y);
-
-   ctx.stroke();
-
-   ctx.globalCompositeOperation=
-    "source-over";
-
-  }
-
-  else if(drawTool==="pen"){
-
-   ctx.beginPath();
-
-   ctx.moveTo(ox,oy);
-
-   ctx.lineTo(x,y);
-
-   ctx.stroke();
-
-  }
-
-  else{
-
-   loadSnapshot();
-
-   ctx.beginPath();
-
-   if(drawTool==="line"){
-
-    ctx.moveTo(sx,sy);
-
-    ctx.lineTo(x,y);
-
-   }
-
-   else{
-
-    ctx.ellipse(
-     (sx+x)/2,
-     (sy+y)/2,
-     Math.abs(x-sx)/2,
-     Math.abs(y-sy)/2,
-     0,
-     0,
-     Math.PI*2
-    );
-
-   }
-
-   ctx.stroke();
-
-  }
-
-  ox=x;
-  oy=y;
-
- };
-
-
- canvas.onpointerup=e=>{
-
-  if(!drawing)return;
-
-  drawing=false;
-
-  if(
-   drawTool==="line"||
-   drawTool==="circle"
-  ){
-
-   const rect=
-    canvas.getBoundingClientRect();
-
-   const x=
-    e.clientX-rect.left;
-
-   const y=
-    e.clientY-rect.top;
-
-   const ctx=
-    canvas.getContext("2d");
-
-   loadSnapshot();
-
-   ctx.lineWidth=2.6;
-
-   ctx.lineCap="round";
-
-   ctx.beginPath();
-
-   if(drawTool==="line"){
-
-    ctx.moveTo(sx,sy);
-
-    ctx.lineTo(x,y);
-
-   }
-   else{
-
-    ctx.ellipse(
-     (sx+x)/2,
-     (sy+y)/2,
-     Math.abs(x-sx)/2,
-     Math.abs(y-sy)/2,
-     0,
-     0,
-     Math.PI*2
-    );
-
-   }
-
-   ctx.stroke();
-
-  }
-
-  saveInk();
-
-  scheduleSave();
-
- };
-
-}
-
-
-function saveInk(){
-
- inkSnapshot=
-  $("drawCanvas").toDataURL();
-
-}
-
-
-function loadSnapshot(){
-
- if(!inkSnapshot)return;
-
- const canvas=
-  $("drawCanvas");
-
- const ctx=
-  canvas.getContext("2d");
-
- const image=
-  new Image();
-
- image.onload=()=>{
-
-  ctx.drawImage(
-   image,
-   0,
-   0,
-   canvas.clientWidth,
-   canvas.clientHeight
-  );
-
- };
-
- image.src=inkSnapshot;
-
-}
-
-
-function loadDrawing(data){
-
- const canvas=
-  $("drawCanvas");
-
- const ctx=
-  canvas.getContext("2d");
-
- ctx.clearRect(
-  0,
-  0,
-  canvas.clientWidth,
-  canvas.clientHeight
- );
-
- inkSnapshot=null;
-
- if(data){
-
-  const image=
-   new Image();
-
-  image.onload=()=>{
-
-   ctx.drawImage(
-    image,
-    0,
-    0,
-    canvas.clientWidth,
-    canvas.clientHeight
-   );
-
-   saveInk();
-
-  };
-
-  image.src=data;
-
- }
-
-}
-
-
-/* DRAW BUTTON */
-
-$("drawToggle").onclick=()=>{
-
- drawMode=!drawMode;
-
- $("page")
-  .classList
-  .toggle(
-   "drawing",
-   drawMode
-  );
-
- $("drawtools").hidden=
-  !drawMode;
-
- $("drawToggle")
-  .classList
-  .toggle(
-   "active",
-   drawMode
-  );
-
-};
-
-
-/*
- Selecting Pen / Line / Circle / Eraser
- closes the small draw menu BUT
- drawing mode remains active.
-*/
-
-$("drawtools").addEventListener(
- "click",
- async e=>{
-
-  const button=
-   e.target.closest("button");
-
-  if(!button)return;
-
-  const tool=
-   button.dataset.draw;
-
-  if(tool==="undo"){
-
-   const previous=
-    history.pop();
-
-   if(previous){
-
-    future.push(
-     $("drawCanvas").toDataURL()
-    );
-
-    loadDrawing(previous);
-
-   }
-
-   return;
-
-  }
-
-
-  if(tool==="redo"){
-
-   const next=
-    future.pop();
-
-   if(next){
-
-    history.push(
-     $("drawCanvas").toDataURL()
-    );
-
-    loadDrawing(next);
-
-   }
-
-   return;
-
-  }
-
-
-  if(tool==="clear"){
-
-   history.push(
-    $("drawCanvas").toDataURL()
-   );
-
-   const canvas=
-    $("drawCanvas");
-
-   const ctx=
-    canvas.getContext("2d");
-
-   ctx.clearRect(
-    0,
-    0,
-    canvas.clientWidth,
-    canvas.clientHeight
-   );
-
-   saveInk();
-
-   scheduleSave();
-
-   $("drawtools").hidden=true;
-
-   return;
-
-  }
-
-
-  drawTool=tool;
-
-  $("drawtools").hidden=true;
-
-  toast(
-   tool.charAt(0).toUpperCase()+
-   tool.slice(1)+
-   " selected"
-  );
-
- });
-
-
-/* MODAL */
-
-function openModal(html){
-
- $("modalBox").innerHTML=
-  html;
-
- $("modal").hidden=false;
-
-}
-
-
-function closeModal(){
-
- $("modal").hidden=true;
-
-}
-
-
-$("modal").addEventListener(
- "click",
- e=>{
-
-  if(e.target===$("modal")){
-
-   closeModal();
-
-  }
-
- });
-
-
-/* EVENTS */
-
-async function showEvents(){
-
- const events=
-  (await all("events"))
-  .sort(
-   (a,b)=>
-    (a.date+a.time)
-    .localeCompare(
-     b.date+b.time
-    )
-  );
-
- openModal(`
-
- <h2>📌 Diary Events</h2>
-
- <button id="addEvent">
- ＋ Add Event
- </button>
-
- <div id="eventList">
-
- ${
- events.map(
-  event=>`
-
-  <div class="todoRow">
-
-   <span>
-
-   <b>
-   ${esc(event.date)}
-   ${esc(event.time||"")}
-   </b>
-
-   — ${esc(event.title)}
-
-   <br>
-
-   <small>
-   ${esc(event.notes||"")}
-   </small>
-
-   </span>
-
-   <button data-del="${event.id}">
-   Delete
-   </button>
+    </div>
 
   </div>
 
-  `
- ).join("")
- ||
- "<p>No events saved.</p>"
- }
+</div>
 
- </div>
+<!-- =========================
+     EVENTS MODAL
+========================= -->
 
- `);
+<div class="modal" id="eventsModal">
 
+  <div class="modal-card">
 
- $("addEvent").onclick=
-  ()=>eventForm();
+    <div class="modal-title">
+      📌 Diary Events
+    </div>
 
+    <div class="form-row">
 
- $("eventList")
-  .querySelectorAll("[data-del]")
-  .forEach(button=>{
+      <label>Event date</label>
 
-   button.onclick=async()=>{
+      <input
+        type="date"
+        id="eventDate">
 
-    await del(
-     "events",
-     Number(button.dataset.del)
-    );
+    </div>
 
-    showEvents();
+    <div class="form-row">
 
-   };
+      <label>Time</label>
 
-  });
+      <input
+        type="time"
+        id="eventTime">
 
-}
+    </div>
 
+    <div class="form-row">
 
-function eventForm(existing=null){
+      <label>Event title</label>
 
- const minimum=
-  isoToday();
+      <input
+        type="text"
+        id="eventTitle"
+        placeholder="Enter event">
 
- openModal(`
+    </div>
 
- <h2>
- ${existing?"Edit":"Add"} Diary Event
- </h2>
+    <div class="form-row">
 
- <div class="grid2">
+      <label>Notes</label>
 
- <div class="field">
+      <textarea
+        id="eventNotes"
+        placeholder="Optional notes">
+      </textarea>
 
- <label>Event</label>
+    </div>
 
- <input
-  id="evTitle"
-  value="${esc(existing?.title||"")}"
- >
+    <div
+      id="eventList">
+    </div>
 
- </div>
+    <div class="modal-actions">
 
-
- <div class="field">
-
- <label>Date</label>
-
- <input
-  id="evDate"
-  type="date"
-  min="${minimum}"
-  value="${existing?.date||minimum}"
- >
-
- </div>
-
- </div>
-
-
- <div class="grid2">
-
- <div class="field">
-
- <label>Time</label>
-
- <input
-  id="evTime"
-  type="time"
-  value="${existing?.time||""}"
- >
-
- </div>
-
-
- <div class="field">
-
- <label>Notes</label>
-
- <input
-  id="evNotes"
-  value="${esc(existing?.notes||"")}"
- >
-
- </div>
-
- </div>
-
-
- <div class="modalActions">
-
- <button id="cancelEv">
- Cancel
- </button>
-
- <button id="saveEv">
- Save Event
- </button>
-
- </div>
-
- `);
-
-
- $("cancelEv").onclick=
-  showEvents;
-
-
- $("saveEv").onclick=
-  async()=>{
-
-   const date=
-    $("evDate").value;
-
-   if(date<isoToday()){
-
-    toast(
-     "Past-date events cannot be changed"
-    );
-
-    return;
-
-   }
-
-
-   const title=
-    $("evTitle")
-    .value
-    .trim();
-
-   if(!title){
-
-    toast(
-     "Enter an event title"
-    );
-
-    return;
-
-   }
-
-
-   const record={
-
-    id:existing
-     ?existing.id
-     :undefined,
-
-    title:title,
-
-    date:date,
-
-    time:$("evTime").value,
-
-    notes:
-     $("evNotes")
-     .value
-     .trim()
-
-   };
-
-
-   await put(
-    "events",
-    record
-   );
-
-
-   toast(
-    "Event saved"
-   );
-
-
-   closeModal();
-
-   await showCalendar(date);
-
-  };
-
-}
-
-
-/* CALENDAR */
-
-async function showCalendar(){
-
- const selected=
-  new Date(
-   currentDate+"T12:00:00"
-  );
-
- const year=
-  selected.getFullYear();
-
- const month=
-  selected.getMonth();
-
- const events=
-  await all("events");
-
- const byDate={};
-
- events.forEach(event=>{
-
-  if(!byDate[event.date]){
-
-   byDate[event.date]=[];
-
-  }
-
-  byDate[event.date].push(event);
-
- });
-
-
- const first=
-  new Date(
-   year,
-   month,
-   1
-  );
-
- const start=
-  (first.getDay()+6)%7;
-
- const days=
-  new Date(
-   year,
-   month+1,
-   0
-  ).getDate();
-
-
- let cells="";
-
-
- for(let i=0;i<start;i++){
-
-  cells+="<div></div>";
-
- }
-
-
- for(
-  let day=1;
-  day<=days;
-  day++
- ){
-
-  const date=
-   `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
-  const dayEvents=
-   byDate[date]||[];
-
-
-  cells+=`
-
-  <button
-   class="calCell ${
-    date===isoToday()
-     ?"today"
-     :""
-   }"
-   data-caldate="${date}"
-  >
-
-  <b>${day}</b>
-
-  ${
-   dayEvents.map(
-    event=>`
-
-    <span class="calEvent">
-    📌 ${esc(event.title)}
-    </span>
-
-    `
-   ).join("")
-  }
-
-  </button>
-
-  `;
-
- }
-
-
- openModal(`
-
- <div class="calendarHead">
-
- <button id="prevM">‹</button>
-
- <h2>
- 📅 ${selected.toLocaleDateString(
-  undefined,
-  {
-   month:"long",
-   year:"numeric"
-  }
- )}
- </h2>
-
- <button id="nextM">›</button>
-
- </div>
-
-
- <div class="calGrid">
-
- ${[
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-  "Sun"
- ].map(
-  x=>`<b>${x}</b>`
- ).join("")}
-
- ${cells}
-
- </div>
-
-
- <div id="calDetails"></div>
-
-
- <div class="modalActions">
-
- <button id="closeCal">
- Close
- </button>
-
- </div>
-
- `);
-
-
- $("closeCal").onclick=
-  closeModal;
-
-
- $("prevM").onclick=()=>{
-
-  const x=
-   new Date(
-    year,
-    month-1,
-    1
-   );
-
-  currentDate=
-   x.toISOString()
-    .slice(0,7)+"-01";
-
-  showCalendar();
-
- };
-
-
- $("nextM").onclick=()=>{
-
-  const x=
-   new Date(
-    year,
-    month+1,
-    1
-   );
-
-  currentDate=
-   x.toISOString()
-    .slice(0,7)+"-01";
-
-  showCalendar();
-
- };
-
-
- $("modalBox")
-  .querySelectorAll(
-   "[data-caldate]"
-  )
-  .forEach(button=>{
-
-   button.onclick=()=>{
-
-    calendarDateDetails(
-     button.dataset.caldate
-    );
-
-   };
-
-  });
-
-}
-
-
-async function calendarDateDetails(date){
-
- const events=
-  (await all("events"))
-  .filter(
-   event=>event.date===date
-  );
-
-
- $("calDetails").innerHTML=`
-
- <h3>
- ${fmtDate(date)}
- </h3>
-
- ${
-  events.map(
-   event=>`
-
-   <div class="todoRow">
-
-   <span>
-
-   📌
-
-   <b>
-   ${esc(event.time||"")}
-   </b>
-
-   ${esc(event.title)}
-
-   <br>
-
-   ${esc(event.notes||"")}
-
-   </span>
-
-   </div>
-
-   `
-  ).join("")
-  ||
-  "<p>No diary events.</p>"
- }
-
- `;
-
-}
-
-
-/* TODO */
-
-async function showTodos(){
-
- const past=
-  currentDate<isoToday();
-
- const todos=
-  (await all("todos"))
-  .filter(
-   x=>x.date===currentDate
-  );
-
-
- openModal(`
-
- <h2>
- ☑ To-Do — ${fmtDate(currentDate)}
- </h2>
-
- ${
-  past
-   ?"<p>This date is read-only.</p>"
-   :""
- }
-
-
- <div id="todoList">
-
- ${
-  todos.map(
-   todo=>`
-
-   <div class="todoRow">
-
-   <input
-    type="checkbox"
-    data-todo="${todo.id}"
-    ${todo.done?"checked":""}
-    ${past?"disabled":""}
-   >
-
-   <span class="${
-    todo.done
-     ?"done"
-     :""
-   }">
-
-   ${esc(todo.text)}
-
-   </span>
-
-   ${
-    past
-     ?""
-     :`
-      <button data-tdel="${todo.id}">
-      ×
+      <button
+        class="secondary"
+        data-close="eventsModal">
+        Close
       </button>
-     `
-   }
 
-   </div>
+      <button
+        class="primary"
+        id="saveEventBtn">
+        Save Event
+      </button>
 
-   `
-  ).join("")
-  ||
-  "<p>No tasks.</p>"
- }
+    </div>
 
- </div>
+  </div>
 
+</div>
 
- ${
-  past
-   ?""
-   :`
+<!-- =========================
+     TODO MODAL
+========================= -->
 
-   <div class="field">
+<div class="modal" id="todoModal">
 
-   <input
-    id="newTodo"
-    placeholder="New task"
-   >
+  <div class="modal-card">
 
-   <button id="addTodo">
-   Add task
-   </button>
+    <div class="modal-title">
+      ☑ To-Do
+    </div>
 
-   </div>
+    <div
+      id="todoDateLabel"
+      style="margin-bottom:10px;">
+    </div>
 
-   `
- }
+    <div class="form-row">
 
+      <label>New task</label>
 
- <div class="modalActions">
+      <input
+        type="text"
+        id="todoInput"
+        placeholder="Enter task">
 
- <button id="closeTodo">
- Close
- </button>
+    </div>
 
- </div>
+    <button
+      class="primary"
+      id="addTodoBtn">
+      Add Task
+    </button>
 
- `);
+    <div
+      id="todoList"
+      style="margin-top:15px;">
+    </div>
 
+    <div class="modal-actions">
 
- $("closeTodo").onclick=
-  closeModal;
+      <button
+        class="secondary"
+        data-close="todoModal">
+        Close
+      </button>
 
+    </div>
 
- if(!past){
+  </div>
 
-  $("addTodo").onclick=
-   async()=>{
+</div>
 
-    const text=
-     $("newTodo")
-     .value
-     .trim();
+<!-- =========================
+     MEMORIES MODAL
+========================= -->
 
-    if(!text)return;
+<div class="modal" id="memoriesModal">
 
-    await put(
-     "todos",
-     {
-      text:text,
-      date:currentDate,
-      done:false
-     }
+  <div class="modal-card">
+
+    <div class="modal-title">
+      🖼 Memories
+    </div>
+
+    <div class="form-row">
+
+      <label>Add photograph / memory</label>
+
+      <input
+        type="file"
+        id="memoryInput"
+        accept="image/*"
+        capture="environment">
+
+    </div>
+
+    <div
+      class="memory-grid"
+      id="memoryGrid">
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="secondary"
+        data-close="memoriesModal">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     SETTINGS MODAL
+========================= -->
+
+<div class="modal" id="settingsModal">
+
+  <div class="modal-card">
+
+    <div class="modal-title">
+      ⚙ Diary Settings
+    </div>
+
+    <div class="form-row">
+
+      <label>Page design</label>
+
+      <div class="design-grid">
+
+        <button
+          class="design-choice"
+          data-design="classic">
+          📖<br>Classic
+        </button>
+
+        <button
+          class="design-choice"
+          data-design="vintage">
+          🕰<br>Vintage
+        </button>
+
+        <button
+          class="design-choice"
+          data-design="blue">
+          💙<br>Blue
+        </button>
+
+        <button
+          class="design-choice"
+          data-design="green">
+          🌿<br>Green
+        </button>
+
+        <button
+          class="design-choice"
+          data-design="rose">
+          🌸<br>Rose
+        </button>
+
+        <button
+          class="design-choice"
+          data-design="night">
+          🌙<br>Night
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="form-row">
+
+      <label>
+        Font size:
+        <span id="fontSizeValue">
+          20
+        </span> px
+      </label>
+
+      <input
+        type="range"
+        id="fontSizeRange"
+        min="16"
+        max="28"
+        value="20">
+
+    </div>
+
+    <div class="form-row">
+
+      <label>
+        Line spacing:
+        <span id="lineSpacingValue">
+          38
+        </span> px
+      </label>
+
+      <input
+        type="range"
+        id="lineSpacingRange"
+        min="30"
+        max="48"
+        value="38">
+
+    </div>
+
+    <div class="form-row">
+
+      <label>Page width</label>
+
+      <input
+        type="range"
+        id="pageWidthRange"
+        min="900"
+        max="1800"
+        value="1500">
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="secondary"
+        data-close="settingsModal">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     MOOD MODAL
+========================= -->
+
+<div class="modal" id="moodModal">
+
+  <div class="modal-card">
+
+    <div class="modal-title">
+      Today's Mood
+    </div>
+
+    <div
+      style="
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:10px;
+      text-align:center;">
+
+      <button class="mood-choice" data-mood="😀">😀</button>
+      <button class="mood-choice" data-mood="🙂">🙂</button>
+      <button class="mood-choice" data-mood="😊">😊</button>
+      <button class="mood-choice" data-mood="😍">😍</button>
+      <button class="mood-choice" data-mood="😌">😌</button>
+      <button class="mood-choice" data-mood="😐">😐</button>
+      <button class="mood-choice" data-mood="😔">😔</button>
+      <button class="mood-choice" data-mood="😢">😢</button>
+      <button class="mood-choice" data-mood="😡">😡</button>
+      <button class="mood-choice" data-mood="🙏">🙏</button>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="secondary"
+        data-close="moodModal">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     QUOTE MODAL
+========================= -->
+
+<div class="modal" id="quoteModal">
+
+  <div class="modal-card">
+
+    <div class="modal-title">
+      ✨ Quote of the Day
+    </div>
+
+    <div
+      id="quoteText"
+      style="
+      font-size:20px;
+      line-height:1.6;
+      text-align:center;
+      padding:20px;">
+    </div>
+
+    <div class="modal-actions">
+
+      <button
+        class="secondary"
+        data-close="quoteModal">
+        Close
+      </button>
+
+      <button
+        class="primary"
+        id="newQuoteBtn">
+        Another Quote
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- =========================
+     TOAST
+========================= -->
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   MY PERSONAL DIARY v9
+   Stable rebuild
+========================================================= */
+
+const DB_NAME = "myPersonalDiaryDB";
+const DB_VERSION = 9;
+
+let db = null;
+
+let currentDate = todayISO();
+let currentPage = 1;
+
+let currentPageRecord = null;
+let saveTimer = null;
+
+let calendarCursor = new Date();
+
+let editingEventId = null;
+
+let selectedMood = "";
+
+let settings = {
+  design: "classic",
+  fontSize: 20,
+  lineSpacing: 38,
+  pageWidth: 1500
+};
+
+/* =========================================================
+   QUOTES
+========================================================= */
+
+const QUOTES = [
+  "Small steps every day create remarkable journeys.",
+  "A peaceful mind sees possibilities everywhere.",
+  "Today is a new page. Write something meaningful.",
+  "The best memories are made one ordinary day at a time.",
+  "Gratitude turns what we have into enough.",
+  "Do not wait for the perfect moment. Make the moment meaningful.",
+  "Consistency is the quiet power behind great results.",
+  "Every day carries something worth remembering.",
+  "A good life is made of good days.",
+  "Keep going. Your story is still being written.",
+  "Peace begins with accepting the present moment.",
+  "What you write today becomes a memory tomorrow.",
+  "Success is often the result of simple things done consistently.",
+  "Make today count.",
+  "There is always something to be grateful for."
+];
+
+/* =========================================================
+   BASIC HELPERS
+========================================================= */
+
+function todayISO(){
+  const d = new Date();
+
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+
+  return `${y}-${m}-${day}`;
+}
+
+function dateObj(iso){
+  const [y,m,d] = iso.split("-").map(Number);
+  return new Date(y,m-1,d);
+}
+
+function isoFromDate(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+
+  return `${y}-${m}-${day}`;
+}
+
+function addDays(iso, amount){
+  const d = dateObj(iso);
+  d.setDate(d.getDate()+amount);
+  return isoFromDate(d);
+}
+
+function formatDate(iso){
+  const d = dateObj(iso);
+
+  return d.toLocaleDateString(
+    undefined,
+    {
+      weekday:"short",
+      day:"numeric",
+      month:"short",
+      year:"numeric"
+    }
+  );
+}
+
+function isPastDate(iso){
+  return iso < todayISO();
+}
+
+function escapeHTML(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer = null;
+
+function toast(message){
+
+  const el = document.getElementById("toast");
+
+  el.textContent = message;
+  el.classList.add("show");
+
+  clearTimeout(toastTimer);
+
+  toastTimer = setTimeout(()=>{
+    el.classList.remove("show");
+  },2200);
+}
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+function openModal(id){
+  document.getElementById(id).classList.add("show");
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove("show");
+}
+
+document.querySelectorAll("[data-close]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    closeModal(btn.dataset.close);
+  });
+});
+
+document.querySelectorAll(".modal").forEach(modal=>{
+  modal.addEventListener("click",e=>{
+    if(e.target === modal){
+      modal.classList.remove("show");
+    }
+  });
+});
+
+/* =========================================================
+   INDEXED DB
+========================================================= */
+
+function openDB(){
+
+  return new Promise((resolve,reject)=>{
+
+    const request = indexedDB.open(
+      DB_NAME,
+      DB_VERSION
     );
 
-    showTodos();
-
-   };
-
-
-  $("todoList")
-   .querySelectorAll(
-    "[data-todo]"
-   )
-   .forEach(check=>{
-
-    check.onchange=
-     async()=>{
-
-      const todo=
-       await get(
-        "todos",
-        Number(check.dataset.todo)
-       );
-
-      todo.done=
-       check.checked;
-
-      await put(
-       "todos",
-       todo
-      );
-
-      showTodos();
-
-     };
-
-   });
-
-
-  $("todoList")
-   .querySelectorAll(
-    "[data-tdel]"
-   )
-   .forEach(button=>{
-
-    button.onclick=
-     async()=>{
-
-      await del(
-       "todos",
-       Number(button.dataset.tdel)
-      );
-
-      showTodos();
-
-     };
-
-   });
-
- }
-
-}
-
-
-/* TODO CARRY FORWARD */
-
-async function carryTodos(){
-
- const tomorrow=
-  addDays(
-   isoToday(),
-   1
-  );
-
- const todayTodos=
-  await all("todos");
-
- const unfinished=
-  todayTodos.filter(
-   x=>
-    x.date===isoToday() &&
-    !x.done
-  );
-
-
- for(const todo of unfinished){
-
-  const exists=
-   todayTodos.some(
-    x=>
-     x.date===tomorrow &&
-     x.text===todo.text &&
-     !x.done
-   );
-
-  if(!exists){
-
-   await put(
-    "todos",
-    {
-     text:todo.text,
-     date:tomorrow,
-     done:false,
-     carriedFrom:todo.id
-    }
-   );
-
-  }
-
- }
-
-}
-
-
-/* MEMORIES */
-
-async function showMemories(){
-
- const attachments=
-  await all("attachments");
-
- const memories=
-  attachments.filter(
-   x=>x.kind==="memory"
-  );
-
-
- openModal(`
-
- <h2>
- 🖼 Memories
- </h2>
-
- <input
-  id="memoryInput"
-  type="file"
-  accept="image/*"
-  capture="environment"
- >
-
-
- <div
-  class="memoryGrid"
-  id="memoryGrid"
- >
-
- ${
-  memories.map(
-   memory=>`
-
-   <div class="memory">
-
-   <img
-    src="${memory.data}"
-    alt="Memory"
-   >
-
-   <div>
-   ${esc(memory.name||"Memory")}
-   </div>
-
-   <button
-    data-md="${memory.id}"
-   >
-   Delete
-   </button>
-
-   </div>
-
-   `
-  ).join("")
-  ||
-  "<p>No memories yet.</p>"
- }
-
- </div>
-
- `);
-
-
- $("memoryInput").onchange=
-  async e=>{
-
-   const file=
-    e.target.files[0];
-
-   if(!file)return;
-
-
-   const data=
-    await new Promise(resolve=>{
-
-     const reader=
-      new FileReader();
-
-     reader.onload=
-      ()=>resolve(
-       reader.result
-      );
-
-     reader.readAsDataURL(
-      file
-     );
-
-    });
-
-
-   await put(
-    "attachments",
-    {
-     kind:"memory",
-     name:file.name,
-     data:data,
-     date:currentDate
-    }
-   );
-
-
-   showMemories();
-
-  };
-
-
- $("memoryGrid")
-  .querySelectorAll(
-   "[data-md]"
-  )
-  .forEach(button=>{
-
-   button.onclick=
-    async()=>{
-
-     await del(
-      "attachments",
-      Number(button.dataset.md)
-     );
-
-     showMemories();
-
+    request.onupgradeneeded = event => {
+
+      const database = event.target.result;
+
+      if(!database.objectStoreNames.contains("pages")){
+        const store =
+          database.createObjectStore(
+            "pages",
+            {keyPath:"id"}
+          );
+
+        store.createIndex(
+          "date",
+          "date",
+          {unique:false}
+        );
+      }
+
+      if(!database.objectStoreNames.contains("events")){
+        const store =
+          database.createObjectStore(
+            "events",
+            {
+              keyPath:"id",
+              autoIncrement:true
+            }
+          );
+
+        store.createIndex(
+          "date",
+          "date",
+          {unique:false}
+        );
+      }
+
+      if(!database.objectStoreNames.contains("todos")){
+        const store =
+          database.createObjectStore(
+            "todos",
+            {
+              keyPath:"id",
+              autoIncrement:true
+            }
+          );
+
+        store.createIndex(
+          "date",
+          "date",
+          {unique:false}
+        );
+      }
+
+      if(!database.objectStoreNames.contains("attachments")){
+        database.createObjectStore(
+          "attachments",
+          {
+            keyPath:"id",
+            autoIncrement:true
+          }
+        );
+      }
+
+      if(!database.objectStoreNames.contains("memories")){
+        database.createObjectStore(
+          "memories",
+          {
+            keyPath:"id",
+            autoIncrement:true
+          }
+        );
+      }
+
+      if(!database.objectStoreNames.contains("settings")){
+        database.createObjectStore(
+          "settings",
+          {keyPath:"key"}
+        );
+      }
+    };
+
+    request.onsuccess = ()=>{
+      db = request.result;
+
+      db.onversionchange = ()=>{
+        db.close();
+      };
+
+      resolve(db);
+    };
+
+    request.onerror = ()=>{
+      reject(request.error);
     };
 
   });
-
 }
 
+function tx(storeName, mode="readonly"){
 
-/* SETTINGS */
+  return db.transaction(
+    storeName,
+    mode
+  ).objectStore(storeName);
+}
 
-async function showSettings(){
+function getOne(storeName,key){
 
- const settings=
-  await get(
-   "settings",
-   "prefs"
-  )||{};
+  return new Promise((resolve,reject)=>{
 
- const designs=[
-  "classic",
-  "vintage",
-  "blue",
-  "green",
-  "rose",
-  "night"
- ];
+    const req = tx(storeName).get(key);
 
+    req.onsuccess = ()=>{
+      resolve(req.result);
+    };
 
- openModal(`
-
- <h2>
- ⚙ Settings
- </h2>
-
- <h3>
- Page design
- </h3>
-
- <div class="designs">
-
- ${
-  designs.map(
-   design=>`
-
-   <button
-    class="design ${
-     design===settings.design
-      ?"sel"
-      :""
-    }"
-    data-design="${design}"
-   >
-
-   ${design}
-
-   </button>
-
-   `
-  ).join("")
- }
-
- </div>
-
-
- <div class="field">
-
- <label>
-
- Font size:
-
- <span id="fontVal">
- ${settings.font||18}
- </span>
-
- px
-
- </label>
-
- <input
-  id="fontRange"
-  type="range"
-  min="15"
-  max="25"
-  value="${settings.font||18}"
- >
-
- </div>
-
-
- <div class="field">
-
- <label>
-
- Line spacing:
-
- <span id="lineVal">
- ${settings.line||32}
- </span>
-
- px
-
- </label>
-
- <input
-  id="lineRange"
-  type="range"
-  min="28"
-  max="40"
-  value="${settings.line||32}"
- >
-
- </div>
-
-
- <div class="modalActions">
-
- <button id="closeSet">
- Close
- </button>
-
- </div>
-
- `);
-
-
- $("closeSet").onclick=
-  closeModal;
-
-
- $("modalBox")
-  .querySelectorAll(
-   "[data-design]"
-  )
-  .forEach(button=>{
-
-   button.onclick=
-    async()=>{
-
-     applyDesign(
-      button.dataset.design
-     );
-
-     await saveSettings({
-      design:button.dataset.design,
-      font:
-       Number(
-        $("fontRange").value
-       ),
-      line:
-       Number(
-        $("lineRange").value
-       )
-     });
-
-     showSettings();
-
+    req.onerror = ()=>{
+      reject(req.error);
     };
 
   });
-
-
- $("fontRange").oninput=
-  e=>{
-
-   $("fontVal").textContent=
-    e.target.value;
-
-   $("editor").style.fontSize=
-    e.target.value+"px";
-
-   scheduleSave();
-
-  };
-
-
- $("lineRange").oninput=
-  e=>{
-
-   $("lineVal").textContent=
-    e.target.value;
-
-   $("editor").style.lineHeight=
-    e.target.value+"px";
-
-   document
-    .querySelectorAll(".editor li")
-    .forEach(
-     li=>
-      li.style.lineHeight=
-       e.target.value+"px"
-    );
-
-   scheduleSave();
-
-  };
-
 }
 
+function getAll(storeName){
 
-/* TOP BUTTONS */
+  return new Promise((resolve,reject)=>{
 
-$("calendarBtn").onclick=
- ()=>showCalendar();
+    const req = tx(storeName).getAll();
 
+    req.onsuccess = ()=>{
+      resolve(req.result || []);
+    };
 
-$("eventsBtn").onclick=
- ()=>showEvents();
+    req.onerror = ()=>{
+      reject(req.error);
+    };
 
+  });
+}
 
-$("todoBtn").onclick=
- ()=>showTodos();
+function putOne(storeName,obj){
 
+  return new Promise((resolve,reject)=>{
 
-$("memoryBtn").onclick=
- ()=>showMemories();
+    const req = tx(
+      storeName,
+      "readwrite"
+    ).put(obj);
 
+    req.onsuccess = ()=>{
+      resolve(req.result);
+    };
 
-$("settingsBtn").onclick=
- ()=>showSettings();
+    req.onerror = ()=>{
+      reject(req.error);
+    };
 
+  });
+}
 
-/* BACKUP */
+function deleteOne(storeName,key){
 
-$("backupBtn").onclick=
- async()=>{
+  return new Promise((resolve,reject)=>{
 
-  await savePage();
+    const req = tx(
+      storeName,
+      "readwrite"
+    ).delete(key);
 
-  const backup={
+    req.onsuccess = ()=>{
+      resolve();
+    };
 
-   version:6,
+    req.onerror = ()=>{
+      reject(req.error);
+    };
 
-   pages:
-    await all("pages"),
+  });
+}
 
-   events:
-    await all("events"),
+/* =========================================================
+   SETTINGS
+========================================================= */
 
-   todos:
-    await all("todos"),
-
-   attachments:
-    await all("attachments"),
-
-   settings:
-    await all("settings")
-
-  };
-
-
-  const link=
-   document.createElement("a");
-
-  link.href=
-   URL.createObjectURL(
-    new Blob(
-     [JSON.stringify(backup)],
-     {
-      type:"application/json"
-     }
-    )
-   );
-
-  link.download=
-   "my-diary-backup.json";
-
-  link.click();
-
- };
-
-
-/* RESTORE */
-
-$("restoreBtn").onclick=
- ()=>$("restoreInput").click();
-
-
-$("restoreInput").onchange=
- async e=>{
-
-  const file=
-   e.target.files[0];
-
-  if(!file)return;
+async function loadSettings(){
 
   try{
 
-   const backup=
-    JSON.parse(
-     await file.text()
-    );
+    const saved =
+      await getOne(
+        "settings",
+        "prefs"
+      );
 
-
-   for(
-    const store of [
-     "pages",
-     "events",
-     "todos",
-     "attachments",
-     "settings"
-    ]
-   ){
-
-    for(
-     const record of
-      backup[store]||[]
-    ){
-
-     await put(
-      store,
-      record
-     );
-
+    if(saved){
+      settings = {
+        ...settings,
+        ...saved.value
+      };
     }
 
-   }
+  }catch(error){
 
-
-   toast(
-    "Backup restored"
-   );
-
-   await loadPage();
-
-  }
-  catch(error){
-
-   console.error(error);
-
-   toast(
-    "Invalid backup file"
-   );
+    console.error(
+      "Settings load error",
+      error
+    );
 
   }
 
- };
+  applySettings();
+}
 
+async function saveSettings(){
 
-/* PRINT */
+  await putOne(
+    "settings",
+    {
+      key:"prefs",
+      value:settings
+    }
+  );
+}
 
-$("printBtn").onclick=
- async()=>{
+function applySettings(){
+
+  const page =
+    document.getElementById("page");
+
+  page.className =
+    "page design-" +
+    settings.design;
+
+  page.style.maxWidth =
+    settings.pageWidth + "px";
+
+  document.documentElement.style
+    .setProperty(
+      "--diary-font-size",
+      settings.fontSize + "px"
+    );
+
+  document.getElementById(
+    "fontSizeValue"
+  ).textContent =
+    settings.fontSize;
+
+  document.getElementById(
+    "lineSpacingValue"
+  ).textContent =
+    settings.lineSpacing;
+
+  document.getElementById(
+    "fontSizeRange"
+  ).value =
+    settings.fontSize;
+
+  document.getElementById(
+    "lineSpacingRange"
+  ).value =
+    settings.lineSpacing;
+
+  document.getElementById(
+    "pageWidthRange"
+  ).value =
+    settings.pageWidth;
+
+  const editor =
+    document.getElementById("editor");
+
+  editor.style.fontSize =
+    settings.fontSize + "px";
+
+  editor.style.lineHeight =
+    settings.lineSpacing + "px";
+
+  document.querySelectorAll(
+    ".design-choice"
+  ).forEach(btn=>{
+    btn.classList.toggle(
+      "selected",
+      btn.dataset.design === settings.design
+    );
+  });
+
+  updateEditorLines();
+}
+
+function updateEditorLines(){
+
+  const editor =
+    document.getElementById("editor");
+
+  const spacing =
+    Number(settings.lineSpacing);
+
+  editor.style.backgroundImage =
+    `repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent ${spacing-1}px,
+      #b8cfdf ${spacing}px,
+      transparent ${spacing+1}px
+    )`;
+}
+
+/* =========================================================
+   QUOTES
+========================================================= */
+
+function quoteForDate(iso){
+
+  let hash = 0;
+
+  for(let i=0;i<iso.length;i++){
+    hash =
+      ((hash << 5) - hash) +
+      iso.charCodeAt(i);
+
+    hash |= 0;
+  }
+
+  return QUOTES[
+    Math.abs(hash) % QUOTES.length
+  ];
+}
+
+async function getPageQuote(){
+
+  const page =
+    await getOne(
+      "pages",
+      `${currentDate}|${currentPage}`
+    );
+
+  if(page && page.quote){
+    return page.quote;
+  }
+
+  return quoteForDate(currentDate);
+}
+
+async function showQuote(){
+
+  const quote =
+    await getPageQuote();
+
+  document.getElementById(
+    "quoteRow"
+  ).textContent =
+    "“" + quote + "”";
+
+  document.getElementById(
+    "quoteText"
+  ).textContent =
+    "“" + quote + "”";
+}
+
+document.getElementById(
+  "quoteRow"
+).addEventListener(
+  "click",
+  ()=>{
+    openModal("quoteModal");
+  }
+);
+
+document.getElementById(
+  "newQuoteBtn"
+).addEventListener(
+  async ()=>{
+    const random =
+      QUOTES[
+        Math.floor(
+          Math.random()*QUOTES.length
+        )
+      ];
+
+    const page =
+      currentPageRecord ||
+      {
+        id:`${currentDate}|${currentPage}`,
+        date:currentDate,
+        page:currentPage
+      };
+
+    page.quote = random;
+
+    currentPageRecord = page;
+
+    await putOne(
+      "pages",
+      page
+    );
+
+    await showQuote();
+
+    toast("Quote changed");
+  }
+);
+
+/* =========================================================
+   PAGE MANAGEMENT
+========================================================= */
+
+function emptyPageRecord(){
+
+  return {
+    id:`${currentDate}|${currentPage}`,
+    date:currentDate,
+    page:currentPage,
+    content:"",
+    drawing:"",
+    mood:"",
+    quote:quoteForDate(currentDate),
+    updatedAt:Date.now()
+  };
+}
+
+async function getPagesForDate(date){
+
+  const all =
+    await getAll("pages");
+
+  return all
+    .filter(p=>p.date === date)
+    .sort((a,b)=>
+      Number(a.page||1) -
+      Number(b.page||1)
+    );
+}
+
+async function loadPage(){
+
+  const id =
+    `${currentDate}|${currentPage}`;
+
+  const record =
+    await getOne(
+      "pages",
+      id
+    );
+
+  currentPageRecord =
+    record ||
+    emptyPageRecord();
+
+  document.getElementById(
+    "editor"
+  ).innerHTML =
+    currentPageRecord.content || "";
+
+  selectedMood =
+    currentPageRecord.mood || "";
+
+  document.getElementById(
+    "moodDisplay"
+  ).textContent =
+    selectedMood;
+
+  document.getElementById(
+    "dateTitle"
+  ).textContent =
+    formatDate(currentDate);
+
+  document.getElementById(
+    "pageNumber"
+  ).textContent =
+    "Page " + currentPage;
+
+  await showQuote();
+
+  loadDrawing(
+    currentPageRecord.drawing || ""
+  );
+
+  updateDateButtons();
+
+  await carryForwardTodos();
+
+  await updateEventReminder();
+
+  setTimeout(()=>{
+    document.getElementById(
+      "editor"
+    ).focus();
+  },100);
+}
+
+async function savePage(){
+
+  if(!db) return;
+
+  const editor =
+    document.getElementById("editor");
+
+  const record =
+    currentPageRecord ||
+    emptyPageRecord();
+
+  record.id =
+    `${currentDate}|${currentPage}`;
+
+  record.date =
+    currentDate;
+
+  record.page =
+    currentPage;
+
+  record.content =
+    editor.innerHTML;
+
+  record.mood =
+    selectedMood || "";
+
+  record.quote =
+    record.quote ||
+    quoteForDate(currentDate);
+
+  record.drawing =
+    drawingDataURL || "";
+
+  record.updatedAt =
+    Date.now();
+
+  currentPageRecord =
+    record;
+
+  try{
+
+    await putOne(
+      "pages",
+      record
+    );
+
+  }catch(error){
+
+    console.error(
+      "Page save error",
+      error
+    );
+
+    toast("Could not save page");
+
+  }
+}
+
+function scheduleSave(){
+
+  clearTimeout(saveTimer);
+
+  saveTimer =
+    setTimeout(
+      savePage,
+      450
+    );
+}
+
+async function changeDate(iso){
 
   await savePage();
 
-  window.print();
+  currentDate =
+    iso;
 
- };
-
-
-/* START */
-
-(async()=>{
-
- try{
-
-  await openDB();
-
-  await migrateOld();
-
-  await loadSettings();
-
-  setupCanvas();
-
-  await carryTodos();
+  currentPage =
+    1;
 
   await loadPage();
 
- }
- catch(error){
+  toast(formatDate(currentDate));
+}
 
-  console.error(error);
+async function changePage(number){
+
+  await savePage();
+
+  currentPage =
+    Math.max(
+      1,
+      number
+    );
+
+  await loadPage();
+}
+
+async function createNewPage(){
+
+  await savePage();
+
+  const pages =
+    await getPagesForDate(
+      currentDate
+    );
+
+  const next =
+    pages.length
+      ? Math.max(
+          ...pages.map(
+            p=>Number(p.page||1)
+          )
+        ) + 1
+      : 2;
+
+  currentPage =
+    next;
+
+  await loadPage();
 
   toast(
-   "Diary storage could not be opened. Please reload the app."
+    "New page " + currentPage
+  );
+}
+
+function updateDateButtons(){
+
+  document.getElementById(
+    "prevDayBtn"
+  ).disabled = false;
+
+  document.getElementById(
+    "nextDayBtn"
+  ).disabled = false;
+}
+
+/* =========================================================
+   EDITOR
+========================================================= */
+
+document.querySelectorAll(
+  "#toolbar [data-cmd]"
+).forEach(button=>{
+
+  button.addEventListener(
+    "mousedown",
+    e=>{
+      e.preventDefault();
+    }
   );
 
- }
+  button.addEventListener(
+    "click",
+    ()=>{
 
-})();
+      document.getElementById(
+        "editor"
+      ).focus();
+
+      document.execCommand(
+        button.dataset.cmd,
+        false,
+        null
+      );
+
+      scheduleSave();
+    }
+  );
+
+});
+
+document.getElementById(
+  "clearFormatBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    document.getElementById(
+      "editor"
+    ).focus();
+
+    document.execCommand(
+      "removeFormat",
+      false,
+      null
+    );
+
+    scheduleSave();
+  }
+);
+
+document.getElementById(
+  "editor"
+).addEventListener(
+  "input",
+  scheduleSave
+);
+
+document.getElementById(
+  "editor"
+).addEventListener(
+  "blur",
+  savePage
+);
+
+/* =========================================================
+   DRAWING
+========================================================= */
+
+const canvas =
+  document.getElementById(
+    "drawCanvas"
+  );
+
+const ctx =
+  canvas.getContext(
+    "2d",
+    {willReadFrequently:true}
+  );
+
+let drawingActive = false;
+let drawingTool = "pen";
+let drawingColor = "#222";
+let drawingSize = 3;
+
+let drawingDataURL = "";
+
+let drawingHistory = [];
+let drawingRedo = [];
+
+let drawingStart = null;
+let drawingBaseImage = null;
+
+function resizeCanvas(){
+
+  const wrap =
+    document.getElementById(
+      "editorWrap"
+    );
+
+  const rect =
+    wrap.getBoundingClientRect();
+
+  if(rect.width <= 0 || rect.height <= 0){
+    return;
+  }
+
+  let oldImage = null;
+
+  if(canvas.width > 0 && canvas.height > 0){
+
+    try{
+      oldImage =
+        document.createElement("canvas");
+
+      oldImage.width =
+        canvas.width;
+
+      oldImage.height =
+        canvas.height;
+
+      oldImage
+        .getContext("2d")
+        .drawImage(
+          canvas,
+          0,
+          0
+        );
+    }catch(e){}
+  }
+
+  const dpr =
+    window.devicePixelRatio || 1;
+
+  canvas.width =
+    Math.round(
+      rect.width * dpr
+    );
+
+  canvas.height =
+    Math.round(
+      rect.height * dpr
+    );
+
+  canvas.style.width =
+    rect.width + "px";
+
+  canvas.style.height =
+    rect.height + "px";
+
+  ctx.setTransform(
+    dpr,
+    0,
+    0,
+    dpr,
+    0,
+    0
+  );
+
+  if(oldImage){
+
+    try{
+
+      ctx.drawImage(
+        oldImage,
+        0,
+        0,
+        oldImage.width / dpr,
+        oldImage.height / dpr
+      );
+
+    }catch(e){}
+
+  }
+
+}
+
+function getPoint(e){
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  return {
+    x:e.clientX - rect.left,
+    y:e.clientY - rect.top
+  };
+}
+
+function snapshot(){
+
+  try{
+
+    return ctx.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+  }catch(e){
+
+    return null;
+
+  }
+}
+
+function restoreImageData(image){
+
+  if(!image) return;
+
+  try{
+    ctx.putImageData(
+      image,
+      0,
+      0
+    );
+  }catch(e){}
+}
+
+function pushHistory(){
+
+  const snap =
+    snapshot();
+
+  if(!snap) return;
+
+  drawingHistory.push(snap);
+
+  if(drawingHistory.length > 25){
+    drawingHistory.shift();
+  }
+
+  drawingRedo = [];
+}
+
+function setDrawTool(tool){
+
+  drawingTool =
+    tool;
+
+  document.querySelectorAll(
+    "[data-draw]"
+  ).forEach(btn=>{
+    btn.classList.toggle(
+      "active",
+      btn.dataset.draw === tool
+    );
+  });
+
+  /*
+    User requested:
+    select tool -> close tool submenu,
+    but drawing remains active.
+  */
+
+  document.getElementById(
+    "drawTools"
+  ).classList.remove("open");
+
+  drawingActive = true;
+
+  canvas.classList.add("active");
+
+  toast(
+    tool.charAt(0).toUpperCase() +
+    tool.slice(1) +
+    " selected"
+  );
+}
+
+document.getElementById(
+  "drawBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    drawingActive =
+      !drawingActive;
+
+    canvas.classList.toggle(
+      "active",
+      drawingActive
+    );
+
+    document.getElementById(
+      "drawTools"
+    ).classList.toggle(
+      "open",
+      drawingActive
+    );
+
+    if(drawingActive){
+      resizeCanvas();
+      toast(
+        "Choose Pen / Line / Circle / Eraser"
+      );
+    }else{
+      document.getElementById(
+        "drawTools"
+      ).classList.remove("open");
+
+      document.getElementById(
+        "editor"
+      ).focus();
+
+      saveDrawing();
+    }
+  }
+);
+
+document.querySelectorAll(
+  "[data-draw]"
+).forEach(btn=>{
+
+  btn.addEventListener(
+    "click",
+    ()=>{
+      setDrawTool(
+        btn.dataset.draw
+      );
+    }
+  );
+
+});
+
+canvas.addEventListener(
+  "pointerdown",
+  e=>{
+
+    if(!drawingActive){
+      return;
+    }
+
+    e.preventDefault();
+
+    canvas.setPointerCapture(
+      e.pointerId
+    );
+
+    drawingStart =
+      getPoint(e);
+
+    drawingBaseImage =
+      snapshot();
+
+    if(drawingTool === "pen"){
+
+      pushHistory();
+
+      ctx.globalCompositeOperation =
+        "source-over";
+
+      ctx.strokeStyle =
+        drawingColor;
+
+      ctx.lineWidth =
+        drawingSize;
+
+      ctx.lineCap =
+        "round";
+
+      ctx.lineJoin =
+        "round";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        drawingStart.x,
+        drawingStart.y
+      );
+
+    }
+
+    if(drawingTool === "eraser"){
+
+      pushHistory();
+
+      ctx.globalCompositeOperation =
+        "destination-out";
+
+      ctx.lineWidth =
+        60;
+
+      ctx.lineCap =
+        "round";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        drawingStart.x,
+        drawingStart.y
+      );
+
+    }
+
+  }
+);
+
+canvas.addEventListener(
+  "pointermove",
+  e=>{
+
+    if(!drawingActive || !drawingStart){
+      return;
+    }
+
+    e.preventDefault();
+
+    const point =
+      getPoint(e);
+
+    if(
+      drawingTool === "pen" ||
+      drawingTool === "eraser"
+    ){
+
+      ctx.lineTo(
+        point.x,
+        point.y
+      );
+
+      ctx.stroke();
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        point.x,
+        point.y
+      );
+
+      return;
+    }
+
+    /*
+      Line / Circle:
+      restore exact image synchronously
+      and draw preview.
+    */
+
+    if(drawingBaseImage){
+      restoreImageData(
+        drawingBaseImage
+      );
+    }
+
+    ctx.globalCompositeOperation =
+      "source-over";
+
+    ctx.strokeStyle =
+      drawingColor;
+
+    ctx.lineWidth =
+      drawingSize;
+
+    ctx.lineCap =
+      "round";
+
+    ctx.beginPath();
+
+    if(drawingTool === "line"){
+
+      ctx.moveTo(
+        drawingStart.x,
+        drawingStart.y
+      );
+
+      ctx.lineTo(
+        point.x,
+        point.y
+      );
+
+      ctx.stroke();
+    }
+
+    if(drawingTool === "circle"){
+
+      const dx =
+        point.x -
+        drawingStart.x;
+
+      const dy =
+        point.y -
+        drawingStart.y;
+
+      const radius =
+        Math.sqrt(
+          dx*dx +
+          dy*dy
+        );
+
+      ctx.arc(
+        drawingStart.x,
+        drawingStart.y,
+        radius,
+        0,
+        Math.PI*2
+      );
+
+      ctx.stroke();
+    }
+
+  }
+);
+
+canvas.addEventListener(
+  "pointerup",
+  e=>{
+
+    if(!drawingActive || !drawingStart){
+      return;
+    }
+
+    const point =
+      getPoint(e);
+
+    if(
+      drawingTool === "line" ||
+      drawingTool === "circle"
+    ){
+
+      if(drawingBaseImage){
+        restoreImageData(
+          drawingBaseImage
+        );
+      }
+
+      ctx.globalCompositeOperation =
+        "source-over";
+
+      ctx.strokeStyle =
+        drawingColor;
+
+      ctx.lineWidth =
+        drawingSize;
+
+      ctx.lineCap =
+        "round";
+
+      ctx.beginPath();
+
+      if(drawingTool === "line"){
+
+        ctx.moveTo(
+          drawingStart.x,
+          drawingStart.y
+        );
+
+        ctx.lineTo(
+          point.x,
+          point.y
+        );
+
+      }else{
+
+        const dx =
+          point.x -
+          drawingStart.x;
+
+        const dy =
+          point.y -
+          drawingStart.y;
+
+        const radius =
+          Math.sqrt(
+            dx*dx +
+            dy*dy
+          );
+
+        ctx.arc(
+          drawingStart.x,
+          drawingStart.y,
+          radius,
+          0,
+          Math.PI*2
+        );
+
+      }
+
+      ctx.stroke();
+
+      /*
+        Save the state before next operation.
+      */
+
+      pushHistory();
+    }
+
+    drawingStart = null;
+    drawingBaseImage = null;
+
+    ctx.globalCompositeOperation =
+      "source-over";
+
+    saveDrawing();
+
+  }
+);
+
+canvas.addEventListener(
+  "pointercancel",
+  ()=>{
+    drawingStart = null;
+    drawingBaseImage = null;
+  }
+);
+
+async function saveDrawing(){
+
+  try{
+
+    drawingDataURL =
+      canvas.toDataURL(
+        "image/png"
+      );
+
+    if(currentPageRecord){
+
+      currentPageRecord.drawing =
+        drawingDataURL;
+
+      await savePage();
+    }
+
+  }catch(error){
+
+    console.error(
+      "Drawing save error",
+      error
+    );
+
+  }
+}
+
+function loadDrawing(data){
+
+  drawingDataURL =
+    data || "";
+
+  resizeCanvas();
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  if(!data){
+    return;
+  }
+
+  const image =
+    new Image();
+
+  image.onload = ()=>{
+
+    const dpr =
+      window.devicePixelRatio || 1;
+
+    ctx.drawImage(
+      image,
+      0,
+      0,
+      canvas.clientWidth,
+      canvas.clientHeight
+    );
+
+  };
+
+  image.src =
+    data;
+}
+
+document.getElementById(
+  "undoDrawBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    if(!drawingHistory.length){
+      toast("Nothing to undo");
+      return;
+    }
+
+    const current =
+      snapshot();
+
+    if(current){
+      drawingRedo.push(
+        current
+      );
+    }
+
+    const previous =
+      drawingHistory.pop();
+
+    restoreImageData(
+      previous
+    );
+
+    saveDrawing();
+
+  }
+);
+
+document.getElementById(
+  "redoDrawBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    if(!drawingRedo.length){
+      toast("Nothing to redo");
+      return;
+    }
+
+    const current =
+      snapshot();
+
+    if(current){
+      drawingHistory.push(
+        current
+      );
+    }
+
+    const next =
+      drawingRedo.pop();
+
+    restoreImageData(
+      next
+    );
+
+    saveDrawing();
+
+  }
+);
+
+document.getElementById(
+  "clearDrawBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    pushHistory();
+
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    saveDrawing();
+
+    toast(
+      "Drawing cleared"
+    );
+  }
+);
+
+document.getElementById(
+  "closeDrawBtn"
+).addEventListener(
+  "click",
+  ()=>{
+
+    drawingActive = false;
+
+    canvas.classList.remove(
+      "active"
+    );
+
+    document.getElementById(
+      "drawTools"
+    ).classList.remove(
+      "open"
+    );
+
+    document.getElementById(
+      "editor"
+    ).focus();
+
+    saveDrawing();
+  }
+);
+
+window.addEventListener(
+  "resize",
+  ()=>{
+    resizeCanvas();
+  }
+);
+
+/* =========================================================
+   MOOD
+========================================================= */
+
+document.getElementById(
+  "moodBtn"
+).addEventListener(
+  "click",
+  ()=>{
+    openModal("moodModal");
+  }
+);
+
+document.querySelectorAll(
+  ".mood-choice"
+).forEach(btn=>{
+
+  btn.addEventListener(
+    "click",
+    async ()=>{
+
+      selectedMood =
+        btn.dataset.mood;
+
+      document.getElementById(
+        "moodDisplay"
+      ).textContent =
+        selectedMood;
+
+      await savePage();
+
+      closeModal(
+        "moodModal"
+      );
+
+      toast("Mood saved");
+    }
+  );
+
+});
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+document.getElementById(
+  "prevDayBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+    await changeDate(
+      addDays(
+        currentDate,
+        -1
+      )
+    );
+  }
+);
+
+document.getElementById(
+  "nextDayBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+    await changeDate(
+      addDays(
+        currentDate,
+        1
+      )
+    );
+  }
+);
+
+document.getElementById(
+  "todayBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+    await changeDate(
+      todayISO()
+    );
+  }
+);
+
+document.getElementById(
+  "newPageBtn"
+).addEventListener(
+  "click",
+  createNewPage
+);
+
+/* =========================================================
+   CALENDAR
+========================================================= */
+
+document.getElementById(
+  "calendarBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    calendarCursor =
+      dateObj(currentDate);
+
+    await renderCalendar();
+
+    openModal(
+      "calendarModal"
+    );
+  }
+);
+
+document.getElementById(
+  "calPrevBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    calendarCursor.setMonth(
+      calendarCursor.getMonth()-1
+    );
+
+    await renderCalendar();
+  }
+);
+
+document.getElementById(
+  "calNextBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    calendarCursor.setMonth(
+      calendarCursor.getMonth()+1
+    );
+
+    await renderCalendar();
+  }
+);
+
+async function renderCalendar(){
+
+  const year =
+    calendarCursor.getFullYear();
+
+  const month =
+    calendarCursor.getMonth();
+
+  document.getElementById(
+    "calendarMonth"
+  ).textContent =
+    calendarCursor.toLocaleDateString(
+      undefined,
+      {
+        month:"long",
+        year:"numeric"
+      }
+    );
+
+  const grid =
+    document.getElementById(
+      "calendarGrid"
+    );
+
+  grid.innerHTML = "";
+
+  [
+    "Sun",
+    "Mon",
+    "Tue",
+    "Wed",
+    "Thu",
+    "Fri",
+    "Sat"
+  ].forEach(name=>{
+
+    const el =
+      document.createElement("div");
+
+    el.className =
+      "cal-day-name";
+
+    el.textContent =
+      name;
+
+    grid.appendChild(el);
+  });
+
+  const first =
+    new Date(
+      year,
+      month,
+      1
+    );
+
+  const last =
+    new Date(
+      year,
+      month+1,
+      0
+    );
+
+  for(
+    let i=0;
+    i<first.getDay();
+    i++
+  ){
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "cal-cell empty";
+
+    grid.appendChild(
+      empty
+    );
+  }
+
+  const events =
+    await getAll("events");
+
+  const pages =
+    await getAll("pages");
+
+  for(
+    let day=1;
+    day<=last.getDate();
+    day++
+  ){
+
+    const date =
+      `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+    const cell =
+      document.createElement("div");
+
+    cell.className =
+      "cal-cell";
+
+    if(date === todayISO()){
+      cell.classList.add("today");
+    }
+
+    const dayEvents =
+      events.filter(
+        e=>e.date === date
+      );
+
+    const hasDiary =
+      pages.some(
+        p=>p.date === date &&
+        (
+          p.content ||
+          p.drawing
+        )
+      );
+
+    if(dayEvents.length){
+      cell.classList.add(
+        "has-event"
+      );
+    }
+
+    cell.innerHTML =
+      `<div class="cal-number">
+        ${day}
+        ${dayEvents.length ? '<span class="event-dot"></span>' : ''}
+      </div>`;
+
+    if(hasDiary){
+      cell.innerHTML +=
+        `<div class="event-mini">📖 Diary</div>`;
+    }
+
+    dayEvents
+      .slice(0,2)
+      .forEach(ev=>{
+        cell.innerHTML +=
+          `<div class="event-mini">
+            📌 ${escapeHTML(ev.title)}
+          </div>`;
+      });
+
+    cell.addEventListener(
+      "click",
+      async ()=>{
+
+        await changeDate(
+          date
+        );
+
+        closeModal(
+          "calendarModal"
+        );
+      }
+    );
+
+    grid.appendChild(
+      cell
+    );
+  }
+
+  const monthEvents =
+    events.filter(ev=>{
+
+      const d =
+        ev.date || "";
+
+      return d.startsWith(
+        `${year}-${String(month+1).padStart(2,"0")}`
+      );
+
+    }).sort(
+      (a,b)=>
+        a.date.localeCompare(b.date)
+    );
+
+  const list =
+    document.getElementById(
+      "calendarEvents"
+    );
+
+  if(!monthEvents.length){
+
+    list.innerHTML =
+      "<p>No diary events this month.</p>";
+
+  }else{
+
+    list.innerHTML =
+      "<strong>Events this month</strong>";
+
+    monthEvents.forEach(ev=>{
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "list-item";
+
+      row.innerHTML =
+        `<div class="list-item-content">
+          <b>${escapeHTML(ev.title)}</b><br>
+          <small>
+            ${formatDate(ev.date)}
+            ${ev.time ? " • "+escapeHTML(ev.time) : ""}
+          </small>
+          ${ev.notes ? `<br>${escapeHTML(ev.notes)}` : ""}
+        </div>`;
+
+      list.appendChild(
+        row
+      );
+    });
+  }
+}
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+document.getElementById(
+  "eventsBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    editingEventId = null;
+
+    document.getElementById(
+      "eventDate"
+    ).value =
+      currentDate >= todayISO()
+        ? currentDate
+        : todayISO();
+
+    document.getElementById(
+      "eventTitle"
+    ).value = "";
+
+    document.getElementById(
+      "eventTime"
+    ).value = "";
+
+    document.getElementById(
+      "eventNotes"
+    ).value = "";
+
+    document.getElementById(
+      "eventDate"
+    ).min =
+      todayISO();
+
+    await renderEvents();
+
+    openModal(
+      "eventsModal"
+    );
+  }
+);
+
+async function renderEvents(){
+
+  const events =
+    await getAll("events");
+
+  events.sort(
+    (a,b)=>
+      (
+        a.date + (a.time||"")
+      ).localeCompare(
+        b.date + (b.time||"")
+      )
+  );
+
+  const list =
+    document.getElementById(
+      "eventList"
+    );
+
+  list.innerHTML =
+    "<h3>Saved Events</h3>";
+
+  if(!events.length){
+
+    list.innerHTML +=
+      "<p>No events saved yet.</p>";
+
+    return;
+  }
+
+  events.forEach(ev=>{
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "list-item";
+
+    row.innerHTML =
+      `<div class="list-item-content">
+        <b>${escapeHTML(ev.title)}</b>
+        <br>
+        <small>
+          ${formatDate(ev.date)}
+          ${ev.time ? " • "+escapeHTML(ev.time) : ""}
+        </small>
+        ${ev.notes ? `<br>${escapeHTML(ev.notes)}` : ""}
+      </div>`;
+
+    const edit =
+      document.createElement("button");
+
+    edit.textContent =
+      "Edit";
+
+    edit.addEventListener(
+      "click",
+      ()=>{
+
+        if(isPastDate(ev.date)){
+
+          toast(
+            "Past events cannot be changed"
+          );
+
+          return;
+        }
+
+        editingEventId =
+          ev.id;
+
+        document.getElementById(
+          "eventDate"
+        ).value =
+          ev.date;
+
+        document.getElementById(
+          "eventTime"
+        ).value =
+          ev.time || "";
+
+        document.getElementById(
+          "eventTitle"
+        ).value =
+          ev.title || "";
+
+        document.getElementById(
+          "eventNotes"
+        ).value =
+          ev.notes || "";
+
+        toast(
+          "Edit the event and press Save Event"
+        );
+      }
+    );
+
+    const del =
+      document.createElement("button");
+
+    del.textContent =
+      "Delete";
+
+    del.addEventListener(
+      "click",
+      async ()=>{
+
+        await deleteOne(
+          "events",
+          ev.id
+        );
+
+        await renderEvents();
+
+        toast(
+          "Event deleted"
+        );
+      }
+    );
+
+    row.appendChild(edit);
+    row.appendChild(del);
+
+    list.appendChild(
+      row
+    );
+  });
+}
+
+document.getElementById(
+  "saveEventBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    const date =
+      document.getElementById(
+        "eventDate"
+      ).value;
+
+    const title =
+      document.getElementById(
+        "eventTitle"
+      ).value.trim();
+
+    const time =
+      document.getElementById(
+        "eventTime"
+      ).value;
+
+    const notes =
+      document.getElementById(
+        "eventNotes"
+      ).value.trim();
+
+    if(!date){
+
+      toast(
+        "Select event date"
+      );
+
+      return;
+    }
+
+    if(date < todayISO()){
+
+      toast(
+        "Events cannot be added to a past date"
+      );
+
+      return;
+    }
+
+    if(!title){
+
+      toast(
+        "Enter event title"
+      );
+
+      return;
+    }
+
+    let event;
+
+    if(editingEventId){
+
+      event =
+        await getOne(
+          "events",
+          editingEventId
+        );
+
+      if(!event){
+        editingEventId = null;
+      }
+    }
+
+    if(!event){
+
+      event = {
+        date,
+        time,
+        title,
+        notes,
+        createdAt:Date.now()
+      };
+
+    }else{
+
+      event.date = date;
+      event.time = time;
+      event.title = title;
+      event.notes = notes;
+      event.updatedAt = Date.now();
+    }
+
+    await putOne(
+      "events",
+      event
+    );
+
+    editingEventId = null;
+
+    document.getElementById(
+      "eventTitle"
+    ).value = "";
+
+    document.getElementById(
+      "eventNotes"
+    ).value = "";
+
+    document.getElementById(
+      "eventTime"
+    ).value = "";
+
+    await renderEvents();
+
+    toast(
+      "Event saved"
+    );
+  }
+);
+
+/* =========================================================
+   EVENT ALERT
+========================================================= */
+
+async function updateEventReminder(){
+
+  const events =
+    await getAll("events");
+
+  const now =
+    new Date();
+
+  const today =
+    todayISO();
+
+  const currentTime =
+    now.toTimeString()
+      .slice(0,5);
+
+  const due =
+    events.filter(ev=>
+      ev.date === today &&
+      ev.time === currentTime
+    );
+
+  if(!due.length){
+    return;
+  }
+
+  const alertKey =
+    "diary-alert-" +
+    today +
+    "-" +
+    currentTime;
+
+  if(
+    sessionStorage.getItem(
+      alertKey
+    )
+  ){
+    return;
+  }
+
+  sessionStorage.setItem(
+    alertKey,
+    "1"
+  );
+
+  due.forEach(ev=>{
+
+    toast(
+      "📌 " + ev.title
+    );
+
+    setTimeout(()=>{
+      alert(
+        "📌 Diary Event\n\n" +
+        ev.title +
+        (
+          ev.notes
+            ? "\n\n" + ev.notes
+            : ""
+        )
+      );
+    },100);
+  });
+}
+
+setInterval(
+  updateEventReminder,
+  30000
+);
+
+/* =========================================================
+   TO-DO
+========================================================= */
+
+document.getElementById(
+  "todoBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    document.getElementById(
+      "todoDateLabel"
+    ).textContent =
+      formatDate(currentDate);
+
+    document.getElementById(
+      "todoInput"
+    ).value = "";
+
+    await renderTodos();
+
+    openModal(
+      "todoModal"
+    );
+  }
+);
+
+async function carryForwardTodos(){
+
+  if(currentDate === "0000-00-00"){
+    return;
+  }
+
+  const previousDate =
+    addDays(
+      currentDate,
+      -1
+    );
+
+  const all =
+    await getAll("todos");
+
+  const pending =
+    all.filter(
+      t=>
+        t.date === previousDate &&
+        !t.done
+    );
+
+  for(const task of pending){
+
+    const already =
+      all.some(
+        t=>
+          t.date === currentDate &&
+          t.carriedFrom ===
+            String(task.id)
+      );
+
+    if(!already){
+
+      await putOne(
+        "todos",
+        {
+          date:currentDate,
+          text:task.text,
+          done:false,
+          carriedFrom:String(task.id),
+          createdAt:Date.now()
+        }
+      );
+    }
+  }
+}
+
+async function renderTodos(){
+
+  await carryForwardTodos();
+
+  const all =
+    await getAll("todos");
+
+  const todos =
+    all
+      .filter(
+        t=>t.date === currentDate
+      )
+      .sort(
+        (a,b)=>
+          Number(a.id) -
+          Number(b.id)
+      );
+
+  const list =
+    document.getElementById(
+      "todoList"
+    );
+
+  list.innerHTML = "";
+
+  const past =
+    isPastDate(currentDate);
+
+  document.getElementById(
+    "todoInput"
+  ).disabled =
+    past;
+
+  document.getElementById(
+    "addTodoBtn"
+  ).disabled =
+    past;
+
+  if(past){
+
+    list.innerHTML +=
+      `<p>
+        <b>Read-only:</b>
+        To-Do entries cannot be changed for a past date.
+      </p>`;
+
+  }
+
+  if(!todos.length){
+
+    list.innerHTML +=
+      "<p>No tasks for this date.</p>";
+
+    return;
+  }
+
+  todos.forEach(todo=>{
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "list-item";
+
+    const checkbox =
+      document.createElement("input");
+
+    checkbox.type =
+      "checkbox";
+
+    checkbox.checked =
+      !!todo.done;
+
+    checkbox.disabled =
+      past;
+
+    const text =
+      document.createElement("div");
+
+    text.className =
+      "list-item-content";
+
+    text.textContent =
+      todo.text;
+
+    if(todo.done){
+      text.classList.add(
+        "done"
+      );
+    }
+
+    const del =
+      document.createElement("button");
+
+    del.textContent =
+      "Delete";
+
+    del.disabled =
+      past;
+
+    checkbox.addEventListener(
+      "change",
+      async ()=>{
+
+        todo.done =
+          checkbox.checked;
+
+        await putOne(
+          "todos",
+          todo
+        );
+
+        await renderTodos();
+      }
+    );
+
+    del.addEventListener(
+      "click",
+      async ()=>{
+
+        await deleteOne(
+          "todos",
+          todo.id
+        );
+
+        await renderTodos();
+      }
+    );
+
+    row.appendChild(
+      checkbox
+    );
+
+    row.appendChild(
+      text
+    );
+
+    row.appendChild(
+      del
+    );
+
+    list.appendChild(
+      row
+    );
+  });
+}
+
+document.getElementById(
+  "addTodoBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    if(isPastDate(currentDate)){
+
+      toast(
+        "Past dates are read-only"
+      );
+
+      return;
+    }
+
+    const input =
+      document.getElementById(
+        "todoInput"
+      );
+
+    const text =
+      input.value.trim();
+
+    if(!text){
+
+      toast(
+        "Enter a task"
+      );
+
+      return;
+    }
+
+    await putOne(
+      "todos",
+      {
+        date:currentDate,
+        text,
+        done:false,
+        createdAt:Date.now()
+      }
+    );
+
+    input.value = "";
+
+    await renderTodos();
+
+    toast(
+      "Task added"
+    );
+  }
+);
+
+document.getElementById(
+  "todoInput"
+).addEventListener(
+  "keydown",
+  e=>{
+    if(e.key === "Enter"){
+      document.getElementById(
+        "addTodoBtn"
+      ).click();
+    }
+  }
+);
+
+/* =========================================================
+   MEMORIES
+========================================================= */
+
+document.getElementById(
+  "memoriesBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    await renderMemories();
+
+    openModal(
+      "memoriesModal"
+    );
+  }
+);
+
+document.getElementById(
+  "memoryInput"
+).addEventListener(
+  "change",
+  async e=>{
+
+    const file =
+      e.target.files[0];
+
+    if(!file){
+      return;
+    }
+
+    if(!file.type.startsWith("image/")){
+
+      toast(
+        "Please select an image"
+      );
+
+      return;
+    }
+
+    const reader =
+      new FileReader();
+
+    reader.onload = async ()=>{
+
+      await putOne(
+        "memories",
+        {
+          date:currentDate,
+          name:file.name,
+          type:file.type,
+          data:reader.result,
+          createdAt:Date.now()
+        }
+      );
+
+      await renderMemories();
+
+      toast(
+        "Memory saved"
+      );
+    };
+
+    reader.readAsDataURL(
+      file
+    );
+
+    e.target.value = "";
+  }
+);
+
+async function renderMemories(){
+
+  let memories =
+    await getAll(
+      "memories"
+    );
+
+  /*
+    Also look at the old v8 attachments store.
+    This allows the new version to recover old
+    photographs when possible.
+  */
+
+  try{
+
+    const old =
+      await getAll(
+        "attachments"
+      );
+
+    for(const item of old){
+
+      if(
+        item &&
+        item.data &&
+        item.type &&
+        item.type.startsWith("image/")
+      ){
+
+        const exists =
+          memories.some(
+            m=>
+              m.legacyId ===
+              item.id
+          );
+
+        if(!exists){
+
+          await putOne(
+            "memories",
+            {
+              date:
+                item.date ||
+                currentDate,
+
+              name:
+                item.name ||
+                "Recovered memory",
+
+              type:
+                item.type,
+
+              data:
+                item.data,
+
+              legacyId:
+                item.id,
+
+              createdAt:
+                item.createdAt ||
+                Date.now()
+            }
+          );
+        }
+      }
+    }
+
+    memories =
+      await getAll(
+        "memories"
+      );
+
+  }catch(error){
+
+    console.log(
+      "No old attachments",
+      error
+    );
+  }
+
+  memories.sort(
+    (a,b)=>
+      Number(b.createdAt||0) -
+      Number(a.createdAt||0)
+  );
+
+  const grid =
+    document.getElementById(
+      "memoryGrid"
+    );
+
+  grid.innerHTML = "";
+
+  if(!memories.length){
+
+    grid.innerHTML =
+      "<p>No memories added yet.</p>";
+
+    return;
+  }
+
+  memories.forEach(memory=>{
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "memory-card";
+
+    const img =
+      document.createElement("img");
+
+    img.src =
+      memory.data;
+
+    img.alt =
+      memory.name || "Diary memory";
+
+    const info =
+      document.createElement("div");
+
+    info.className =
+      "memory-info";
+
+    info.innerHTML =
+      `<b>${escapeHTML(
+        memory.name || "Memory"
+      )}</b>
+      <br>
+      ${memory.date
+        ? formatDate(memory.date)
+        : ""}`;
+
+    const del =
+      document.createElement("button");
+
+    del.textContent =
+      "Delete";
+
+    del.style.margin =
+      "6px";
+
+    del.addEventListener(
+      "click",
+      async ()=>{
+
+        await deleteOne(
+          "memories",
+          memory.id
+        );
+
+        await renderMemories();
+
+        toast(
+          "Memory deleted"
+        );
+      }
+    );
+
+    card.appendChild(
+      img
+    );
+
+    card.appendChild(
+      info
+    );
+
+    card.appendChild(
+      del
+    );
+
+    grid.appendChild(
+      card
+    );
+  });
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+document.getElementById(
+  "settingsBtn"
+).addEventListener(
+  "click",
+  ()=>{
+    applySettings();
+    openModal(
+      "settingsModal"
+    );
+  }
+);
+
+document.querySelectorAll(
+  ".design-choice"
+).forEach(btn=>{
+
+  btn.addEventListener(
+    "click",
+    async ()=>{
+
+      settings.design =
+        btn.dataset.design;
+
+      applySettings();
+
+      await saveSettings();
+
+      toast(
+        "Page design changed"
+      );
+    }
+  );
+});
+
+document.getElementById(
+  "fontSizeRange"
+).addEventListener(
+  "input",
+  async e=>{
+
+    settings.fontSize =
+      Number(e.target.value);
+
+    applySettings();
+
+    await saveSettings();
+  }
+);
+
+document.getElementById(
+  "lineSpacingRange"
+).addEventListener(
+  "input",
+  async e=>{
+
+    settings.lineSpacing =
+      Number(e.target.value);
+
+    applySettings();
+
+    await saveSettings();
+  }
+);
+
+document.getElementById(
+  "pageWidthRange"
+).addEventListener(
+  "input",
+  async e=>{
+
+    settings.pageWidth =
+      Number(e.target.value);
+
+    applySettings();
+
+    await saveSettings();
+  }
+);
+
+/* =========================================================
+   BACKUP
+========================================================= */
+
+document.getElementById(
+  "backupBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    await savePage();
+
+    const backup = {
+      version:9,
+      exportedAt:
+        new Date().toISOString(),
+
+      settings,
+
+      pages:
+        await getAll("pages"),
+
+      events:
+        await getAll("events"),
+
+      todos:
+        await getAll("todos"),
+
+      memories:
+        await getAll("memories")
+    };
+
+    const blob =
+      new Blob(
+        [
+          JSON.stringify(
+            backup,
+            null,
+            2
+          )
+        ],
+        {
+          type:"application/json"
+        }
+      );
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+    const a =
+      document.createElement("a");
+
+    a.href = url;
+
+    a.download =
+      "my-personal-diary-backup-" +
+      todayISO() +
+      ".json";
+
+    document.body.appendChild(a);
+
+    a.click();
+
+    a.remove();
+
+    setTimeout(
+      ()=>URL.revokeObjectURL(url),
+      1000
+    );
+
+    toast(
+      "Backup downloaded"
+    );
+  }
+);
+
+/* =========================================================
+   RESTORE
+========================================================= */
+
+document.getElementById(
+  "restoreBtn"
+).addEventListener(
+  "click",
+  ()=>{
+    document.getElementById(
+      "restoreInput"
+    ).click();
+  }
+);
+
+document.getElementById(
+  "restoreInput"
+).addEventListener(
+  "change",
+  async e=>{
+
+    const file =
+      e.target.files[0];
+
+    if(!file){
+      return;
+    }
+
+    try{
+
+      const text =
+        await file.text();
+
+      const backup =
+        JSON.parse(text);
+
+      if(
+        !backup ||
+        !Array.isArray(
+          backup.pages
+        )
+      ){
+
+        throw new Error(
+          "Invalid diary backup"
+        );
+      }
+
+      for(
+        const item of backup.pages
+      ){
+        await putOne(
+          "pages",
+          item
+        );
+      }
+
+      for(
+        const item of (
+          backup.events || []
+        )
+      ){
+        await putOne(
+          "events",
+          item
+        );
+      }
+
+      for(
+        const item of (
+          backup.todos || []
+        )
+      ){
+        await putOne(
+          "todos",
+          item
+        );
+      }
+
+      for(
+        const item of (
+          backup.memories || []
+        )
+      ){
+        await putOne(
+          "memories",
+          item
+        );
+      }
+
+      if(backup.settings){
+
+        settings = {
+          ...settings,
+          ...backup.settings
+        };
+
+        await saveSettings();
+        applySettings();
+      }
+
+      await loadPage();
+
+      toast(
+        "Diary restored successfully"
+      );
+
+    }catch(error){
+
+      console.error(
+        "Restore error",
+        error
+      );
+
+      alert(
+        "This backup file could not be restored."
+      );
+
+    }
+
+    e.target.value = "";
+  }
+);
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+document.getElementById(
+  "printBtn"
+).addEventListener(
+  "click",
+  async ()=>{
+
+    await savePage();
+
+    const record =
+      currentPageRecord ||
+      emptyPageRecord();
+
+    const win =
+      window.open(
+        "",
+        "_blank"
+      );
+
+    if(!win){
+
+      alert(
+        "Printing was blocked by the browser. Allow pop-ups for this diary."
+      );
+
+      return;
+    }
+
+    const drawing =
+      record.drawing
+        ? `<img
+            src="${record.drawing}"
+            style="
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            object-fit:fill;
+            pointer-events:none;">
+          `
+        : "";
+
+    win.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>
+${escapeHTML(formatDate(currentDate))}
+</title>
+
+<style>
+
+body{
+  margin:0;
+  padding:30px;
+  font-family:Georgia,"Times New Roman",serif;
+  color:#222;
+}
+
+h1{
+  margin:0 0 5px;
+  font-size:25px;
+}
+
+.quote{
+  font-style:italic;
+  color:#766;
+  margin-bottom:18px;
+}
+
+.paper{
+  position:relative;
+  min-height:900px;
+  padding:0 20px;
+  font-size:${settings.fontSize}px;
+  line-height:${settings.lineSpacing}px;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent ${settings.lineSpacing-1}px,
+      #b8cfdf ${settings.lineSpacing}px,
+      transparent ${settings.lineSpacing+1}px
+    );
+}
+
+.content{
+  position:relative;
+  z-index:2;
+}
+
+.drawing{
+  position:absolute;
+  inset:0;
+  z-index:3;
+}
+
+@media print{
+
+  body{
+    padding:10mm;
+  }
+
+  .paper{
+    min-height:250mm;
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>
+${escapeHTML(formatDate(currentDate))}
+</h1>
+
+<div class="quote">
+“${escapeHTML(
+  record.quote ||
+  quoteForDate(currentDate)
+)}”
+</div>
+
+<div class="paper">
+
+<div class="content">
+${record.content || ""}
+</div>
+
+<div class="drawing">
+${drawing}
+</div>
+
+</div>
+
+<script>
+window.onload=function(){
+  setTimeout(
+    function(){
+      window.print();
+    },
+    300
+  );
+};
+<\/script>
+
+</body>
+</html>
+`);
+
+    win.document.close();
+  }
+);
+
+/* =========================================================
+   OLD DATA MIGRATION
+========================================================= */
+
+async function migrateOldLocalStorage(){
+
+  try{
+
+    const old =
+      localStorage.getItem(
+        "myPersonalDiaryEntries"
+      );
+
+    if(!old){
+      return;
+    }
+
+    const parsed =
+      JSON.parse(old);
+
+    if(!parsed){
+      return;
+    }
+
+    /*
+      Only migrate if there is no page
+      already stored for the date.
+    */
+
+    for(
+      const date of Object.keys(parsed)
+    ){
+
+      const existing =
+        await getPagesForDate(
+          date
+        );
+
+      if(existing.length){
+        continue;
+      }
+
+      const value =
+        parsed[date];
+
+      let content = "";
+      let mood = "";
+      let quote = "";
+
+      if(
+        typeof value === "string"
+      ){
+
+        content = value;
+
+      }else if(
+        value &&
+        typeof value === "object"
+      ){
+
+        content =
+          value.content ||
+          value.html ||
+          value.text ||
+          "";
+
+        mood =
+          value.mood ||
+          "";
+
+        quote =
+          value.quote ||
+          "";
+
+      }
+
+      await putOne(
+        "pages",
+        {
+          id:`${date}|1`,
+          date,
+          page:1,
+          content,
+          drawing:"",
+          mood,
+          quote:
+            quote ||
+            quoteForDate(date),
+
+          updatedAt:Date.now()
+        }
+      );
+    }
+
+    toast(
+      "Previous diary entries recovered"
+    );
+
+  }catch(error){
+
+    console.log(
+      "Old localStorage migration:",
+      error
+    );
+  }
+}
+
+/* =========================================================
+   MIGRATE OLD ATTACHMENTS
+========================================================= */
+
+async function migrateOldAttachments(){
+
+  try{
+
+    const old =
+      await getAll(
+        "attachments"
+      );
+
+    if(!old.length){
+      return;
+    }
+
+    const memories =
+      await getAll(
+        "memories"
+      );
+
+    for(
+      const item of old
+    ){
+
+      if(
+        !item ||
+        !item.data ||
+        !item.type
+      ){
+        continue;
+      }
+
+      const already =
+        memories.some(
+          m=>
+            m.legacyId ===
+            item.id
+        );
+
+      if(already){
+        continue;
+      }
+
+      await putOne(
+        "memories",
+        {
+          date:
+            item.date ||
+            currentDate,
+
+          name:
+            item.name ||
+            "Recovered memory",
+
+          type:
+            item.type,
+
+          data:
+            item.data,
+
+          legacyId:
+            item.id,
+
+          createdAt:
+            item.createdAt ||
+            Date.now()
+        }
+      );
+    }
+
+  }catch(error){
+
+    console.log(
+      "Attachment migration:",
+      error
+    );
+  }
+}
+
+/* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  e=>{
+
+    if(
+      (e.ctrlKey || e.metaKey) &&
+      e.key.toLowerCase() === "s"
+    ){
+
+      e.preventDefault();
+
+      savePage();
+
+      toast(
+        "Diary saved"
+      );
+    }
+
+    if(
+      e.key === "Escape"
+    ){
+
+      document
+        .querySelectorAll(".modal.show")
+        .forEach(modal=>{
+          modal.classList.remove(
+            "show"
+          );
+        });
+
+    }
+
+  }
+);
+
+/* =========================================================
+   PAGE VISIBILITY
+========================================================= */
+
+document.addEventListener(
+  "visibilitychange",
+  ()=>{
+    if(document.hidden){
+      savePage();
+    }
+  }
+);
+
+window.addEventListener(
+  "pagehide",
+  ()=>{
+    savePage();
+  }
+);
+
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
+
+async function registerServiceWorker(){
+
+  if(
+    "serviceWorker" in navigator
+  ){
+
+    try{
+
+      await navigator.serviceWorker.register(
+        "./service-worker.js"
+      );
+
+    }catch(error){
+
+      console.log(
+        "Service worker registration:",
+        error
+      );
+
+    }
+  }
+}
+
+/* =========================================================
+   START APPLICATION
+========================================================= */
+
+async function startApp(){
+
+  try{
+
+    await openDB();
+
+    await migrateOldLocalStorage();
+
+    await migrateOldAttachments();
+
+    await loadSettings();
+
+    /*
+      Restore today's page.
+    */
+
+    await loadPage();
+
+    resizeCanvas();
+
+    await registerServiceWorker();
+
+    toast(
+      "Diary ready"
+    );
+
+  }catch(error){
+
+    console.error(
+      "STARTUP ERROR:",
+      error
+    );
+
+    alert(
+      "Diary could not start correctly.\n\n" +
+      "Please reload the page. Your existing data has not been deleted."
+    );
+  }
+}
+
+startApp();
 
 </script>
 

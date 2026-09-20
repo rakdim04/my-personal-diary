@@ -1,16 +1,17 @@
 {
   "name": "My Personal Diary",
   "short_name": "My Diary",
-  "description": "Personal diary, memories, events, calendar, to-do and drawing journal",
+  "description": "Personal diary and journal with pages, events, calendar, memories, to-do list and drawing.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#d8d0c4",
-  "theme_color": "#5b402b",
+  "background_color": "#d9d1c5",
+  "theme_color": "#5b3a29",
+  "lang": "en-IN",
   "categories": [
     "lifestyle",
-    "productivity"
-  ],
-  "icons": []
+    "productivity",
+    "personal"
+  ]
 }

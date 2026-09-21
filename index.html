@@ -6,15 +6,16 @@
 <meta name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
-<title>My Personal Diary v10.1</title>
-
 <meta name="theme-color" content="#563925">
+
 <link rel="manifest" href="manifest.json">
+
+<title>My Personal Diary v10.2</title>
 
 <style>
 
 /* =========================================================
-   GLOBAL
+   V10.2 — GLOBAL
 ========================================================= */
 
 *{
@@ -30,11 +31,23 @@ body{
 }
 
 body{
+  color:#35281e;
   background:
-    radial-gradient(circle at 20% 15%,rgba(255,255,255,.9),transparent 28%),
-    linear-gradient(135deg,#d8d0c3,#eee8dd 50%,#d3c9bb);
-  color:#33251b;
-  font-family:Georgia,"Times New Roman",serif;
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(255,255,255,.8),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #d5cdc0,
+      #eee8df,
+      #d1c7b9
+    );
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 }
 
 button,
@@ -52,35 +65,33 @@ button{
   display:none !important;
 }
 
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
 :root{
 
-  --paper:#fffdf4;
+  --paper:#fffdf5;
 
-  --ink:#33251b;
+  --ink:#35281e;
 
-  --rule:#b9ccd5;
+  --rule:#b8ccd5;
 
-  --brown:#563925;
+  --accent:#5b3b27;
 
-  --brown2:#795438;
+  --accent2:#7b573b;
 
   --line-height:34px;
 
-  --font-size:19px;
+  --font-size:18px;
 
   --page-lines:24;
 
   --page-width:1500px;
+
+  --spine-width:42px;
+
 }
 
 
 /* =========================================================
-   TOP BAR
+   TOP NAVIGATION
 ========================================================= */
 
 .topbar{
@@ -91,32 +102,35 @@ button{
 
   z-index:10000;
 
-  min-height:62px;
+  min-height:58px;
 
   display:flex;
 
   align-items:center;
 
-  gap:8px;
+  gap:7px;
 
-  padding:7px 10px;
+  padding:6px 8px;
+
+  color:white;
 
   background:
     linear-gradient(
       135deg,
-      #432918,
-      #765039
+      #432817,
+      #755038
     );
 
-  color:white;
-
   box-shadow:
-    0 4px 15px rgba(0,0,0,.28);
+    0 3px 12px rgba(0,0,0,.28);
+
 }
 
 .brand{
 
-  font-size:21px;
+  flex:none;
+
+  font-size:19px;
 
   font-weight:bold;
 
@@ -128,11 +142,13 @@ button{
 
   display:flex;
 
+  flex:1;
+
+  min-width:0;
+
   gap:6px;
 
   overflow-x:auto;
-
-  flex:1;
 
   scrollbar-width:none;
 
@@ -146,20 +162,24 @@ button{
 
   flex:none;
 
-  padding:8px 11px;
+  padding:7px 10px;
 
-  border:1px solid rgba(255,255,255,.35);
+  border:
+    1px solid rgba(255,255,255,.32);
 
   border-radius:8px;
 
+  background:
+    rgba(255,255,255,.10);
+
   color:white;
 
-  background:rgba(255,255,255,.10);
+  white-space:nowrap;
 
 }
 
 .topbuttons button:active{
-  transform:scale(.96);
+  transform:scale(.97);
 }
 
 
@@ -171,11 +191,14 @@ button{
 
   width:100%;
 
-  padding:18px 12px 50px;
+  padding:
+    12px 5px 40px;
 
 }
 
 .book{
+
+  position:relative;
 
   width:100%;
 
@@ -183,12 +206,111 @@ button{
 
   margin:auto;
 
+}
+
+
+/* =========================================================
+   SPINE
+========================================================= */
+
+.spine{
+
+  position:absolute;
+
+  z-index:100;
+
+  left:0;
+
+  top:0;
+
+  bottom:0;
+
+  width:var(--spine-width);
+
+  background:
+    linear-gradient(
+      90deg,
+      #29180f 0%,
+      #684127 32%,
+      #8a5d3b 48%,
+      #593720 67%,
+      #2c1a10 100%
+    );
+
+  border-radius:
+    6px 0 0 6px;
+
+  box-shadow:
+    inset -4px 0 7px rgba(0,0,0,.35),
+    inset 3px 0 5px rgba(255,255,255,.10);
+
+  overflow:hidden;
+
+}
+
+.spine-line{
+
+  position:absolute;
+
+  top:0;
+
+  bottom:0;
+
+  left:50%;
+
+  width:2px;
+
+  transform:translateX(-50%);
+
+  background:
+    rgba(20,10,5,.45);
+
+}
+
+
+/* =========================================================
+   NATURAL BINDER RINGS
+========================================================= */
+
+.rings{
+
+  position:absolute;
+
+  inset:
+    8px 4px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:space-around;
+
+}
+
+.ring{
+
   position:relative;
 
-  filter:
-    drop-shadow(
-      0 15px 25px rgba(0,0,0,.25)
-    );
+  width:31px;
+
+  height:17px;
+
+  margin:auto;
+
+  border-radius:50%;
+
+  border:
+    3px solid #2d1a10;
+
+  border-left-color:#53321f;
+
+  border-right-color:#ad805b;
+
+  box-shadow:
+    1px 2px 3px rgba(0,0,0,.55),
+    inset 1px 1px 2px rgba(255,255,255,.22);
+
+  transform:rotate(-4deg);
 
 }
 
@@ -205,29 +327,30 @@ button{
     calc(
       var(--page-lines) *
       var(--line-height) +
-      220px
+      180px
     );
 
-  background-color:var(--paper);
+  margin:0;
+
+  margin-left:var(--spine-width);
+
+  background:var(--paper);
+
+  color:var(--ink);
 
   border:
-    1px solid #d3c6b3;
+    1px solid #d4c7b5;
+
+  border-left:0;
 
   border-radius:
-    5px 17px 17px 5px;
+    0 12px 12px 0;
 
   box-shadow:
-
-    inset 0 0 40px rgba(80,50,20,.08),
-
-    inset -12px 0 20px rgba(80,50,20,.04);
-
-  overflow:visible;
+    inset 0 0 35px rgba(80,50,20,.07),
+    0 13px 25px rgba(0,0,0,.23);
 
 }
-
-
-/* page edge */
 
 .page:after{
 
@@ -235,144 +358,23 @@ button{
 
   position:absolute;
 
-  right:-5px;
+  z-index:1;
 
   top:0;
 
+  right:-3px;
+
   bottom:0;
 
-  width:5px;
+  width:3px;
 
   background:
     repeating-linear-gradient(
       to bottom,
-      #cfc4b3 0px,
+      #c8bdad 0,
       #eee8dd 2px,
-      #c5b9a8 4px
+      #c0b4a4 4px
     );
-
-  border-radius:0 5px 5px 0;
-
-  pointer-events:none;
-
-}
-
-
-/* =========================================================
-   NATURAL SPIRAL
-========================================================= */
-
-.spine{
-
-  position:absolute;
-
-  left:0;
-
-  top:0;
-
-  bottom:0;
-
-  width:72px;
-
-  z-index:50;
-
-  background:
-
-    linear-gradient(
-      90deg,
-      #2c1b11,
-      #624027 22%,
-      #936345 42%,
-      #573721 64%,
-      #2d1b11
-    );
-
-  border-radius:
-    6px 0 0 6px;
-
-  box-shadow:
-
-    inset -8px 0 10px rgba(0,0,0,.35),
-
-    inset 5px 0 8px rgba(255,255,255,.10);
-
-  overflow:hidden;
-
-}
-
-
-/* spine stitching */
-
-.spine:before{
-
-  content:"";
-
-  position:absolute;
-
-  top:0;
-
-  bottom:0;
-
-  left:17px;
-
-  width:38px;
-
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 28px,
-      rgba(0,0,0,.42) 29px,
-      rgba(255,255,255,.12) 31px,
-      transparent 35px
-    );
-
-}
-
-
-/* rings */
-
-.rings{
-
-  position:absolute;
-
-  left:15px;
-
-  right:12px;
-
-  top:14px;
-
-  bottom:14px;
-
-  display:flex;
-
-  flex-direction:column;
-
-  justify-content:space-around;
-
-}
-
-.ring{
-
-  width:43px;
-
-  height:26px;
-
-  border-radius:50%;
-
-  border:4px solid #302015;
-
-  border-left-color:#563723;
-
-  border-right-color:#b2845d;
-
-  box-shadow:
-
-    1px 2px 3px rgba(0,0,0,.5),
-
-    inset 1px 1px 1px rgba(255,255,255,.25);
-
-  transform:rotate(-5deg);
 
 }
 
@@ -383,27 +385,27 @@ button{
 
 .pagecontent{
 
-  margin-left:72px;
+  position:relative;
 
   padding:
-    0 24px 50px 20px;
+    0 13px 45px;
 
 }
 
 
 /* =========================================================
-   HEADER
+   PAGE HEADER
 ========================================================= */
 
 .pageheader{
 
   position:sticky;
 
-  top:62px;
+  top:58px;
 
-  z-index:200;
+  z-index:500;
 
-  min-height:65px;
+  min-height:54px;
 
   display:flex;
 
@@ -411,15 +413,16 @@ button{
 
   justify-content:space-between;
 
-  gap:8px;
+  gap:5px;
 
-  padding:7px 5px;
+  padding:
+    4px 2px;
 
   background:
-    rgba(255,253,244,.97);
+    rgba(255,253,245,.97);
 
   border-bottom:
-    1px solid #d7cab7;
+    1px solid #d8cbb9;
 
   backdrop-filter:blur(5px);
 
@@ -427,17 +430,29 @@ button{
 
 .datearea{
 
+  flex:1;
+
   min-width:0;
 
 }
 
 .date{
 
-  font-size:21px;
+  display:flex;
+
+  align-items:center;
+
+  min-width:0;
+
+  font-size:18px;
 
   font-weight:bold;
 
   white-space:nowrap;
+
+}
+
+#dateText{
 
   overflow:hidden;
 
@@ -447,6 +462,8 @@ button{
 
 .mood{
 
+  flex:none;
+
   margin-left:5px;
 
   font-size:20px;
@@ -455,25 +472,29 @@ button{
 
 .pageactions{
 
+  flex:none;
+
   display:flex;
 
-  gap:5px;
-
-  flex:none;
+  gap:4px;
 
 }
 
 .smallbtn{
 
+  min-height:36px;
+
+  padding:
+    5px 9px;
+
   border:
-    1px solid #a9967c;
+    1px solid #ae9c84;
 
-  background:
-    #fff9ee;
+  border-radius:8px;
 
-  border-radius:7px;
+  background:#fffaf0;
 
-  padding:7px 10px;
+  color:#3b2a1d;
 
 }
 
@@ -484,20 +505,26 @@ button{
 
 .quote{
 
-  height:30px;
+  height:29px;
 
-  margin:
-    4px 0 5px;
+  display:flex;
 
-  padding:4px 7px;
+  align-items:center;
 
-  text-align:center;
+  justify-content:center;
+
+  margin:0;
+
+  padding:0 4px;
+
+  border-bottom:
+    1px dotted #b9a58d;
+
+  color:#73543d;
 
   font-size:13px;
 
   font-style:italic;
-
-  color:#76533b;
 
   white-space:nowrap;
 
@@ -505,63 +532,73 @@ button{
 
   text-overflow:ellipsis;
 
-  border-bottom:
-    1px dotted #bba68e;
-
 }
 
 
 /* =========================================================
-   FORMATTING TOOLBAR
+   TOOLBAR
 ========================================================= */
 
 .toolbar{
 
   position:sticky;
 
-  top:127px;
+  top:112px;
 
-  z-index:190;
+  z-index:450;
 
   display:flex;
 
   align-items:center;
 
-  gap:5px;
+  gap:4px;
 
-  padding:6px;
+  min-width:0;
 
-  background:
-    rgba(247,240,228,.98);
+  margin:
+    7px 0 4px;
+
+  padding:5px;
 
   border:
-    1px solid #cbbca7;
+    1px solid #c8b9a4;
 
   border-radius:9px;
 
+  background:
+    rgba(247,240,229,.98);
+
   box-shadow:
-    0 3px 8px rgba(0,0,0,.10);
+    0 2px 7px rgba(0,0,0,.12);
 
-  overflow:visible;
+  overflow-x:auto;
 
+  scrollbar-width:none;
+
+}
+
+.toolbar::-webkit-scrollbar{
+  display:none;
 }
 
 .toolbar button{
 
-  min-width:40px;
+  flex:none;
 
-  height:38px;
+  min-width:38px;
+
+  height:36px;
 
   padding:4px 8px;
 
   border:
-    1px solid #a9977e;
+    1px solid #ae9c84;
 
   border-radius:7px;
 
   background:#fffaf1;
 
-  color:#38281c;
+  color:#3b2b1e;
 
 }
 
@@ -569,46 +606,48 @@ button{
 
   color:white;
 
-  background:#5a3b27;
+  background:#5b3b27;
 
 }
 
 
 /* =========================================================
-   DRAW MENU
+   DRAWING MENU
 ========================================================= */
 
 .drawwrap{
 
   position:relative;
 
+  flex:none;
+
 }
 
 .drawmenu{
 
-  position:absolute;
+  position:fixed;
 
-  left:0;
-
-  top:43px;
-
-  z-index:1000;
+  z-index:5000;
 
   display:flex;
 
+  flex-wrap:wrap;
+
   gap:5px;
+
+  max-width:calc(100vw - 20px);
 
   padding:6px;
 
-  background:#fffdf7;
-
   border:
-    1px solid #b9a990;
+    1px solid #a99478;
 
   border-radius:9px;
 
+  background:#fffdf8;
+
   box-shadow:
-    0 8px 20px rgba(0,0,0,.25);
+    0 8px 22px rgba(0,0,0,.25);
 
 }
 
@@ -616,9 +655,19 @@ button{
   min-width:42px;
 }
 
+.drawhint{
+
+  padding:5px 7px;
+
+  font-size:12px;
+
+  color:#74573e;
+
+}
+
 
 /* =========================================================
-   WRITING AREA
+   EDITOR
 ========================================================= */
 
 .editorwrap{
@@ -633,13 +682,6 @@ button{
 
 }
 
-
-/*
-  IMPORTANT:
-  The ruled background and the text use exactly
-  the same line-height.
-*/
-
 .editor{
 
   position:relative;
@@ -653,15 +695,21 @@ button{
     );
 
   padding:
-    4px 8px 10px;
+    0 6px 10px;
 
   outline:none;
 
+  color:var(--ink);
+
+  /*
+    NORMAL DIARY FONT.
+    No forced cursive.
+  */
+
   font-family:
-    "Segoe Print",
-    "Bradley Hand",
-    "Comic Sans MS",
-    cursive;
+    Georgia,
+    "Times New Roman",
+    serif;
 
   font-size:var(--font-size);
 
@@ -671,55 +719,88 @@ button{
 
   overflow-wrap:anywhere;
 
-  background-image:
+  /*
+    The rule is deliberately ABOVE the
+    bottom of the line box so the glyph
+    baseline sits on it.
+  */
 
+  background-image:
     repeating-linear-gradient(
       to bottom,
       transparent 0,
-      transparent calc(var(--line-height) - 1px),
-      var(--rule) calc(var(--line-height) - 1px),
-      var(--rule) var(--line-height)
+      transparent calc(var(--line-height) - 8px),
+      var(--rule) calc(var(--line-height) - 8px),
+      var(--rule) calc(var(--line-height) - 7px),
+      transparent calc(var(--line-height) - 7px),
+      transparent var(--line-height)
     );
-
-  background-position:
-    0 6px;
 
   background-size:
     100% var(--line-height);
+
+  background-position:
+    0 0;
+
+}
+
+.editor:empty:before{
+
+  content:
+    "Start writing here...";
+
+  color:#b5a899;
+
+  pointer-events:none;
 
 }
 
 
 /*
-  Prevent browser default margins from
-  making text appear above/below lines.
+  Remove browser paragraph/div spacing.
 */
 
 .editor p,
 .editor div,
-.editor li{
+.editor section{
 
-  margin:0;
+  margin:0 !important;
 
-  padding:0;
+  padding:0 !important;
 
-  min-height:var(--line-height);
+  min-height:
+    var(--line-height);
 
-  line-height:var(--line-height);
+  line-height:
+    var(--line-height);
 
 }
 
 
-/* placeholder */
+/*
+  Lists stay on the same ruling.
+*/
 
-.editor:empty:before{
+.editor ul,
+.editor ol{
 
-  content:
-    "Start writing your diary...";
+  margin:0 !important;
 
-  color:#b2a494;
+  padding-left:1.45em !important;
 
-  pointer-events:none;
+}
+
+.editor li{
+
+  margin:0 !important;
+
+  padding:0 !important;
+
+  min-height:
+    var(--line-height);
+
+  line-height:
+    var(--line-height);
 
 }
 
@@ -752,11 +833,11 @@ button{
 
   pointer-events:auto;
 
-  cursor:crosshair;
-
 }
 
 .editorwrap.drawing .editor{
+
+  pointer-events:none;
 
   user-select:none;
 
@@ -771,32 +852,74 @@ button{
 
   position:absolute;
 
+  z-index:80;
+
   right:-1px;
 
-  bottom:20px;
+  bottom:17px;
 
-  z-index:70;
-
-  padding:10px 14px;
+  padding:
+    9px 12px;
 
   border:
-    1px solid #9d8569;
+    1px solid #a58b6e;
 
   border-radius:
     8px 0 0 8px;
 
-  background:#f3e6d1;
+  background:#f0dfc6;
 
-  color:#503521;
+  color:#533520;
 
   box-shadow:
-    0 4px 10px rgba(0,0,0,.18);
+    0 3px 8px rgba(0,0,0,.18);
 
 }
 
 
 /* =========================================================
-   MODALS
+   READ ONLY
+========================================================= */
+
+.readonly{
+
+  opacity:.92;
+
+}
+
+.readonly .editor{
+
+  background-color:
+    rgba(230,225,215,.16);
+
+}
+
+.readonlynote{
+
+  display:none;
+
+  margin:
+    4px 0;
+
+  padding:4px 7px;
+
+  border-radius:5px;
+
+  color:#754a35;
+
+  background:#f3e1d2;
+
+  font-size:12px;
+
+}
+
+.page.readonly .readonlynote{
+  display:block;
+}
+
+
+/* =========================================================
+   MODAL
 ========================================================= */
 
 .modal{
@@ -813,29 +936,31 @@ button{
 
   justify-content:center;
 
-  padding:12px;
+  padding:10px;
 
   background:
-    rgba(25,18,12,.65);
+    rgba(25,18,12,.66);
 
 }
 
 .modalbox{
 
-  width:min(720px,97vw);
+  width:
+    min(720px,97vw);
 
-  max-height:91vh;
+  max-height:
+    92vh;
 
   overflow:auto;
 
-  padding:18px;
-
-  border-radius:15px;
-
-  background:#fffdf7;
+  padding:16px;
 
   border:
     1px solid #bca990;
+
+  border-radius:14px;
+
+  background:#fffdf7;
 
   box-shadow:
     0 20px 60px rgba(0,0,0,.45);
@@ -845,14 +970,16 @@ button{
 .modalbox h2{
 
   margin:
-    0 0 15px;
+    0 0 14px;
 
-  color:#583a27;
+  color:#593a27;
 
 }
 
 .modalbox h3{
-  color:#67462e;
+
+  color:#68472f;
+
 }
 
 .formrow{
@@ -862,12 +989,14 @@ button{
   grid-template-columns:
     1fr 1fr;
 
-  gap:10px;
+  gap:9px;
 
 }
 
 .field{
-  margin-bottom:10px;
+
+  margin-bottom:9px;
+
 }
 
 .field label{
@@ -889,7 +1018,7 @@ button{
   padding:9px;
 
   border:
-    1px solid #b9aa96;
+    1px solid #b8a994;
 
   border-radius:7px;
 
@@ -907,17 +1036,17 @@ button{
 
   justify-content:flex-end;
 
-  gap:8px;
+  gap:7px;
 
-  margin-top:12px;
+  margin-top:10px;
 
 }
 
 .primary{
 
-  background:#593a27 !important;
-
   color:white !important;
+
+  background:#593a27 !important;
 
 }
 
@@ -934,7 +1063,7 @@ button{
 
   justify-content:space-between;
 
-  margin-bottom:12px;
+  margin-bottom:10px;
 
 }
 
@@ -945,32 +1074,34 @@ button{
   grid-template-columns:
     repeat(7,1fr);
 
-  gap:4px;
+  gap:3px;
 
 }
 
 .calhead{
 
-  padding:5px;
+  padding:4px;
 
   text-align:center;
 
   font-weight:bold;
 
+  font-size:13px;
+
 }
 
 .calday{
 
-  min-height:66px;
+  min-height:61px;
 
   padding:4px;
 
-  background:#fffaf1;
-
   border:
-    1px solid #d8cbb8;
+    1px solid #d5c7b3;
 
   border-radius:6px;
+
+  background:#fffaf1;
 
   overflow:hidden;
 
@@ -981,7 +1112,14 @@ button{
 .calday.today{
 
   border:
-    2px solid #795237;
+    2px solid #69462d;
+
+}
+
+.calday.selected{
+
+  box-shadow:
+    inset 0 0 0 2px #b4865a;
 
 }
 
@@ -991,15 +1129,17 @@ button{
 
 .eventdot{
 
-  margin-top:4px;
+  margin-top:3px;
 
   padding:2px 3px;
 
-  background:#e8d5b8;
-
   border-radius:4px;
 
-  font-size:11px;
+  background:#e8d4b8;
+
+  color:#513520;
+
+  font-size:10px;
 
   white-space:nowrap;
 
@@ -1011,37 +1151,37 @@ button{
 
 .eventlist{
 
-  margin-top:15px;
+  margin-top:14px;
 
-  padding-top:10px;
+  padding-top:9px;
 
   border-top:
-    1px solid #d7c8b5;
+    1px solid #d8c9b5;
 
 }
 
 
 /* =========================================================
-   EVENT
+   EVENT / TODO
 ========================================================= */
 
 .eventcard{
 
-  padding:10px;
-
   margin-bottom:8px;
 
-  background:#fffaf1;
+  padding:9px;
 
   border:
-    1px solid #d5c6b1;
+    1px solid #d2c2ad;
 
-  border-radius:9px;
+  border-radius:8px;
+
+  background:#fffaf1;
 
 }
 
 .eventcard strong{
-  color:#5b3b28;
+  color:#5b3b27;
 }
 
 .eventcard small{
@@ -1050,14 +1190,9 @@ button{
 
   margin-top:3px;
 
-  color:#75624f;
+  color:#75624e;
 
 }
-
-
-/* =========================================================
-   TODO
-========================================================= */
 
 .todoitem{
 
@@ -1082,7 +1217,7 @@ button{
 
   text-decoration:line-through;
 
-  opacity:.55;
+  opacity:.5;
 
 }
 
@@ -1096,9 +1231,12 @@ button{
   display:grid;
 
   grid-template-columns:
-    repeat(auto-fill,minmax(145px,1fr));
+    repeat(
+      auto-fill,
+      minmax(135px,1fr)
+    );
 
-  gap:10px;
+  gap:9px;
 
 }
 
@@ -1106,12 +1244,12 @@ button{
 
   overflow:hidden;
 
-  background:white;
-
   border:
-    1px solid #d0c0aa;
+    1px solid #cfbfaa;
 
-  border-radius:9px;
+  border-radius:8px;
+
+  background:white;
 
 }
 
@@ -1121,7 +1259,7 @@ button{
 
   width:100%;
 
-  height:150px;
+  height:140px;
 
   object-fit:cover;
 
@@ -1129,9 +1267,9 @@ button{
 
 .memorycaption{
 
-  padding:7px;
+  padding:6px;
 
-  font-size:13px;
+  font-size:12px;
 
 }
 
@@ -1147,18 +1285,18 @@ button{
   grid-template-columns:
     repeat(3,1fr);
 
-  gap:8px;
+  gap:7px;
 
 }
 
 .design{
 
-  min-height:65px;
+  min-height:55px;
 
-  padding:9px;
+  padding:8px;
 
   border:
-    2px solid #c9b9a2;
+    2px solid #c8b9a4;
 
   border-radius:8px;
 
@@ -1168,85 +1306,72 @@ button{
 
 .design.selected{
 
-  border-color:#593a27;
+  border-color:#5b3b27;
 
   box-shadow:
-    0 0 0 2px #dfc7a5;
+    0 0 0 2px #dfc6a5;
+
+}
+
+.rangevalue{
+
+  font-weight:normal;
+
+  color:#76563e;
 
 }
 
 
 /* =========================================================
-   DESIGNS
+   PAGE DESIGNS
 ========================================================= */
 
 .design-classic{
-
-  --paper:#fffdf4;
-
-  --rule:#b9ccd5;
-
+  --paper:#fffdf5;
+  --rule:#b8ccd5;
 }
 
 .design-vintage{
-
-  --paper:#f8ecd5;
-
-  --rule:#c8ae82;
-
+  --paper:#f8ecd6;
+  --rule:#c7ad80;
 }
 
 .design-blue{
-
   --paper:#f1f8fc;
-
-  --rule:#a7c7dc;
-
+  --rule:#a8c6d8;
 }
 
 .design-green{
-
-  --paper:#f3f8ed;
-
-  --rule:#b5c8a2;
-
+  --paper:#f2f8ed;
+  --rule:#b3c7a0;
 }
 
 .design-rose{
-
   --paper:#fff4f4;
+  --rule:#d7b5bd;
+}
 
-  --rule:#d8b6bd;
-
+.design-lavender{
+  --paper:#f8f5ff;
+  --rule:#c2b9d6;
 }
 
 .design-night{
-
-  --paper:#282622;
-
-  --rule:#605b52;
-
-  --ink:#f1eadf;
-
+  --paper:#292724;
+  --rule:#625d54;
+  --ink:#eee6da;
 }
 
 .design-night .pageheader,
 .design-night .toolbar{
-
-  background:
-    rgba(40,38,34,.97);
-
+  background:rgba(41,39,36,.97);
 }
 
 .design-night .toolbar button,
 .design-night .smallbtn{
-
-  color:#f2ebdf;
-
-  background:#39352f;
-
-  border-color:#736b60;
-
+  color:#eee6da;
+  background:#393631;
+  border-color:#756c60;
 }
 
 
@@ -1258,21 +1383,22 @@ button{
 
   .topbar{
 
-    min-height:57px;
+    min-height:55px;
 
-    padding:6px;
+    padding:5px;
 
   }
 
   .brand{
 
-    font-size:17px;
+    font-size:16px;
 
   }
 
   .topbuttons button{
 
-    padding:7px 9px;
+    padding:
+      6px 8px;
 
     font-size:13px;
 
@@ -1281,88 +1407,97 @@ button{
   .workspace{
 
     padding:
-      7px 3px 30px;
+      6px 2px 30px;
 
   }
 
-  .spine{
+  /*
+    Small spine on phone.
+  */
 
-    width:52px;
+  :root{
+
+    --spine-width:38px;
 
   }
 
   .rings{
 
-    left:8px;
-
-    width:37px;
+    inset:
+      6px 2px;
 
   }
 
   .ring{
 
-    width:37px;
+    width:29px;
 
-    height:22px;
+    height:16px;
+
+    border-width:3px;
+
+  }
+
+  .page{
+
+    min-height:
+      calc(
+        var(--page-lines) *
+        var(--line-height) +
+        160px
+      );
 
   }
 
   .pagecontent{
 
-    margin-left:52px;
-
     padding:
-      0 7px 35px 7px;
+      0 7px 35px;
 
   }
 
   .pageheader{
 
-    top:57px;
+    top:55px;
 
-    min-height:56px;
+    min-height:52px;
 
   }
 
   .date{
 
-    font-size:17px;
+    font-size:16px;
+
+  }
+
+  .pageactions .smallbtn{
+
+    min-width:34px;
+
+    padding:
+      4px 7px;
 
   }
 
   .toolbar{
 
-    top:113px;
+    top:107px;
 
-    overflow-x:auto;
-
-    scrollbar-width:none;
-
-  }
-
-  .toolbar::-webkit-scrollbar{
-    display:none;
-  }
-
-  .toolbar button{
-
-    min-width:38px;
-
-    height:36px;
-
-    padding:4px 7px;
+    margin-top:5px;
 
   }
 
   .editor{
 
-    font-size:17px;
+    font-size:
+      var(--font-size);
 
   }
 
   .formrow{
 
-    grid-template-columns:1fr;
+    grid-template-columns:
+      1fr;
 
   }
 
@@ -1375,7 +1510,83 @@ button{
 
   .calday{
 
-    min-height:54px;
+    min-height:51px;
+
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(min-width:701px){
+
+  .pagecontent{
+
+    padding-left:20px;
+
+    padding-right:22px;
+
+  }
+
+  .pageheader{
+
+    top:58px;
+
+  }
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+  body{
+
+    background:white;
+
+  }
+
+  .topbar,
+  .spine,
+  .toolbar,
+  .newpage,
+  .pageactions{
+
+    display:none !important;
+
+  }
+
+  .workspace{
+
+    padding:0;
+
+  }
+
+  .page{
+
+    margin:0;
+
+    border:0;
+
+    box-shadow:none;
+
+  }
+
+  .pagecontent{
+
+    margin:0;
+
+  }
+
+  .pageheader{
+
+    position:static;
 
   }
 
@@ -1384,11 +1595,12 @@ button{
 </style>
 </head>
 
+
 <body>
 
-<!-- =====================================================
+<!-- =======================================================
      TOP BAR
-===================================================== -->
+======================================================= -->
 
 <header class="topbar">
 
@@ -1434,6 +1646,7 @@ button{
 
 </header>
 
+
 <input
   id="restoreFile"
   type="file"
@@ -1443,9 +1656,9 @@ button{
 >
 
 
-<!-- =====================================================
+<!-- =======================================================
      BOOK
-===================================================== -->
+======================================================= -->
 
 <main class="workspace">
 
@@ -1453,18 +1666,19 @@ button{
 
   <div class="spine">
 
+    <div class="spine-line"></div>
+
     <div
-      class="rings"
-      id="rings">
+      id="rings"
+      class="rings">
     </div>
 
   </div>
 
 
-  <div
-    class="page design-classic"
+  <article
     id="diaryPage"
-    data-design="classic"
+    class="page design-classic"
   >
 
     <div class="pagecontent">
@@ -1489,11 +1703,11 @@ button{
 
         </div>
 
-
         <div class="pageactions">
 
           <button
             class="smallbtn"
+            id="prevDateBtn"
             onclick="previousDate()">
             ‹
           </button>
@@ -1506,12 +1720,20 @@ button{
 
           <button
             class="smallbtn"
+            id="nextDateBtn"
             onclick="nextDate()">
             ›
           </button>
 
         </div>
 
+      </div>
+
+
+      <div
+        id="readonlyNote"
+        class="readonlynote">
+        🔒 Past diary pages are read-only.
       </div>
 
 
@@ -1523,9 +1745,11 @@ button{
       </div>
 
 
-      <!-- FORMATTING TOOLBAR -->
+      <!-- TOOLBAR -->
 
-      <div class="toolbar">
+      <div
+        id="toolbar"
+        class="toolbar">
 
         <button
           onclick="formatText('bold')">
@@ -1563,12 +1787,14 @@ button{
         </button>
 
         <button
+          id="clearFormatButton"
           onclick="clearFormatting()">
           Clear
         </button>
 
-
-        <div class="drawwrap">
+        <div
+          id="drawWrap"
+          class="drawwrap">
 
           <button
             id="drawButton"
@@ -1576,61 +1802,74 @@ button{
             ✎ Draw
           </button>
 
-
-          <div
-            id="drawMenu"
-            class="drawmenu"
-            hidden
-          >
-
-            <button
-              onclick="selectDrawTool('pen')">
-              ✎
-            </button>
-
-            <button
-              onclick="selectDrawTool('line')">
-              ╱
-            </button>
-
-            <button
-              onclick="selectDrawTool('circle')">
-              ○
-            </button>
-
-            <button
-              onclick="selectDrawTool('eraser')">
-              ⌫
-            </button>
-
-            <button
-              onclick="undoDrawing()">
-              ↶
-            </button>
-
-            <button
-              onclick="redoDrawing()">
-              ↷
-            </button>
-
-            <button
-              onclick="clearDrawing()">
-              Clear
-            </button>
-
-          </div>
-
         </div>
 
       </div>
 
 
-      <!-- WRITING + DRAWING -->
+      <!-- DRAW MENU IS PLACED HERE SO IT CAN BE
+           POSITIONED ABOVE THE PAGE WITHOUT
+           DISTURBING THE WRITING LINES -->
+
+      <div
+        id="drawMenu"
+        class="drawmenu"
+        hidden>
+
+        <button
+          onclick="selectDrawTool('pen')">
+          ✎ Pen
+        </button>
+
+        <button
+          onclick="selectDrawTool('line')">
+          ╱ Line
+        </button>
+
+        <button
+          onclick="selectDrawTool('circle')">
+          ○ Circle
+        </button>
+
+        <button
+          onclick="selectDrawTool('eraser')">
+          ⌫ Eraser
+        </button>
+
+        <button
+          onclick="undoDrawing()">
+          ↶ Undo
+        </button>
+
+        <button
+          onclick="redoDrawing()">
+          ↷ Redo
+        </button>
+
+        <button
+          onclick="clearDrawing()">
+          Clear
+        </button>
+
+        <button
+          id="exitDrawButton"
+          onclick="exitDrawing()">
+          ✓ Exit Draw
+        </button>
+
+        <span
+          class="drawhint">
+          Select a tool — menu closes automatically
+        </span>
+
+      </div>
+
+
+      <!-- EDITOR -->
 
       <div
         id="editorWrap"
-        class="editorwrap"
-      >
+        class="editorwrap">
 
         <div
           id="editor"
@@ -1646,9 +1885,8 @@ button{
       </div>
 
 
-      <!-- NEW PAGE -->
-
       <button
+        id="newPageButton"
         class="newpage"
         onclick="newPage()">
         + New Page
@@ -1656,22 +1894,21 @@ button{
 
     </div>
 
-  </div>
+  </article>
 
 </section>
 
 </main>
 
 
-<!-- =====================================================
-     CALENDAR MODAL
-===================================================== -->
+<!-- =======================================================
+     CALENDAR
+======================================================= -->
 
 <div
   id="calendarModal"
   class="modal"
-  hidden
->
+  hidden>
 
   <div class="modalbox">
 
@@ -1702,7 +1939,7 @@ button{
 
     <div class="eventlist">
 
-      <h3>Diary Events</h3>
+      <h3>Events this month</h3>
 
       <div id="calendarEvents"></div>
 
@@ -1723,15 +1960,14 @@ button{
 </div>
 
 
-<!-- =====================================================
-     EVENTS MODAL
-===================================================== -->
+<!-- =======================================================
+     EVENTS
+======================================================= -->
 
 <div
   id="eventsModal"
   class="modal"
-  hidden
->
+  hidden>
 
   <div class="modalbox">
 
@@ -1797,6 +2033,7 @@ button{
       </button>
 
       <button
+        id="saveEventButton"
         class="smallbtn primary"
         onclick="saveEvent()">
         Save Event
@@ -1809,15 +2046,14 @@ button{
 </div>
 
 
-<!-- =====================================================
-     TODO MODAL
-===================================================== -->
+<!-- =======================================================
+     TODO
+======================================================= -->
 
 <div
   id="todoModal"
   class="modal"
-  hidden
->
+  hidden>
 
   <div class="modalbox">
 
@@ -1876,15 +2112,14 @@ button{
 </div>
 
 
-<!-- =====================================================
-     MEMORIES MODAL
-===================================================== -->
+<!-- =======================================================
+     MEMORY
+======================================================= -->
 
 <div
   id="memoryModal"
   class="modal"
-  hidden
->
+  hidden>
 
   <div class="modalbox">
 
@@ -1893,7 +2128,7 @@ button{
     <div class="field">
 
       <label>
-        Add photograph
+        Photograph / Camera
       </label>
 
       <input
@@ -1925,15 +2160,70 @@ button{
 </div>
 
 
-<!-- =====================================================
-     SETTINGS MODAL
-===================================================== -->
+<!-- =======================================================
+     MOOD
+======================================================= -->
+
+<div
+  id="moodModal"
+  class="modal"
+  hidden>
+
+  <div class="modalbox">
+
+    <h2>Choose Mood</h2>
+
+    <div
+      style="
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:8px;
+      ">
+
+      <button class="smallbtn" onclick="setMood('😊')">😊</button>
+      <button class="smallbtn" onclick="setMood('😄')">😄</button>
+      <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
+      <button class="smallbtn" onclick="setMood('😌')">😌</button>
+      <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
+      <button class="smallbtn" onclick="setMood('😐')">😐</button>
+      <button class="smallbtn" onclick="setMood('😔')">😔</button>
+      <button class="smallbtn" onclick="setMood('😢')">😢</button>
+      <button class="smallbtn" onclick="setMood('😡')">😡</button>
+      <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
+      <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
+      <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
+
+    </div>
+
+    <div class="modalbuttons">
+
+      <button
+        class="smallbtn"
+        onclick="setMood('')">
+        Remove Mood
+      </button>
+
+      <button
+        class="smallbtn"
+        onclick="closeModal('moodModal')">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =======================================================
+     SETTINGS
+======================================================= -->
 
 <div
   id="settingsModal"
   class="modal"
-  hidden
->
+  hidden>
 
   <div class="modalbox">
 
@@ -1974,6 +2264,12 @@ button{
       </div>
 
       <div
+        class="design design-lavender"
+        onclick="setDesign('lavender')">
+        💜 Lavender
+      </div>
+
+      <div
         class="design design-night"
         onclick="setDesign('night')">
         🌙 Night
@@ -1987,10 +2283,7 @@ button{
 
       <label>
         Number of lines:
-        <span
-          id="lineValue"
-          class="rangevalue">
-        </span>
+        <span id="lineValue"></span>
       </label>
 
       <input
@@ -2003,57 +2296,45 @@ button{
 
     </div>
 
-
     <div class="field">
 
       <label>
         Font size:
-        <span
-          id="fontValue"
-          class="rangevalue">
-        </span>
+        <span id="fontValue"></span>
       </label>
 
       <input
         id="fontRange"
         type="range"
         min="15"
-        max="26"
-        value="19"
+        max="24"
+        value="18"
         oninput="changeFont(this.value)">
 
     </div>
-
 
     <div class="field">
 
       <label>
         Line spacing:
-        <span
-          id="spacingValue"
-          class="rangevalue">
-        </span>
+        <span id="spacingValue"></span>
       </label>
 
       <input
         id="spacingRange"
         type="range"
-        min="27"
-        max="46"
+        min="28"
+        max="45"
         value="34"
         oninput="changeSpacing(this.value)">
 
     </div>
 
-
     <div class="field">
 
       <label>
         Page width:
-        <span
-          id="widthValue"
-          class="rangevalue">
-        </span>
+        <span id="widthValue"></span>
       </label>
 
       <input
@@ -2065,7 +2346,6 @@ button{
         oninput="changeWidth(this.value)">
 
     </div>
-
 
     <div class="modalbuttons">
 
@@ -2082,67 +2362,93 @@ button{
 </div>
 
 
+<!-- =======================================================
+     DATABASE / APPLICATION
+======================================================= -->
+
 <script>
 
 /* =========================================================
    DATABASE
 ========================================================= */
 
+/*
+  NEW DATABASE NAME.
+
+  This is deliberate.
+
+  The previous versions could contain incompatible
+  object-store schemas. v10.2 does not try to "put"
+  records into the old schema.
+
+  Instead:
+    old DB -> migration reader -> new DB
+*/
+
 const DB_NAME =
-  "myPersonalDiaryDB";
+  "myPersonalDiaryDB_v102";
 
 const DB_VERSION =
-  10;
-
-let db = null;
-
-let currentDate =
-  todayISO();
-
-let currentPage =
   1;
 
-let currentPageRecord =
-  null;
+const OLD_DB_NAME =
+  "myPersonalDiaryDB";
 
-let calendarDate =
-  new Date();
+let db=null;
+
+let currentDate=
+  todayISO();
+
+let currentPage=1;
+
+let currentPageRecord=null;
+
+let calendarDate=
+  dateObj(currentDate);
+
+let saveTimer=null;
+
+let migrationDone=false;
 
 
 /* =========================================================
-   DRAWING VARIABLES
+   DRAWING
 ========================================================= */
 
-let drawingMode =
-  false;
+const editor=
+  document.getElementById("editor");
 
-let drawTool =
-  "pen";
+const editorWrap=
+  document.getElementById("editorWrap");
 
-let drawColor =
-  "#33251b";
+const canvas=
+  document.getElementById("drawCanvas");
 
-let drawSize =
-  3;
+const ctx=
+  canvas.getContext("2d");
 
-let drawStart =
-  null;
+let drawingMode=false;
 
-let drawLast =
-  null;
+let drawTool="pen";
 
-let drawHistory =
-  [];
+let drawSize=3;
 
-let drawRedo =
-  [];
+let drawColor="#35281e";
+
+let drawStart=null;
+
+let drawLast=null;
+
+let drawHistory=[];
+
+let drawRedo=[];
 
 
 /* =========================================================
    QUOTES
 ========================================================= */
 
-const quotes = [
+const quotes=[
 
   "Every day is a new page.",
 
@@ -2160,7 +2466,7 @@ const quotes = [
 
   "Keep the memories. They become treasures.",
 
-  "The ordinary days often become the precious memories.",
+  "The ordinary days often become precious memories.",
 
   "A peaceful mind creates beautiful memories."
 
@@ -2168,15 +2474,14 @@ const quotes = [
 
 
 /* =========================================================
-   HELPERS
+   BASIC HELPERS
 ========================================================= */
 
 function todayISO(){
 
-  const d =
-    new Date();
-
-  return toISO(d);
+  return toISO(
+    new Date()
+  );
 
 }
 
@@ -2184,11 +2489,13 @@ function todayISO(){
 function toISO(d){
 
   return (
-    d.getFullYear() +
-    "-" +
-    String(d.getMonth()+1).padStart(2,"0") +
-    "-" +
-    String(d.getDate()).padStart(2,"0")
+    d.getFullYear()+
+    "-"+
+    String(d.getMonth()+1)
+      .padStart(2,"0")+
+    "-"+
+    String(d.getDate())
+      .padStart(2,"0")
   );
 
 }
@@ -2196,8 +2503,10 @@ function toISO(d){
 
 function dateObj(iso){
 
-  const p =
-    iso.split("-").map(Number);
+  const p=
+    String(iso)
+      .split("-")
+      .map(Number);
 
   return new Date(
     p[0],
@@ -2226,7 +2535,7 @@ function formatDate(iso){
 
 function escapeHTML(value){
 
-  return String(value || "")
+  return String(value||"")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
@@ -2238,40 +2547,79 @@ function escapeHTML(value){
 
 function closeModal(id){
 
-  document.getElementById(id)
-    .hidden = true;
+  const el=
+    document.getElementById(id);
+
+  if(el)
+    el.hidden=true;
 
 }
 
 
 function openModal(id){
 
-  document.getElementById(id)
-    .hidden = false;
+  const el=
+    document.getElementById(id);
+
+  if(el)
+    el.hidden=false;
+
+}
+
+
+function isPastDate(date){
+
+  return date<todayISO();
 
 }
 
 
 /* =========================================================
-   OPEN DATABASE
+   QUOTE
 ========================================================= */
 
-function openDB(){
+function getQuote(date){
+
+  let n=0;
+
+  for(
+    let i=0;
+    i<date.length;
+    i++
+  ){
+
+    n+=
+      date.charCodeAt(i);
+
+  }
+
+  return quotes[
+    n%quotes.length
+  ];
+
+}
+
+
+/* =========================================================
+   NEW DATABASE
+========================================================= */
+
+function openNewDB(){
 
   return new Promise(
     (resolve,reject)=>{
 
-      const request =
+      const request=
         indexedDB.open(
           DB_NAME,
           DB_VERSION
         );
 
 
-      request.onupgradeneeded =
+      request.onupgradeneeded=
         function(e){
 
-          const database =
+          const database=
             e.target.result;
 
 
@@ -2280,13 +2628,13 @@ function openDB(){
               .contains("pages")
           ){
 
-            const store =
+            const s=
               database.createObjectStore(
                 "pages",
                 {keyPath:"id"}
               );
 
-            store.createIndex(
+            s.createIndex(
               "date",
               "date"
             );
@@ -2299,7 +2647,7 @@ function openDB(){
               .contains("events")
           ){
 
-            const store =
+            const s=
               database.createObjectStore(
                 "events",
                 {
@@ -2308,7 +2656,7 @@ function openDB(){
                 }
               );
 
-            store.createIndex(
+            s.createIndex(
               "date",
               "date"
             );
@@ -2321,7 +2669,7 @@ function openDB(){
               .contains("todos")
           ){
 
-            const store =
+            const s=
               database.createObjectStore(
                 "todos",
                 {
@@ -2330,7 +2678,7 @@ function openDB(){
                 }
               );
 
-            store.createIndex(
+            s.createIndex(
               "date",
               "date"
             );
@@ -2343,7 +2691,7 @@ function openDB(){
               .contains("memories")
           ){
 
-            const store =
+            const s=
               database.createObjectStore(
                 "memories",
                 {
@@ -2352,7 +2700,7 @@ function openDB(){
                 }
               );
 
-            store.createIndex(
+            s.createIndex(
               "date",
               "date"
             );
@@ -2375,22 +2723,41 @@ function openDB(){
         };
 
 
-      request.onsuccess =
+      request.onsuccess=
         function(e){
 
-          db =
-            e.target.result;
+          db=e.target.result;
+
+          db.onversionchange=
+            function(){
+
+              db.close();
+
+            };
 
           resolve(db);
 
         };
 
 
-      request.onerror =
+      request.onerror=
         function(){
 
           reject(
-            request.error
+            request.error ||
+            new Error(
+              "Unable to open diary database."
+            )
+          );
+
+        };
+
+
+      request.onblocked=
+        function(){
+
+          console.warn(
+            "Diary database opening is blocked."
           );
 
         };
@@ -2402,7 +2769,7 @@ function openDB(){
 
 
 /* =========================================================
-   DATABASE FUNCTIONS
+   DATABASE OPERATIONS
 ========================================================= */
 
 function get(store,key){
@@ -2410,20 +2777,72 @@ function get(store,key){
   return new Promise(
     (resolve,reject)=>{
 
-      const request =
-        db
-          .transaction(
-            store,
+      try{
+
+        const tx=
+          db.transaction(
+            [store],
             "readonly"
-          )
-          .objectStore(store)
-          .get(key);
+          );
 
-      request.onsuccess =
-        ()=>resolve(request.result);
+        const request=
+          tx.objectStore(store)
+            .get(key);
 
-      request.onerror =
-        ()=>reject(request.error);
+        request.onsuccess=
+          ()=>resolve(
+            request.result
+          );
+
+        request.onerror=
+          ()=>reject(
+            request.error
+          );
+
+      }catch(error){
+
+        reject(error);
+
+      }
+
+    }
+  );
+
+}
+
+
+function getAll(store){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      try{
+
+        const tx=
+          db.transaction(
+            [store],
+            "readonly"
+          );
+
+        const request=
+          tx.objectStore(store)
+            .getAll();
+
+        request.onsuccess=
+          ()=>resolve(
+            request.result||[]
+          );
+
+        request.onerror=
+          ()=>reject(
+            request.error
+          );
+
+      }catch(error){
+
+        reject(error);
+
+      }
 
     }
   );
@@ -2436,20 +2855,33 @@ function put(store,value){
   return new Promise(
     (resolve,reject)=>{
 
-      const request =
-        db
-          .transaction(
-            store,
+      try{
+
+        const tx=
+          db.transaction(
+            [store],
             "readwrite"
-          )
-          .objectStore(store)
-          .put(value);
+          );
 
-      request.onsuccess =
-        ()=>resolve(request.result);
+        const request=
+          tx.objectStore(store)
+            .put(value);
 
-      request.onerror =
-        ()=>reject(request.error);
+        request.onsuccess=
+          ()=>resolve(
+            request.result
+          );
+
+        request.onerror=
+          ()=>reject(
+            request.error
+          );
+
+      }catch(error){
+
+        reject(error);
+
+      }
 
     }
   );
@@ -2457,51 +2889,36 @@ function put(store,value){
 }
 
 
-function remove(store,key){
+function deleteRecord(store,key){
 
   return new Promise(
     (resolve,reject)=>{
 
-      const request =
-        db
-          .transaction(
-            store,
+      try{
+
+        const tx=
+          db.transaction(
+            [store],
             "readwrite"
-          )
-          .objectStore(store)
-          .delete(key);
+          );
 
-      request.onsuccess =
-        ()=>resolve();
+        const request=
+          tx.objectStore(store)
+            .delete(key);
 
-      request.onerror =
-        ()=>reject(request.error);
+        request.onsuccess=
+          ()=>resolve();
 
-    }
-  );
+        request.onerror=
+          ()=>reject(
+            request.error
+          );
 
-}
+      }catch(error){
 
+        reject(error);
 
-function all(store){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      const request =
-        db
-          .transaction(
-            store,
-            "readonly"
-          )
-          .objectStore(store)
-          .getAll();
-
-      request.onsuccess =
-        ()=>resolve(request.result || []);
-
-      request.onerror =
-        ()=>reject(request.error);
+      }
 
     }
   );
@@ -2510,81 +2927,80 @@ function all(store){
 
 
 /* =========================================================
-   OLD DIARY MIGRATION
+   OLD DATABASE MIGRATION
 ========================================================= */
 
-async function migrateOldDiary(){
+async function migrateOldDatabase(){
 
-  const old =
-    localStorage.getItem(
-      "myPersonalDiaryEntries"
-    );
-
-  if(!old)
+  if(migrationDone)
     return;
+
+  migrationDone=true;
+
+
+  /*
+    First migrate old localStorage diary.
+  */
 
   try{
 
-    const data =
-      JSON.parse(old);
+    const oldDiary=
+      localStorage.getItem(
+        "myPersonalDiaryEntries"
+      );
 
-    for(
-      const date
-      of Object.keys(data)
-    ){
+    if(oldDiary){
 
-      const value =
-        data[date];
+      const data=
+        JSON.parse(oldDiary);
 
-      let content="";
-      let mood="";
-
-      if(
-        typeof value ===
-        "string"
+      for(
+        const date of Object.keys(data)
       ){
 
-        content=value;
+        const value=data[date];
 
-      }else if(value){
+        let content="";
+        let mood="";
 
-        content =
-          value.content ||
-          value.text ||
-          "";
+        if(
+          typeof value==="string"
+        ){
 
-        mood =
-          value.mood ||
-          "";
+          content=value;
 
-      }
+        }else if(value){
 
+          content=
+            value.content||
+            value.text||
+            "";
 
-      if(!content)
-        continue;
+          mood=
+            value.mood||
+            "";
 
+        }
 
-      const id =
-        date + "-1";
-
-      const exists =
-        await get(
-          "pages",
-          id
-        );
-
-
-      if(!exists){
+        if(!content)
+          continue;
 
         await put(
           "pages",
           {
-            id:id,
+            id:
+              date+"-1",
+
             date:date,
+
             page:1,
+
             content:content,
+
             drawing:null,
+
             mood:mood,
+
             quote:getQuote(date)
           }
         );
@@ -2595,55 +3011,974 @@ async function migrateOldDiary(){
 
   }catch(error){
 
-    console.log(
-      "Old diary migration error",
+    console.warn(
+      "localStorage migration:",
       error
     );
 
   }
 
-}
+
+  /*
+    Now try to read the old IndexedDB.
+
+    There is deliberately NO version number.
+    Therefore we do not trigger an upgrade
+    against the old schema.
+  */
+
+  let oldDB=null;
 
 
-/* =========================================================
-   QUOTE
-========================================================= */
+  try{
 
-function getQuote(date){
+    oldDB=
+      await openOldDB();
 
-  let n=0;
+  }catch(error){
 
-  for(
-    let i=0;
-    i<date.length;
-    i++
-  ){
+    console.log(
+      "No readable old database:",
+      error
+    );
 
-    n +=
-      date.charCodeAt(i);
+    return;
 
   }
 
-  return quotes[
-    n % quotes.length
-  ];
+
+  try{
+
+    const stores=
+      Array.from(
+        oldDB.objectStoreNames
+      );
+
+
+    /*
+      Pages
+    */
+
+    if(
+      stores.includes("pages")
+    ){
+
+      const records=
+        await readOldStore(
+          oldDB,
+          "pages"
+        );
+
+
+      for(
+        const record of records
+      ){
+
+        const page=
+          normalizePage(
+            record
+          );
+
+        if(page){
+
+          const exists=
+            await get(
+              "pages",
+              page.id
+            );
+
+          if(!exists){
+
+            await put(
+              "pages",
+              page
+            );
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+    /*
+      Events
+    */
+
+    if(
+      stores.includes("events")
+    ){
+
+      const records=
+        await readOldStore(
+          oldDB,
+          "events"
+        );
+
+
+      for(
+        const record of records
+      ){
+
+        const event=
+          normalizeEvent(
+            record
+          );
+
+        if(event){
+
+          await put(
+            "events",
+            event
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /*
+      Todos
+    */
+
+    if(
+      stores.includes("todos")
+    ){
+
+      const records=
+        await readOldStore(
+          oldDB,
+          "todos"
+        );
+
+
+      for(
+        const record of records
+      ){
+
+        const todo=
+          normalizeTodo(
+            record
+          );
+
+        if(todo){
+
+          await put(
+            "todos",
+            todo
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /*
+      Memories
+    */
+
+    if(
+      stores.includes("memories")
+    ){
+
+      const records=
+        await readOldStore(
+          oldDB,
+          "memories"
+        );
+
+
+      for(
+        const record of records
+      ){
+
+        const memory=
+          normalizeMemory(
+            record
+          );
+
+        if(memory){
+
+          await put(
+            "memories",
+            memory
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /*
+      Old attachments -> memories
+    */
+
+    if(
+      stores.includes("attachments")
+    ){
+
+      const records=
+        await readOldStore(
+          oldDB,
+          "attachments"
+        );
+
+
+      for(
+        const record of records
+      ){
+
+        const memory=
+          normalizeMemory(
+            record
+          );
+
+        if(memory){
+
+          await put(
+            "memories",
+            memory
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /*
+      Settings
+    */
+
+    if(
+      stores.includes("settings")
+    ){
+
+      const records=
+        await readOldStore(
+          oldDB,
+          "settings"
+        );
+
+
+      for(
+        const record of records
+      ){
+
+        const setting=
+          normalizeSetting(
+            record
+          );
+
+        if(setting){
+
+          await put(
+            "settings",
+            setting
+          );
+
+        }
+
+      }
+
+    }
+
+  }catch(error){
+
+    console.warn(
+      "Old database migration error:",
+      error
+    );
+
+  }finally{
+
+    try{
+      oldDB.close();
+    }catch(e){}
+
+  }
+
+}
+
+
+function openOldDB(){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const request=
+        indexedDB.open(
+          OLD_DB_NAME
+        );
+
+      request.onsuccess=
+        e=>
+          resolve(
+            e.target.result
+          );
+
+      request.onerror=
+        e=>
+          reject(
+            e.target.error
+          );
+
+      request.onupgradeneeded=
+        function(){
+
+          /*
+            If the old database does not exist,
+            cancel migration rather than modifying it.
+          */
+
+          try{
+
+            request.transaction.abort();
+
+          }catch(e){}
+
+        };
+
+    }
+  );
+
+}
+
+
+function readOldStore(database,name){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      try{
+
+        const tx=
+          database.transaction(
+            [name],
+            "readonly"
+          );
+
+        const store=
+          tx.objectStore(name);
+
+        const request=
+          store.getAll();
+
+        request.onsuccess=
+          ()=>resolve(
+            request.result||[]
+          );
+
+        request.onerror=
+          ()=>reject(
+            request.error
+          );
+
+      }catch(error){
+
+        reject(error);
+
+      }
+
+    }
+  );
 
 }
 
 
 /* =========================================================
-   PAGE LOAD
+   NORMALIZERS
 ========================================================= */
+
+function normalizePage(r){
+
+  if(!r)
+    return null;
+
+
+  const date=
+    r.date||
+    r.day||
+    (
+      r.id
+      ? String(r.id).split("-")[0]
+      : null
+    );
+
+
+  if(!date)
+    return null;
+
+
+  const page=
+    Number(
+      r.page||
+      r.pageNumber||
+      1
+    );
+
+
+  return {
+
+    id:
+      date+"-"+page,
+
+    date:date,
+
+    page:page,
+
+    content:
+      r.content||
+      r.text||
+      "",
+
+    drawing:
+      r.drawing||
+      r.draw||
+      null,
+
+    mood:
+      r.mood||
+      "",
+
+    quote:
+      r.quote||
+      getQuote(date)
+
+  };
+
+}
+
+
+function normalizeEvent(r){
+
+  if(!r)
+    return null;
+
+
+  if(!r.date)
+    return null;
+
+
+  return {
+
+    /*
+      Do NOT reuse potentially incompatible
+      numeric keys from the old store.
+    */
+
+    title:
+      r.title||
+      r.name||
+      r.event||
+      "",
+
+    date:
+      r.date,
+
+    time:
+      r.time||
+      "",
+
+    notes:
+      r.notes||
+      r.description||
+      "",
+
+    created:
+      r.created||
+      Date.now(),
+
+    oldId:
+      r.id
+  };
+
+}
+
+
+function normalizeTodo(r){
+
+  if(!r)
+    return null;
+
+  if(!r.date)
+    return null;
+
+
+  return {
+
+    text:
+      r.text||
+      r.title||
+      r.task||
+      "",
+
+    date:
+      r.date,
+
+    done:
+      !!r.done,
+
+    carried:
+      !!r.carried,
+
+    created:
+      r.created||
+      Date.now(),
+
+    oldId:
+      r.id
+
+  };
+
+}
+
+
+function normalizeMemory(r){
+
+  if(!r)
+    return null;
+
+
+  const image=
+    r.image||
+    r.data||
+    r.dataUrl||
+    r.url||
+    null;
+
+
+  if(!image)
+    return null;
+
+
+  return {
+
+    date:
+      r.date||
+      todayISO(),
+
+    name:
+      r.name||
+      r.filename||
+      "Memory",
+
+    image:image,
+
+    created:
+      r.created||
+      Date.now(),
+
+    oldId:
+      r.id
+
+  };
+
+}
+
+
+function normalizeSetting(r){
+
+  if(!r)
+    return null;
+
+
+  const key=
+    r.key||
+    "preferences";
+
+
+  if(
+    key!=="preferences"
+  )
+    return null;
+
+
+  return {
+
+    key:"preferences",
+
+    design:
+      r.design||
+      "classic",
+
+    lines:
+      Number(
+        r.lines||
+        24
+      ),
+
+    font:
+      Number(
+        r.font||
+        18
+      ),
+
+    spacing:
+      Number(
+        r.spacing||
+        34
+      ),
+
+    width:
+      Number(
+        r.width||
+        1500
+      )
+
+  };
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+async function getSettings(){
+
+  const result=
+    await get(
+      "settings",
+      "preferences"
+    );
+
+
+  return result||{
+
+    key:"preferences",
+
+    design:"classic",
+
+    lines:24,
+
+    font:18,
+
+    spacing:34,
+
+    width:1500
+
+  };
+
+}
+
+
+async function saveSettings(){
+
+  const page=
+    document.getElementById(
+      "diaryPage"
+    );
+
+
+  const settings={
+
+    key:"preferences",
+
+    design:
+      page.dataset.design||
+      "classic",
+
+    lines:
+      Number(
+        document.getElementById(
+          "lineRange"
+        ).value
+      ),
+
+    font:
+      Number(
+        document.getElementById(
+          "fontRange"
+        ).value
+      ),
+
+    spacing:
+      Number(
+        document.getElementById(
+          "spacingRange"
+        ).value
+      ),
+
+    width:
+      Number(
+        document.getElementById(
+          "widthRange"
+        ).value
+      )
+
+  };
+
+
+  await put(
+    "settings",
+    settings
+  );
+
+}
+
+
+function applySettings(s){
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-lines",
+      s.lines
+    );
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--font-size",
+      s.font+"px"
+    );
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--line-height",
+      s.spacing+"px"
+    );
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-width",
+      s.width+"px"
+    );
+
+
+  const page=
+    document.getElementById(
+      "diaryPage"
+    );
+
+
+  page.dataset.design=
+    s.design;
+
+
+  page.className=
+    "page design-"+s.design;
+
+
+  document.getElementById(
+    "lineValue"
+  ).textContent=
+    s.lines;
+
+  document.getElementById(
+    "fontValue"
+  ).textContent=
+    s.font+" px";
+
+  document.getElementById(
+    "spacingValue"
+  ).textContent=
+    s.spacing+" px";
+
+  document.getElementById(
+    "widthValue"
+  ).textContent=
+    s.width+" px";
+
+
+  updateDesignSelection();
+
+}
+
+
+function updateDesignSelection(){
+
+  const current=
+    document
+      .getElementById(
+        "diaryPage"
+      )
+      .dataset.design||
+    "classic";
+
+
+  document
+    .querySelectorAll(
+      ".design"
+    )
+    .forEach(
+      el=>{
+
+        el.classList.toggle(
+          "selected",
+          el.classList.contains(
+            "design-"+current
+          )
+        );
+
+      }
+    );
+
+}
+
+
+async function openSettings(){
+
+  const s=
+    await getSettings();
+
+
+  document.getElementById(
+    "lineRange"
+  ).value=s.lines;
+
+  document.getElementById(
+    "fontRange"
+  ).value=s.font;
+
+  document.getElementById(
+    "spacingRange"
+  ).value=s.spacing;
+
+  document.getElementById(
+    "widthRange"
+  ).value=s.width;
+
+
+  applySettings(s);
+
+  openModal(
+    "settingsModal"
+  );
+
+}
+
+
+async function setDesign(name){
+
+  const s=
+    await getSettings();
+
+  s.design=name;
+
+  await put(
+    "settings",
+    s
+  );
+
+  applySettings(s);
+
+}
+
+
+async function changeLines(value){
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-lines",
+      value
+    );
+
+  document.getElementById(
+    "lineValue"
+  ).textContent=value;
+
+  await saveSettings();
+
+}
+
+
+async function changeFont(value){
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--font-size",
+      value+"px"
+    );
+
+  document.getElementById(
+    "fontValue"
+  ).textContent=
+    value+" px";
+
+  await saveSettings();
+
+}
+
+
+async function changeSpacing(value){
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--line-height",
+      value+"px"
+    );
+
+  document.getElementById(
+    "spacingValue"
+  ).textContent=
+    value+" px";
+
+  resizeCanvas();
+
+  await saveSettings();
+
+}
+
+
+async function changeWidth(value){
+
+  document.documentElement
+    .style
+    .setProperty(
+      "--page-width",
+      value+"px"
+    );
+
+  document.getElementById(
+    "widthValue"
+  ).textContent=
+    value+" px";
+
+  resizeCanvas();
+
+  await saveSettings();
+
+}
+
+
+/* =========================================================
+   PAGE LOAD / SAVE
+========================================================= */
+
+function pageId(){
+
+  return (
+    currentDate+
+    "-"+
+    currentPage
+  );
+
+}
+
 
 async function loadPage(){
 
-  const id =
-    currentDate +
-    "-" +
-    currentPage;
+  const id=
+    pageId();
 
 
-  let page =
+  let page=
     await get(
       "pages",
       id
@@ -2652,7 +3987,7 @@ async function loadPage(){
 
   if(!page){
 
-    page = {
+    page={
 
       id:id,
 
@@ -2666,85 +4001,162 @@ async function loadPage(){
 
       mood:"",
 
-      quote:getQuote(currentDate)
+      quote:
+        getQuote(
+          currentDate
+        )
 
     };
 
   }
 
 
-  currentPageRecord =
+  currentPageRecord=
     page;
 
 
-  document.getElementById("editor")
-    .innerHTML =
-      page.content || "";
+  editor.innerHTML=
+    page.content||"";
 
 
-  document.getElementById("dateText")
-    .textContent =
-      formatDate(currentDate) +
-      " · Page " +
-      currentPage;
+  document.getElementById(
+    "dateText"
+  ).textContent=
+    formatDate(
+      currentDate
+    )+
+    " • Page "+
+    currentPage;
 
 
-  document.getElementById("moodDisplay")
-    .textContent =
-      page.mood || "";
+  document.getElementById(
+    "moodDisplay"
+  ).textContent=
+    page.mood||"";
 
 
-  document.getElementById("quote")
-    .textContent =
-      "“" +
-      (page.quote ||
-       getQuote(currentDate)) +
-      "”";
+  document.getElementById(
+    "quote"
+  ).textContent=
+    "“"+
+    (
+      page.quote||
+      getQuote(currentDate)
+    )+
+    "”";
 
+
+  applyDatePermissions();
 
   await loadDrawing(
     page.drawing
   );
 
+}
 
-  updateDesignSelection();
+
+function scheduleSave(){
+
+  clearTimeout(
+    saveTimer
+  );
+
+  saveTimer=
+    setTimeout(
+      savePage,
+      200
+    );
 
 }
 
 
-/* =========================================================
-   SAVE PAGE
-========================================================= */
+async function savePage(){
 
-let saveTimer=null;
+  if(
+    !currentPageRecord ||
+    isPastDate(currentDate)
+  ){
 
-function savePage(){
+    return;
 
-  clearTimeout(saveTimer);
+  }
 
-  saveTimer =
-    setTimeout(
-      async function(){
 
-        if(!currentPageRecord)
-          return;
+  currentPageRecord.content=
+    editor.innerHTML;
 
-        currentPageRecord.content =
-          document
-            .getElementById("editor")
-            .innerHTML;
+  currentPageRecord.drawing=
+    getDrawingData();
 
-        currentPageRecord.drawing =
-          getDrawingData();
 
-        await put(
-          "pages",
-          currentPageRecord
-        );
+  await put(
+    "pages",
+    currentPageRecord
+  );
 
-      },
-      250
+}
+
+
+function applyDatePermissions(){
+
+  const past=
+    isPastDate(
+      currentDate
     );
+
+
+  const page=
+    document.getElementById(
+      "diaryPage"
+    );
+
+
+  page.classList.toggle(
+    "readonly",
+    past
+  );
+
+
+  editor.contentEditable=
+    past
+    ? "false"
+    : "true";
+
+
+  document.getElementById(
+    "newPageButton"
+  ).disabled=
+    past;
+
+
+  document.getElementById(
+    "readonlyNote"
+  ).hidden=
+    !past;
+
+
+  document
+    .querySelectorAll(
+      "#toolbar button"
+    )
+    .forEach(
+      button=>{
+        button.disabled=past;
+      }
+    );
+
+
+  document.getElementById(
+    "drawButton"
+  ).disabled=
+    past;
+
+
+  if(past){
+
+    exitDrawing();
+
+  }
 
 }
 
@@ -2753,81 +4165,93 @@ function savePage(){
    PAGE NAVIGATION
 ========================================================= */
 
-function newPage(){
+async function newPage(){
 
-  savePage();
+  if(isPastDate(currentDate)){
+
+    alert(
+      "Past diary dates are read-only."
+    );
+
+    return;
+
+  }
+
+
+  await savePage();
 
   currentPage++;
 
-  loadPage();
+  await loadPage();
 
 }
 
 
-function previousDate(){
+async function previousDate(){
 
-  savePage();
+  await savePage();
 
-  const d =
+  const d=
     dateObj(currentDate);
 
   d.setDate(
     d.getDate()-1
   );
 
-  currentDate =
+  currentDate=
     toISO(d);
 
   currentPage=1;
 
-  loadPage();
+  await loadPage();
 
 }
 
 
-function nextDate(){
+async function nextDate(){
 
-  savePage();
+  await savePage();
 
-  const d =
+  const d=
     dateObj(currentDate);
 
   d.setDate(
     d.getDate()+1
   );
 
-  currentDate =
+  currentDate=
     toISO(d);
 
   currentPage=1;
 
-  loadPage();
+  await loadPage();
 
 }
 
 
-function goToday(){
+async function goToday(){
 
-  savePage();
+  await savePage();
 
-  currentDate =
+  currentDate=
     todayISO();
 
   currentPage=1;
 
-  loadPage();
+  await loadPage();
 
 }
 
 
 /* =========================================================
-   TEXT EDITING
+   TEXT FORMATTING
 ========================================================= */
 
 function formatText(command){
 
-  const editor =
-    document.getElementById("editor");
+  if(isPastDate(currentDate))
+    return;
+
 
   editor.focus();
 
@@ -2837,15 +4261,16 @@ function formatText(command){
     null
   );
 
-  savePage();
+  scheduleSave();
 
 }
 
 
 function clearFormatting(){
 
-  const editor =
-    document.getElementById("editor");
+  if(isPastDate(currentDate))
+    return;
+
 
   editor.focus();
 
@@ -2855,16 +4280,75 @@ function clearFormatting(){
     null
   );
 
-  savePage();
+  scheduleSave();
 
 }
 
 
+editor.addEventListener(
+  "input",
+  function(){
+
+    if(isPastDate(currentDate))
+      return;
+
+    scheduleSave();
+
+  }
+);
+
+
+/* =========================================================
+   MOOD
+========================================================= */
+
+function openMood(){
+
+  if(isPastDate(currentDate))
+    return;
+
+  openModal(
+    "moodModal"
+  );
+
+}
+
+
+async function setMood(mood){
+
+  if(isPastDate(currentDate))
+    return;
+
+
+  currentPageRecord.mood=
+    mood;
+
+  await savePage();
+
+  document.getElementById(
+    "moodDisplay"
+  ).textContent=
+    mood;
+
+
+  closeModal(
+    "moodModal"
+  );
+
+}
+
+
+/*
+  Long press / click mood area opens selector.
+*/
+
 document
-  .getElementById("editor")
+  .getElementById(
+    "moodDisplay"
+  )
   .addEventListener(
-    "input",
-    savePage
+    "click",
+    openMood
   );
 
 
@@ -2872,44 +4356,36 @@ document
    DRAWING
 ========================================================= */
 
-const canvas =
-  document.getElementById(
-    "drawCanvas"
-  );
-
-const editorWrap =
-  document.getElementById(
-    "editorWrap"
-  );
-
-const ctx =
-  canvas.getContext(
-    "2d"
-  );
-
-
 function resizeCanvas(){
 
-  const rect =
+  const rect=
     editorWrap.getBoundingClientRect();
 
-  const dpr =
-    window.devicePixelRatio || 1;
+  if(
+    rect.width<=0 ||
+    rect.height<=0
+  )
+    return;
 
-  const oldCanvas =
+
+  const old=
     document.createElement(
       "canvas"
     );
 
-  if(canvas.width && canvas.height){
+  old.width=
+    canvas.width;
 
-    oldCanvas.width =
-      canvas.width;
+  old.height=
+    canvas.height;
 
-    oldCanvas.height =
-      canvas.height;
 
-    oldCanvas
+  if(
+    canvas.width &&
+    canvas.height
+  ){
+
+    old
       .getContext("2d")
       .drawImage(
         canvas,
@@ -2920,27 +4396,28 @@ function resizeCanvas(){
   }
 
 
-  canvas.width =
+  const dpr=
     Math.max(
       1,
-      Math.floor(
-        rect.width*dpr
-      )
-    );
-
-  canvas.height =
-    Math.max(
-      1,
-      Math.floor(
-        rect.height*dpr
-      )
+      window.devicePixelRatio||1
     );
 
 
-  canvas.style.width =
+  canvas.width=
+    Math.floor(
+      rect.width*dpr
+    );
+
+  canvas.height=
+    Math.floor(
+      rect.height*dpr
+    );
+
+
+  canvas.style.width=
     rect.width+"px";
 
-  canvas.style.height =
+  canvas.style.height=
     rect.height+"px";
 
 
@@ -2953,21 +4430,23 @@ function resizeCanvas(){
     0
   );
 
-  ctx.lineCap =
-    "round";
 
-  ctx.lineJoin =
-    "round";
+  ctx.lineCap="round";
+
+  ctx.lineJoin="round";
 
 
-  if(oldCanvas.width){
+  if(
+    old.width &&
+    old.height
+  ){
 
     ctx.drawImage(
-      oldCanvas,
+      old,
       0,
       0,
-      oldCanvas.width,
-      oldCanvas.height,
+      old.width,
+      old.height,
       0,
       0,
       rect.width,
@@ -2981,8 +4460,12 @@ function resizeCanvas(){
 
 function getDrawingData(){
 
-  if(!canvas.width)
+  if(
+    !canvas.width ||
+    !canvas.height
+  )
     return null;
+
 
   return canvas.toDataURL(
     "image/png"
@@ -2991,7 +4474,7 @@ function getDrawingData(){
 }
 
 
-function loadDrawing(data){
+async function loadDrawing(data){
 
   resizeCanvas();
 
@@ -3002,22 +4485,24 @@ function loadDrawing(data){
     canvas.height
   );
 
+
   drawHistory=[];
   drawRedo=[];
+
 
   if(!data)
     return;
 
 
-  const image =
+  const image=
     new Image();
 
-  image.onload =
+
+  image.onload=
     function(){
 
-      const rect =
-        editorWrap
-          .getBoundingClientRect();
+      const rect=
+        editorWrap.getBoundingClientRect();
 
       ctx.drawImage(
         image,
@@ -3029,6 +4514,7 @@ function loadDrawing(data){
 
     };
 
+
   image.src=data;
 
 }
@@ -3036,9 +4522,7 @@ function loadDrawing(data){
 
 function snapshot(){
 
-  return canvas.toDataURL(
-    "image/png"
-  );
+  return getDrawingData();
 
 }
 
@@ -3052,24 +4536,25 @@ function restoreSnapshot(data){
     canvas.height
   );
 
+
   if(!data){
 
-    savePage();
+    scheduleSave();
 
     return;
 
   }
 
 
-  const image =
+  const image=
     new Image();
 
-  image.onload =
+
+  image.onload=
     function(){
 
-      const rect =
-        editorWrap
-          .getBoundingClientRect();
+      const rect=
+        editorWrap.getBoundingClientRect();
 
       ctx.drawImage(
         image,
@@ -3079,39 +4564,88 @@ function restoreSnapshot(data){
         rect.height
       );
 
-      savePage();
+      scheduleSave();
 
     };
+
 
   image.src=data;
 
 }
 
 
-/* draw menu */
+/* draw menu positioning */
 
-function toggleDrawMenu(){
+function positionDrawMenu(){
 
-  const menu =
+  const button=
+    document.getElementById(
+      "drawButton"
+    );
+
+  const menu=
     document.getElementById(
       "drawMenu"
     );
 
-  menu.hidden =
-    !menu.hidden;
+
+  const rect=
+    button.getBoundingClientRect();
+
+
+  menu.style.left=
+    Math.min(
+      rect.left,
+      window.innerWidth-330
+    )+"px";
+
+
+  menu.style.top=
+    (rect.bottom+5)+"px";
+
+}
+
+
+function toggleDrawMenu(){
+
+  if(isPastDate(currentDate))
+    return;
+
+
+  const menu=
+    document.getElementById(
+      "drawMenu"
+    );
+
+
+  if(menu.hidden){
+
+    positionDrawMenu();
+
+    menu.hidden=false;
+
+  }else{
+
+    menu.hidden=true;
+
+  }
 
 }
 
 
 /*
-  Selecting a drawing tool closes
-  the menu but DOES NOT close drawing mode.
+  Selecting a drawing tool:
+  - menu closes
+  - drawing mode remains active
 */
 
 function selectDrawTool(tool){
 
-  drawTool =
-    tool;
+  if(isPastDate(currentDate))
+    return;
+
+
+  drawTool=tool;
 
   drawingMode=true;
 
@@ -3119,53 +4653,108 @@ function selectDrawTool(tool){
     .classList
     .add("drawing");
 
-  document
-    .getElementById("drawButton")
-    .classList
-    .add("active");
 
-  document
-    .getElementById("drawMenu")
-    .hidden=true;
+  document.getElementById(
+    "drawButton"
+  ).classList.add(
+    "active"
+  );
+
+
+  document.getElementById(
+    "drawMenu"
+  ).hidden=true;
 
 }
 
 
-/* Clicking Draw again exits drawing */
+function exitDrawing(){
 
-function toggleDrawing(){
+  drawingMode=false;
 
-  drawingMode =
-    !drawingMode;
+  drawStart=null;
+
+  drawLast=null;
 
   editorWrap
     .classList
-    .toggle(
-      "drawing",
-      drawingMode
-    );
+    .remove("drawing");
+
+
+  document.getElementById(
+    "drawButton"
+  ).classList.remove(
+    "active"
+  );
+
+
+  document.getElementById(
+    "drawMenu"
+  ).hidden=true;
 
 }
 
 
-/* position */
+/* canvas coordinates */
 
 function pointerPosition(e){
 
-  const rect =
+  const rect=
     canvas.getBoundingClientRect();
 
   return {
 
     x:
-      e.clientX -
+      e.clientX-
       rect.left,
 
     y:
-      e.clientY -
+      e.clientY-
       rect.top
 
   };
+
+}
+
+
+/* save base before line/circle */
+
+function redrawBase(data){
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+
+  if(!data)
+    return;
+
+
+  const image=
+    new Image();
+
+
+  image.onload=
+    function(){
+
+      const rect=
+        editorWrap.getBoundingClientRect();
+
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        rect.width,
+        rect.height
+      );
+
+    };
+
+
+  image.src=data;
 
 }
 
@@ -3176,14 +4765,21 @@ canvas.addEventListener(
   "pointerdown",
   function(e){
 
-    if(!drawingMode)
+    if(
+      !drawingMode ||
+      isPastDate(currentDate)
+    )
       return;
+
 
     e.preventDefault();
 
-    canvas.setPointerCapture(
-      e.pointerId
-    );
+
+    try{
+      canvas.setPointerCapture(
+        e.pointerId
+      );
+    }catch(err){}
 
 
     drawHistory.push(
@@ -3193,22 +4789,24 @@ canvas.addEventListener(
     drawRedo=[];
 
 
-    const p =
+    const p=
       pointerPosition(e);
 
+
     drawStart=p;
+
     drawLast=p;
 
 
     if(drawTool==="pen"){
 
-      ctx.globalCompositeOperation =
+      ctx.globalCompositeOperation=
         "source-over";
 
-      ctx.strokeStyle =
+      ctx.strokeStyle=
         drawColor;
 
-      ctx.lineWidth =
+      ctx.lineWidth=
         drawSize;
 
       ctx.beginPath();
@@ -3230,7 +4828,7 @@ canvas.addEventListener(
 
     if(drawTool==="eraser"){
 
-      ctx.globalCompositeOperation =
+      ctx.globalCompositeOperation=
         "destination-out";
 
       ctx.beginPath();
@@ -3238,7 +4836,7 @@ canvas.addEventListener(
       ctx.arc(
         p.x,
         p.y,
-        24,
+        25,
         0,
         Math.PI*2
       );
@@ -3264,23 +4862,23 @@ canvas.addEventListener(
     )
       return;
 
+
     e.preventDefault();
 
-    const p =
+
+    const p=
       pointerPosition(e);
 
 
-    /* PEN */
-
     if(drawTool==="pen"){
 
-      ctx.globalCompositeOperation =
+      ctx.globalCompositeOperation=
         "source-over";
 
-      ctx.strokeStyle =
+      ctx.strokeStyle=
         drawColor;
 
-      ctx.lineWidth =
+      ctx.lineWidth=
         drawSize;
 
       ctx.beginPath();
@@ -3300,13 +4898,11 @@ canvas.addEventListener(
     }
 
 
-    /* ERASER */
-
     else if(
       drawTool==="eraser"
     ){
 
-      ctx.globalCompositeOperation =
+      ctx.globalCompositeOperation=
         "destination-out";
 
       ctx.beginPath();
@@ -3324,22 +4920,24 @@ canvas.addEventListener(
     }
 
 
-    /*
-      LINE/CIRCLE:
-      preview is drawn directly.
-    */
-
     else{
 
-      redrawHistoryBase();
+      const base=
+        drawHistory[
+          drawHistory.length-1
+        ];
 
-      ctx.globalCompositeOperation =
+
+      redrawBase(base);
+
+
+      ctx.globalCompositeOperation=
         "source-over";
 
-      ctx.strokeStyle =
+      ctx.strokeStyle=
         drawColor;
 
-      ctx.lineWidth =
+      ctx.lineWidth=
         drawSize;
 
       ctx.beginPath();
@@ -3362,29 +4960,29 @@ canvas.addEventListener(
 
       if(drawTool==="circle"){
 
-        const rx =
+        const rx=
           Math.abs(
-            p.x -
+            p.x-
             drawStart.x
-          ) / 2;
+          )/2;
 
-        const ry =
+        const ry=
           Math.abs(
-            p.y -
+            p.y-
             drawStart.y
-          ) / 2;
+          )/2;
 
-        const cx =
+        const cx=
           (
-            p.x +
+            p.x+
             drawStart.x
-          ) / 2;
+          )/2;
 
-        const cy =
+        const cy=
           (
-            p.y +
+            p.y+
             drawStart.y
-          ) / 2;
+          )/2;
 
         ctx.ellipse(
           cx,
@@ -3416,8 +5014,12 @@ canvas.addEventListener(
   "pointerup",
   function(e){
 
-    if(!drawingMode)
+    if(
+      !drawingMode ||
+      !drawStart
+    )
       return;
+
 
     e.preventDefault();
 
@@ -3427,133 +5029,150 @@ canvas.addEventListener(
       drawTool==="circle"
     ){
 
-      const p =
+      const p=
         pointerPosition(e);
 
-      redrawHistoryBase();
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
 
 
-      ctx.globalCompositeOperation =
-        "source-over";
-
-      ctx.strokeStyle =
-        drawColor;
-
-      ctx.lineWidth =
-        drawSize;
-
-      ctx.beginPath();
+      const base=
+        drawHistory[
+          drawHistory.length-1
+        ];
 
 
-      if(drawTool==="line"){
+      if(base){
 
-        ctx.moveTo(
-          drawStart.x,
-          drawStart.y
-        );
-
-        ctx.lineTo(
-          p.x,
-          p.y
-        );
-
-      }
+        const image=
+          new Image();
 
 
-      if(drawTool==="circle"){
+        image.onload=
+          function(){
 
-        const rx =
-          Math.abs(
-            p.x -
-            drawStart.x
-          ) / 2;
+            const rect=
+              editorWrap
+                .getBoundingClientRect();
 
-        const ry =
-          Math.abs(
-            p.y -
-            drawStart.y
-          ) / 2;
 
-        const cx =
-          (
-            p.x +
-            drawStart.x
-          ) / 2;
+            ctx.drawImage(
+              image,
+              0,
+              0,
+              rect.width,
+              rect.height
+            );
 
-        const cy =
-          (
-            p.y +
-            drawStart.y
-          ) / 2;
 
-        ctx.ellipse(
-          cx,
-          cy,
-          Math.max(2,rx),
-          Math.max(2,ry),
-          0,
-          0,
-          Math.PI*2
-        );
+            drawShape(
+              p
+            );
+
+            scheduleSave();
+
+          };
+
+
+        image.src=base;
+
+      }else{
+
+        drawShape(p);
+
+        scheduleSave();
 
       }
 
-      ctx.stroke();
+    }else{
+
+      scheduleSave();
 
     }
 
 
-    drawLast=null;
     drawStart=null;
 
-    savePage();
+    drawLast=null;
 
   },
   {passive:false}
 );
 
 
-/* redraw previous drawing */
+function drawShape(p){
 
-function redrawHistoryBase(){
+  ctx.globalCompositeOperation=
+    "source-over";
 
-  const previous =
-    drawHistory[
-      drawHistory.length-1
-    ];
+  ctx.strokeStyle=
+    drawColor;
 
-  ctx.clearRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
+  ctx.lineWidth=
+    drawSize;
 
-  if(!previous)
-    return;
+  ctx.beginPath();
 
 
-  const image =
-    new Image();
+  if(drawTool==="line"){
 
-  image.onload =
-    function(){
+    ctx.moveTo(
+      drawStart.x,
+      drawStart.y
+    );
 
-      const rect =
-        editorWrap
-          .getBoundingClientRect();
+    ctx.lineTo(
+      p.x,
+      p.y
+    );
 
-      ctx.drawImage(
-        image,
-        0,
-        0,
-        rect.width,
-        rect.height
-      );
+  }
 
-    };
 
-  image.src=previous;
+  if(drawTool==="circle"){
+
+    const rx=
+      Math.abs(
+        p.x-
+        drawStart.x
+      )/2;
+
+    const ry=
+      Math.abs(
+        p.y-
+        drawStart.y
+      )/2;
+
+    const cx=
+      (
+        p.x+
+        drawStart.x
+      )/2;
+
+    const cy=
+      (
+        p.y+
+        drawStart.y
+      )/2;
+
+    ctx.ellipse(
+      cx,
+      cy,
+      Math.max(2,rx),
+      Math.max(2,ry),
+      0,
+      0,
+      Math.PI*2
+    );
+
+  }
+
+  ctx.stroke();
 
 }
 
@@ -3565,14 +5184,19 @@ function undoDrawing(){
   if(!drawHistory.length)
     return;
 
+
   drawRedo.push(
     snapshot()
   );
 
-  const old =
+
+  const previous=
     drawHistory.pop();
 
-  restoreSnapshot(old);
+
+  restoreSnapshot(
+    previous
+  );
 
 }
 
@@ -3584,14 +5208,19 @@ function redoDrawing(){
   if(!drawRedo.length)
     return;
 
+
   drawHistory.push(
     snapshot()
   );
 
-  const next =
+
+  const next=
     drawRedo.pop();
 
-  restoreSnapshot(next);
+
+  restoreSnapshot(
+    next
+  );
 
 }
 
@@ -3600,11 +5229,16 @@ function redoDrawing(){
 
 function clearDrawing(){
 
+  if(isPastDate(currentDate))
+    return;
+
+
   drawHistory.push(
     snapshot()
   );
 
   drawRedo=[];
+
 
   ctx.clearRect(
     0,
@@ -3613,7 +5247,8 @@ function clearDrawing(){
     canvas.height
   );
 
-  savePage();
+
+  scheduleSave();
 
 }
 
@@ -3622,13 +5257,7 @@ window.addEventListener(
   "resize",
   function(){
 
-    const data =
-      getDrawingData();
-
     resizeCanvas();
-
-    if(data)
-      loadDrawing(data);
 
   }
 );
@@ -3640,7 +5269,7 @@ window.addEventListener(
 
 async function openCalendar(){
 
-  calendarDate =
+  calendarDate=
     dateObj(currentDate);
 
   openModal(
@@ -3652,44 +5281,44 @@ async function openCalendar(){
 }
 
 
-function changeMonth(amount){
+async function changeMonth(amount){
 
   calendarDate.setMonth(
-    calendarDate.getMonth()+amount
+    calendarDate.getMonth()+
+    amount
   );
 
-  renderCalendar();
+  await renderCalendar();
 
 }
 
 
 async function renderCalendar(){
 
-  const year =
+  const year=
     calendarDate.getFullYear();
 
-  const month =
+  const month=
     calendarDate.getMonth();
 
 
-  document
-    .getElementById(
-      "calendarTitle"
-    )
-    .textContent =
-      calendarDate.toLocaleDateString(
-        undefined,
-        {
-          month:"long",
-          year:"numeric"
-        }
-      );
+  document.getElementById(
+    "calendarTitle"
+  ).textContent=
+    calendarDate.toLocaleDateString(
+      undefined,
+      {
+        month:"long",
+        year:"numeric"
+      }
+    );
 
 
-  const grid =
+  const grid=
     document.getElementById(
       "calendarGrid"
     );
+
 
   grid.innerHTML="";
 
@@ -3703,52 +5332,30 @@ async function renderCalendar(){
     "Fri",
     "Sat"
   ].forEach(
-    function(day){
+    day=>{
 
-      const el =
+      const h=
         document.createElement(
           "div"
         );
 
-      el.className=
-        "calhead";
+      h.className="calhead";
 
-      el.textContent=
-        day;
+      h.textContent=day;
 
-      grid.appendChild(el);
+      grid.appendChild(h);
 
     }
   );
 
 
-  /*
-    IMPORTANT:
-    Calendar reads directly from
-    the same Events database.
-  */
-
-  const events =
-    await all("events");
-
-
-  const monthEvents =
-    events.filter(
-      function(ev){
-
-        const d =
-          dateObj(ev.date);
-
-        return (
-          d.getFullYear()===year &&
-          d.getMonth()===month
-        );
-
-      }
+  const events=
+    await getAll(
+      "events"
     );
 
 
-  const firstDay =
+  const firstDay=
     new Date(
       year,
       month,
@@ -3756,7 +5363,7 @@ async function renderCalendar(){
     ).getDay();
 
 
-  const numberOfDays =
+  const days=
     new Date(
       year,
       month+1,
@@ -3771,7 +5378,9 @@ async function renderCalendar(){
   ){
 
     grid.appendChild(
-      document.createElement("div")
+      document.createElement(
+        "div"
+      )
     );
 
   }
@@ -3779,30 +5388,31 @@ async function renderCalendar(){
 
   for(
     let day=1;
-    day<=numberOfDays;
+    day<=days;
     day++
   ){
 
-    const iso =
-      year +
-      "-" +
-      String(month+1).padStart(2,"0") +
-      "-" +
-      String(day).padStart(2,"0");
+    const iso=
+      year+
+      "-"+
+      String(month+1)
+        .padStart(2,"0")+
+      "-"+
+      String(day)
+        .padStart(2,"0");
 
 
-    const cell =
+    const cell=
       document.createElement(
         "div"
       );
 
-    cell.className=
-      "calday";
+
+    cell.className="calday";
 
 
     if(
-      iso===
-      todayISO()
+      iso===todayISO()
     ){
 
       cell.classList.add(
@@ -3812,31 +5422,40 @@ async function renderCalendar(){
     }
 
 
-    const number =
+    if(
+      iso===currentDate
+    ){
+
+      cell.classList.add(
+        "selected"
+      );
+
+    }
+
+
+    const n=
       document.createElement(
         "div"
       );
 
-    number.className=
+    n.className=
       "caldaynum";
 
-    number.textContent=
+    n.textContent=
       day;
 
-    cell.appendChild(
-      number
-    );
+    cell.appendChild(n);
 
 
-    monthEvents
+    events
       .filter(
-        ev =>
+        ev=>
           ev.date===iso
       )
       .forEach(
         ev=>{
 
-          const dot =
+          const dot=
             document.createElement(
               "div"
             );
@@ -3844,12 +5463,12 @@ async function renderCalendar(){
           dot.className=
             "eventdot";
 
-          dot.textContent =
+          dot.textContent=
             (
               ev.time
               ? ev.time+" "
               : ""
-            ) +
+            )+
             ev.title;
 
           cell.appendChild(
@@ -3860,11 +5479,12 @@ async function renderCalendar(){
       );
 
 
-    cell.onclick =
-      function(){
+    cell.onclick=
+      async function(){
 
-        currentDate=
-          iso;
+        await savePage();
+
+        currentDate=iso;
 
         currentPage=1;
 
@@ -3872,7 +5492,7 @@ async function renderCalendar(){
           "calendarModal"
         );
 
-        loadPage();
+        await loadPage();
 
       };
 
@@ -3884,22 +5504,30 @@ async function renderCalendar(){
   }
 
 
-  const list =
+  const list=
     document.getElementById(
       "calendarEvents"
     );
 
+
   list.innerHTML="";
 
 
-  if(!monthEvents.length){
+  const monthEvents=
+    events
+      .filter(
+        ev=>{
 
-    list.innerHTML=
-      "<p>No diary events this month.</p>";
+          const d=
+            dateObj(ev.date);
 
-  }else{
+          return(
+            d.getFullYear()===year &&
+            d.getMonth()===month
+          );
 
-    monthEvents
+        }
+      )
       .sort(
         (a,b)=>
           (
@@ -3910,46 +5538,50 @@ async function renderCalendar(){
             b.date+
             (b.time||"")
           )
-      )
-      .forEach(
-        ev=>{
+      );
 
-          const card =
-            document.createElement(
-              "div"
-            );
 
-          card.className=
-            "eventcard";
+  if(!monthEvents.length){
 
-          card.innerHTML =
-            "<strong>"+
-            escapeHTML(
-              ev.title
-            )+
-            "</strong>"+
-            "<small>"+
-            formatDate(
-              ev.date
-            )+
-            (
-              ev.time
-              ? " · "+ev.time
-              : ""
-            )+
-            "</small>"+
-            "<small>"+
-            escapeHTML(
-              ev.notes||""
-            )+
-            "</small>";
+    list.innerHTML=
+      "<p>No events this month.</p>";
 
-          list.appendChild(
-            card
+  }else{
+
+    monthEvents.forEach(
+      ev=>{
+
+        const card=
+          document.createElement(
+            "div"
           );
 
-        }
-      );
+        card.className=
+          "eventcard";
+
+        card.innerHTML=
+          "<strong>"+
+          escapeHTML(
+            ev.title
+          )+
+          "</strong>"+
+          "<small>"+
+          formatDate(
+            ev.date
+          )+
+          (
+            ev.time
+            ? " · "+ev.time
+            : ""
+          )+
+          "</small>";
+
+        list.appendChild(
+          card
+        );
+
+      }
+    );
 
   }
 
@@ -3962,15 +5594,17 @@ async function renderCalendar(){
 
 async function openEvents(){
 
-  const dateInput =
+  const input=
     document.getElementById(
       "eventDate"
     );
 
-  dateInput.min=
+
+  input.min=
     todayISO();
 
-  dateInput.value =
+
+  input.value=
     currentDate>=todayISO()
     ? currentDate
     : todayISO();
@@ -3995,6 +5629,7 @@ async function openEvents(){
     "eventsModal"
   );
 
+
   await renderEvents();
 
 }
@@ -4002,8 +5637,10 @@ async function openEvents(){
 
 async function renderEvents(){
 
-  const events =
-    await all("events");
+  const events=
+    await getAll(
+      "events"
+    );
 
 
   events.sort(
@@ -4019,10 +5656,11 @@ async function renderEvents(){
   );
 
 
-  const list =
+  const list=
     document.getElementById(
       "eventList"
     );
+
 
   list.innerHTML="";
 
@@ -4038,9 +5676,9 @@ async function renderEvents(){
 
 
   events.forEach(
-    function(ev){
+    ev=>{
 
-      const card =
+      const card=
         document.createElement(
           "div"
         );
@@ -4049,7 +5687,7 @@ async function renderEvents(){
         "eventcard";
 
 
-      card.innerHTML =
+      card.innerHTML=
         "<strong>"+
         escapeHTML(
           ev.title
@@ -4065,15 +5703,19 @@ async function renderEvents(){
           : ""
         )+
         "</small>"+
-        "<small>"+
-        escapeHTML(
-          ev.notes||""
+        (
+          ev.notes
+          ? "<small>"+
+            escapeHTML(
+              ev.notes
+            )+
+            "</small>"
+          : ""
         )+
-        "</small>"+
         "<button class='smallbtn' "+
-        "onclick='deleteEvent("+
+        "onclick='deleteEvent(\""+
         ev.id+
-        ")'>Delete</button>";
+        "\")'>Delete</button>";
 
 
       list.appendChild(
@@ -4088,25 +5730,22 @@ async function renderEvents(){
 
 async function saveEvent(){
 
-  const date =
+  const date=
     document.getElementById(
       "eventDate"
     ).value;
 
-
-  const title =
+  const title=
     document.getElementById(
       "eventTitle"
     ).value.trim();
 
-
-  const time =
+  const time=
     document.getElementById(
       "eventTime"
     ).value;
 
-
-  const notes =
+  const notes=
     document.getElementById(
       "eventNotes"
     ).value.trim();
@@ -4118,7 +5757,7 @@ async function saveEvent(){
   ){
 
     alert(
-      "Please enter event date and title."
+      "Please enter the event date and title."
     );
 
     return;
@@ -4131,7 +5770,7 @@ async function saveEvent(){
   ){
 
     alert(
-      "Past dates cannot be changed."
+      "Events cannot be added to a past date."
     );
 
     return;
@@ -4155,11 +5794,9 @@ async function saveEvent(){
     "eventTitle"
   ).value="";
 
-
   document.getElementById(
     "eventNotes"
   ).value="";
-
 
   document.getElementById(
     "eventTime"
@@ -4167,18 +5804,6 @@ async function saveEvent(){
 
 
   await renderEvents();
-
-
-  if(
-    !document
-      .getElementById(
-        "calendarModal"
-      ).hidden
-  ){
-
-    await renderCalendar();
-
-  }
 
 }
 
@@ -4193,25 +5818,13 @@ async function deleteEvent(id){
     return;
 
 
-  await remove(
+  await deleteRecord(
     "events",
-    id
+    Number(id)
   );
 
 
   await renderEvents();
-
-
-  if(
-    !document
-      .getElementById(
-        "calendarModal"
-      ).hidden
-  ){
-
-    await renderCalendar();
-
-  }
 
 }
 
@@ -4222,10 +5835,18 @@ async function deleteEvent(id){
 
 async function openTodo(){
 
-  document.getElementById(
-    "todoDate"
-  ).value =
+  const dateInput=
+    document.getElementById(
+      "todoDate"
+    );
+
+
+  dateInput.value=
     currentDate;
+
+
+  dateInput.min=
+    todayISO();
 
 
   document.getElementById(
@@ -4244,7 +5865,9 @@ async function openTodo(){
 
 
 document
-  .getElementById("todoDate")
+  .getElementById(
+    "todoDate"
+  )
   .addEventListener(
     "change",
     renderTodos
@@ -4253,13 +5876,17 @@ document
 
 async function renderTodos(){
 
-  const date =
+  const date=
     document.getElementById(
       "todoDate"
     ).value;
 
 
-  const list =
+  const past=
+    date<todayISO();
+
+
+  const list=
     document.getElementById(
       "todoList"
     );
@@ -4268,13 +5895,14 @@ async function renderTodos(){
   list.innerHTML="";
 
 
-  const items =
+  const todos=
     (
-      await all("todos")
+      await getAll(
+        "todos"
+      )
     )
     .filter(
-      item =>
-        item.date===date
+      t=>t.date===date
     )
     .sort(
       (a,b)=>
@@ -4283,31 +5911,25 @@ async function renderTodos(){
     );
 
 
-  const past =
-    date<todayISO();
-
-
   document.getElementById(
     "todoInfo"
-  ).textContent =
+  ).textContent=
     past
-    ? "Past-date To-Do is read-only."
+    ? "🔒 Past-date To-Do is read-only."
     : "Unfinished tasks are carried forward automatically.";
 
 
   document.getElementById(
     "todoAddButton"
-  ).disabled =
-    past;
+  ).disabled=past;
 
 
   document.getElementById(
     "todoText"
-  ).disabled =
-    past;
+  ).disabled=past;
 
 
-  if(!items.length){
+  if(!todos.length){
 
     list.innerHTML=
       "<p>No To-Do items.</p>";
@@ -4317,27 +5939,28 @@ async function renderTodos(){
   }
 
 
-  items.forEach(
-    item=>{
+  todos.forEach(
+    todo=>{
 
-      const row =
+      const row=
         document.createElement(
           "div"
         );
 
-      row.className =
+
+      row.className=
         "todoitem"+
         (
-          item.done
+          todo.done
           ? " done"
           : ""
         );
 
 
-      row.innerHTML =
+      row.innerHTML=
         "<input type='checkbox' "+
         (
-          item.done
+          todo.done
           ? "checked "
           : ""
         )+
@@ -4346,24 +5969,22 @@ async function renderTodos(){
           ? "disabled "
           : ""
         )+
-        "onchange='toggleTodo("+
-        item.id+
-        ",this.checked)'>"+
-
+        "onchange='toggleTodo(\""+
+        todo.id+
+        "\",this.checked)'>"+
         "<span>"+
         escapeHTML(
-          item.text
+          todo.text
         )+
         "</span>"+
-
         (
           past
           ? ""
           :
           "<button class='smallbtn' "+
-          "onclick='deleteTodo("+
-          item.id+
-          ")'>×</button>"
+          "onclick='deleteTodo(\""+
+          todo.id+
+          "\")'>×</button>"
         );
 
 
@@ -4379,13 +6000,12 @@ async function renderTodos(){
 
 async function addTodo(){
 
-  const date =
+  const date=
     document.getElementById(
       "todoDate"
     ).value;
 
-
-  const text =
+  const text=
     document.getElementById(
       "todoText"
     ).value.trim();
@@ -4395,10 +6015,12 @@ async function addTodo(){
     return;
 
 
-  if(date<todayISO()){
+  if(
+    date<todayISO()
+  ){
 
     alert(
-      "You cannot add a To-Do to a past date."
+      "Past dates are read-only."
     );
 
     return;
@@ -4412,6 +6034,7 @@ async function addTodo(){
       date:date,
       text:text,
       done:false,
+      carried:false,
       created:Date.now()
     }
   );
@@ -4432,18 +6055,29 @@ async function toggleTodo(
   done
 ){
 
-  const item =
+  if(
+    isPastDate(
+      document.getElementById(
+        "todoDate"
+      ).value
+    )
+  )
+    return;
+
+
+  const item=
     await get(
       "todos",
-      id
+      Number(id)
     );
+
 
   if(!item)
     return;
 
 
   item.done=
-    done;
+    !!done;
 
 
   await put(
@@ -4459,9 +6093,9 @@ async function toggleTodo(
 
 async function deleteTodo(id){
 
-  await remove(
+  await deleteRecord(
     "todos",
-    id
+    Number(id)
   );
 
   await renderTodos();
@@ -4470,65 +6104,47 @@ async function deleteTodo(id){
 
 
 /*
-  Carry unfinished items forward
-  when opening a new day.
+  Copy pending tasks into TODAY.
+
+  Duplicates are prevented.
 */
 
 async function carryForwardTodos(){
 
-  const allTodos =
-    await all("todos");
+  const all=
+    await getAll(
+      "todos"
+    );
 
 
-  const pending =
-    allTodos.filter(
-      item =>
-        !item.done &&
-        item.date<todayISO()
+  const pending=
+    all.filter(
+      t=>
+        !t.done &&
+        t.date<todayISO()
     );
 
 
   for(
-    const item
-    of pending
+    const task of pending
   ){
 
-    const d =
-      dateObj(
-        item.date
-      );
-
-    d.setDate(
-      d.getDate()+1
-    );
-
-
-    const nextDate =
-      toISO(d);
-
-
-    if(
-      nextDate>todayISO()
-    )
-      continue;
-
-
-    const exists =
-      allTodos.some(
-        x =>
-          x.date===nextDate &&
-          x.text===item.text &&
-          !x.done
+    const duplicate=
+      all.some(
+        t=>
+          t.date===todayISO() &&
+          !t.done &&
+          t.text===task.text
       );
 
 
-    if(!exists){
+    if(!duplicate){
 
       await put(
         "todos",
         {
-          date:nextDate,
-          text:item.text,
+          date:todayISO(),
+          text:task.text,
           done:false,
           carried:true,
           created:Date.now()
@@ -4557,65 +6173,157 @@ async function openMemories(){
 }
 
 
+async function compressImage(file){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const reader=
+        new FileReader();
+
+
+      reader.onload=
+        function(){
+
+          const image=
+            new Image();
+
+
+          image.onload=
+            function(){
+
+              const max=1600;
+
+              let width=
+                image.width;
+
+              let height=
+                image.height;
+
+
+              if(width>max){
+
+                height=
+                  Math.round(
+                    height*
+                    max/
+                    width
+                  );
+
+                width=max;
+
+              }
+
+
+              const c=
+                document.createElement(
+                  "canvas"
+                );
+
+
+              c.width=width;
+
+              c.height=height;
+
+
+              const cctx=
+                c.getContext(
+                  "2d"
+                );
+
+
+              cctx.drawImage(
+                image,
+                0,
+                0,
+                width,
+                height
+              );
+
+
+              resolve(
+                c.toDataURL(
+                  "image/jpeg",
+                  .82
+                )
+              );
+
+            };
+
+
+          image.onerror=
+            reject;
+
+
+          image.src=
+            reader.result;
+
+        };
+
+
+      reader.onerror=
+        reject;
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+
 async function saveMemory(event){
 
-  const file =
+  const file=
     event.target.files[0];
+
 
   if(!file)
     return;
 
 
-  if(
-    !file.type.startsWith(
-      "image/"
-    )
-  ){
+  try{
 
-    alert(
-      "Please select an image."
-    );
-
-    return;
-
-  }
-
-
-  const reader =
-    new FileReader();
-
-
-  reader.onload =
-    async function(){
-
-      await put(
-        "memories",
-        {
-          date:currentDate,
-          name:file.name,
-          image:reader.result,
-          created:Date.now()
-        }
+    const image=
+      await compressImage(
+        file
       );
 
 
-      event.target.value="";
+    await put(
+      "memories",
+      {
+        date:currentDate,
+        name:file.name,
+        image:image,
+        created:Date.now()
+      }
+    );
 
 
-      await renderMemories();
-
-    };
+    event.target.value="";
 
 
-  reader.readAsDataURL(file);
+    await renderMemories();
+
+  }catch(error){
+
+    alert(
+      "Could not save photograph."
+    );
+
+  }
 
 }
 
 
 async function renderMemories(){
 
-  const memories =
-    await all(
+  const memories=
+    await getAll(
       "memories"
     );
 
@@ -4627,10 +6335,11 @@ async function renderMemories(){
   );
 
 
-  const grid =
+  const grid=
     document.getElementById(
       "memoryGrid"
     );
+
 
   grid.innerHTML="";
 
@@ -4648,33 +6357,30 @@ async function renderMemories(){
   memories.forEach(
     memory=>{
 
-      const card =
+      const card=
         document.createElement(
           "div"
         );
+
 
       card.className=
         "memory";
 
 
-      const image =
+      const image=
         document.createElement(
           "img"
         );
 
-      /*
-        Actual stored image is used here.
-      */
-
-      image.src =
+      image.src=
         memory.image;
 
-      image.alt =
-        memory.name ||
+      image.alt=
+        memory.name||
         "Diary memory";
 
 
-      const caption =
+      const caption=
         document.createElement(
           "div"
         );
@@ -4682,13 +6388,13 @@ async function renderMemories(){
       caption.className=
         "memorycaption";
 
-      caption.textContent =
+      caption.textContent=
         formatDate(
           memory.date
         );
 
 
-      const del =
+      const del=
         document.createElement(
           "button"
         );
@@ -4699,7 +6405,7 @@ async function renderMemories(){
       del.textContent=
         "Delete";
 
-      del.onclick =
+      del.onclick=
         ()=>deleteMemory(
           memory.id
         );
@@ -4738,373 +6444,13 @@ async function deleteMemory(id){
     return;
 
 
-  await remove(
+  await deleteRecord(
     "memories",
-    id
+    Number(id)
   );
 
 
   await renderMemories();
-
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-async function getSettings(){
-
-  const s =
-    await get(
-      "settings",
-      "preferences"
-    );
-
-
-  return s || {
-
-    key:"preferences",
-
-    design:"classic",
-
-    lines:24,
-
-    font:19,
-
-    spacing:34,
-
-    width:1500
-
-  };
-
-}
-
-
-async function openSettings(){
-
-  const p =
-    await getSettings();
-
-
-  document.getElementById(
-    "lineRange"
-  ).value =
-    p.lines;
-
-
-  document.getElementById(
-    "fontRange"
-  ).value =
-    p.font;
-
-
-  document.getElementById(
-    "spacingRange"
-  ).value =
-    p.spacing;
-
-
-  document.getElementById(
-    "widthRange"
-  ).value =
-    p.width;
-
-
-  applySettings(
-    p
-  );
-
-
-  openModal(
-    "settingsModal"
-  );
-
-}
-
-
-async function saveSettings(){
-
-  const old =
-    await getSettings();
-
-
-  const settings = {
-
-    key:"preferences",
-
-    design:
-      document
-        .getElementById(
-          "diaryPage"
-        )
-        .dataset.design ||
-      old.design,
-
-    lines:
-      Number(
-        document
-          .getElementById(
-            "lineRange"
-          ).value
-      ),
-
-    font:
-      Number(
-        document
-          .getElementById(
-            "fontRange"
-          ).value
-      ),
-
-    spacing:
-      Number(
-        document
-          .getElementById(
-            "spacingRange"
-          ).value
-      ),
-
-    width:
-      Number(
-        document
-          .getElementById(
-            "widthRange"
-          ).value
-      )
-
-  };
-
-
-  await put(
-    "settings",
-    settings
-  );
-
-}
-
-
-function applySettings(p){
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-lines",
-      p.lines
-    );
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--font-size",
-      p.font+"px"
-    );
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--line-height",
-      p.spacing+"px"
-    );
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-width",
-      p.width+"px"
-    );
-
-
-  const page =
-    document.getElementById(
-      "diaryPage"
-    );
-
-
-  page.dataset.design =
-    p.design;
-
-
-  page.className =
-    "page design-"+p.design;
-
-
-  document.getElementById(
-    "lineValue"
-  ).textContent =
-    p.lines;
-
-
-  document.getElementById(
-    "fontValue"
-  ).textContent =
-    p.font+" px";
-
-
-  document.getElementById(
-    "spacingValue"
-  ).textContent =
-    p.spacing+" px";
-
-
-  document.getElementById(
-    "widthValue"
-  ).textContent =
-    p.width+" px";
-
-
-  updateDesignSelection();
-
-}
-
-
-function updateDesignSelection(){
-
-  const page =
-    document.getElementById(
-      "diaryPage"
-    );
-
-  const design =
-    page.dataset.design ||
-    "classic";
-
-
-  document
-    .querySelectorAll(
-      ".design"
-    )
-    .forEach(
-      el=>{
-
-        el.classList.remove(
-          "selected"
-        );
-
-        if(
-          el.classList.contains(
-            "design-"+design
-          )
-        ){
-
-          el.classList.add(
-            "selected"
-          );
-
-        }
-
-      }
-    );
-
-}
-
-
-async function setDesign(name){
-
-  const p =
-    await getSettings();
-
-
-  p.design =
-    name;
-
-
-  await put(
-    "settings",
-    p
-  );
-
-
-  applySettings(
-    p
-  );
-
-}
-
-
-async function changeLines(value){
-
-  document.getElementById(
-    "lineValue"
-  ).textContent =
-    value;
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-lines",
-      value
-    );
-
-
-  await saveSettings();
-
-}
-
-
-async function changeFont(value){
-
-  document.getElementById(
-    "fontValue"
-  ).textContent =
-    value+" px";
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--font-size",
-      value+"px"
-    );
-
-
-  await saveSettings();
-
-}
-
-
-async function changeSpacing(value){
-
-  document.getElementById(
-    "spacingValue"
-  ).textContent =
-    value+" px";
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--line-height",
-      value+"px"
-    );
-
-
-  await saveSettings();
-
-}
-
-
-async function changeWidth(value){
-
-  document.getElementById(
-    "widthValue"
-  ).textContent =
-    value+" px";
-
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-width",
-      value+"px"
-    );
-
-
-  await saveSettings();
 
 }
 
@@ -5115,63 +6461,73 @@ async function changeWidth(value){
 
 async function backupDiary(){
 
-  const data={
+  await savePage();
 
-    version:"10.1",
+
+  const backup={
+
+    version:"10.2",
+
+    created:
+      new Date().toISOString(),
 
     pages:
-      await all("pages"),
+      await getAll("pages"),
 
     events:
-      await all("events"),
+      await getAll("events"),
 
     todos:
-      await all("todos"),
+      await getAll("todos"),
 
     memories:
-      await all("memories"),
+      await getAll("memories"),
 
     settings:
-      await all("settings")
+      await getAll("settings")
 
   };
 
 
-  const blob =
+  const blob=
     new Blob(
       [
         JSON.stringify(
-          data
+          backup,
+          null,
+          2
         )
       ],
       {
-        type:
-          "application/json"
+        type:"application/json"
       }
     );
 
 
-  const url =
+  const url=
     URL.createObjectURL(
       blob
     );
 
 
-  const a =
+  const a=
     document.createElement(
       "a"
     );
 
+
   a.href=url;
 
-  a.download =
-    "my-personal-diary-v10.1-backup.json";
+  a.download=
+    "my-personal-diary-v10.2-backup.json";
+
 
   document.body.appendChild(a);
 
   a.click();
 
   a.remove();
+
 
   setTimeout(
     ()=>{
@@ -5191,8 +6547,9 @@ async function backupDiary(){
 
 async function restoreDiary(event){
 
-  const file =
+  const file=
     event.target.files[0];
+
 
   if(!file)
     return;
@@ -5200,88 +6557,134 @@ async function restoreDiary(event){
 
   try{
 
-    const text =
+    const text=
       await file.text();
 
 
-    const data =
+    const data=
       JSON.parse(text);
 
 
     if(
-      !data.version
+      !data.pages &&
+      !data.events &&
+      !data.todos &&
+      !data.memories
     ){
 
-      alert(
-        "Invalid diary backup."
-      );
-
-      return;
-
-    }
-
-
-    for(
-      const item
-      of data.pages || []
-    ){
-
-      await put(
-        "pages",
-        item
+      throw new Error(
+        "This does not appear to be a diary backup."
       );
 
     }
 
 
     for(
-      const item
-      of data.events || []
+      const page of data.pages||[]
+    ){
+
+      const normalized=
+        normalizePage(page);
+
+      if(normalized)
+        await put(
+          "pages",
+          normalized
+        );
+
+    }
+
+
+    for(
+      const eventRecord
+      of data.events||[]
     ){
 
       await put(
         "events",
-        item
+        {
+          title:
+            eventRecord.title||"",
+          date:
+            eventRecord.date||todayISO(),
+          time:
+            eventRecord.time||"",
+          notes:
+            eventRecord.notes||"",
+          created:
+            eventRecord.created||
+            Date.now()
+        }
       );
 
     }
 
 
     for(
-      const item
-      of data.todos || []
+      const todo of data.todos||[]
     ){
 
       await put(
         "todos",
-        item
+        {
+          text:
+            todo.text||"",
+          date:
+            todo.date||todayISO(),
+          done:
+            !!todo.done,
+          carried:
+            !!todo.carried,
+          created:
+            todo.created||
+            Date.now()
+        }
       );
 
     }
 
 
     for(
-      const item
-      of data.memories || []
+      const memory of data.memories||[]
     ){
 
-      await put(
-        "memories",
-        item
-      );
+      const normalized=
+        normalizeMemory(
+          memory
+        );
+
+      if(normalized)
+        await put(
+          "memories",
+          normalized
+        );
 
     }
 
 
-    for(
-      const item
-      of data.settings || []
+    if(
+      Array.isArray(
+        data.settings
+      )
     ){
 
-      await put(
-        "settings",
-        item
-      );
+      for(
+        const setting
+        of data.settings
+      ){
+
+        const normalized=
+          normalizeSetting(
+            setting
+          );
+
+        if(normalized)
+          await put(
+            "settings",
+            normalized
+          );
+
+      }
 
     }
 
@@ -5297,9 +6700,13 @@ async function restoreDiary(event){
   }catch(error){
 
     alert(
-      "Restore failed: "+
+      "Restore failed:\n"+
       error.message
     );
+
+  }finally{
+
+    event.target.value="";
 
   }
 
@@ -5307,20 +6714,119 @@ async function restoreDiary(event){
 
 
 /* =========================================================
-   START
+   EVENTS REMINDER
+========================================================= */
+
+let alertedEvents=
+  new Set();
+
+
+async function checkEventAlerts(){
+
+  const events=
+    await getAll(
+      "events"
+    );
+
+
+  const now=
+    new Date();
+
+
+  const today=
+    todayISO();
+
+
+  const currentTime=
+    String(
+      now.getHours()
+    ).padStart(2,"0")+
+    ":"+
+    String(
+      now.getMinutes()
+    ).padStart(2,"0");
+
+
+  events.forEach(
+    event=>{
+
+      if(
+        event.date!==today ||
+        !event.time
+      )
+        return;
+
+
+      const key=
+        event.id+
+        "-"+
+        today;
+
+
+      if(
+        event.time===currentTime &&
+        !alertedEvents.has(key)
+      ){
+
+        alertedEvents.add(key);
+
+
+        /*
+          Use the existing event modal
+          as the alert rather than a browser
+          alert that can be blocked.
+        */
+
+        openEvents();
+
+        alert(
+          "📌 Diary Event\n\n"+
+          event.title+
+          (
+            event.notes
+            ? "\n\n"+
+              event.notes
+            : ""
+          )
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   STARTUP
 ========================================================= */
 
 async function start(){
 
   try{
 
-    await openDB();
+    /*
+      Open the NEW database first.
+      This eliminates the old object-store
+      mismatch.
+    */
+
+    await openNewDB();
 
 
-    await migrateOldDiary();
+    /*
+      Migrate old data.
+    */
+
+    await migrateOldDatabase();
 
 
-    const settings =
+    /*
+      Settings.
+    */
+
+    const settings=
       await getSettings();
 
 
@@ -5330,30 +6836,30 @@ async function start(){
 
 
     /*
-      Natural spiral rings.
+      Binder rings.
     */
 
-    const rings =
+    const rings=
       document.getElementById(
         "rings"
       );
+
 
     rings.innerHTML="";
 
 
     for(
       let i=0;
-      i<24;
+      i<26;
       i++
     ){
 
-      const ring =
+      const ring=
         document.createElement(
           "div"
         );
 
-      ring.className=
-        "ring";
+      ring.className="ring";
 
       rings.appendChild(
         ring
@@ -5362,42 +6868,102 @@ async function start(){
     }
 
 
+    /*
+      Load diary.
+    */
+
     await loadPage();
 
+
+    /*
+      Carry pending tasks forward.
+    */
 
     await carryForwardTodos();
 
 
+    /*
+      Canvas.
+    */
+
     resizeCanvas();
+
+
+    /*
+      Event checking.
+    */
+
+    setInterval(
+      checkEventAlerts,
+      30000
+    );
+
+
+    /*
+      Prevent accidental loss when
+      leaving the page.
+    */
+
+    window.addEventListener(
+      "beforeunload",
+      function(){
+
+        if(
+          !isPastDate(
+            currentDate
+          )
+        ){
+
+          currentPageRecord.content=
+            editor.innerHTML;
+
+          currentPageRecord.drawing=
+            getDrawingData();
+
+          /*
+            Synchronous IDB is impossible,
+            but scheduled save already runs
+            during normal editing.
+          */
+
+        }
+
+      }
+    );
 
 
   }catch(error){
 
     console.error(
+      "V10.2 startup error:",
       error
     );
 
 
-    document.body.innerHTML =
-
+    document.body.innerHTML=
       "<div style='"+
       "font-family:Arial;"+
-      "padding:30px;"+
-      "color:#721c24;"+
+      "padding:25px;"+
+      "line-height:1.6;"+
       "'>"+
-      "<h2>Diary could not be opened</h2>"+
-      "<p>Please reload the page.</p>"+
-      "<p>"+
+      "<h2>📖 Diary startup problem</h2>"+
+      "<p>The diary database could not be opened.</p>"+
+      "<p style='color:#8b0000'>"+
       escapeHTML(
         error.message
       )+
       "</p>"+
+      "<p>Reload the page once. Your existing diary data has not been deliberately deleted.</p>"+
       "</div>";
 
   }
 
 }
 
+
+/* =========================================================
+   START
+========================================================= */
 
 start();
 

@@ -1,8 +1,8 @@
-const CACHE_NAME = "my-personal-diary-v10-1";
+const CACHE_NAME =
+  "my-personal-diary-v10-2";
 
-const STATIC_FILES = [
-  "./manifest.json"
-];
+const OLD_CACHE_PREFIX =
+  "my-personal-diary-";
 
 
 /* =========================================================
@@ -13,21 +13,18 @@ self.addEventListener(
   "install",
   event => {
 
+    /*
+      Do not cache index.html here.
+
+      The previous version could keep an old
+      broken index.html alive.
+
+      v10.2 deliberately gets the latest
+      index.html from GitHub Pages.
+    */
+
     event.waitUntil(
-
-      caches
-        .open(CACHE_NAME)
-        .then(
-          cache =>
-            cache.addAll(
-              STATIC_FILES
-            )
-        )
-        .then(
-          () =>
-            self.skipWaiting()
-        )
-
+      self.skipWaiting()
     );
 
   }
@@ -44,27 +41,36 @@ self.addEventListener(
 
     event.waitUntil(
 
-      caches
-        .keys()
+      caches.keys()
         .then(
-          keys =>
+          keys => {
 
-            Promise.all(
+            return Promise.all(
 
-              keys
-                .filter(
-                  key =>
-                    key !== CACHE_NAME
-                )
-                .map(
-                  key =>
-                    caches.delete(
+              keys.map(
+                key => {
+
+                  if(
+                    key.startsWith(
+                      OLD_CACHE_PREFIX
+                    ) &&
+                    key!==CACHE_NAME
+                  ){
+
+                    return caches.delete(
                       key
-                    )
-                )
+                    );
 
-            )
+                  }
 
+                  return null;
+
+                }
+              )
+
+            );
+
+          }
         )
         .then(
           () =>
@@ -85,23 +91,21 @@ self.addEventListener(
   "fetch",
   event => {
 
-    const request =
+    const request=
       event.request;
 
 
     /*
-      HTML is NETWORK FIRST.
+      Navigation / HTML:
+      NETWORK FIRST.
 
-      This is deliberately different from
-      the old service worker.
-
-      GitHub Pages must deliver the newest
-      index.html instead of an old cached copy.
+      This is the important part for
+      GitHub Pages updates.
     */
 
     if(
-      request.mode === "navigate" ||
-      request.destination === "document"
+      request.mode==="navigate" ||
+      request.destination==="document"
     ){
 
       event.respondWith(
@@ -120,11 +124,13 @@ self.addEventListener(
               response.ok
             ){
 
-              const copy =
+              const copy=
                 response.clone();
 
               caches
-                .open(CACHE_NAME)
+                .open(
+                  CACHE_NAME
+                )
                 .then(
                   cache =>
                     cache.put(
@@ -140,16 +146,26 @@ self.addEventListener(
           }
         )
         .catch(
-          () =>
-            caches
-              .match(request)
-              .then(
-                cached =>
-                  cached ||
-                  caches.match(
-                    "./index.html"
-                  )
-              )
+          async () => {
+
+            const cached=
+              await caches.match(
+                request
+              );
+
+            if(cached)
+              return cached;
+
+
+            /*
+              Last-resort fallback.
+            */
+
+            return caches.match(
+              "./index.html"
+            );
+
+          }
         )
 
       );
@@ -160,56 +176,50 @@ self.addEventListener(
 
 
     /*
-      Non-HTML files:
-      cache first, then network.
+      Other assets:
+      NETWORK FIRST, with cache fallback.
     */
 
     event.respondWith(
 
-      caches
-        .match(request)
-        .then(
-          cached => {
+      fetch(
+        request
+      )
+      .then(
+        response => {
 
-            if(cached)
-              return cached;
+          if(
+            response &&
+            response.ok
+          ){
 
+            const copy=
+              response.clone();
 
-            return fetch(
-              request
-            )
-            .then(
-              response => {
-
-                if(
-                  response &&
-                  response.ok
-                ){
-
-                  const copy =
-                    response.clone();
-
-                  caches
-                    .open(
-                      CACHE_NAME
-                    )
-                    .then(
-                      cache =>
-                        cache.put(
-                          request,
-                          copy
-                        )
-                    );
-
-                }
-
-                return response;
-
-              }
-            );
+            caches
+              .open(
+                CACHE_NAME
+              )
+              .then(
+                cache =>
+                  cache.put(
+                    request,
+                    copy
+                  )
+              );
 
           }
-        )
+
+          return response;
+
+        }
+      )
+      .catch(
+        () =>
+          caches.match(
+            request
+          )
+      )
 
     );
 

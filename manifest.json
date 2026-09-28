@@ -1,17 +1,11 @@
 {
   "name": "My Personal Diary",
-  "short_name": "My Diary",
-  "description": "Personal paper-style diary, journal, memories, events and To-Do list",
-  "start_url": "./index.html",
+  "short_name": "Diary",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "any",
-  "background_color": "#eee8df",
-  "theme_color": "#563925",
-  "lang": "en",
-  "categories": [
-    "lifestyle",
-    "productivity"
-  ],
+  "background_color": "#e9dcc6",
+  "theme_color": "#6f5137",
+  "description": "Private diary with offline storage, login and multi-device cloud synchronization.",
   "icons": []
 }

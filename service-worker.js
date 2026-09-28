@@ -1,39 +1,32 @@
-const CACHE_NAME =
-  "my-personal-diary-v10-2";
+const CACHE = "my-personal-diary-v11";
 
-const OLD_CACHE_PREFIX =
-  "my-personal-diary-";
-
-
-/* =========================================================
-   INSTALL
-========================================================= */
+const CORE = [
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./service-worker.js"
+];
 
 self.addEventListener(
   "install",
   event => {
 
-    /*
-      Do not cache index.html here.
-
-      The previous version could keep an old
-      broken index.html alive.
-
-      v10.2 deliberately gets the latest
-      index.html from GitHub Pages.
-    */
-
     event.waitUntil(
-      self.skipWaiting()
+
+      caches
+        .open(CACHE)
+        .then(cache =>
+          cache.addAll(CORE)
+        )
+        .then(() =>
+          self.skipWaiting()
+        )
+
     );
 
   }
 );
 
-
-/* =========================================================
-   ACTIVATE
-========================================================= */
 
 self.addEventListener(
   "activate",
@@ -41,40 +34,24 @@ self.addEventListener(
 
     event.waitUntil(
 
-      caches.keys()
-        .then(
-          keys => {
+      caches
+        .keys()
+        .then(keys =>
+          Promise.all(
 
-            return Promise.all(
-
-              keys.map(
-                key => {
-
-                  if(
-                    key.startsWith(
-                      OLD_CACHE_PREFIX
-                    ) &&
-                    key!==CACHE_NAME
-                  ){
-
-                    return caches.delete(
-                      key
-                    );
-
-                  }
-
-                  return null;
-
-                }
+            keys
+              .filter(
+                key => key !== CACHE
+              )
+              .map(
+                key =>
+                  caches.delete(key)
               )
 
-            );
-
-          }
+          )
         )
-        .then(
-          () =>
-            self.clients.claim()
+        .then(() =>
+          self.clients.claim()
         )
 
     );
@@ -83,145 +60,63 @@ self.addEventListener(
 );
 
 
-/* =========================================================
-   FETCH
-========================================================= */
-
 self.addEventListener(
   "fetch",
   event => {
 
-    const request=
-      event.request;
+    if(
+      event.request.method !== "GET"
+    ){
+      return;
+    }
 
+    const url =
+      new URL(
+        event.request.url
+      );
 
-    /*
-      Navigation / HTML:
-      NETWORK FIRST.
-
-      This is the important part for
-      GitHub Pages updates.
-    */
 
     if(
-      request.mode==="navigate" ||
-      request.destination==="document"
+      url.origin === location.origin
     ){
 
       event.respondWith(
 
         fetch(
-          request,
-          {
-            cache:"no-store"
-          }
+          event.request
         )
+
         .then(
           response => {
 
-            if(
-              response &&
-              response.ok
-            ){
+            const copy =
+              response.clone();
 
-              const copy=
-                response.clone();
-
-              caches
-                .open(
-                  CACHE_NAME
-                )
-                .then(
-                  cache =>
-                    cache.put(
-                      request,
-                      copy
-                    )
-                );
-
-            }
+            caches
+              .open(CACHE)
+              .then(
+                cache =>
+                  cache.put(
+                    event.request,
+                    copy
+                  )
+              );
 
             return response;
 
           }
         )
+
         .catch(
-          async () => {
-
-            const cached=
-              await caches.match(
-                request
-              );
-
-            if(cached)
-              return cached;
-
-
-            /*
-              Last-resort fallback.
-            */
-
-            return caches.match(
-              "./index.html"
-            );
-
-          }
+          () =>
+            caches.match(
+              event.request
+            )
         )
 
       );
 
-      return;
-
     }
-
-
-    /*
-      Other assets:
-      NETWORK FIRST, with cache fallback.
-    */
-
-    event.respondWith(
-
-      fetch(
-        request
-      )
-      .then(
-        response => {
-
-          if(
-            response &&
-            response.ok
-          ){
-
-            const copy=
-              response.clone();
-
-            caches
-              .open(
-                CACHE_NAME
-              )
-              .then(
-                cache =>
-                  cache.put(
-                    request,
-                    copy
-                  )
-              );
-
-          }
-
-          return response;
-
-        }
-      )
-      .catch(
-        () =>
-          caches.match(
-            request
-          )
-      )
-
-    );
 
   }
 );

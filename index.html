@@ -1,6971 +1,3370 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#6f5137">
 
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="manifest" href="./manifest.json">
 
-<meta name="theme-color" content="#563925">
-
-<link rel="manifest" href="manifest.json">
-
-<title>My Personal Diary v10.2</title>
+<title>My Personal Diary v11</title>
 
 <style>
 
-/* =========================================================
-   V10.2 — GLOBAL
-========================================================= */
+:root{
+ --paper:#fffdf5;
+ --ink:#34281f;
+ --line:#d8c8ad;
+ --accent:#705034;
+ --lh:34px;
+ --font:Georgia,serif;
+}
 
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,
-body{
-  margin:0;
-  padding:0;
-  min-height:100%;
+ box-sizing:border-box;
 }
 
 body{
-  color:#35281e;
-  background:
-    radial-gradient(
-      circle at 20% 10%,
-      rgba(255,255,255,.8),
-      transparent 30%
-    ),
-    linear-gradient(
-      135deg,
-      #d5cdc0,
-      #eee8df,
-      #d1c7b9
-    );
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
+ margin:0;
+ background:#e9dcc6;
+ color:var(--ink);
+ font-family:var(--font);
 }
 
 button,
 input,
 textarea,
 select{
-  font:inherit;
+ font:inherit;
 }
 
 button{
-  cursor:pointer;
+ cursor:pointer;
 }
 
-[hidden]{
-  display:none !important;
+.hidden{
+ display:none!important;
 }
 
-:root{
+/* TOP BAR */
 
-  --paper:#fffdf5;
-
-  --ink:#35281e;
-
-  --rule:#b8ccd5;
-
-  --accent:#5b3b27;
-
-  --accent2:#7b573b;
-
-  --line-height:34px;
-
-  --font-size:18px;
-
-  --page-lines:24;
-
-  --page-width:1500px;
-
-  --spine-width:42px;
-
-}
-
-
-/* =========================================================
-   TOP NAVIGATION
-========================================================= */
-
-.topbar{
-
-  position:sticky;
-
-  top:0;
-
-  z-index:10000;
-
-  min-height:58px;
-
-  display:flex;
-
-  align-items:center;
-
-  gap:7px;
-
-  padding:6px 8px;
-
-  color:white;
-
-  background:
-    linear-gradient(
-      135deg,
-      #432817,
-      #755038
-    );
-
-  box-shadow:
-    0 3px 12px rgba(0,0,0,.28);
-
+.top{
+ position:sticky;
+ top:0;
+ z-index:20;
+ background:#f4e7d4ee;
+ backdrop-filter:blur(8px);
+ padding:8px;
+ display:flex;
+ gap:6px;
+ align-items:center;
+ flex-wrap:wrap;
+ border-bottom:1px solid #cbb896;
 }
 
 .brand{
-
-  flex:none;
-
-  font-size:19px;
-
-  font-weight:bold;
-
-  white-space:nowrap;
-
+ font-weight:700;
+ margin-right:auto;
 }
 
-.topbuttons{
-
-  display:flex;
-
-  flex:1;
-
-  min-width:0;
-
-  gap:6px;
-
-  overflow-x:auto;
-
-  scrollbar-width:none;
-
-}
-
-.topbuttons::-webkit-scrollbar{
-  display:none;
-}
-
-.topbuttons button{
-
-  flex:none;
-
-  padding:7px 10px;
-
-  border:
-    1px solid rgba(255,255,255,.32);
-
-  border-radius:8px;
-
-  background:
-    rgba(255,255,255,.10);
-
-  color:white;
-
-  white-space:nowrap;
-
-}
-
-.topbuttons button:active{
-  transform:scale(.97);
-}
-
-
-/* =========================================================
-   WORKSPACE
-========================================================= */
-
-.workspace{
-
-  width:100%;
-
-  padding:
-    12px 5px 40px;
-
-}
-
-.book{
-
-  position:relative;
-
-  width:100%;
-
-  max-width:var(--page-width);
-
-  margin:auto;
-
-}
-
-
-/* =========================================================
-   SPINE
-========================================================= */
-
-.spine{
-
-  position:absolute;
-
-  z-index:100;
-
-  left:0;
-
-  top:0;
-
-  bottom:0;
-
-  width:var(--spine-width);
-
-  background:
-    linear-gradient(
-      90deg,
-      #29180f 0%,
-      #684127 32%,
-      #8a5d3b 48%,
-      #593720 67%,
-      #2c1a10 100%
-    );
-
-  border-radius:
-    6px 0 0 6px;
-
-  box-shadow:
-    inset -4px 0 7px rgba(0,0,0,.35),
-    inset 3px 0 5px rgba(255,255,255,.10);
-
-  overflow:hidden;
-
-}
-
-.spine-line{
-
-  position:absolute;
-
-  top:0;
-
-  bottom:0;
-
-  left:50%;
-
-  width:2px;
-
-  transform:translateX(-50%);
-
-  background:
-    rgba(20,10,5,.45);
-
-}
-
-
-/* =========================================================
-   NATURAL BINDER RINGS
-========================================================= */
-
-.rings{
-
-  position:absolute;
-
-  inset:
-    8px 4px;
-
-  display:flex;
-
-  flex-direction:column;
-
-  justify-content:space-around;
-
-}
-
-.ring{
-
-  position:relative;
-
-  width:31px;
-
-  height:17px;
-
-  margin:auto;
-
-  border-radius:50%;
-
-  border:
-    3px solid #2d1a10;
-
-  border-left-color:#53321f;
-
-  border-right-color:#ad805b;
-
-  box-shadow:
-    1px 2px 3px rgba(0,0,0,.55),
-    inset 1px 1px 2px rgba(255,255,255,.22);
-
-  transform:rotate(-4deg);
-
-}
-
-
-/* =========================================================
-   PAGE
-========================================================= */
-
-.page{
-
-  position:relative;
-
-  min-height:
-    calc(
-      var(--page-lines) *
-      var(--line-height) +
-      180px
-    );
-
-  margin:0;
-
-  margin-left:var(--spine-width);
-
-  background:var(--paper);
-
-  color:var(--ink);
-
-  border:
-    1px solid #d4c7b5;
-
-  border-left:0;
-
-  border-radius:
-    0 12px 12px 0;
-
-  box-shadow:
-    inset 0 0 35px rgba(80,50,20,.07),
-    0 13px 25px rgba(0,0,0,.23);
-
-}
-
-.page:after{
-
-  content:"";
-
-  position:absolute;
-
-  z-index:1;
-
-  top:0;
-
-  right:-3px;
-
-  bottom:0;
-
-  width:3px;
-
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      #c8bdad 0,
-      #eee8dd 2px,
-      #c0b4a4 4px
-    );
-
-}
-
-
-/* =========================================================
-   PAGE CONTENT
-========================================================= */
-
-.pagecontent{
-
-  position:relative;
-
-  padding:
-    0 13px 45px;
-
-}
-
-
-/* =========================================================
-   PAGE HEADER
-========================================================= */
-
-.pageheader{
-
-  position:sticky;
-
-  top:58px;
-
-  z-index:500;
-
-  min-height:54px;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  gap:5px;
-
-  padding:
-    4px 2px;
-
-  background:
-    rgba(255,253,245,.97);
-
-  border-bottom:
-    1px solid #d8cbb9;
-
-  backdrop-filter:blur(5px);
-
-}
-
-.datearea{
-
-  flex:1;
-
-  min-width:0;
-
-}
-
-.date{
-
-  display:flex;
-
-  align-items:center;
-
-  min-width:0;
-
-  font-size:18px;
-
-  font-weight:bold;
-
-  white-space:nowrap;
-
-}
-
-#dateText{
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-
-}
-
-.mood{
-
-  flex:none;
-
-  margin-left:5px;
-
-  font-size:20px;
-
-}
-
-.pageactions{
-
-  flex:none;
-
-  display:flex;
-
-  gap:4px;
-
-}
-
-.smallbtn{
-
-  min-height:36px;
-
-  padding:
-    5px 9px;
-
-  border:
-    1px solid #ae9c84;
-
-  border-radius:8px;
-
-  background:#fffaf0;
-
-  color:#3b2a1d;
-
-}
-
-
-/* =========================================================
-   QUOTE
-========================================================= */
-
-.quote{
-
-  height:29px;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  margin:0;
-
-  padding:0 4px;
-
-  border-bottom:
-    1px dotted #b9a58d;
-
-  color:#73543d;
-
-  font-size:13px;
-
-  font-style:italic;
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-
-}
-
-
-/* =========================================================
-   TOOLBAR
-========================================================= */
-
-.toolbar{
-
-  position:sticky;
-
-  top:112px;
-
-  z-index:450;
-
-  display:flex;
-
-  align-items:center;
-
-  gap:4px;
-
-  min-width:0;
-
-  margin:
-    7px 0 4px;
-
-  padding:5px;
-
-  border:
-    1px solid #c8b9a4;
-
-  border-radius:9px;
-
-  background:
-    rgba(247,240,229,.98);
-
-  box-shadow:
-    0 2px 7px rgba(0,0,0,.12);
-
-  overflow-x:auto;
-
-  scrollbar-width:none;
-
-}
-
-.toolbar::-webkit-scrollbar{
-  display:none;
-}
-
-.toolbar button{
-
-  flex:none;
-
-  min-width:38px;
-
-  height:36px;
-
-  padding:4px 8px;
-
-  border:
-    1px solid #ae9c84;
-
-  border-radius:7px;
-
-  background:#fffaf1;
-
-  color:#3b2b1e;
-
-}
-
-.toolbar button.active{
-
-  color:white;
-
-  background:#5b3b27;
-
-}
-
-
-/* =========================================================
-   DRAWING MENU
-========================================================= */
-
-.drawwrap{
-
-  position:relative;
-
-  flex:none;
-
-}
-
-.drawmenu{
-
-  position:fixed;
-
-  z-index:5000;
-
-  display:flex;
-
-  flex-wrap:wrap;
-
-  gap:5px;
-
-  max-width:calc(100vw - 20px);
-
-  padding:6px;
-
-  border:
-    1px solid #a99478;
-
-  border-radius:9px;
-
-  background:#fffdf8;
-
-  box-shadow:
-    0 8px 22px rgba(0,0,0,.25);
-
-}
-
-.drawmenu button{
-  min-width:42px;
-}
-
-.drawhint{
-
-  padding:5px 7px;
-
-  font-size:12px;
-
-  color:#74573e;
-
-}
-
-
-/* =========================================================
-   EDITOR
-========================================================= */
-
-.editorwrap{
-
-  position:relative;
-
-  min-height:
-    calc(
-      var(--page-lines) *
-      var(--line-height)
-    );
-
-}
-
-.editor{
-
-  position:relative;
-
-  z-index:10;
-
-  min-height:
-    calc(
-      var(--page-lines) *
-      var(--line-height)
-    );
-
-  padding:
-    0 6px 10px;
-
-  outline:none;
-
-  color:var(--ink);
-
-  /*
-    NORMAL DIARY FONT.
-    No forced cursive.
-  */
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size:var(--font-size);
-
-  line-height:var(--line-height);
-
-  white-space:pre-wrap;
-
-  overflow-wrap:anywhere;
-
-  /*
-    The rule is deliberately ABOVE the
-    bottom of the line box so the glyph
-    baseline sits on it.
-  */
-
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      transparent 0,
-      transparent calc(var(--line-height) - 8px),
-      var(--rule) calc(var(--line-height) - 8px),
-      var(--rule) calc(var(--line-height) - 7px),
-      transparent calc(var(--line-height) - 7px),
-      transparent var(--line-height)
-    );
-
-  background-size:
-    100% var(--line-height);
-
-  background-position:
-    0 0;
-
-}
-
-.editor:empty:before{
-
-  content:
-    "Start writing here...";
-
-  color:#b5a899;
-
-  pointer-events:none;
-
-}
-
-
-/*
-  Remove browser paragraph/div spacing.
-*/
-
-.editor p,
-.editor div,
-.editor section{
-
-  margin:0 !important;
-
-  padding:0 !important;
-
-  min-height:
-    var(--line-height);
-
-  line-height:
-    var(--line-height);
-
-}
-
-
-/*
-  Lists stay on the same ruling.
-*/
-
-.editor ul,
-.editor ol{
-
-  margin:0 !important;
-
-  padding-left:1.45em !important;
-
-}
-
-.editor li{
-
-  margin:0 !important;
-
-  padding:0 !important;
-
-  min-height:
-    var(--line-height);
-
-  line-height:
-    var(--line-height);
-
-}
-
-
-/* =========================================================
-   DRAWING CANVAS
-========================================================= */
-
-#drawCanvas{
-
-  position:absolute;
-
-  z-index:30;
-
-  left:0;
-
-  top:0;
-
-  width:100%;
-
-  height:100%;
-
-  pointer-events:none;
-
-  touch-action:none;
-
-}
-
-.editorwrap.drawing #drawCanvas{
-
-  pointer-events:auto;
-
-}
-
-.editorwrap.drawing .editor{
-
-  pointer-events:none;
-
-  user-select:none;
-
-}
-
-
-/* =========================================================
-   NEW PAGE
-========================================================= */
-
-.newpage{
-
-  position:absolute;
-
-  z-index:80;
-
-  right:-1px;
-
-  bottom:17px;
-
-  padding:
-    9px 12px;
-
-  border:
-    1px solid #a58b6e;
-
-  border-radius:
-    8px 0 0 8px;
-
-  background:#f0dfc6;
-
-  color:#533520;
-
-  box-shadow:
-    0 3px 8px rgba(0,0,0,.18);
-
-}
-
-
-/* =========================================================
-   READ ONLY
-========================================================= */
-
-.readonly{
-
-  opacity:.92;
-
-}
-
-.readonly .editor{
-
-  background-color:
-    rgba(230,225,215,.16);
-
-}
-
-.readonlynote{
-
-  display:none;
-
-  margin:
-    4px 0;
-
-  padding:4px 7px;
-
-  border-radius:5px;
-
-  color:#754a35;
-
-  background:#f3e1d2;
-
-  font-size:12px;
-
-}
-
-.page.readonly .readonlynote{
-  display:block;
-}
-
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-.modal{
-
-  position:fixed;
-
-  inset:0;
-
-  z-index:20000;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  padding:10px;
-
-  background:
-    rgba(25,18,12,.66);
-
-}
-
-.modalbox{
-
-  width:
-    min(720px,97vw);
-
-  max-height:
-    92vh;
-
-  overflow:auto;
-
-  padding:16px;
-
-  border:
-    1px solid #bca990;
-
-  border-radius:14px;
-
-  background:#fffdf7;
-
-  box-shadow:
-    0 20px 60px rgba(0,0,0,.45);
-
-}
-
-.modalbox h2{
-
-  margin:
-    0 0 14px;
-
-  color:#593a27;
-
-}
-
-.modalbox h3{
-
-  color:#68472f;
-
-}
-
-.formrow{
-
-  display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
-  gap:9px;
-
-}
-
-.field{
-
-  margin-bottom:9px;
-
-}
-
-.field label{
-
-  display:block;
-
-  margin-bottom:4px;
-
-  font-weight:bold;
-
-}
-
-.field input,
-.field textarea,
-.field select{
-
-  width:100%;
-
-  padding:9px;
-
-  border:
-    1px solid #b8a994;
-
-  border-radius:7px;
-
-  background:white;
-
-}
-
-.field textarea{
-  min-height:80px;
-}
-
-.modalbuttons{
-
-  display:flex;
-
-  justify-content:flex-end;
-
-  gap:7px;
-
-  margin-top:10px;
-
+.btn{
+ border:1px solid #c7b593;
+ background:#fff8ec;
+ border-radius:8px;
+ padding:8px 10px;
 }
 
 .primary{
-
-  color:white !important;
-
-  background:#593a27 !important;
-
+ background:var(--accent);
+ color:#fff;
+ border:0;
 }
 
-
-/* =========================================================
-   CALENDAR
-========================================================= */
-
-.calnav{
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  margin-bottom:10px;
-
+.status{
+ font-size:12px;
+ color:#776653;
 }
 
-.calgrid{
+/* LOGIN */
 
-  display:grid;
-
-  grid-template-columns:
-    repeat(7,1fr);
-
-  gap:3px;
-
+.auth{
+ min-height:100vh;
+ display:grid;
+ place-items:center;
+ padding:20px;
+ background:linear-gradient(135deg,#d8c09b,#f4ead8);
 }
 
-.calhead{
-
-  padding:4px;
-
-  text-align:center;
-
-  font-weight:bold;
-
-  font-size:13px;
-
+.card{
+ background:#fffaf0;
+ border:1px solid #d0bb98;
+ border-radius:16px;
+ padding:22px;
+ box-shadow:0 10px 35px #0002;
+ width:min(430px,95vw);
 }
 
-.calday{
-
-  min-height:61px;
-
-  padding:4px;
-
-  border:
-    1px solid #d5c7b3;
-
-  border-radius:6px;
-
-  background:#fffaf1;
-
-  overflow:hidden;
-
-  cursor:pointer;
-
+.card input,
+.panel input,
+.panel select{
+ width:100%;
+ padding:10px;
+ border:1px solid #cdbb9d;
+ border-radius:8px;
+ margin:5px 0;
 }
 
-.calday.today{
-
-  border:
-    2px solid #69462d;
-
+.actions{
+ display:grid;
+ gap:8px;
+ margin-top:8px;
 }
 
-.calday.selected{
+/* NOTEBOOK */
 
-  box-shadow:
-    inset 0 0 0 2px #b4865a;
-
+.book{
+ max-width:1000px;
+ margin:15px auto;
+ display:grid;
+ grid-template-columns:34px 1fr;
+ filter:drop-shadow(0 10px 18px #0002);
 }
 
-.caldaynum{
-  font-weight:bold;
+.spine{
+ background:#6e5035;
+ border-radius:12px 0 0 12px;
+ min-height:700px;
+ position:relative;
 }
 
-.eventdot{
-
-  margin-top:3px;
-
-  padding:2px 3px;
-
-  border-radius:4px;
-
-  background:#e8d4b8;
-
-  color:#513520;
-
-  font-size:10px;
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-
+.ring{
+ position:absolute;
+ left:2px;
+ width:29px;
+ height:18px;
+ border:4px solid #cbbda7;
+ border-left:0;
+ border-radius:0 15px 15px 0;
 }
 
-.eventlist{
-
-  margin-top:14px;
-
-  padding-top:9px;
-
-  border-top:
-    1px solid #d8c9b5;
-
+.page{
+ position:relative;
+ background:var(--paper);
+ min-height:700px;
+ padding:16px 25px;
+ border-radius:0 12px 12px 0;
+ overflow:hidden;
 }
 
-
-/* =========================================================
-   EVENT / TODO
-========================================================= */
-
-.eventcard{
-
-  margin-bottom:8px;
-
-  padding:9px;
-
-  border:
-    1px solid #d2c2ad;
-
-  border-radius:8px;
-
-  background:#fffaf1;
-
+.page:before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:
+ repeating-linear-gradient(
+  to bottom,
+  transparent 0 calc(var(--lh) - 1px),
+  var(--line) calc(var(--lh) - 1px) var(--lh)
+ );
+ pointer-events:none;
+ opacity:.7;
 }
 
-.eventcard strong{
-  color:#5b3b27;
+.page>*{
+ position:relative;
 }
 
-.eventcard small{
+/* DATE */
 
-  display:block;
-
-  margin-top:3px;
-
-  color:#75624e;
-
+.head{
+ display:flex;
+ gap:10px;
+ align-items:center;
+ border-bottom:1px solid #cbb896;
+ background:#fffdf5ee;
 }
 
-.todoitem{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:8px;
-
-  padding:8px 3px;
-
-  border-bottom:
-    1px solid #ded1bf;
-
+.date{
+ font-weight:700;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis;
 }
 
-.todoitem span{
-  flex:1;
+.moods{
+ margin-left:auto;
 }
 
-.todoitem.done span{
-
-  text-decoration:line-through;
-
-  opacity:.5;
-
+.moods button{
+ border:1px solid transparent;
+ background:transparent;
+ border-radius:7px;
+ padding:3px;
 }
 
+.moods .sel{
+ border-color:#9d7b54;
+ background:#f0dec2;
+}
 
-/* =========================================================
-   MEMORIES
-========================================================= */
+/* QUOTE */
+
+.quote{
+ font-size:13px;
+ font-style:italic;
+ color:#796955;
+ padding:5px 0;
+}
+
+/* EDITOR TOOLBAR */
+
+.tools{
+ display:flex;
+ gap:4px;
+ flex-wrap:wrap;
+ background:#fffdf5ee;
+}
+
+.tools button{
+ border:1px solid #cbb896;
+ background:#f4e7d4;
+ border-radius:7px;
+ padding:6px 9px;
+}
+
+/* EDITOR */
+
+.editor{
+ min-height:470px;
+ outline:0;
+ line-height:var(--lh);
+ font-size:17px;
+ white-space:pre-wrap;
+ word-break:break-word;
+ padding:0 3px;
+}
+
+.editor:empty:before{
+ content:'Write your thoughts here…';
+ color:#ad9d89;
+}
+
+/* PAGE NAVIGATION */
+
+.nav{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
+ margin-top:10px;
+ background:#fffdf5ee;
+ padding:7px;
+ border-radius:8px;
+}
+
+.navright{
+ display:flex;
+ gap:7px;
+}
+
+/* PANELS */
+
+.panel{
+ max-width:1000px;
+ margin:10px auto;
+ background:#fffaf0;
+ border:1px solid #d1bd9e;
+ border-radius:12px;
+ padding:13px;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:
+ repeat(auto-fit,minmax(190px,1fr));
+ gap:8px;
+}
+
+.list{
+ display:grid;
+ gap:7px;
+ margin-top:9px;
+}
+
+.item{
+ display:flex;
+ gap:8px;
+ align-items:center;
+ background:#f5ead7;
+ padding:8px;
+ border-radius:8px;
+}
+
+.grow{
+ flex:1;
+}
+
+/* MEMORIES */
 
 .memorygrid{
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(
-      auto-fill,
-      minmax(135px,1fr)
-    );
-
-  gap:9px;
-
+ display:grid;
+ grid-template-columns:
+ repeat(auto-fill,minmax(145px,1fr));
+ gap:8px;
 }
 
 .memory{
-
-  overflow:hidden;
-
-  border:
-    1px solid #cfbfaa;
-
-  border-radius:8px;
-
-  background:white;
-
+ background:#f3e5d0;
+ padding:6px;
+ border-radius:8px;
 }
 
 .memory img{
-
-  display:block;
-
-  width:100%;
-
-  height:140px;
-
-  object-fit:cover;
-
+ width:100%;
+ height:120px;
+ object-fit:cover;
+ border-radius:6px;
 }
 
-.memorycaption{
+/* MODALS */
 
-  padding:6px;
-
-  font-size:12px;
-
+.modal{
+ position:fixed;
+ inset:0;
+ background:#0007;
+ display:grid;
+ place-items:center;
+ padding:15px;
+ z-index:100;
 }
 
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-.designs{
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(3,1fr);
-
-  gap:7px;
-
+.modalbox{
+ background:#fffaf0;
+ border-radius:14px;
+ padding:15px;
+ width:min(650px,96vw);
+ max-height:90vh;
+ overflow:auto;
 }
 
-.design{
-
-  min-height:55px;
-
-  padding:8px;
-
-  border:
-    2px solid #c8b9a4;
-
-  border-radius:8px;
-
-  cursor:pointer;
-
+.modalhead{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
 }
 
-.design.selected{
+/* DRAWING */
 
-  border-color:#5b3b27;
-
-  box-shadow:
-    0 0 0 2px #dfc6a5;
-
+canvas{
+ width:100%;
+ height:350px;
+ border:1px solid #cdbb9d;
+ background:#fffdf5;
+ touch-action:none;
 }
 
-.rangevalue{
-
-  font-weight:normal;
-
-  color:#76563e;
-
-}
-
-
-/* =========================================================
-   PAGE DESIGNS
-========================================================= */
-
-.design-classic{
-  --paper:#fffdf5;
-  --rule:#b8ccd5;
-}
-
-.design-vintage{
-  --paper:#f8ecd6;
-  --rule:#c7ad80;
-}
-
-.design-blue{
-  --paper:#f1f8fc;
-  --rule:#a8c6d8;
-}
-
-.design-green{
-  --paper:#f2f8ed;
-  --rule:#b3c7a0;
-}
-
-.design-rose{
-  --paper:#fff4f4;
-  --rule:#d7b5bd;
-}
-
-.design-lavender{
-  --paper:#f8f5ff;
-  --rule:#c2b9d6;
-}
-
-.design-night{
-  --paper:#292724;
-  --rule:#625d54;
-  --ink:#eee6da;
-}
-
-.design-night .pageheader,
-.design-night .toolbar{
-  background:rgba(41,39,36,.97);
-}
-
-.design-night .toolbar button,
-.design-night .smallbtn{
-  color:#eee6da;
-  background:#393631;
-  border-color:#756c60;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:700px){
-
-  .topbar{
-
-    min-height:55px;
-
-    padding:5px;
-
-  }
-
-  .brand{
-
-    font-size:16px;
-
-  }
-
-  .topbuttons button{
-
-    padding:
-      6px 8px;
-
-    font-size:13px;
-
-  }
-
-  .workspace{
-
-    padding:
-      6px 2px 30px;
-
-  }
-
-  /*
-    Small spine on phone.
-  */
-
-  :root{
-
-    --spine-width:38px;
-
-  }
-
-  .rings{
-
-    inset:
-      6px 2px;
-
-  }
-
-  .ring{
-
-    width:29px;
-
-    height:16px;
-
-    border-width:3px;
-
-  }
-
-  .page{
-
-    min-height:
-      calc(
-        var(--page-lines) *
-        var(--line-height) +
-        160px
-      );
-
-  }
-
-  .pagecontent{
-
-    padding:
-      0 7px 35px;
-
-  }
-
-  .pageheader{
-
-    top:55px;
-
-    min-height:52px;
-
-  }
-
-  .date{
-
-    font-size:16px;
-
-  }
-
-  .pageactions .smallbtn{
-
-    min-width:34px;
-
-    padding:
-      4px 7px;
-
-  }
-
-  .toolbar{
-
-    top:107px;
-
-    margin-top:5px;
-
-  }
-
-  .editor{
-
-    font-size:
-      var(--font-size);
-
-  }
-
-  .formrow{
-
-    grid-template-columns:
-      1fr;
-
-  }
-
-  .designs{
-
-    grid-template-columns:
-      repeat(2,1fr);
-
-  }
-
-  .calday{
-
-    min-height:51px;
-
-  }
-
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media(min-width:701px){
-
-  .pagecontent{
-
-    padding-left:20px;
-
-    padding-right:22px;
-
-  }
-
-  .pageheader{
-
-    top:58px;
-
-  }
-
-}
-
-
-/* =========================================================
-   PRINT
-========================================================= */
-
-@media print{
-
-  body{
-
-    background:white;
-
-  }
-
-  .topbar,
-  .spine,
-  .toolbar,
-  .newpage,
-  .pageactions{
-
-    display:none !important;
-
-  }
-
-  .workspace{
-
-    padding:0;
-
-  }
-
-  .page{
-
-    margin:0;
-
-    border:0;
-
-    box-shadow:none;
-
-  }
-
-  .pagecontent{
-
-    margin:0;
-
-  }
-
-  .pageheader{
-
-    position:static;
-
-  }
+/* MOBILE */
+
+@media(max-width:650px){
+
+ .book{
+  grid-template-columns:24px 1fr;
+  margin:5px;
+ }
+
+ .page{
+  padding:11px 9px;
+ }
+
+ .editor{
+  min-height:490px;
+  font-size:16px;
+ }
+
+ .nav button{
+  padding:9px 8px;
+ }
 
 }
 
 </style>
 </head>
 
-
 <body>
 
-<!-- =======================================================
-     TOP BAR
-======================================================= -->
+<!-- LOGIN -->
 
-<header class="topbar">
+<div id="auth" class="auth">
 
-  <div class="brand">
-    📖 My Diary
-  </div>
+ <div class="card">
 
-  <div class="topbuttons">
+  <h2>📖 My Personal Diary</h2>
 
-    <button onclick="openCalendar()">
-      📅 Calendar
-    </button>
+  <p>v11 Cloud Sync Edition</p>
 
-    <button onclick="openEvents()">
-      📌 Events
-    </button>
-
-    <button onclick="openTodo()">
-      ☑ To-Do
-    </button>
-
-    <button onclick="openMemories()">
-      🖼 Memories
-    </button>
-
-    <button onclick="openSettings()">
-      ⚙ Settings
-    </button>
-
-    <button onclick="backupDiary()">
-      💾 Backup
-    </button>
-
-    <button onclick="document.getElementById('restoreFile').click()">
-      ↩ Restore
-    </button>
-
-    <button onclick="window.print()">
-      🖨 Print
-    </button>
-
-  </div>
-
-</header>
-
-
-<input
-  id="restoreFile"
-  type="file"
-  accept=".json"
-  hidden
-  onchange="restoreDiary(event)"
->
-
-
-<!-- =======================================================
-     BOOK
-======================================================= -->
-
-<main class="workspace">
-
-<section class="book">
-
-  <div class="spine">
-
-    <div class="spine-line"></div>
-
-    <div
-      id="rings"
-      class="rings">
-    </div>
-
-  </div>
-
-
-  <article
-    id="diaryPage"
-    class="page design-classic"
+  <input
+   id="email"
+   type="email"
+   placeholder="Email"
+   autocomplete="email"
   >
 
-    <div class="pagecontent">
+  <input
+   id="password"
+   type="password"
+   placeholder="Password"
+   autocomplete="current-password"
+  >
+
+  <div id="authmsg"></div>
+
+  <div class="actions">
+
+   <button
+    id="login"
+    class="btn primary">
+    Login
+   </button>
+
+   <button
+    id="signup"
+    class="btn">
+    Create account
+   </button>
+
+   <button
+    id="reset"
+    class="btn">
+    Forgot password
+   </button>
+
+  </div>
+
+  <p style="font-size:12px;color:#776653">
+   Your diary is kept in an offline cache and synchronized
+   to your account when online.
+  </p>
+
+ </div>
+
+</div>
 
 
-      <!-- HEADER -->
+<!-- APPLICATION -->
 
-      <div class="pageheader">
+<div id="app" class="hidden">
 
-        <div class="datearea">
+ <div class="top">
 
-          <div class="date">
+  <span class="brand">
+   📖 My Personal Diary
+  </span>
 
-            <span id="dateText"></span>
+  <span id="status" class="status">
+   Offline cache
+  </span>
 
-            <span
-              id="moodDisplay"
-              class="mood">
-            </span>
+  <button
+   class="btn"
+   onclick="toggle('calendar')">
+   📅 Calendar
+  </button>
 
-          </div>
+  <button
+   class="btn"
+   onclick="toggle('events')">
+   🔔 Events
+  </button>
 
-        </div>
+  <button
+   class="btn"
+   onclick="toggle('todos')">
+   ☑ To-do
+  </button>
 
-        <div class="pageactions">
+  <button
+   class="btn"
+   onclick="toggle('memories')">
+   🖼 Memories
+  </button>
 
-          <button
-            class="smallbtn"
-            id="prevDateBtn"
-            onclick="previousDate()">
-            ‹
-          </button>
+  <button
+   class="btn"
+   onclick="openDraw()">
+   ✏ Draw
+  </button>
 
-          <button
-            class="smallbtn"
-            onclick="goToday()">
-            Today
-          </button>
+  <button
+   class="btn"
+   onclick="openSettings()">
+   ⚙ Settings
+  </button>
 
-          <button
-            class="smallbtn"
-            id="nextDateBtn"
-            onclick="nextDate()">
-            ›
-          </button>
+  <button
+   class="btn"
+   onclick="backup()">
+   ⬇ Backup
+  </button>
 
-        </div>
+  <button
+   class="btn"
+   onclick="logout()">
+   Logout
+  </button>
 
-      </div>
-
-
-      <div
-        id="readonlyNote"
-        class="readonlynote">
-        🔒 Past diary pages are read-only.
-      </div>
-
-
-      <!-- QUOTE -->
-
-      <div
-        id="quote"
-        class="quote">
-      </div>
-
-
-      <!-- TOOLBAR -->
-
-      <div
-        id="toolbar"
-        class="toolbar">
-
-        <button
-          onclick="formatText('bold')">
-          <b>B</b>
-        </button>
-
-        <button
-          onclick="formatText('italic')">
-          <i>I</i>
-        </button>
-
-        <button
-          onclick="formatText('underline')">
-          <u>U</u>
-        </button>
-
-        <button
-          onclick="formatText('insertUnorderedList')">
-          •
-        </button>
-
-        <button
-          onclick="formatText('insertOrderedList')">
-          1.
-        </button>
-
-        <button
-          onclick="formatText('justifyLeft')">
-          ≡
-        </button>
-
-        <button
-          onclick="formatText('justifyCenter')">
-          ≡
-        </button>
-
-        <button
-          id="clearFormatButton"
-          onclick="clearFormatting()">
-          Clear
-        </button>
-
-        <div
-          id="drawWrap"
-          class="drawwrap">
-
-          <button
-            id="drawButton"
-            onclick="toggleDrawMenu()">
-            ✎ Draw
-          </button>
-
-        </div>
-
-      </div>
+ </div>
 
 
-      <!-- DRAW MENU IS PLACED HERE SO IT CAN BE
-           POSITIONED ABOVE THE PAGE WITHOUT
-           DISTURBING THE WRITING LINES -->
+ <!-- NOTEBOOK -->
 
-      <div
-        id="drawMenu"
-        class="drawmenu"
-        hidden>
+ <main class="book">
 
-        <button
-          onclick="selectDrawTool('pen')">
-          ✎ Pen
-        </button>
-
-        <button
-          onclick="selectDrawTool('line')">
-          ╱ Line
-        </button>
-
-        <button
-          onclick="selectDrawTool('circle')">
-          ○ Circle
-        </button>
-
-        <button
-          onclick="selectDrawTool('eraser')">
-          ⌫ Eraser
-        </button>
-
-        <button
-          onclick="undoDrawing()">
-          ↶ Undo
-        </button>
-
-        <button
-          onclick="redoDrawing()">
-          ↷ Redo
-        </button>
-
-        <button
-          onclick="clearDrawing()">
-          Clear
-        </button>
-
-        <button
-          id="exitDrawButton"
-          onclick="exitDrawing()">
-          ✓ Exit Draw
-        </button>
-
-        <span
-          class="drawhint">
-          Select a tool — menu closes automatically
-        </span>
-
-      </div>
+  <aside
+   class="spine"
+   id="spine">
+  </aside>
 
 
-      <!-- EDITOR -->
+  <article class="page">
 
-      <div
-        id="editorWrap"
-        class="editorwrap">
+   <div class="head">
 
-        <div
-          id="editor"
-          class="editor"
-          contenteditable="true"
-          spellcheck="true">
-        </div>
+    <div
+     id="date"
+     class="date">
+    </div>
 
-        <canvas
-          id="drawCanvas">
-        </canvas>
+    <div
+     id="moods"
+     class="moods">
 
-      </div>
-
-
-      <button
-        id="newPageButton"
-        class="newpage"
-        onclick="newPage()">
-        + New Page
-      </button>
+     <button data-mood="😊">😊</button>
+     <button data-mood="🙂">🙂</button>
+     <button data-mood="😐">😐</button>
+     <button data-mood="😔">😔</button>
+     <button data-mood="😡">😡</button>
+     <button data-mood="❤️">❤️</button>
 
     </div>
+
+   </div>
+
+
+   <div
+    id="quote"
+    class="quote">
+   </div>
+
+
+   <div class="tools">
+
+    <button onclick="cmd('bold')">
+     <b>B</b>
+    </button>
+
+    <button onclick="cmd('italic')">
+     <i>I</i>
+    </button>
+
+    <button onclick="cmd('underline')">
+     <u>U</u>
+    </button>
+
+    <button onclick="cmd('insertUnorderedList')">
+     • List
+    </button>
+
+    <button onclick="cmd('insertOrderedList')">
+     1. List
+    </button>
+
+   </div>
+
+
+   <div
+    id="editor"
+    class="editor"
+    contenteditable="true">
+   </div>
+
+
+   <!-- IMPORTANT:
+        PREVIOUS IS IMMEDIATELY BESIDE NEXT -->
+
+   <div class="nav">
+
+    <button
+     class="btn"
+     onclick="previousPage()">
+     ← Previous
+    </button>
+
+    <span
+     id="pageinfo"
+     class="status">
+    </span>
+
+    <div class="navright">
+
+     <button
+      class="btn"
+      onclick="newPage()">
+      ＋ New Page
+     </button>
+
+     <button
+      class="btn"
+      onclick="nextPage()">
+      Next →
+     </button>
+
+    </div>
+
+   </div>
 
   </article>
 
-</section>
-
-</main>
+ </main>
 
 
-<!-- =======================================================
-     CALENDAR
-======================================================= -->
+ <!-- CALENDAR -->
 
-<div
-  id="calendarModal"
-  class="modal"
-  hidden>
+ <section
+  id="calendar"
+  class="panel hidden">
 
-  <div class="modalbox">
+  <h3>Calendar</h3>
 
-    <h2>📅 Diary Calendar</h2>
+  <input
+   id="caldate"
+   type="date"
+   onchange="calendar()">
 
-    <div class="calnav">
+  <div
+   id="calout"
+   class="list">
+  </div>
 
-      <button
-        class="smallbtn"
-        onclick="changeMonth(-1)">
-        ‹
-      </button>
+ </section>
 
-      <strong id="calendarTitle"></strong>
 
-      <button
-        class="smallbtn"
-        onclick="changeMonth(1)">
-        ›
-      </button>
+ <!-- EVENTS -->
 
-    </div>
+ <section
+  id="events"
+  class="panel hidden">
 
-    <div
-      id="calendarGrid"
-      class="calgrid">
-    </div>
+  <h3>
+   Events & reminders
+  </h3>
 
-    <div class="eventlist">
+  <div class="grid">
 
-      <h3>Events this month</h3>
+   <input
+    id="etitle"
+    placeholder="Title">
 
-      <div id="calendarEvents"></div>
+   <input
+    id="edate"
+    type="date">
 
-    </div>
+   <input
+    id="etime"
+    type="time">
 
-    <div class="modalbuttons">
+   <input
+    id="erem"
+    type="number"
+    min="0"
+    value="15"
+    placeholder="Reminder minutes">
 
-      <button
-        class="smallbtn"
-        onclick="closeModal('calendarModal')">
-        Close
-      </button>
+   <input
+    id="edesc"
+    placeholder="Description">
 
-    </div>
+   <button
+    class="btn primary"
+    onclick="addEvent()">
+    Add event
+   </button>
 
   </div>
+
+  <div
+   id="eventout"
+   class="list">
+  </div>
+
+ </section>
+
+
+ <!-- TODO -->
+
+ <section
+  id="todos"
+  class="panel hidden">
+
+  <h3>To-do</h3>
+
+  <div class="grid">
+
+   <input
+    id="todoText"
+    placeholder="Task">
+
+   <button
+    class="btn primary"
+    onclick="addTodo()">
+    Add
+   </button>
+
+  </div>
+
+  <div
+   id="todoout"
+   class="list">
+  </div>
+
+ </section>
+
+
+ <!-- MEMORIES -->
+
+ <section
+  id="memories"
+  class="panel hidden">
+
+  <h3>
+   Memories for this date
+  </h3>
+
+  <div class="grid">
+
+   <input
+    id="mtitle"
+    placeholder="Memory title">
+
+   <input
+    id="mfile"
+    type="file"
+    accept="image/*,application/pdf">
+
+   <button
+    class="btn primary"
+    onclick="addMemory()">
+    Add memory
+   </button>
+
+  </div>
+
+  <div
+   class="memorygrid"
+   id="memoryout">
+  </div>
+
+ </section>
 
 </div>
 
 
-<!-- =======================================================
-     EVENTS
-======================================================= -->
+<!-- DRAWING -->
 
 <div
-  id="eventsModal"
-  class="modal"
-  hidden>
+ id="drawModal"
+ class="modal hidden">
 
-  <div class="modalbox">
+ <div class="modalbox">
 
-    <h2>📌 Diary Events</h2>
+  <div class="modalhead">
 
-    <div id="eventList"></div>
+   <h3>Draw</h3>
 
-    <hr>
-
-    <h3>Add Event</h3>
-
-    <div class="formrow">
-
-      <div class="field">
-
-        <label>Date</label>
-
-        <input
-          id="eventDate"
-          type="date">
-
-      </div>
-
-      <div class="field">
-
-        <label>Time</label>
-
-        <input
-          id="eventTime"
-          type="time">
-
-      </div>
-
-    </div>
-
-    <div class="field">
-
-      <label>Event</label>
-
-      <input
-        id="eventTitle"
-        type="text"
-        placeholder="Birthday, appointment, meeting...">
-
-    </div>
-
-    <div class="field">
-
-      <label>Notes</label>
-
-      <textarea
-        id="eventNotes">
-      </textarea>
-
-    </div>
-
-    <div class="modalbuttons">
-
-      <button
-        class="smallbtn"
-        onclick="closeModal('eventsModal')">
-        Close
-      </button>
-
-      <button
-        id="saveEventButton"
-        class="smallbtn primary"
-        onclick="saveEvent()">
-        Save Event
-      </button>
-
-    </div>
+   <button
+    class="btn"
+    onclick="closeModal('drawModal')">
+    Close
+   </button>
 
   </div>
+
+  <canvas id="canvas"></canvas>
+
+  <button
+   class="btn"
+   onclick="clearCanvas()">
+   Clear
+  </button>
+
+  <button
+   class="btn primary"
+   onclick="saveDrawing()">
+   Save
+  </button>
+
+ </div>
 
 </div>
 
 
-<!-- =======================================================
-     TODO
-======================================================= -->
+<!-- SETTINGS -->
 
 <div
-  id="todoModal"
-  class="modal"
-  hidden>
+ id="settingsModal"
+ class="modal hidden">
 
-  <div class="modalbox">
+ <div class="modalbox">
 
-    <h2>☑ To-Do List</h2>
+  <div class="modalhead">
 
-    <p id="todoInfo"></p>
+   <h3>Settings</h3>
 
-    <div id="todoList"></div>
-
-    <hr>
-
-    <div class="formrow">
-
-      <div class="field">
-
-        <label>Task</label>
-
-        <input
-          id="todoText"
-          type="text"
-          placeholder="Enter task">
-
-      </div>
-
-      <div class="field">
-
-        <label>Date</label>
-
-        <input
-          id="todoDate"
-          type="date">
-
-      </div>
-
-    </div>
-
-    <div class="modalbuttons">
-
-      <button
-        class="smallbtn"
-        onclick="closeModal('todoModal')">
-        Close
-      </button>
-
-      <button
-        id="todoAddButton"
-        class="smallbtn primary"
-        onclick="addTodo()">
-        Add
-      </button>
-
-    </div>
+   <button
+    class="btn"
+    onclick="closeModal('settingsModal')">
+    Close
+   </button>
 
   </div>
+
+
+  <div class="grid">
+
+   <label>
+    Spacing
+
+    <select id="lh">
+
+     <option value="28">
+      Compact
+     </option>
+
+     <option value="34">
+      Normal
+     </option>
+
+     <option value="40">
+      Wide
+     </option>
+
+    </select>
+
+   </label>
+
+
+   <label>
+    Font
+
+    <select id="font">
+
+     <option value="Georgia,serif">
+      Classic
+     </option>
+
+     <option value="Arial,sans-serif">
+      Clean
+     </option>
+
+     <option value="Trebuchet MS,sans-serif">
+      Friendly
+     </option>
+
+    </select>
+
+   </label>
+
+  </div>
+
+
+  <button
+   class="btn primary"
+   onclick="saveSettings()">
+   Save settings
+  </button>
+
+ </div>
 
 </div>
 
 
-<!-- =======================================================
-     MEMORY
-======================================================= -->
+<!-- SUPABASE -->
 
-<div
-  id="memoryModal"
-  class="modal"
-  hidden>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <div class="modalbox">
-
-    <h2>🖼 Memories</h2>
-
-    <div class="field">
-
-      <label>
-        Photograph / Camera
-      </label>
-
-      <input
-        id="memoryFile"
-        type="file"
-        accept="image/*"
-        capture="environment"
-        onchange="saveMemory(event)">
-
-    </div>
-
-    <div
-      id="memoryGrid"
-      class="memorygrid">
-    </div>
-
-    <div class="modalbuttons">
-
-      <button
-        class="smallbtn"
-        onclick="closeModal('memoryModal')">
-        Close
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =======================================================
-     MOOD
-======================================================= -->
-
-<div
-  id="moodModal"
-  class="modal"
-  hidden>
-
-  <div class="modalbox">
-
-    <h2>Choose Mood</h2>
-
-    <div
-      style="
-        display:grid;
-        grid-template-columns:repeat(4,1fr);
-        gap:8px;
-      ">
-
-      <button class="smallbtn" onclick="setMood('😊')">😊</button>
-      <button class="smallbtn" onclick="setMood('😄')">😄</button>
-      <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
-      <button class="smallbtn" onclick="setMood('😌')">😌</button>
-      <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
-      <button class="smallbtn" onclick="setMood('😐')">😐</button>
-      <button class="smallbtn" onclick="setMood('😔')">😔</button>
-      <button class="smallbtn" onclick="setMood('😢')">😢</button>
-      <button class="smallbtn" onclick="setMood('😡')">😡</button>
-      <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
-      <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
-      <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
-
-    </div>
-
-    <div class="modalbuttons">
-
-      <button
-        class="smallbtn"
-        onclick="setMood('')">
-        Remove Mood
-      </button>
-
-      <button
-        class="smallbtn"
-        onclick="closeModal('moodModal')">
-        Close
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =======================================================
-     SETTINGS
-======================================================= -->
-
-<div
-  id="settingsModal"
-  class="modal"
-  hidden>
-
-  <div class="modalbox">
-
-    <h2>⚙ Diary Settings</h2>
-
-    <h3>Page Design</h3>
-
-    <div class="designs">
-
-      <div
-        class="design design-classic"
-        onclick="setDesign('classic')">
-        📖 Classic
-      </div>
-
-      <div
-        class="design design-vintage"
-        onclick="setDesign('vintage')">
-        🕰 Vintage
-      </div>
-
-      <div
-        class="design design-blue"
-        onclick="setDesign('blue')">
-        💙 Blue
-      </div>
-
-      <div
-        class="design design-green"
-        onclick="setDesign('green')">
-        🌿 Green
-      </div>
-
-      <div
-        class="design design-rose"
-        onclick="setDesign('rose')">
-        🌸 Rose
-      </div>
-
-      <div
-        class="design design-lavender"
-        onclick="setDesign('lavender')">
-        💜 Lavender
-      </div>
-
-      <div
-        class="design design-night"
-        onclick="setDesign('night')">
-        🌙 Night
-      </div>
-
-    </div>
-
-    <hr>
-
-    <div class="field">
-
-      <label>
-        Number of lines:
-        <span id="lineValue"></span>
-      </label>
-
-      <input
-        id="lineRange"
-        type="range"
-        min="12"
-        max="45"
-        value="24"
-        oninput="changeLines(this.value)">
-
-    </div>
-
-    <div class="field">
-
-      <label>
-        Font size:
-        <span id="fontValue"></span>
-      </label>
-
-      <input
-        id="fontRange"
-        type="range"
-        min="15"
-        max="24"
-        value="18"
-        oninput="changeFont(this.value)">
-
-    </div>
-
-    <div class="field">
-
-      <label>
-        Line spacing:
-        <span id="spacingValue"></span>
-      </label>
-
-      <input
-        id="spacingRange"
-        type="range"
-        min="28"
-        max="45"
-        value="34"
-        oninput="changeSpacing(this.value)">
-
-    </div>
-
-    <div class="field">
-
-      <label>
-        Page width:
-        <span id="widthValue"></span>
-      </label>
-
-      <input
-        id="widthRange"
-        type="range"
-        min="900"
-        max="1700"
-        value="1500"
-        oninput="changeWidth(this.value)">
-
-    </div>
-
-    <div class="modalbuttons">
-
-      <button
-        class="smallbtn"
-        onclick="closeModal('settingsModal')">
-        Close
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- =======================================================
-     DATABASE / APPLICATION
-======================================================= -->
 
 <script>
 
-/* =========================================================
-   DATABASE
-========================================================= */
+/* =====================================================
+   SUPABASE CONFIGURATION
 
-/*
-  NEW DATABASE NAME.
+   REPLACE THESE TWO VALUES.
 
-  This is deliberate.
+   DO NOT PUT A SECRET / SERVICE-ROLE KEY HERE.
+===================================================== */
 
-  The previous versions could contain incompatible
-  object-store schemas. v10.2 does not try to "put"
-  records into the old schema.
+const SUPABASE_URL =
+'https://YOUR_PROJECT.supabase.co';
 
-  Instead:
-    old DB -> migration reader -> new DB
-*/
-
-const DB_NAME =
-  "myPersonalDiaryDB_v102";
-
-const DB_VERSION =
-  1;
-
-const OLD_DB_NAME =
-  "myPersonalDiaryDB";
-
-let db=null;
-
-let currentDate=
-  todayISO();
-
-let currentPage=1;
-
-let currentPageRecord=null;
-
-let calendarDate=
-  dateObj(currentDate);
-
-let saveTimer=null;
-
-let migrationDone=false;
+const SUPABASE_PUBLISHABLE_KEY =
+'YOUR_PUBLISHABLE_KEY';
 
 
-/* =========================================================
-   DRAWING
-========================================================= */
+/* SUPABASE CLIENT */
 
-const editor=
-  document.getElementById("editor");
-
-const editorWrap=
-  document.getElementById("editorWrap");
-
-const canvas=
-  document.getElementById("drawCanvas");
-
-const ctx=
-  canvas.getContext("2d");
-
-let drawingMode=false;
-
-let drawTool="pen";
-
-let drawSize=3;
-
-let drawColor="#35281e";
-
-let drawStart=null;
-
-let drawLast=null;
-
-let drawHistory=[];
-
-let drawRedo=[];
+const sb =
+ SUPABASE_URL.includes('YOUR_PROJECT')
+ ?
+ null
+ :
+ supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY,
+  {
+   auth:{
+    autoRefreshToken:true,
+    persistSession:true,
+    detectSessionInUrl:true
+   }
+  }
+ );
 
 
-/* =========================================================
-   QUOTES
-========================================================= */
+/* =====================================================
+   LOCAL DATABASE
+===================================================== */
 
-const quotes=[
+const DB='myPersonalDiaryDB';
+const VER=11;
 
-  "Every day is a new page.",
+let db;
+let user;
 
-  "Write today. Remember tomorrow.",
+let dateNow=new Date();
 
-  "Small moments become beautiful memories.",
+let pageNo=1;
+let pageRow;
 
-  "A diary is a conversation with your future self.",
-
-  "Life is made of moments worth remembering.",
-
-  "Today deserves to be remembered.",
-
-  "Your story is written one day at a time.",
-
-  "Keep the memories. They become treasures.",
-
-  "The ordinary days often become precious memories.",
-
-  "A peaceful mind creates beautiful memories."
-
-];
+let saveTimer;
 
 
-/* =========================================================
-   BASIC HELPERS
-========================================================= */
+/* HELPERS */
 
-function todayISO(){
+const $=id =>
+ document.getElementById(id);
 
-  return toISO(
-    new Date()
-  );
+
+function today(){
+
+ let d=new Date();
+
+ return new Date(
+  d-d.getTimezoneOffset()*60000
+ )
+ .toISOString()
+ .slice(0,10);
 
 }
 
 
-function toISO(d){
+function uid(){
 
-  return (
-    d.getFullYear()+
-    "-"+
-    String(d.getMonth()+1)
-      .padStart(2,"0")+
-    "-"+
-    String(d.getDate())
-      .padStart(2,"0")
-  );
+ return crypto.randomUUID();
 
 }
 
 
-function dateObj(iso){
+/* =====================================================
+   INDEXED DB
+===================================================== */
 
-  const p=
-    String(iso)
-      .split("-")
-      .map(Number);
+function openDB(){
 
-  return new Date(
-    p[0],
-    p[1]-1,
-    p[2]
-  );
+ return new Promise((ok,no)=>{
 
-}
+  let r=indexedDB.open(DB,VER);
 
+  r.onupgradeneeded=e=>{
 
-function formatDate(iso){
+   for(
+    let s of
+    [
+     'pages',
+     'events',
+     'todos',
+     'memories',
+     'settings',
+     'queue'
+    ]
+   ){
 
-  return dateObj(iso)
-    .toLocaleDateString(
-      undefined,
-      {
-        weekday:"short",
-        day:"2-digit",
-        month:"short",
-        year:"numeric"
-      }
-    );
+    if(
+     !e.target.result.objectStoreNames
+      .contains(s)
+    ){
 
-}
+     e.target.result
+      .createObjectStore(
+       s,
+       {keyPath:'id'}
+      );
 
+    }
 
-function escapeHTML(value){
+   }
 
-  return String(value||"")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
+  };
 
 
-function closeModal(id){
+  r.onsuccess=()=>{
 
-  const el=
-    document.getElementById(id);
+   db=r.result;
+   ok();
 
-  if(el)
-    el.hidden=true;
-
-}
+  };
 
 
-function openModal(id){
+  r.onerror=()=>no(r.error);
 
-  const el=
-    document.getElementById(id);
-
-  if(el)
-    el.hidden=false;
+ });
 
 }
 
 
-function isPastDate(date){
+function all(s){
 
-  return date<todayISO();
+ return new Promise((ok,no)=>{
+
+  let r=
+   db
+    .transaction(s)
+    .objectStore(s)
+    .getAll();
+
+  r.onsuccess=() =>
+   ok(r.result);
+
+  r.onerror=() =>
+   no(r.error);
+
+ });
 
 }
 
 
-/* =========================================================
+function get(s,id){
+
+ return new Promise((ok,no)=>{
+
+  let r=
+   db
+    .transaction(s)
+    .objectStore(s)
+    .get(id);
+
+  r.onsuccess=() =>
+   ok(r.result);
+
+  r.onerror=() =>
+   no(r.error);
+
+ });
+
+}
+
+
+function put(s,x){
+
+ return new Promise((ok,no)=>{
+
+  let r=
+   db
+    .transaction(s,'readwrite')
+    .objectStore(s)
+    .put(x);
+
+  r.onsuccess=()=>ok();
+
+  r.onerror=()=>no(r.error);
+
+ });
+
+}
+
+
+function del(s,id){
+
+ return new Promise((ok,no)=>{
+
+  let r=
+   db
+    .transaction(s,'readwrite')
+    .objectStore(s)
+    .delete(id);
+
+  r.onsuccess=()=>ok();
+
+  r.onerror=()=>no(r.error);
+
+ });
+
+}
+
+
+/* =====================================================
+   SYNC QUEUE
+===================================================== */
+
+async function q(
+ table,
+ action,
+ row
+){
+
+ await put(
+  'queue',
+  {
+   id:uid(),
+   table,
+   action,
+   row
+  }
+ );
+
+ syncSoon();
+
+}
+
+
+async function save(
+ store,
+ row
+){
+
+ await put(
+  store,
+  row
+ );
+
+ await q(
+  store,
+  'upsert',
+  row
+ );
+
+}
+
+
+/* =====================================================
    QUOTE
-========================================================= */
+===================================================== */
 
-function getQuote(date){
+function qquote(d){
 
-  let n=0;
+ let a=[
+  'Write it down. Small moments become a life.',
+  'Today is a page you will never get back.',
+  'A quiet mind notices more.',
+  'Gratitude turns ordinary days into memories.',
+  'Begin where you are.'
+ ];
 
-  for(
-    let i=0;
-    i<date.length;
-    i++
-  ){
+ let n=0;
 
-    n+=
-      date.charCodeAt(i);
+ for(
+  let c of d
+ ){
 
+  n=
+   (
+    n*31+
+    c.charCodeAt(0)
+   )
+   %
+   a.length;
+
+ }
+
+ return a[n];
+
+}
+
+
+/* =====================================================
+   PAGE FUNCTIONS
+===================================================== */
+
+async function getPage(
+ d,
+ n
+){
+
+ return(
+  await all('pages')
+ ).find(
+  x =>
+   x.diary_date===d &&
+   x.page_number===n
+ );
+
+}
+
+
+async function datePages(d){
+
+ return(
+  await all('pages')
+ )
+ .filter(
+  x=>x.diary_date===d
+ )
+ .sort(
+  (a,b)=>
+   a.page_number-b.page_number
+ );
+
+}
+
+
+async function ensurePage(
+ d,
+ n
+){
+
+ let p=
+  await getPage(d,n);
+
+
+ if(!p){
+
+  p={
+   id:uid(),
+   user_id:user.id,
+   diary_date:d,
+   page_number:n,
+   content:'',
+   mood:'',
+   drawing_data:'',
+   quote:qquote(d),
+   created_at:
+    new Date().toISOString(),
+   updated_at:
+    new Date().toISOString()
+  };
+
+  await save(
+   'pages',
+   p
+  );
+
+ }
+
+ return p;
+
+}
+
+
+/* DATE LABEL */
+
+function label(d){
+
+ return new Date(
+  d+'T12:00:00'
+ )
+ .toLocaleDateString(
+  undefined,
+  {
+   weekday:'short',
+   day:'2-digit',
+   month:'short',
+   year:'numeric'
   }
-
-  return quotes[
-    n%quotes.length
-  ];
+ );
 
 }
 
 
-/* =========================================================
-   NEW DATABASE
-========================================================= */
+/* =====================================================
+   RENDER PAGE
+===================================================== */
 
-function openNewDB(){
+async function render(){
 
-  return new Promise(
-    (resolve,reject)=>{
-
-      const request=
-        indexedDB.open(
-          DB_NAME,
-          DB_VERSION
-        );
-
-
-      request.onupgradeneeded=
-        function(e){
-
-          const database=
-            e.target.result;
-
-
-          if(
-            !database.objectStoreNames
-              .contains("pages")
-          ){
-
-            const s=
-              database.createObjectStore(
-                "pages",
-                {keyPath:"id"}
-              );
-
-            s.createIndex(
-              "date",
-              "date"
-            );
-
-          }
-
-
-          if(
-            !database.objectStoreNames
-              .contains("events")
-          ){
-
-            const s=
-              database.createObjectStore(
-                "events",
-                {
-                  keyPath:"id",
-                  autoIncrement:true
-                }
-              );
-
-            s.createIndex(
-              "date",
-              "date"
-            );
-
-          }
-
-
-          if(
-            !database.objectStoreNames
-              .contains("todos")
-          ){
-
-            const s=
-              database.createObjectStore(
-                "todos",
-                {
-                  keyPath:"id",
-                  autoIncrement:true
-                }
-              );
-
-            s.createIndex(
-              "date",
-              "date"
-            );
-
-          }
-
-
-          if(
-            !database.objectStoreNames
-              .contains("memories")
-          ){
-
-            const s=
-              database.createObjectStore(
-                "memories",
-                {
-                  keyPath:"id",
-                  autoIncrement:true
-                }
-              );
-
-            s.createIndex(
-              "date",
-              "date"
-            );
-
-          }
-
-
-          if(
-            !database.objectStoreNames
-              .contains("settings")
-          ){
-
-            database.createObjectStore(
-              "settings",
-              {keyPath:"key"}
-            );
-
-          }
-
-        };
-
-
-      request.onsuccess=
-        function(e){
-
-          db=e.target.result;
-
-          db.onversionchange=
-            function(){
-
-              db.close();
-
-            };
-
-          resolve(db);
-
-        };
-
-
-      request.onerror=
-        function(){
-
-          reject(
-            request.error ||
-            new Error(
-              "Unable to open diary database."
-            )
-          );
-
-        };
-
-
-      request.onblocked=
-        function(){
-
-          console.warn(
-            "Diary database opening is blocked."
-          );
-
-        };
-
-    }
+ pageRow=
+  await ensurePage(
+   dateNow
+    .toISOString()
+    .slice(0,10),
+   pageNo
   );
 
-}
+
+ let d=
+  pageRow.diary_date;
 
 
-/* =========================================================
-   DATABASE OPERATIONS
-========================================================= */
+ $('date').textContent=
+  label(d)+
+  ' · Page '+
+  pageNo;
 
-function get(store,key){
 
-  return new Promise(
-    (resolve,reject)=>{
+ $('quote').textContent=
+  pageNo===1
+  ?
+  pageRow.quote
+  :
+  '';
 
-      try{
 
-        const tx=
-          db.transaction(
-            [store],
-            "readonly"
-          );
+ $('editor').innerHTML=
+  pageRow.content||'';
 
-        const request=
-          tx.objectStore(store)
-            .get(key);
 
-        request.onsuccess=
-          ()=>resolve(
-            request.result
-          );
+ let ps=
+  await datePages(d);
 
-        request.onerror=
-          ()=>reject(
-            request.error
-          );
 
-      }catch(error){
-
-        reject(error);
-
-      }
-
-    }
+ $('pageinfo').textContent=
+  'Page '+
+  pageNo+
+  ' of '+
+  Math.max(
+   1,
+   ps.length
   );
 
-}
 
+ $('edate').value=d;
 
-function getAll(store){
+ $('caldate').value=d;
 
-  return new Promise(
-    (resolve,reject)=>{
+ renderSpine();
 
-      try{
+ renderTodos();
 
-        const tx=
-          db.transaction(
-            [store],
-            "readonly"
-          );
+ renderEvents();
 
-        const request=
-          tx.objectStore(store)
-            .getAll();
-
-        request.onsuccess=
-          ()=>resolve(
-            request.result||[]
-          );
-
-        request.onerror=
-          ()=>reject(
-            request.error
-          );
-
-      }catch(error){
-
-        reject(error);
-
-      }
-
-    }
-  );
+ renderMemories();
 
 }
 
 
-function put(store,value){
+/* =====================================================
+   SPIRAL
+===================================================== */
 
-  return new Promise(
-    (resolve,reject)=>{
+function renderSpine(){
 
-      try{
+ let s=$('spine');
 
-        const tx=
-          db.transaction(
-            [store],
-            "readwrite"
-          );
+ s.innerHTML='';
 
-        const request=
-          tx.objectStore(store)
-            .put(value);
+ for(
+  let i=0;
+  i<16;
+  i++
+ ){
 
-        request.onsuccess=
-          ()=>resolve(
-            request.result
-          );
+  let r=
+   document.createElement(
+    'div'
+   );
 
-        request.onerror=
-          ()=>reject(
-            request.error
-          );
+  r.className='ring';
 
-      }catch(error){
+  r.style.top=
+   (15+i*43)+'px';
 
-        reject(error);
+  s.appendChild(r);
 
-      }
-
-    }
-  );
+ }
 
 }
 
 
-function deleteRecord(store,key){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      try{
-
-        const tx=
-          db.transaction(
-            [store],
-            "readwrite"
-          );
-
-        const request=
-          tx.objectStore(store)
-            .delete(key);
-
-        request.onsuccess=
-          ()=>resolve();
-
-        request.onerror=
-          ()=>reject(
-            request.error
-          );
-
-      }catch(error){
-
-        reject(error);
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   OLD DATABASE MIGRATION
-========================================================= */
-
-async function migrateOldDatabase(){
-
-  if(migrationDone)
-    return;
-
-  migrationDone=true;
-
-
-  /*
-    First migrate old localStorage diary.
-  */
-
-  try{
-
-    const oldDiary=
-      localStorage.getItem(
-        "myPersonalDiaryEntries"
-      );
-
-    if(oldDiary){
-
-      const data=
-        JSON.parse(oldDiary);
-
-      for(
-        const date of Object.keys(data)
-      ){
-
-        const value=data[date];
-
-        let content="";
-        let mood="";
-
-        if(
-          typeof value==="string"
-        ){
-
-          content=value;
-
-        }else if(value){
-
-          content=
-            value.content||
-            value.text||
-            "";
-
-          mood=
-            value.mood||
-            "";
-
-        }
-
-        if(!content)
-          continue;
-
-        await put(
-          "pages",
-          {
-            id:
-              date+"-1",
-
-            date:date,
-
-            page:1,
-
-            content:content,
-
-            drawing:null,
-
-            mood:mood,
-
-            quote:getQuote(date)
-          }
-        );
-
-      }
-
-    }
-
-  }catch(error){
-
-    console.warn(
-      "localStorage migration:",
-      error
-    );
-
-  }
-
-
-  /*
-    Now try to read the old IndexedDB.
-
-    There is deliberately NO version number.
-    Therefore we do not trigger an upgrade
-    against the old schema.
-  */
-
-  let oldDB=null;
-
-
-  try{
-
-    oldDB=
-      await openOldDB();
-
-  }catch(error){
-
-    console.log(
-      "No readable old database:",
-      error
-    );
-
-    return;
-
-  }
-
-
-  try{
-
-    const stores=
-      Array.from(
-        oldDB.objectStoreNames
-      );
-
-
-    /*
-      Pages
-    */
-
-    if(
-      stores.includes("pages")
-    ){
-
-      const records=
-        await readOldStore(
-          oldDB,
-          "pages"
-        );
-
-
-      for(
-        const record of records
-      ){
-
-        const page=
-          normalizePage(
-            record
-          );
-
-        if(page){
-
-          const exists=
-            await get(
-              "pages",
-              page.id
-            );
-
-          if(!exists){
-
-            await put(
-              "pages",
-              page
-            );
-
-          }
-
-        }
-
-      }
-
-    }
-
-
-    /*
-      Events
-    */
-
-    if(
-      stores.includes("events")
-    ){
-
-      const records=
-        await readOldStore(
-          oldDB,
-          "events"
-        );
-
-
-      for(
-        const record of records
-      ){
-
-        const event=
-          normalizeEvent(
-            record
-          );
-
-        if(event){
-
-          await put(
-            "events",
-            event
-          );
-
-        }
-
-      }
-
-    }
-
-
-    /*
-      Todos
-    */
-
-    if(
-      stores.includes("todos")
-    ){
-
-      const records=
-        await readOldStore(
-          oldDB,
-          "todos"
-        );
-
-
-      for(
-        const record of records
-      ){
-
-        const todo=
-          normalizeTodo(
-            record
-          );
-
-        if(todo){
-
-          await put(
-            "todos",
-            todo
-          );
-
-        }
-
-      }
-
-    }
-
-
-    /*
-      Memories
-    */
-
-    if(
-      stores.includes("memories")
-    ){
-
-      const records=
-        await readOldStore(
-          oldDB,
-          "memories"
-        );
-
-
-      for(
-        const record of records
-      ){
-
-        const memory=
-          normalizeMemory(
-            record
-          );
-
-        if(memory){
-
-          await put(
-            "memories",
-            memory
-          );
-
-        }
-
-      }
-
-    }
-
-
-    /*
-      Old attachments -> memories
-    */
-
-    if(
-      stores.includes("attachments")
-    ){
-
-      const records=
-        await readOldStore(
-          oldDB,
-          "attachments"
-        );
-
-
-      for(
-        const record of records
-      ){
-
-        const memory=
-          normalizeMemory(
-            record
-          );
-
-        if(memory){
-
-          await put(
-            "memories",
-            memory
-          );
-
-        }
-
-      }
-
-    }
-
-
-    /*
-      Settings
-    */
-
-    if(
-      stores.includes("settings")
-    ){
-
-      const records=
-        await readOldStore(
-          oldDB,
-          "settings"
-        );
-
-
-      for(
-        const record of records
-      ){
-
-        const setting=
-          normalizeSetting(
-            record
-          );
-
-        if(setting){
-
-          await put(
-            "settings",
-            setting
-          );
-
-        }
-
-      }
-
-    }
-
-  }catch(error){
-
-    console.warn(
-      "Old database migration error:",
-      error
-    );
-
-  }finally{
-
-    try{
-      oldDB.close();
-    }catch(e){}
-
-  }
-
-}
-
-
-function openOldDB(){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      const request=
-        indexedDB.open(
-          OLD_DB_NAME
-        );
-
-      request.onsuccess=
-        e=>
-          resolve(
-            e.target.result
-          );
-
-      request.onerror=
-        e=>
-          reject(
-            e.target.error
-          );
-
-      request.onupgradeneeded=
-        function(){
-
-          /*
-            If the old database does not exist,
-            cancel migration rather than modifying it.
-          */
-
-          try{
-
-            request.transaction.abort();
-
-          }catch(e){}
-
-        };
-
-    }
-  );
-
-}
-
-
-function readOldStore(database,name){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      try{
-
-        const tx=
-          database.transaction(
-            [name],
-            "readonly"
-          );
-
-        const store=
-          tx.objectStore(name);
-
-        const request=
-          store.getAll();
-
-        request.onsuccess=
-          ()=>resolve(
-            request.result||[]
-          );
-
-        request.onerror=
-          ()=>reject(
-            request.error
-          );
-
-      }catch(error){
-
-        reject(error);
-
-      }
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   NORMALIZERS
-========================================================= */
-
-function normalizePage(r){
-
-  if(!r)
-    return null;
-
-
-  const date=
-    r.date||
-    r.day||
-    (
-      r.id
-      ? String(r.id).split("-")[0]
-      : null
-    );
-
-
-  if(!date)
-    return null;
-
-
-  const page=
-    Number(
-      r.page||
-      r.pageNumber||
-      1
-    );
-
-
-  return {
-
-    id:
-      date+"-"+page,
-
-    date:date,
-
-    page:page,
-
-    content:
-      r.content||
-      r.text||
-      "",
-
-    drawing:
-      r.drawing||
-      r.draw||
-      null,
-
-    mood:
-      r.mood||
-      "",
-
-    quote:
-      r.quote||
-      getQuote(date)
-
-  };
-
-}
-
-
-function normalizeEvent(r){
-
-  if(!r)
-    return null;
-
-
-  if(!r.date)
-    return null;
-
-
-  return {
-
-    /*
-      Do NOT reuse potentially incompatible
-      numeric keys from the old store.
-    */
-
-    title:
-      r.title||
-      r.name||
-      r.event||
-      "",
-
-    date:
-      r.date,
-
-    time:
-      r.time||
-      "",
-
-    notes:
-      r.notes||
-      r.description||
-      "",
-
-    created:
-      r.created||
-      Date.now(),
-
-    oldId:
-      r.id
-  };
-
-}
-
-
-function normalizeTodo(r){
-
-  if(!r)
-    return null;
-
-  if(!r.date)
-    return null;
-
-
-  return {
-
-    text:
-      r.text||
-      r.title||
-      r.task||
-      "",
-
-    date:
-      r.date,
-
-    done:
-      !!r.done,
-
-    carried:
-      !!r.carried,
-
-    created:
-      r.created||
-      Date.now(),
-
-    oldId:
-      r.id
-
-  };
-
-}
-
-
-function normalizeMemory(r){
-
-  if(!r)
-    return null;
-
-
-  const image=
-    r.image||
-    r.data||
-    r.dataUrl||
-    r.url||
-    null;
-
-
-  if(!image)
-    return null;
-
-
-  return {
-
-    date:
-      r.date||
-      todayISO(),
-
-    name:
-      r.name||
-      r.filename||
-      "Memory",
-
-    image:image,
-
-    created:
-      r.created||
-      Date.now(),
-
-    oldId:
-      r.id
-
-  };
-
-}
-
-
-function normalizeSetting(r){
-
-  if(!r)
-    return null;
-
-
-  const key=
-    r.key||
-    "preferences";
-
-
-  if(
-    key!=="preferences"
-  )
-    return null;
-
-
-  return {
-
-    key:"preferences",
-
-    design:
-      r.design||
-      "classic",
-
-    lines:
-      Number(
-        r.lines||
-        24
-      ),
-
-    font:
-      Number(
-        r.font||
-        18
-      ),
-
-    spacing:
-      Number(
-        r.spacing||
-        34
-      ),
-
-    width:
-      Number(
-        r.width||
-        1500
-      )
-
-  };
-
-}
-
-
-/* =========================================================
-   SETTINGS
-========================================================= */
-
-async function getSettings(){
-
-  const result=
-    await get(
-      "settings",
-      "preferences"
-    );
-
-
-  return result||{
-
-    key:"preferences",
-
-    design:"classic",
-
-    lines:24,
-
-    font:18,
-
-    spacing:34,
-
-    width:1500
-
-  };
-
-}
-
-
-async function saveSettings(){
-
-  const page=
-    document.getElementById(
-      "diaryPage"
-    );
-
-
-  const settings={
-
-    key:"preferences",
-
-    design:
-      page.dataset.design||
-      "classic",
-
-    lines:
-      Number(
-        document.getElementById(
-          "lineRange"
-        ).value
-      ),
-
-    font:
-      Number(
-        document.getElementById(
-          "fontRange"
-        ).value
-      ),
-
-    spacing:
-      Number(
-        document.getElementById(
-          "spacingRange"
-        ).value
-      ),
-
-    width:
-      Number(
-        document.getElementById(
-          "widthRange"
-        ).value
-      )
-
-  };
-
-
-  await put(
-    "settings",
-    settings
-  );
-
-}
-
-
-function applySettings(s){
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-lines",
-      s.lines
-    );
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--font-size",
-      s.font+"px"
-    );
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--line-height",
-      s.spacing+"px"
-    );
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-width",
-      s.width+"px"
-    );
-
-
-  const page=
-    document.getElementById(
-      "diaryPage"
-    );
-
-
-  page.dataset.design=
-    s.design;
-
-
-  page.className=
-    "page design-"+s.design;
-
-
-  document.getElementById(
-    "lineValue"
-  ).textContent=
-    s.lines;
-
-  document.getElementById(
-    "fontValue"
-  ).textContent=
-    s.font+" px";
-
-  document.getElementById(
-    "spacingValue"
-  ).textContent=
-    s.spacing+" px";
-
-  document.getElementById(
-    "widthValue"
-  ).textContent=
-    s.width+" px";
-
-
-  updateDesignSelection();
-
-}
-
-
-function updateDesignSelection(){
-
-  const current=
-    document
-      .getElementById(
-        "diaryPage"
-      )
-      .dataset.design||
-    "classic";
-
-
-  document
-    .querySelectorAll(
-      ".design"
-    )
-    .forEach(
-      el=>{
-
-        el.classList.toggle(
-          "selected",
-          el.classList.contains(
-            "design-"+current
-          )
-        );
-
-      }
-    );
-
-}
-
-
-async function openSettings(){
-
-  const s=
-    await getSettings();
-
-
-  document.getElementById(
-    "lineRange"
-  ).value=s.lines;
-
-  document.getElementById(
-    "fontRange"
-  ).value=s.font;
-
-  document.getElementById(
-    "spacingRange"
-  ).value=s.spacing;
-
-  document.getElementById(
-    "widthRange"
-  ).value=s.width;
-
-
-  applySettings(s);
-
-  openModal(
-    "settingsModal"
-  );
-
-}
-
-
-async function setDesign(name){
-
-  const s=
-    await getSettings();
-
-  s.design=name;
-
-  await put(
-    "settings",
-    s
-  );
-
-  applySettings(s);
-
-}
-
-
-async function changeLines(value){
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-lines",
-      value
-    );
-
-  document.getElementById(
-    "lineValue"
-  ).textContent=value;
-
-  await saveSettings();
-
-}
-
-
-async function changeFont(value){
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--font-size",
-      value+"px"
-    );
-
-  document.getElementById(
-    "fontValue"
-  ).textContent=
-    value+" px";
-
-  await saveSettings();
-
-}
-
-
-async function changeSpacing(value){
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--line-height",
-      value+"px"
-    );
-
-  document.getElementById(
-    "spacingValue"
-  ).textContent=
-    value+" px";
-
-  resizeCanvas();
-
-  await saveSettings();
-
-}
-
-
-async function changeWidth(value){
-
-  document.documentElement
-    .style
-    .setProperty(
-      "--page-width",
-      value+"px"
-    );
-
-  document.getElementById(
-    "widthValue"
-  ).textContent=
-    value+" px";
-
-  resizeCanvas();
-
-  await saveSettings();
-
-}
-
-
-/* =========================================================
-   PAGE LOAD / SAVE
-========================================================= */
-
-function pageId(){
-
-  return (
-    currentDate+
-    "-"+
-    currentPage
-  );
-
-}
-
-
-async function loadPage(){
-
-  const id=
-    pageId();
-
-
-  let page=
-    await get(
-      "pages",
-      id
-    );
-
-
-  if(!page){
-
-    page={
-
-      id:id,
-
-      date:currentDate,
-
-      page:currentPage,
-
-      content:"",
-
-      drawing:null,
-
-      mood:"",
-
-      quote:
-        getQuote(
-          currentDate
-        )
-
-    };
-
-  }
-
-
-  currentPageRecord=
-    page;
-
-
-  editor.innerHTML=
-    page.content||"";
-
-
-  document.getElementById(
-    "dateText"
-  ).textContent=
-    formatDate(
-      currentDate
-    )+
-    " • Page "+
-    currentPage;
-
-
-  document.getElementById(
-    "moodDisplay"
-  ).textContent=
-    page.mood||"";
-
-
-  document.getElementById(
-    "quote"
-  ).textContent=
-    "“"+
-    (
-      page.quote||
-      getQuote(currentDate)
-    )+
-    "”";
-
-
-  applyDatePermissions();
-
-  await loadDrawing(
-    page.drawing
-  );
-
-}
-
-
-function scheduleSave(){
-
-  clearTimeout(
+/* =====================================================
+   EDITOR
+===================================================== */
+
+$('editor')
+ .addEventListener(
+  'input',
+  ()=>{
+
+   clearTimeout(
     saveTimer
-  );
+   );
 
-  saveTimer=
+   saveTimer=
     setTimeout(
-      savePage,
-      200
+     saveCurrent,
+     450
     );
-
-}
-
-
-async function savePage(){
-
-  if(
-    !currentPageRecord ||
-    isPastDate(currentDate)
-  ){
-
-    return;
 
   }
+ );
 
 
-  currentPageRecord.content=
-    editor.innerHTML;
+async function saveCurrent(){
 
-  currentPageRecord.drawing=
-    getDrawingData();
+ if(!pageRow)return;
 
+ pageRow.content=
+  $('editor').innerHTML;
 
-  await put(
-    "pages",
-    currentPageRecord
-  );
+ pageRow.updated_at=
+  new Date().toISOString();
 
-}
+ await save(
+  'pages',
+  pageRow
+ );
 
-
-function applyDatePermissions(){
-
-  const past=
-    isPastDate(
-      currentDate
-    );
-
-
-  const page=
-    document.getElementById(
-      "diaryPage"
-    );
-
-
-  page.classList.toggle(
-    "readonly",
-    past
-  );
-
-
-  editor.contentEditable=
-    past
-    ? "false"
-    : "true";
-
-
-  document.getElementById(
-    "newPageButton"
-  ).disabled=
-    past;
-
-
-  document.getElementById(
-    "readonlyNote"
-  ).hidden=
-    !past;
-
-
-  document
-    .querySelectorAll(
-      "#toolbar button"
-    )
-    .forEach(
-      button=>{
-        button.disabled=past;
-      }
-    );
-
-
-  document.getElementById(
-    "drawButton"
-  ).disabled=
-    past;
-
-
-  if(past){
-
-    exitDrawing();
-
-  }
+ status('Saved ✓');
 
 }
 
 
-/* =========================================================
-   PAGE NAVIGATION
-========================================================= */
+function cmd(c){
+
+ document.execCommand(
+  c,
+  false,
+  null
+ );
+
+ $('editor').focus();
+
+ saveCurrent();
+
+}
+
+
+/* =====================================================
+   NEXT PAGE
+===================================================== */
+
+async function nextPage(){
+
+ await saveCurrent();
+
+ pageNo++;
+
+ await render();
+
+}
+
+
+/* =====================================================
+   NEW PAGE
+===================================================== */
 
 async function newPage(){
 
-  if(isPastDate(currentDate)){
-
-    alert(
-      "Past diary dates are read-only."
-    );
-
-    return;
-
-  }
-
-
-  await savePage();
-
-  currentPage++;
-
-  await loadPage();
+ await nextPage();
 
 }
 
 
-async function previousDate(){
+/* =====================================================
+   PREVIOUS PAGE
 
-  await savePage();
+   PAGE 2 -> PAGE 1
 
-  const d=
-    dateObj(currentDate);
+   PAGE 1 -> LAST PAGE OF PREVIOUS DATE
+===================================================== */
 
-  d.setDate(
-    d.getDate()-1
+async function previousPage(){
+
+ await saveCurrent();
+
+
+ if(pageNo>1){
+
+  pageNo--;
+
+  await render();
+
+  return;
+
+ }
+
+
+ let d=
+  new Date(
+   pageRow.diary_date+
+   'T12:00:00'
   );
 
-  currentDate=
-    toISO(d);
 
-  currentPage=1;
-
-  await loadPage();
-
-}
+ d.setDate(
+  d.getDate()-1
+ );
 
 
-async function nextDate(){
-
-  await savePage();
-
-  const d=
-    dateObj(currentDate);
-
-  d.setDate(
-    d.getDate()+1
-  );
-
-  currentDate=
-    toISO(d);
-
-  currentPage=1;
-
-  await loadPage();
-
-}
-
-
-async function goToday(){
-
-  await savePage();
-
-  currentDate=
-    todayISO();
-
-  currentPage=1;
-
-  await loadPage();
-
-}
-
-
-/* =========================================================
-   TEXT FORMATTING
-========================================================= */
-
-function formatText(command){
-
-  if(isPastDate(currentDate))
-    return;
-
-
-  editor.focus();
-
-  document.execCommand(
-    command,
-    false,
-    null
-  );
-
-  scheduleSave();
-
-}
-
-
-function clearFormatting(){
-
-  if(isPastDate(currentDate))
-    return;
-
-
-  editor.focus();
-
-  document.execCommand(
-    "removeFormat",
-    false,
-    null
-  );
-
-  scheduleSave();
-
-}
-
-
-editor.addEventListener(
-  "input",
-  function(){
-
-    if(isPastDate(currentDate))
-      return;
-
-    scheduleSave();
-
-  }
-);
-
-
-/* =========================================================
-   MOOD
-========================================================= */
-
-function openMood(){
-
-  if(isPastDate(currentDate))
-    return;
-
-  openModal(
-    "moodModal"
-  );
-
-}
-
-
-async function setMood(mood){
-
-  if(isPastDate(currentDate))
-    return;
-
-
-  currentPageRecord.mood=
-    mood;
-
-  await savePage();
-
-  document.getElementById(
-    "moodDisplay"
-  ).textContent=
-    mood;
-
-
-  closeModal(
-    "moodModal"
-  );
-
-}
-
-
-/*
-  Long press / click mood area opens selector.
-*/
-
-document
-  .getElementById(
-    "moodDisplay"
+ let prev=
+  new Date(
+   d-
+   d.getTimezoneOffset()*60000
   )
-  .addEventListener(
-    "click",
-    openMood
-  );
+  .toISOString()
+  .slice(0,10);
 
 
-/* =========================================================
-   DRAWING
-========================================================= */
+ let ps=
+  await datePages(prev);
 
-function resizeCanvas(){
 
-  const rect=
-    editorWrap.getBoundingClientRect();
+ dateNow=d;
 
-  if(
-    rect.width<=0 ||
-    rect.height<=0
+
+ pageNo=
+  ps.length
+  ?
+  ps[ps.length-1]
+   .page_number
+  :
+  1;
+
+
+ await render();
+
+}
+
+
+/* =====================================================
+   PANELS
+===================================================== */
+
+function toggle(id){
+
+ [
+  'calendar',
+  'events',
+  'todos',
+  'memories'
+ ]
+ .forEach(
+  x=>
+   $(x)
+   .classList
+   .toggle(
+    'hidden',
+    x!==id
+   )
+ );
+
+
+ if(id==='calendar')
+  calendar();
+
+ if(id==='events')
+  renderEvents();
+
+ if(id==='todos')
+  renderTodos();
+
+ if(id==='memories')
+  renderMemories();
+
+}
+
+
+/* =====================================================
+   TODO
+===================================================== */
+
+async function addTodo(){
+
+ let t=
+  $('todoText')
+   .value
+   .trim();
+
+ if(!t)return;
+
+ await save(
+  'todos',
+  {
+   id:uid(),
+   user_id:user.id,
+   diary_date:
+    pageRow.diary_date,
+   text:t,
+   completed:false,
+   created_at:
+    new Date().toISOString(),
+   updated_at:
+    new Date().toISOString()
+  }
+ );
+
+ $('todoText').value='';
+
+ renderTodos();
+
+}
+
+
+async function renderTodos(){
+
+ let a=
+  (
+   await all('todos')
   )
-    return;
-
-
-  const old=
-    document.createElement(
-      "canvas"
-    );
-
-  old.width=
-    canvas.width;
-
-  old.height=
-    canvas.height;
-
-
-  if(
-    canvas.width &&
-    canvas.height
-  ){
-
-    old
-      .getContext("2d")
-      .drawImage(
-        canvas,
-        0,
-        0
-      );
-
-  }
-
-
-  const dpr=
-    Math.max(
-      1,
-      window.devicePixelRatio||1
-    );
-
-
-  canvas.width=
-    Math.floor(
-      rect.width*dpr
-    );
-
-  canvas.height=
-    Math.floor(
-      rect.height*dpr
-    );
-
-
-  canvas.style.width=
-    rect.width+"px";
-
-  canvas.style.height=
-    rect.height+"px";
-
-
-  ctx.setTransform(
-    dpr,
-    0,
-    0,
-    dpr,
-    0,
-    0
+  .filter(
+   x=>
+    x.diary_date===
+    pageRow?.diary_date
   );
 
 
-  ctx.lineCap="round";
+ $('todoout').innerHTML=
 
-  ctx.lineJoin="round";
+  a.map(
+   x=>
 
+   `<div class="item">
 
-  if(
-    old.width &&
-    old.height
-  ){
+    <input
+     type="checkbox"
+     ${x.completed?'checked':''}
+     onchange=
+      "todoCheck('${x.id}',this.checked)"
+    >
 
-    ctx.drawImage(
-      old,
-      0,
-      0,
-      old.width,
-      old.height,
-      0,
-      0,
-      rect.width,
-      rect.height
-    );
+    <span
+     class="grow"
+     style=
+      "${x.completed?
+        'text-decoration:line-through':
+        ''}"
+    >
+     ${esc(x.text)}
+    </span>
 
-  }
+    <button
+     class="btn"
+     onclick=
+      "removeRow('todos','${x.id}')"
+    >
+     Delete
+    </button>
 
-}
+   </div>`
 
-
-function getDrawingData(){
-
-  if(
-    !canvas.width ||
-    !canvas.height
   )
-    return null;
+  .join('')
+
+  ||
+  '<small>No tasks.</small>';
+
+}
 
 
-  return canvas.toDataURL(
-    "image/png"
+async function todoCheck(
+ id,
+ v
+){
+
+ let x=
+  await get(
+   'todos',
+   id
   );
 
+ x.completed=v;
+
+ x.updated_at=
+  new Date().toISOString();
+
+ await save(
+  'todos',
+  x
+ );
+
+ renderTodos();
+
 }
 
 
-async function loadDrawing(data){
+async function removeRow(
+ s,
+ id
+){
 
-  resizeCanvas();
-
-  ctx.clearRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
+ let x=
+  await get(
+   s,
+   id
   );
 
+ if(!x)return;
 
-  drawHistory=[];
-  drawRedo=[];
+ await del(
+  s,
+  id
+ );
 
+ await q(
+  s,
+  'delete',
+  x
+ );
 
-  if(!data)
-    return;
+ renderTodos();
 
+ renderEvents();
 
-  const image=
-    new Image();
-
-
-  image.onload=
-    function(){
-
-      const rect=
-        editorWrap.getBoundingClientRect();
-
-      ctx.drawImage(
-        image,
-        0,
-        0,
-        rect.width,
-        rect.height
-      );
-
-    };
-
-
-  image.src=data;
+ renderMemories();
 
 }
 
 
-function snapshot(){
-
-  return getDrawingData();
-
-}
-
-
-function restoreSnapshot(data){
-
-  ctx.clearRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-
-  if(!data){
-
-    scheduleSave();
-
-    return;
-
-  }
-
-
-  const image=
-    new Image();
-
-
-  image.onload=
-    function(){
-
-      const rect=
-        editorWrap.getBoundingClientRect();
-
-      ctx.drawImage(
-        image,
-        0,
-        0,
-        rect.width,
-        rect.height
-      );
-
-      scheduleSave();
-
-    };
-
-
-  image.src=data;
-
-}
-
-
-/* draw menu positioning */
-
-function positionDrawMenu(){
-
-  const button=
-    document.getElementById(
-      "drawButton"
-    );
-
-  const menu=
-    document.getElementById(
-      "drawMenu"
-    );
-
-
-  const rect=
-    button.getBoundingClientRect();
-
-
-  menu.style.left=
-    Math.min(
-      rect.left,
-      window.innerWidth-330
-    )+"px";
-
-
-  menu.style.top=
-    (rect.bottom+5)+"px";
-
-}
-
-
-function toggleDrawMenu(){
-
-  if(isPastDate(currentDate))
-    return;
-
-
-  const menu=
-    document.getElementById(
-      "drawMenu"
-    );
-
-
-  if(menu.hidden){
-
-    positionDrawMenu();
-
-    menu.hidden=false;
-
-  }else{
-
-    menu.hidden=true;
-
-  }
-
-}
-
-
-/*
-  Selecting a drawing tool:
-  - menu closes
-  - drawing mode remains active
-*/
-
-function selectDrawTool(tool){
-
-  if(isPastDate(currentDate))
-    return;
-
-
-  drawTool=tool;
-
-  drawingMode=true;
-
-  editorWrap
-    .classList
-    .add("drawing");
-
-
-  document.getElementById(
-    "drawButton"
-  ).classList.add(
-    "active"
-  );
-
-
-  document.getElementById(
-    "drawMenu"
-  ).hidden=true;
-
-}
-
-
-function exitDrawing(){
-
-  drawingMode=false;
-
-  drawStart=null;
-
-  drawLast=null;
-
-  editorWrap
-    .classList
-    .remove("drawing");
-
-
-  document.getElementById(
-    "drawButton"
-  ).classList.remove(
-    "active"
-  );
-
-
-  document.getElementById(
-    "drawMenu"
-  ).hidden=true;
-
-}
-
-
-/* canvas coordinates */
-
-function pointerPosition(e){
-
-  const rect=
-    canvas.getBoundingClientRect();
-
-  return {
-
-    x:
-      e.clientX-
-      rect.left,
-
-    y:
-      e.clientY-
-      rect.top
-
-  };
-
-}
-
-
-/* save base before line/circle */
-
-function redrawBase(data){
-
-  ctx.clearRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-
-  if(!data)
-    return;
-
-
-  const image=
-    new Image();
-
-
-  image.onload=
-    function(){
-
-      const rect=
-        editorWrap.getBoundingClientRect();
-
-      ctx.drawImage(
-        image,
-        0,
-        0,
-        rect.width,
-        rect.height
-      );
-
-    };
-
-
-  image.src=data;
-
-}
-
-
-/* pointer down */
-
-canvas.addEventListener(
-  "pointerdown",
-  function(e){
-
-    if(
-      !drawingMode ||
-      isPastDate(currentDate)
-    )
-      return;
-
-
-    e.preventDefault();
-
-
-    try{
-      canvas.setPointerCapture(
-        e.pointerId
-      );
-    }catch(err){}
-
-
-    drawHistory.push(
-      snapshot()
-    );
-
-    drawRedo=[];
-
-
-    const p=
-      pointerPosition(e);
-
-
-    drawStart=p;
-
-    drawLast=p;
-
-
-    if(drawTool==="pen"){
-
-      ctx.globalCompositeOperation=
-        "source-over";
-
-      ctx.strokeStyle=
-        drawColor;
-
-      ctx.lineWidth=
-        drawSize;
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        p.x,
-        p.y
-      );
-
-      ctx.lineTo(
-        p.x+.1,
-        p.y+.1
-      );
-
-      ctx.stroke();
-
-    }
-
-
-    if(drawTool==="eraser"){
-
-      ctx.globalCompositeOperation=
-        "destination-out";
-
-      ctx.beginPath();
-
-      ctx.arc(
-        p.x,
-        p.y,
-        25,
-        0,
-        Math.PI*2
-      );
-
-      ctx.fill();
-
-    }
-
-  },
-  {passive:false}
-);
-
-
-/* pointer move */
-
-canvas.addEventListener(
-  "pointermove",
-  function(e){
-
-    if(
-      !drawingMode ||
-      !drawLast
-    )
-      return;
-
-
-    e.preventDefault();
-
-
-    const p=
-      pointerPosition(e);
-
-
-    if(drawTool==="pen"){
-
-      ctx.globalCompositeOperation=
-        "source-over";
-
-      ctx.strokeStyle=
-        drawColor;
-
-      ctx.lineWidth=
-        drawSize;
-
-      ctx.beginPath();
-
-      ctx.moveTo(
-        drawLast.x,
-        drawLast.y
-      );
-
-      ctx.lineTo(
-        p.x,
-        p.y
-      );
-
-      ctx.stroke();
-
-    }
-
-
-    else if(
-      drawTool==="eraser"
-    ){
-
-      ctx.globalCompositeOperation=
-        "destination-out";
-
-      ctx.beginPath();
-
-      ctx.arc(
-        p.x,
-        p.y,
-        25,
-        0,
-        Math.PI*2
-      );
-
-      ctx.fill();
-
-    }
-
-
-    else{
-
-      const base=
-        drawHistory[
-          drawHistory.length-1
-        ];
-
-
-      redrawBase(base);
-
-
-      ctx.globalCompositeOperation=
-        "source-over";
-
-      ctx.strokeStyle=
-        drawColor;
-
-      ctx.lineWidth=
-        drawSize;
-
-      ctx.beginPath();
-
-
-      if(drawTool==="line"){
-
-        ctx.moveTo(
-          drawStart.x,
-          drawStart.y
-        );
-
-        ctx.lineTo(
-          p.x,
-          p.y
-        );
-
-      }
-
-
-      if(drawTool==="circle"){
-
-        const rx=
-          Math.abs(
-            p.x-
-            drawStart.x
-          )/2;
-
-        const ry=
-          Math.abs(
-            p.y-
-            drawStart.y
-          )/2;
-
-        const cx=
-          (
-            p.x+
-            drawStart.x
-          )/2;
-
-        const cy=
-          (
-            p.y+
-            drawStart.y
-          )/2;
-
-        ctx.ellipse(
-          cx,
-          cy,
-          Math.max(2,rx),
-          Math.max(2,ry),
-          0,
-          0,
-          Math.PI*2
-        );
-
-      }
-
-      ctx.stroke();
-
-    }
-
-
-    drawLast=p;
-
-  },
-  {passive:false}
-);
-
-
-/* pointer up */
-
-canvas.addEventListener(
-  "pointerup",
-  function(e){
-
-    if(
-      !drawingMode ||
-      !drawStart
-    )
-      return;
-
-
-    e.preventDefault();
-
-
-    if(
-      drawTool==="line" ||
-      drawTool==="circle"
-    ){
-
-      const p=
-        pointerPosition(e);
-
-
-      ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
-
-      const base=
-        drawHistory[
-          drawHistory.length-1
-        ];
-
-
-      if(base){
-
-        const image=
-          new Image();
-
-
-        image.onload=
-          function(){
-
-            const rect=
-              editorWrap
-                .getBoundingClientRect();
-
-
-            ctx.drawImage(
-              image,
-              0,
-              0,
-              rect.width,
-              rect.height
-            );
-
-
-            drawShape(
-              p
-            );
-
-            scheduleSave();
-
-          };
-
-
-        image.src=base;
-
-      }else{
-
-        drawShape(p);
-
-        scheduleSave();
-
-      }
-
-    }else{
-
-      scheduleSave();
-
-    }
-
-
-    drawStart=null;
-
-    drawLast=null;
-
-  },
-  {passive:false}
-);
-
-
-function drawShape(p){
-
-  ctx.globalCompositeOperation=
-    "source-over";
-
-  ctx.strokeStyle=
-    drawColor;
-
-  ctx.lineWidth=
-    drawSize;
-
-  ctx.beginPath();
-
-
-  if(drawTool==="line"){
-
-    ctx.moveTo(
-      drawStart.x,
-      drawStart.y
-    );
-
-    ctx.lineTo(
-      p.x,
-      p.y
-    );
-
-  }
-
-
-  if(drawTool==="circle"){
-
-    const rx=
-      Math.abs(
-        p.x-
-        drawStart.x
-      )/2;
-
-    const ry=
-      Math.abs(
-        p.y-
-        drawStart.y
-      )/2;
-
-    const cx=
-      (
-        p.x+
-        drawStart.x
-      )/2;
-
-    const cy=
-      (
-        p.y+
-        drawStart.y
-      )/2;
-
-    ctx.ellipse(
-      cx,
-      cy,
-      Math.max(2,rx),
-      Math.max(2,ry),
-      0,
-      0,
-      Math.PI*2
-    );
-
-  }
-
-  ctx.stroke();
-
-}
-
-
-/* undo */
-
-function undoDrawing(){
-
-  if(!drawHistory.length)
-    return;
-
-
-  drawRedo.push(
-    snapshot()
-  );
-
-
-  const previous=
-    drawHistory.pop();
-
-
-  restoreSnapshot(
-    previous
-  );
-
-}
-
-
-/* redo */
-
-function redoDrawing(){
-
-  if(!drawRedo.length)
-    return;
-
-
-  drawHistory.push(
-    snapshot()
-  );
-
-
-  const next=
-    drawRedo.pop();
-
-
-  restoreSnapshot(
-    next
-  );
-
-}
-
-
-/* clear */
-
-function clearDrawing(){
-
-  if(isPastDate(currentDate))
-    return;
-
-
-  drawHistory.push(
-    snapshot()
-  );
-
-  drawRedo=[];
-
-
-  ctx.clearRect(
-    0,
-    0,
-    canvas.width,
-    canvas.height
-  );
-
-
-  scheduleSave();
-
-}
-
-
-window.addEventListener(
-  "resize",
-  function(){
-
-    resizeCanvas();
-
-  }
-);
-
-
-/* =========================================================
-   CALENDAR
-========================================================= */
-
-async function openCalendar(){
-
-  calendarDate=
-    dateObj(currentDate);
-
-  openModal(
-    "calendarModal"
-  );
-
-  await renderCalendar();
-
-}
-
-
-async function changeMonth(amount){
-
-  calendarDate.setMonth(
-    calendarDate.getMonth()+
-    amount
-  );
-
-  await renderCalendar();
-
-}
-
-
-async function renderCalendar(){
-
-  const year=
-    calendarDate.getFullYear();
-
-  const month=
-    calendarDate.getMonth();
-
-
-  document.getElementById(
-    "calendarTitle"
-  ).textContent=
-    calendarDate.toLocaleDateString(
-      undefined,
-      {
-        month:"long",
-        year:"numeric"
-      }
-    );
-
-
-  const grid=
-    document.getElementById(
-      "calendarGrid"
-    );
-
-
-  grid.innerHTML="";
-
-
-  [
-    "Sun",
-    "Mon",
-    "Tue",
-    "Wed",
-    "Thu",
-    "Fri",
-    "Sat"
-  ].forEach(
-    day=>{
-
-      const h=
-        document.createElement(
-          "div"
-        );
-
-      h.className="calhead";
-
-      h.textContent=day;
-
-      grid.appendChild(h);
-
-    }
-  );
-
-
-  const events=
-    await getAll(
-      "events"
-    );
-
-
-  const firstDay=
-    new Date(
-      year,
-      month,
-      1
-    ).getDay();
-
-
-  const days=
-    new Date(
-      year,
-      month+1,
-      0
-    ).getDate();
-
-
-  for(
-    let i=0;
-    i<firstDay;
-    i++
-  ){
-
-    grid.appendChild(
-      document.createElement(
-        "div"
-      )
-    );
-
-  }
-
-
-  for(
-    let day=1;
-    day<=days;
-    day++
-  ){
-
-    const iso=
-      year+
-      "-"+
-      String(month+1)
-        .padStart(2,"0")+
-      "-"+
-      String(day)
-        .padStart(2,"0");
-
-
-    const cell=
-      document.createElement(
-        "div"
-      );
-
-
-    cell.className="calday";
-
-
-    if(
-      iso===todayISO()
-    ){
-
-      cell.classList.add(
-        "today"
-      );
-
-    }
-
-
-    if(
-      iso===currentDate
-    ){
-
-      cell.classList.add(
-        "selected"
-      );
-
-    }
-
-
-    const n=
-      document.createElement(
-        "div"
-      );
-
-    n.className=
-      "caldaynum";
-
-    n.textContent=
-      day;
-
-    cell.appendChild(n);
-
-
-    events
-      .filter(
-        ev=>
-          ev.date===iso
-      )
-      .forEach(
-        ev=>{
-
-          const dot=
-            document.createElement(
-              "div"
-            );
-
-          dot.className=
-            "eventdot";
-
-          dot.textContent=
-            (
-              ev.time
-              ? ev.time+" "
-              : ""
-            )+
-            ev.title;
-
-          cell.appendChild(
-            dot
-          );
-
-        }
-      );
-
-
-    cell.onclick=
-      async function(){
-
-        await savePage();
-
-        currentDate=iso;
-
-        currentPage=1;
-
-        closeModal(
-          "calendarModal"
-        );
-
-        await loadPage();
-
-      };
-
-
-    grid.appendChild(
-      cell
-    );
-
-  }
-
-
-  const list=
-    document.getElementById(
-      "calendarEvents"
-    );
-
-
-  list.innerHTML="";
-
-
-  const monthEvents=
-    events
-      .filter(
-        ev=>{
-
-          const d=
-            dateObj(ev.date);
-
-          return(
-            d.getFullYear()===year &&
-            d.getMonth()===month
-          );
-
-        }
-      )
-      .sort(
-        (a,b)=>
-          (
-            a.date+
-            (a.time||"")
-          )
-          .localeCompare(
-            b.date+
-            (b.time||"")
-          )
-      );
-
-
-  if(!monthEvents.length){
-
-    list.innerHTML=
-      "<p>No events this month.</p>";
-
-  }else{
-
-    monthEvents.forEach(
-      ev=>{
-
-        const card=
-          document.createElement(
-            "div"
-          );
-
-        card.className=
-          "eventcard";
-
-        card.innerHTML=
-          "<strong>"+
-          escapeHTML(
-            ev.title
-          )+
-          "</strong>"+
-          "<small>"+
-          formatDate(
-            ev.date
-          )+
-          (
-            ev.time
-            ? " · "+ev.time
-            : ""
-          )+
-          "</small>";
-
-        list.appendChild(
-          card
-        );
-
-      }
-    );
-
-  }
-
-}
-
-
-/* =========================================================
+/* =====================================================
    EVENTS
-========================================================= */
+===================================================== */
 
-async function openEvents(){
+async function addEvent(){
 
-  const input=
-    document.getElementById(
-      "eventDate"
-    );
+ let title=
+  $('etitle')
+   .value
+   .trim();
 
+ if(!title)return;
 
-  input.min=
-    todayISO();
+ let x={
+  id:uid(),
+  user_id:user.id,
+  event_date:
+   $('edate').value,
+  event_time:
+   $('etime').value,
+  title:title,
+  description:
+   $('edesc').value,
+  reminder_minutes:
+   +$('erem').value||0,
+  created_at:
+   new Date().toISOString(),
+  updated_at:
+   new Date().toISOString()
+ };
 
+ await save(
+  'events',
+  x
+ );
 
-  input.value=
-    currentDate>=todayISO()
-    ? currentDate
-    : todayISO();
+ $('etitle').value='';
 
+ $('edesc').value='';
 
-  document.getElementById(
-    "eventTitle"
-  ).value="";
+ renderEvents();
 
-
-  document.getElementById(
-    "eventNotes"
-  ).value="";
-
-
-  document.getElementById(
-    "eventTime"
-  ).value="";
-
-
-  openModal(
-    "eventsModal"
-  );
-
-
-  await renderEvents();
+ calendar();
 
 }
 
 
 async function renderEvents(){
 
-  const events=
-    await getAll(
-      "events"
-    );
-
-
-  events.sort(
-    (a,b)=>
-      (
-        a.date+
-        (a.time||"")
-      )
-      .localeCompare(
-        b.date+
-        (b.time||"")
-      )
+ let a=
+  (
+   await all('events')
+  )
+  .filter(
+   x=>
+    x.event_date===
+    pageRow?.diary_date
   );
 
 
-  const list=
-    document.getElementById(
-      "eventList"
-    );
+ $('eventout').innerHTML=
+
+  a.map(
+   x=>
+
+   `<div class="item">
+
+    <span class="grow">
+
+     <b>
+      ${esc(x.title)}
+     </b>
+
+     ${esc(
+      x.event_time||''
+     )}
+
+     <br>
+
+     <small>
+      ${esc(
+       x.description||''
+      )}
+
+      ·
+
+      ${x.reminder_minutes||0}
+      min
+
+     </small>
+
+    </span>
+
+    <button
+     class="btn"
+     onclick=
+      "removeRow('events','${x.id}')"
+    >
+     Delete
+    </button>
+
+   </div>`
+
+  )
+  .join('')
+
+  ||
+  '<small>No events.</small>';
+
+}
 
 
-  list.innerHTML="";
+/* =====================================================
+   CALENDAR
+===================================================== */
+
+async function calendar(){
+
+ let d=
+  $('caldate').value;
 
 
-  if(!events.length){
-
-    list.innerHTML=
-      "<p>No diary events yet.</p>";
-
-    return;
-
-  }
-
-
-  events.forEach(
-    ev=>{
-
-      const card=
-        document.createElement(
-          "div"
-        );
-
-      card.className=
-        "eventcard";
+ let a=
+  (
+   await all('events')
+  )
+  .filter(
+   x=>x.event_date===d
+  );
 
 
-      card.innerHTML=
-        "<strong>"+
-        escapeHTML(
-          ev.title
-        )+
-        "</strong>"+
-        "<small>"+
-        formatDate(
-          ev.date
-        )+
-        (
-          ev.time
-          ? " · "+ev.time
-          : ""
-        )+
-        "</small>"+
-        (
-          ev.notes
-          ? "<small>"+
-            escapeHTML(
-              ev.notes
-            )+
-            "</small>"
-          : ""
-        )+
-        "<button class='smallbtn' "+
-        "onclick='deleteEvent(\""+
-        ev.id+
-        "\")'>Delete</button>";
+ let t=
+  (
+   await all('todos')
+  )
+  .filter(
+   x=>x.diary_date===d
+  );
 
 
-      list.appendChild(
-        card
-      );
+ $('calout').innerHTML=
 
-    }
+  [
+   ...a.map(
+    x=>
+     `<div class="item">
+       🔔
+       ${esc(x.event_time||'')}
+       —
+       ${esc(x.title)}
+      </div>`
+   ),
+
+   ...t.map(
+    x=>
+     `<div class="item">
+       ☑
+       ${x.completed?'✓ ':''}
+       ${esc(x.text)}
+      </div>`
+   )
+
+  ]
+  .join('')
+
+  ||
+  '<small>Nothing recorded.</small>';
+
+}
+
+
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
+
+function esc(s){
+
+ return String(s??'')
+  .replace(
+   /[&<>"']/g,
+   c=>
+    ({
+     '&':'&amp;',
+     '<':'&lt;',
+     '>':'&gt;',
+     '"':'&quot;',
+     "'":'&#39;'
+    }[c])
   );
 
 }
 
 
-async function saveEvent(){
+/* =====================================================
+   MEMORY DUPLICATE CLEANUP
 
-  const date=
-    document.getElementById(
-      "eventDate"
-    ).value;
+   This is specifically included to address the
+   duplicate memories problem.
+===================================================== */
 
-  const title=
-    document.getElementById(
-      "eventTitle"
-    ).value.trim();
+async function dedupeMemories(){
 
-  const time=
-    document.getElementById(
-      "eventTime"
-    ).value;
+ let a=
+  await all('memories');
 
-  const notes=
-    document.getElementById(
-      "eventNotes"
-    ).value.trim();
+ let seen=
+  new Set();
+
+
+ a.sort(
+  (u,v)=>
+   (u.created_at||'')
+    .localeCompare(
+     v.created_at||''
+    )
+ );
+
+
+ for(
+  let x of a
+ ){
+
+  /*
+   Use the actual stored image URL/data
+   or cloud path.
+
+   This prevents identical memory records
+   from appearing multiple times.
+  */
+
+  let k=
+   x.local_url ||
+   x.storage_path ||
+   (
+    (x.diary_date||'')+
+    '|' +
+    (x.original_name||'')
+   );
 
 
   if(
-    !date ||
-    !title
+   seen.has(k)
   ){
 
-    alert(
-      "Please enter the event date and title."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    date<todayISO()
-  ){
-
-    alert(
-      "Events cannot be added to a past date."
-    );
-
-    return;
-
-  }
-
-
-  await put(
-    "events",
-    {
-      date:date,
-      title:title,
-      time:time,
-      notes:notes,
-      created:Date.now()
-    }
-  );
-
-
-  document.getElementById(
-    "eventTitle"
-  ).value="";
-
-  document.getElementById(
-    "eventNotes"
-  ).value="";
-
-  document.getElementById(
-    "eventTime"
-  ).value="";
-
-
-  await renderEvents();
-
-}
-
-
-async function deleteEvent(id){
-
-  if(
-    !confirm(
-      "Delete this event?"
-    )
-  )
-    return;
-
-
-  await deleteRecord(
-    "events",
-    Number(id)
-  );
-
-
-  await renderEvents();
-
-}
-
-
-/* =========================================================
-   TODO
-========================================================= */
-
-async function openTodo(){
-
-  const dateInput=
-    document.getElementById(
-      "todoDate"
-    );
-
-
-  dateInput.value=
-    currentDate;
-
-
-  dateInput.min=
-    todayISO();
-
-
-  document.getElementById(
-    "todoText"
-  ).value="";
-
-
-  openModal(
-    "todoModal"
-  );
-
-
-  await renderTodos();
-
-}
-
-
-document
-  .getElementById(
-    "todoDate"
-  )
-  .addEventListener(
-    "change",
-    renderTodos
-  );
-
-
-async function renderTodos(){
-
-  const date=
-    document.getElementById(
-      "todoDate"
-    ).value;
-
-
-  const past=
-    date<todayISO();
-
-
-  const list=
-    document.getElementById(
-      "todoList"
-    );
-
-
-  list.innerHTML="";
-
-
-  const todos=
-    (
-      await getAll(
-        "todos"
-      )
-    )
-    .filter(
-      t=>t.date===date
-    )
-    .sort(
-      (a,b)=>
-        (a.created||0)-
-        (b.created||0)
-    );
-
-
-  document.getElementById(
-    "todoInfo"
-  ).textContent=
-    past
-    ? "🔒 Past-date To-Do is read-only."
-    : "Unfinished tasks are carried forward automatically.";
-
-
-  document.getElementById(
-    "todoAddButton"
-  ).disabled=past;
-
-
-  document.getElementById(
-    "todoText"
-  ).disabled=past;
-
-
-  if(!todos.length){
-
-    list.innerHTML=
-      "<p>No To-Do items.</p>";
-
-    return;
-
-  }
-
-
-  todos.forEach(
-    todo=>{
-
-      const row=
-        document.createElement(
-          "div"
-        );
-
-
-      row.className=
-        "todoitem"+
-        (
-          todo.done
-          ? " done"
-          : ""
-        );
-
-
-      row.innerHTML=
-        "<input type='checkbox' "+
-        (
-          todo.done
-          ? "checked "
-          : ""
-        )+
-        (
-          past
-          ? "disabled "
-          : ""
-        )+
-        "onchange='toggleTodo(\""+
-        todo.id+
-        "\",this.checked)'>"+
-        "<span>"+
-        escapeHTML(
-          todo.text
-        )+
-        "</span>"+
-        (
-          past
-          ? ""
-          :
-          "<button class='smallbtn' "+
-          "onclick='deleteTodo(\""+
-          todo.id+
-          "\")'>×</button>"
-        );
-
-
-      list.appendChild(
-        row
-      );
+   /*
+    Delete duplicate local record.
+   */
+
+   await del(
+    'memories',
+    x.id
+   );
+
+
+   /*
+    If already authenticated/cloud storage
+    is available, remove the duplicate cloud file.
+   */
+
+   if(
+    x.storage_path &&
+    sb &&
+    user
+   ){
+
+    try{
+
+     await sb
+      .storage
+      .from('diary-media')
+      .remove([
+       x.storage_path
+      ]);
 
     }
-  );
+    catch(e){}
 
-}
+   }
 
+  }
+  else{
 
-async function addTodo(){
-
-  const date=
-    document.getElementById(
-      "todoDate"
-    ).value;
-
-  const text=
-    document.getElementById(
-      "todoText"
-    ).value.trim();
-
-
-  if(!text)
-    return;
-
-
-  if(
-    date<todayISO()
-  ){
-
-    alert(
-      "Past dates are read-only."
-    );
-
-    return;
+   seen.add(k);
 
   }
 
-
-  await put(
-    "todos",
-    {
-      date:date,
-      text:text,
-      done:false,
-      carried:false,
-      created:Date.now()
-    }
-  );
-
-
-  document.getElementById(
-    "todoText"
-  ).value="";
-
-
-  await renderTodos();
+ }
 
 }
 
 
-async function toggleTodo(
-  id,
-  done
-){
+/* =====================================================
+   ADD MEMORY
+===================================================== */
 
-  if(
-    isPastDate(
-      document.getElementById(
-        "todoDate"
-      ).value
-    )
-  )
-    return;
+async function addMemory(){
 
+ let f=
+  $('mfile')
+   .files[0];
 
-  const item=
-    await get(
-      "todos",
-      Number(id)
-    );
+ if(!f)return;
 
 
-  if(!item)
-    return;
+ let r=
+  new FileReader();
 
 
-  item.done=
-    !!done;
+ r.onload=
+  async()=>{
 
+   let uniqueId=
+    uid();
 
-  await put(
-    "todos",
-    item
-  );
 
+   let x={
 
-  await renderTodos();
+    /*
+     UNIQUE ID
+    */
 
-}
+    id:uniqueId,
 
+    user_id:user.id,
 
-async function deleteTodo(id){
+    diary_date:
+     pageRow.diary_date,
 
-  await deleteRecord(
-    "todos",
-    Number(id)
-  );
+    title:
+     $('mtitle')
+      .value
+      .trim()
+     ||
+     f.name,
 
-  await renderTodos();
+    original_name:
+     f.name,
 
-}
+    mime_type:
+     f.type,
 
+    /*
+     LOCAL COPY
+     */
 
-/*
-  Copy pending tasks into TODAY.
+    local_url:
+     r.result,
 
-  Duplicates are prevented.
-*/
+    /*
+     UNIQUE CLOUD PATH
+     */
 
-async function carryForwardTodos(){
+    storage_path:
+     user.id+
+     '/' +
+     uniqueId+
+     '-' +
+     f.name.replace(
+      /[^a-zA-Z0-9._-]/g,
+      '_'
+     ),
 
-  const all=
-    await getAll(
-      "todos"
-    );
+    created_at:
+     new Date().toISOString(),
 
+    updated_at:
+     new Date().toISOString()
 
-  const pending=
-    all.filter(
-      t=>
-        !t.done &&
-        t.date<todayISO()
-    );
+   };
 
 
-  for(
-    const task of pending
-  ){
+   await save(
+    'memories',
+    x
+   );
 
-    const duplicate=
-      all.some(
-        t=>
-          t.date===todayISO() &&
-          !t.done &&
-          t.text===task.text
-      );
 
+   $('mfile').value='';
 
-    if(!duplicate){
+   $('mtitle').value='';
 
-      await put(
-        "todos",
-        {
-          date:todayISO(),
-          text:task.text,
-          done:false,
-          carried:true,
-          created:Date.now()
-        }
-      );
-
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   MEMORIES
-========================================================= */
-
-async function openMemories(){
-
-  openModal(
-    "memoryModal"
-  );
-
-  await renderMemories();
-
-}
-
-
-async function compressImage(file){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      const reader=
-        new FileReader();
-
-
-      reader.onload=
-        function(){
-
-          const image=
-            new Image();
-
-
-          image.onload=
-            function(){
-
-              const max=1600;
-
-              let width=
-                image.width;
-
-              let height=
-                image.height;
-
-
-              if(width>max){
-
-                height=
-                  Math.round(
-                    height*
-                    max/
-                    width
-                  );
-
-                width=max;
-
-              }
-
-
-              const c=
-                document.createElement(
-                  "canvas"
-                );
-
-
-              c.width=width;
-
-              c.height=height;
-
-
-              const cctx=
-                c.getContext(
-                  "2d"
-                );
-
-
-              cctx.drawImage(
-                image,
-                0,
-                0,
-                width,
-                height
-              );
-
-
-              resolve(
-                c.toDataURL(
-                  "image/jpeg",
-                  .82
-                )
-              );
-
-            };
-
-
-          image.onerror=
-            reject;
-
-
-          image.src=
-            reader.result;
-
-        };
-
-
-      reader.onerror=
-        reject;
-
-
-      reader.readAsDataURL(
-        file
-      );
-
-    }
-  );
-
-}
-
-
-async function saveMemory(event){
-
-  const file=
-    event.target.files[0];
-
-
-  if(!file)
-    return;
-
-
-  try{
-
-    const image=
-      await compressImage(
-        file
-      );
-
-
-    await put(
-      "memories",
-      {
-        date:currentDate,
-        name:file.name,
-        image:image,
-        created:Date.now()
-      }
-    );
-
-
-    event.target.value="";
-
-
-    await renderMemories();
-
-  }catch(error){
-
-    alert(
-      "Could not save photograph."
-    );
-
-  }
-
-}
-
-
-async function renderMemories(){
-
-  const memories=
-    await getAll(
-      "memories"
-    );
-
-
-  memories.sort(
-    (a,b)=>
-      (b.created||0)-
-      (a.created||0)
-  );
-
-
-  const grid=
-    document.getElementById(
-      "memoryGrid"
-    );
-
-
-  grid.innerHTML="";
-
-
-  if(!memories.length){
-
-    grid.innerHTML=
-      "<p>No memories saved yet.</p>";
-
-    return;
-
-  }
-
-
-  memories.forEach(
-    memory=>{
-
-      const card=
-        document.createElement(
-          "div"
-        );
-
-
-      card.className=
-        "memory";
-
-
-      const image=
-        document.createElement(
-          "img"
-        );
-
-      image.src=
-        memory.image;
-
-      image.alt=
-        memory.name||
-        "Diary memory";
-
-
-      const caption=
-        document.createElement(
-          "div"
-        );
-
-      caption.className=
-        "memorycaption";
-
-      caption.textContent=
-        formatDate(
-          memory.date
-        );
-
-
-      const del=
-        document.createElement(
-          "button"
-        );
-
-      del.className=
-        "smallbtn";
-
-      del.textContent=
-        "Delete";
-
-      del.onclick=
-        ()=>deleteMemory(
-          memory.id
-        );
-
-
-      card.appendChild(
-        image
-      );
-
-      card.appendChild(
-        caption
-      );
-
-      card.appendChild(
-        del
-      );
-
-
-      grid.appendChild(
-        card
-      );
-
-    }
-  );
-
-}
-
-
-async function deleteMemory(id){
-
-  if(
-    !confirm(
-      "Delete this memory?"
-    )
-  )
-    return;
-
-
-  await deleteRecord(
-    "memories",
-    Number(id)
-  );
-
-
-  await renderMemories();
-
-}
-
-
-/* =========================================================
-   BACKUP
-========================================================= */
-
-async function backupDiary(){
-
-  await savePage();
-
-
-  const backup={
-
-    version:"10.2",
-
-    created:
-      new Date().toISOString(),
-
-    pages:
-      await getAll("pages"),
-
-    events:
-      await getAll("events"),
-
-    todos:
-      await getAll("todos"),
-
-    memories:
-      await getAll("memories"),
-
-    settings:
-      await getAll("settings")
+   renderMemories();
 
   };
 
 
-  const blob=
-    new Blob(
-      [
-        JSON.stringify(
-          backup,
-          null,
-          2
-        )
-      ],
+ r.readAsDataURL(f);
+
+}
+
+
+/* =====================================================
+   RENDER MEMORIES
+
+   Only memories belonging to the CURRENT diary date
+   are displayed.
+===================================================== */
+
+async function renderMemories(){
+
+ let a=
+  (
+   await all('memories')
+  )
+  .filter(
+   x=>
+    x.diary_date===
+    pageRow?.diary_date
+  );
+
+
+ $('memoryout').innerHTML=
+
+  a.map(
+   x=>
+
+   `<div class="memory">
+
+     <img
+      src="${x.local_url||''}"
+      alt=""
+     >
+
+     <b>
+      ${esc(x.title)}
+     </b>
+
+     <small>
+      ${esc(
+       x.original_name
+      )}
+     </small>
+
+     <button
+      class="btn"
+      style=
+       "width:100%;margin-top:4px"
+      onclick=
+       "deleteMemory('${x.id}')"
+     >
+      Delete
+     </button>
+
+    </div>`
+
+  )
+  .join('')
+
+  ||
+  '<small>No memories for this date.</small>';
+
+}
+
+
+/* =====================================================
+   DELETE MEMORY
+
+   Deletes EXACTLY the selected memory.
+===================================================== */
+
+async function deleteMemory(id){
+
+ let x=
+  await get(
+   'memories',
+   id
+  );
+
+
+ if(!x)return;
+
+
+ /*
+  Delete cloud storage object first.
+ */
+
+ if(
+  sb &&
+  user &&
+  x.storage_path
+ ){
+
+  try{
+
+   await sb
+    .storage
+    .from('diary-media')
+    .remove([
+     x.storage_path
+    ]);
+
+  }
+  catch(e){
+
+   console.warn(
+    'Cloud memory deletion:',
+    e
+   );
+
+  }
+
+ }
+
+
+ /*
+  Delete local memory.
+ */
+
+ await del(
+  'memories',
+  id
+ );
+
+
+ /*
+  Queue database-row deletion.
+ */
+
+ await q(
+  'memories',
+  'delete',
+  x
+ );
+
+
+ await renderMemories();
+
+ status(
+  'Memory deleted ✓'
+ );
+
+}
+
+
+/* =====================================================
+   DRAWING
+===================================================== */
+
+let ctx;
+let down=false;
+let lx=0;
+let ly=0;
+
+
+async function openDraw(){
+
+ $('drawModal')
+  .classList
+  .remove('hidden');
+
+
+ let c=
+  $('canvas');
+
+
+ let r=
+  c.getBoundingClientRect();
+
+
+ let z=
+  devicePixelRatio||1;
+
+
+ c.width=
+  r.width*z;
+
+ c.height=
+  r.height*z;
+
+
+ ctx=
+  c.getContext('2d');
+
+
+ ctx.scale(
+  z,
+  z
+ );
+
+
+ ctx.lineWidth=2;
+
+ ctx.lineCap='round';
+
+
+ if(
+  pageRow.drawing_data
+ ){
+
+  let i=
+   new Image();
+
+
+  i.onload=
+   ()=>
+    ctx.drawImage(
+     i,
+     0,
+     0,
+     r.width,
+     r.height
+    );
+
+
+  i.src=
+   pageRow.drawing_data;
+
+ }
+
+}
+
+
+$('canvas')
+ .onpointerdown=
+ e=>{
+
+  down=true;
+
+  let r=
+   e.currentTarget
+    .getBoundingClientRect();
+
+  lx=
+   e.clientX-r.left;
+
+  ly=
+   e.clientY-r.top;
+
+ };
+
+
+$('canvas')
+ .onpointermove=
+ e=>{
+
+  if(!down)return;
+
+  let r=
+   e.currentTarget
+    .getBoundingClientRect();
+
+  let x=
+   e.clientX-r.left;
+
+  let y=
+   e.clientY-r.top;
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+   lx,
+   ly
+  );
+
+  ctx.lineTo(
+   x,
+   y
+  );
+
+  ctx.stroke();
+
+
+  lx=x;
+  ly=y;
+
+ };
+
+
+$('canvas')
+ .onpointerup=
+ ()=>{
+  down=false;
+ };
+
+
+$('canvas')
+ .onpointerleave=
+ ()=>{
+  down=false;
+ };
+
+
+function clearCanvas(){
+
+ ctx.clearRect(
+  0,
+  0,
+  $('canvas').width,
+  $('canvas').height
+ );
+
+}
+
+
+async function saveDrawing(){
+
+ pageRow.drawing_data=
+  $('canvas')
+   .toDataURL(
+    'image/png'
+   );
+
+
+ pageRow.updated_at=
+  new Date().toISOString();
+
+
+ await save(
+  'pages',
+  pageRow
+ );
+
+
+ closeModal(
+  'drawModal'
+ );
+
+}
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+async function openSettings(){
+
+ let s=
+  await get(
+   'settings',
+   'settings'
+  ) ||
+  {};
+
+
+ $('lh').value=
+  s.lineh||34;
+
+
+ $('font').value=
+  s.font||
+  'Georgia,serif';
+
+
+ $('settingsModal')
+  .classList
+  .remove('hidden');
+
+}
+
+
+async function saveSettings(){
+
+ let x={
+
+  id:'settings',
+
+  user_id:user.id,
+
+  lineh:
+   +$('lh').value,
+
+  font:
+   $('font').value,
+
+  updated_at:
+   new Date().toISOString()
+
+ };
+
+
+ await save(
+  'settings',
+  x
+ );
+
+
+ apply(x);
+
+ closeModal(
+  'settingsModal'
+ );
+
+}
+
+
+function apply(x){
+
+ if(!x)return;
+
+ document.documentElement
+  .style
+  .setProperty(
+   '--lh',
+   (x.lineh||34)+'px'
+  );
+
+
+ document.documentElement
+  .style
+  .setProperty(
+   '--font',
+   x.font||'Georgia,serif'
+  );
+
+}
+
+
+function closeModal(id){
+
+ $(id)
+  .classList
+  .add('hidden');
+
+}
+
+
+/* =====================================================
+   CLOUD SYNC
+===================================================== */
+
+async function sync(){
+
+ if(
+  !sb ||
+  !user ||
+  !navigator.onLine
+ ){
+
+  return;
+
+ }
+
+
+ let qs=
+  await all('queue');
+
+
+ for(
+  let qx of qs
+ ){
+
+  let table=
+   {
+    pages:
+     'diary_pages',
+
+    events:
+     'diary_events',
+
+    todos:
+     'diary_todos',
+
+    memories:
+     'diary_memories',
+
+    settings:
+     'diary_settings'
+
+   }[qx.table];
+
+
+  let row={
+   ...qx.row
+  };
+
+
+  delete row.local_url;
+
+
+  /*
+   SETTINGS ARE STORED IN JSONB
+  */
+
+  if(
+   qx.table==='settings'
+  ){
+
+   row.data={
+    lineh:row.lineh,
+    font:row.font
+   };
+
+   delete row.lineh;
+
+   delete row.font;
+
+  }
+
+
+  /*
+   UPLOAD MEMORY IMAGE
+  */
+
+  if(
+   qx.table==='memories' &&
+   qx.row.local_url
+  ){
+
+   try{
+
+    let blob=
+     await(
+      await fetch(
+       qx.row.local_url
+      )
+     ).blob();
+
+
+    await sb
+     .storage
+     .from('diary-media')
+     .upload(
+      row.storage_path,
+      blob,
       {
-        type:"application/json"
+       upsert:true,
+       contentType:
+        row.mime_type
       }
+     );
+
+   }
+   catch(e){
+
+    console.warn(
+     'Memory upload:',
+     e
     );
 
+   }
 
-  const url=
-    URL.createObjectURL(
-      blob
+  }
+
+
+  /*
+   DELETE
+  */
+
+  if(
+   qx.action==='delete'
+  ){
+
+   await sb
+    .from(table)
+    .delete()
+    .eq(
+     'id',
+     row.id
     );
 
+  }
 
-  const a=
-    document.createElement(
-      "a"
+  else{
+
+   await sb
+    .from(table)
+    .upsert(
+     row,
+     {
+      onConflict:
+       qx.table==='pages'
+       ?
+       'user_id,diary_date,page_number'
+       :
+       qx.table==='settings'
+       ?
+       'user_id'
+       :
+       'id'
+     }
     );
 
-
-  a.href=url;
-
-  a.download=
-    "my-personal-diary-v10.2-backup.json";
+  }
 
 
-  document.body.appendChild(a);
+  await del(
+   'queue',
+   qx.id
+  );
 
-  a.click();
-
-  a.remove();
+ }
 
 
+ status(
+  'Synced ✓'
+ );
+
+}
+
+
+/* =====================================================
+   SYNC TIMER
+===================================================== */
+
+let st;
+
+
+function syncSoon(){
+
+ clearTimeout(st);
+
+ st=
   setTimeout(
-    ()=>{
-      URL.revokeObjectURL(
-        url
-      );
+   sync,
+   700
+  );
+
+}
+
+
+function status(x){
+
+ $('status')
+  .textContent=x;
+
+}
+
+
+window.addEventListener(
+ 'online',
+ sync
+);
+
+
+window.addEventListener(
+ 'offline',
+ ()=>{
+  status(
+   'Offline — saved locally'
+  );
+ }
+);
+
+
+/* =====================================================
+   CLOUD DOWNLOAD
+===================================================== */
+
+async function cloudPull(){
+
+ if(
+  !sb ||
+  !user
+ )return;
+
+
+ let maps={
+
+  pages:
+   'diary_pages',
+
+  events:
+   'diary_events',
+
+  todos:
+   'diary_todos',
+
+  memories:
+   'diary_memories'
+
+ };
+
+
+ for(
+  let [
+   s,
+   t
+  ]
+  of Object.entries(maps)
+ ){
+
+  let {
+   data,
+   error
+  }=
+   await sb
+    .from(t)
+    .select('*');
+
+
+  if(error)
+   continue;
+
+
+  for(
+   let x of data||[]
+  ){
+
+   let l=
+    await get(
+     s,
+     x.id
+    );
+
+
+   /*
+    CLOUD VERSION IS NEWER
+   */
+
+   if(
+    !l ||
+    new Date(
+     x.updated_at
+    )
+    >
+    new Date(
+     l.updated_at||0
+    )
+   ){
+
+    if(
+     s==='memories'
+    ){
+
+     x.local_url=
+      l?.local_url||'';
+
+
+     /*
+      If image is not cached locally,
+      get a temporary signed URL.
+     */
+
+     if(
+      !x.local_url &&
+      x.storage_path
+     ){
+
+      try{
+
+       let z=
+        await sb
+         .storage
+         .from(
+          'diary-media'
+         )
+         .createSignedUrl(
+          x.storage_path,
+          3600
+         );
+
+
+       x.local_url=
+        z.data?.signedUrl||'';
+
+      }
+      catch(e){}
+
+     }
+
+    }
+
+
+    await put(
+     s,
+     x
+    );
+
+   }
+
+  }
+
+ }
+
+
+ /*
+  SETTINGS
+ */
+
+ let {
+  data:settings
+ }=
+  await sb
+   .from(
+    'diary_settings'
+   )
+   .select('*')
+   .eq(
+    'user_id',
+    user.id
+   )
+   .maybeSingle();
+
+
+ if(settings){
+
+  await put(
+   'settings',
+   {
+    id:'settings',
+    user_id:user.id,
+    ...settings.data,
+    updated_at:
+     settings.updated_at
+   }
+  );
+
+ }
+
+
+ await render();
+
+}
+
+
+/* =====================================================
+   REALTIME
+===================================================== */
+
+async function realtime(){
+
+ if(
+  !sb ||
+  !user
+ )return;
+
+
+ for(
+  let [
+   t,
+   s
+  ]
+  of Object.entries(
+   {
+    diary_pages:'pages',
+    diary_events:'events',
+    diary_todos:'todos',
+    diary_memories:'memories'
+   }
+  )
+ ){
+
+  sb
+   .channel(
+    'diary-'+t
+   )
+   .on(
+    'postgres_changes',
+    {
+     event:'*',
+     schema:'public',
+     table:t,
+     filter:
+      'user_id=eq.'+
+      user.id
     },
-    1000
-  );
+    async p=>{
 
-}
+     /*
+      DELETE
+     */
 
+     if(
+      p.eventType==='DELETE'
+     ){
 
-/* =========================================================
-   RESTORE
-========================================================= */
-
-async function restoreDiary(event){
-
-  const file=
-    event.target.files[0];
-
-
-  if(!file)
-    return;
-
-
-  try{
-
-    const text=
-      await file.text();
-
-
-    const data=
-      JSON.parse(text);
-
-
-    if(
-      !data.pages &&
-      !data.events &&
-      !data.todos &&
-      !data.memories
-    ){
-
-      throw new Error(
-        "This does not appear to be a diary backup."
+      await del(
+       s,
+       p.old.id
       );
 
-    }
+     }
 
+     else{
 
-    for(
-      const page of data.pages||[]
-    ){
-
-      const normalized=
-        normalizePage(page);
-
-      if(normalized)
-        await put(
-          "pages",
-          normalized
-        );
-
-    }
-
-
-    for(
-      const eventRecord
-      of data.events||[]
-    ){
-
-      await put(
-        "events",
-        {
-          title:
-            eventRecord.title||"",
-          date:
-            eventRecord.date||todayISO(),
-          time:
-            eventRecord.time||"",
-          notes:
-            eventRecord.notes||"",
-          created:
-            eventRecord.created||
-            Date.now()
-        }
-      );
-
-    }
-
-
-    for(
-      const todo of data.todos||[]
-    ){
-
-      await put(
-        "todos",
-        {
-          text:
-            todo.text||"",
-          date:
-            todo.date||todayISO(),
-          done:
-            !!todo.done,
-          carried:
-            !!todo.carried,
-          created:
-            todo.created||
-            Date.now()
-        }
-      );
-
-    }
-
-
-    for(
-      const memory of data.memories||[]
-    ){
-
-      const normalized=
-        normalizeMemory(
-          memory
-        );
-
-      if(normalized)
-        await put(
-          "memories",
-          normalized
-        );
-
-    }
-
-
-    if(
-      Array.isArray(
-        data.settings
-      )
-    ){
-
-      for(
-        const setting
-        of data.settings
-      ){
-
-        const normalized=
-          normalizeSetting(
-            setting
-          );
-
-        if(normalized)
-          await put(
-            "settings",
-            normalized
-          );
-
-      }
-
-    }
-
-
-    alert(
-      "Diary restored successfully."
-    );
-
-
-    location.reload();
-
-
-  }catch(error){
-
-    alert(
-      "Restore failed:\n"+
-      error.message
-    );
-
-  }finally{
-
-    event.target.value="";
-
-  }
-
-}
-
-
-/* =========================================================
-   EVENTS REMINDER
-========================================================= */
-
-let alertedEvents=
-  new Set();
-
-
-async function checkEventAlerts(){
-
-  const events=
-    await getAll(
-      "events"
-    );
-
-
-  const now=
-    new Date();
-
-
-  const today=
-    todayISO();
-
-
-  const currentTime=
-    String(
-      now.getHours()
-    ).padStart(2,"0")+
-    ":"+
-    String(
-      now.getMinutes()
-    ).padStart(2,"0");
-
-
-  events.forEach(
-    event=>{
-
-      if(
-        event.date!==today ||
-        !event.time
-      )
-        return;
-
-
-      const key=
-        event.id+
-        "-"+
-        today;
+      let x=p.new;
 
 
       if(
-        event.time===currentTime &&
-        !alertedEvents.has(key)
+       s==='memories' &&
+       x.storage_path
       ){
 
-        alertedEvents.add(key);
+       let z=
+        await sb
+         .storage
+         .from(
+          'diary-media'
+         )
+         .createSignedUrl(
+          x.storage_path,
+          3600
+         );
 
 
-        /*
-          Use the existing event modal
-          as the alert rather than a browser
-          alert that can be blocked.
-        */
-
-        openEvents();
-
-        alert(
-          "📌 Diary Event\n\n"+
-          event.title+
-          (
-            event.notes
-            ? "\n\n"+
-              event.notes
-            : ""
-          )
-        );
+       x.local_url=
+        z.data?.signedUrl||'';
 
       }
 
+
+      await put(
+       s,
+       x
+      );
+
+     }
+
+
+     if(
+      s==='pages'
+     )
+      render();
+
+
+     if(
+      s==='memories'
+     )
+      renderMemories();
+
+
+     if(
+      s==='events'
+     )
+      renderEvents();
+
+
+     if(
+      s==='todos'
+     )
+      renderTodos();
+
     }
-  );
+   )
+   .subscribe();
+
+ }
 
 }
 
 
-/* =========================================================
-   STARTUP
-========================================================= */
+/* =====================================================
+   START APPLICATION
+===================================================== */
 
-async function start(){
+async function start(u){
 
-  try{
+ user=u;
 
-    /*
-      Open the NEW database first.
-      This eliminates the old object-store
-      mismatch.
-    */
+ $('auth')
+  .classList
+  .add('hidden');
 
-    await openNewDB();
-
-
-    /*
-      Migrate old data.
-    */
-
-    await migrateOldDatabase();
+ $('app')
+  .classList
+  .remove('hidden');
 
 
-    /*
-      Settings.
-    */
-
-    const settings=
-      await getSettings();
+ await ensurePage(
+  today(),
+  1
+ );
 
 
-    applySettings(
-      settings
-    );
+ await cloudPull();
+
+ await sync();
+
+ await realtime();
+
+ status(
+  navigator.onLine
+  ?
+  'Synced ✓'
+  :
+  'Offline — saved locally'
+ );
+
+}
 
 
-    /*
-      Binder rings.
-    */
+/* =====================================================
+   LOGIN
+===================================================== */
 
-    const rings=
-      document.getElementById(
-        "rings"
-      );
+$('login').onclick=
+ async()=>{
 
+  if(!sb){
 
-    rings.innerHTML="";
+   $('authmsg')
+    .textContent=
+    'Configure SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY first.';
 
-
-    for(
-      let i=0;
-      i<26;
-      i++
-    ){
-
-      const ring=
-        document.createElement(
-          "div"
-        );
-
-      ring.className="ring";
-
-      rings.appendChild(
-        ring
-      );
-
-    }
-
-
-    /*
-      Load diary.
-    */
-
-    await loadPage();
-
-
-    /*
-      Carry pending tasks forward.
-    */
-
-    await carryForwardTodos();
-
-
-    /*
-      Canvas.
-    */
-
-    resizeCanvas();
-
-
-    /*
-      Event checking.
-    */
-
-    setInterval(
-      checkEventAlerts,
-      30000
-    );
-
-
-    /*
-      Prevent accidental loss when
-      leaving the page.
-    */
-
-    window.addEventListener(
-      "beforeunload",
-      function(){
-
-        if(
-          !isPastDate(
-            currentDate
-          )
-        ){
-
-          currentPageRecord.content=
-            editor.innerHTML;
-
-          currentPageRecord.drawing=
-            getDrawingData();
-
-          /*
-            Synchronous IDB is impossible,
-            but scheduled save already runs
-            during normal editing.
-          */
-
-        }
-
-      }
-    );
-
-
-  }catch(error){
-
-    console.error(
-      "V10.2 startup error:",
-      error
-    );
-
-
-    document.body.innerHTML=
-      "<div style='"+
-      "font-family:Arial;"+
-      "padding:25px;"+
-      "line-height:1.6;"+
-      "'>"+
-      "<h2>📖 Diary startup problem</h2>"+
-      "<p>The diary database could not be opened.</p>"+
-      "<p style='color:#8b0000'>"+
-      escapeHTML(
-        error.message
-      )+
-      "</p>"+
-      "<p>Reload the page once. Your existing diary data has not been deliberately deleted.</p>"+
-      "</div>";
+   return;
 
   }
 
+
+  let {
+   data,
+   error
+  }=
+   await sb.auth
+    .signInWithPassword(
+     {
+      email:
+       $('email')
+        .value
+        .trim(),
+
+      password:
+       $('password')
+        .value
+     }
+    );
+
+
+  if(error){
+
+   $('authmsg')
+    .textContent=
+    error.message;
+
+  }
+
+  else{
+
+   start(
+    data.user
+   );
+
+  }
+
+ };
+
+
+/* =====================================================
+   CREATE ACCOUNT
+===================================================== */
+
+$('signup').onclick=
+ async()=>{
+
+  if(!sb)return;
+
+
+  let {
+   error
+  }=
+   await sb.auth
+    .signUp(
+     {
+      email:
+       $('email')
+        .value
+        .trim(),
+
+      password:
+       $('password')
+        .value
+     }
+    );
+
+
+  $('authmsg')
+   .textContent=
+    error?.message
+    ||
+    'Account created. Check your email if confirmation is enabled.';
+
+ };
+
+
+/* =====================================================
+   PASSWORD RESET
+===================================================== */
+
+$('reset').onclick=
+ async()=>{
+
+  if(!sb)return;
+
+
+  let {
+   error
+  }=
+   await sb.auth
+    .resetPasswordForEmail(
+     $('email')
+      .value
+      .trim(),
+     {
+      redirectTo:
+       location.href
+     }
+    );
+
+
+  $('authmsg')
+   .textContent=
+    error?.message
+    ||
+    'Reset email sent.';
+
+ };
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout(){
+
+ if(sb)
+  await sb.auth.signOut();
+
+ location.reload();
+
 }
 
 
-/* =========================================================
+/* =====================================================
+   BACKUP
+===================================================== */
+
+async function backup(){
+
+ let d={
+
+  version:11,
+
+  pages:
+   await all('pages'),
+
+  events:
+   await all('events'),
+
+  todos:
+   await all('todos'),
+
+  memories:
+   await all('memories'),
+
+  settings:
+   await all('settings')
+
+ };
+
+
+ let a=
+  document.createElement(
+   'a'
+  );
+
+
+ a.href=
+  URL.createObjectURL(
+   new Blob(
+    [
+     JSON.stringify(d)
+    ],
+    {
+     type:
+      'application/json'
+    }
+   )
+  );
+
+
+ a.download=
+  'diary-backup-'+
+  today()+
+  '.json';
+
+
+ a.click();
+
+}
+
+
+/* =====================================================
    START
-========================================================= */
+===================================================== */
 
-start();
+(async()=>{
+
+ await openDB();
+
+ /*
+  Remove duplicate local memory
+  records before application starts.
+ */
+
+ await dedupeMemories();
+
+
+ if(
+  'serviceWorker'
+  in navigator
+ ){
+
+  navigator.serviceWorker
+   .register(
+    './service-worker.js'
+   );
+
+ }
+
+
+ if(sb){
+
+  sb.auth
+   .onAuthStateChange(
+    (e,s)=>{
+
+     if(
+      e==='SIGNED_IN' &&
+      s &&
+      !user
+     ){
+
+      start(
+       s.user
+      );
+
+     }
+
+    }
+   );
+
+
+  let {
+   data
+  }=
+   await sb.auth
+    .getSession();
+
+
+  if(
+   data.session
+  ){
+
+   start(
+    data.session.user
+   );
+
+  }
+
+ }
+
+})();
 
 </script>
 

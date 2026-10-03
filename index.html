@@ -2585,9 +2585,16 @@ function get(store,key){
             .get(key);
 
         request.onsuccess=
-          ()=>resolve(
-            request.result
-          );
+          ()=>{
+            try{
+              if(typeof diaryTouchLocalMeta === "function" && !diaryApplyingCloud){
+                diaryTouchLocalMeta(store,value);
+              }
+            }catch(metaError){
+              console.warn("Diary sync metadata warning:",metaError);
+            }
+            resolve(request.result);
+          };
 
         request.onerror=
           ()=>reject(
@@ -6729,14 +6736,20 @@ async function start(){
 
 /* =========================================================
    SUPABASE AUTH + TWO-WAY CLOUD SYNC
+   V2 - batched, incremental, conflict-safe sync
 ========================================================= */
 
+/* Keep the user's existing Supabase project/key.  The source file had
+   accidental whitespace inside these two constants; it is normalized here. */
 const DIARY_SUPABASE_URL = "https://dmkmlftloybapekshzza.supabase.co";
 const DIARY_SUPABASE_KEY = "sb_publishable_GxF-SiNTxFCXTUBOIsxBBQ_XgtOW_m7";
 let diarySupabaseClient = null;
 let diaryAuthenticatedUser = null;
 let diarySyncInProgress = false;
 let diarySyncTimer = null;
+let diaryApplyingCloud = false;
+const DIARY_SYNC_META_KEY = "diarySyncMeta_v3";
+const DIARY_SYNC_STATE_KEY = "diarySyncState_v3";
 
 function diaryStatus(message){
   const el=document.getElementById("diarySyncStatus");
@@ -6766,10 +6779,14 @@ function diaryTombstones(){
 function diaryAddTombstone(type,sync_id){
   if(!sync_id) return;
   const a=diaryTombstones();
-  if(!a.some(x=>x.type===type&&x.sync_id===sync_id)){
-    a.push({type,sync_id,deleted_at:new Date().toISOString()});
-    localStorage.setItem("diarySyncTombstones_v2",JSON.stringify(a));
+  const existing=a.find(x=>x.type===type&&x.sync_id===sync_id);
+  const now=new Date().toISOString();
+  if(existing){
+    if(!existing.deleted_at || new Date(existing.deleted_at)<new Date(now)) existing.deleted_at=now;
+  }else{
+    a.push({type,sync_id,deleted_at:now});
   }
+  localStorage.setItem("diarySyncTombstones_v2",JSON.stringify(a));
 }
 function diaryRemoveTombstone(type,sync_id){
   const a=diaryTombstones().filter(x=>!(x.type===type&&x.sync_id===sync_id));
@@ -6786,137 +6803,299 @@ function diaryCloudDate(r){
   const d=r&&(r.date||r.day||r.entryDate);
   return /^\d{4}-\d{2}-\d{2}$/.test(String(d||""))?d:null;
 }
+function diaryMetaLoad(){
+  try{return JSON.parse(localStorage.getItem(DIARY_SYNC_META_KEY)||"{}");}catch(e){return {}}
+}
+function diaryMetaSave(meta){
+  localStorage.setItem(DIARY_SYNC_META_KEY,JSON.stringify(meta));
+}
+function diaryMetaKey(type,syncId){return type+":"+String(syncId);}
+function diaryMetaGet(type,syncId){return diaryMetaLoad()[diaryMetaKey(type,syncId)]||null;}
+function diaryMetaSet(type,syncId,iso){
+  if(!syncId||!iso) return;
+  const meta=diaryMetaLoad();
+  meta[diaryMetaKey(type,syncId)]=iso;
+  diaryMetaSave(meta);
+}
+function diaryTouchLocalMeta(store,value){
+  const map={pages:"page",events:"event",todos:"todo",memories:"memory",settings:"setting"};
+  const type=map[store];
+  if(!type||!value) return;
+  const syncId=diaryRecordSyncId(type,value);
+  if(syncId) diaryMetaSet(type,syncId,new Date().toISOString());
+}
+function diarySyncStateLoad(){
+  try{return JSON.parse(localStorage.getItem(DIARY_SYNC_STATE_KEY)||"{}");}catch(e){return {}}
+}
+function diarySyncStateSave(state){
+  localStorage.setItem(DIARY_SYNC_STATE_KEY,JSON.stringify(state));
+}
+function diaryClearSyncState(){localStorage.removeItem(DIARY_SYNC_STATE_KEY);}
 
 async function diaryEnsureSyncIds(){
   for(const [store,type] of [["events","event"],["todos","todo"],["memories","memory"]]){
     const records=await getAll(store);
     for(const r of records){
-      if(!r.sync_id){r.sync_id=diaryNewSyncId();await put(store,r);}
+      if(!r.sync_id){
+        r.sync_id=diaryNewSyncId();
+        await put(store,r);
+      }
     }
   }
 }
 
-async function diaryUploadLocal(){
-  if(!diaryAuthenticatedUser || diarySyncInProgress) return;
+/* Read the cloud in small pages.  The previous code requested the user's
+   entire table in one SQL statement, which is what was causing the
+   "cancelling statement due to statement timeout" error. */
+async function diaryFetchCloudRows(fullSync=false){
+  const client=diaryCreateSupabaseClient();
+  const state=diarySyncStateLoad();
+  const since=!fullSync && state.lastCloudUpdatedAt ? state.lastCloudUpdatedAt : null;
+  let offset=0;
+  let batchSize=100;
+  const rows=[];
+
+  while(true){
+    let query=client
+      .from("diary_sync_records")
+      .select("id,user_id,record_type,record_date,record_data,updated_at")
+      .eq("user_id",diaryAuthenticatedUser.id)
+      .order("updated_at",{ascending:true})
+      .range(offset,offset+batchSize-1);
+    if(since) query=query.gt("updated_at",since);
+
+    let result=await query;
+    if(result.error && batchSize>25){
+      batchSize=25;
+      offset=0;
+      rows.length=0;
+      continue;
+    }
+    if(result.error) throw result.error;
+
+    const page=result.data||[];
+    rows.push(...page);
+    if(page.length<batchSize) break;
+    offset+=batchSize;
+  }
+  return {rows,since};
+}
+
+function diaryCloudRowSyncId(row){
+  const type=row&&row.record_type;
+  const cloud=row&&row.record_data;
+  if(!type||!cloud) return "";
+  return String(cloud.sync_id || (type==="page"?cloud.id:(type==="setting"?cloud.key:"")) || "");
+}
+
+function diaryLocalMaps(){
+  return Promise.all([
+    getAll("pages"),getAll("events"),getAll("todos"),getAll("memories"),getAll("settings")
+  ]).then(([pages,events,todos,memories,settings])=>({
+    page:new Map(pages.map(r=>[diaryRecordSyncId("page",r),r])),
+    event:new Map(events.map(r=>[diaryRecordSyncId("event",r),r])),
+    todo:new Map(todos.map(r=>[diaryRecordSyncId("todo",r),r])),
+    memory:new Map(memories.map(r=>[diaryRecordSyncId("memory",r),r])),
+    setting:new Map(settings.map(r=>[diaryRecordSyncId("setting",r),r]))
+  }));
+}
+
+async function diaryApplyCloudRows(rows,localMaps){
+  const mapping={page:"pages",event:"events",todo:"todos",memory:"memories",setting:"settings"};
+  const typeMaps=localMaps;
+  const touched=new Set();
+
+  /* Cloud rows are already ordered by updated_at.  If two old duplicate
+     rows exist, the newest one wins for the same cloud id. */
+  for(const row of (rows||[])){
+    const store=mapping[row.record_type];
+    const type=row.record_type;
+    const cloud=row.record_data;
+    const syncId=diaryCloudRowSyncId(row);
+    if(!store||!cloud||!syncId) continue;
+
+    const cloudTime=row.updated_at || cloud.updated_at || new Date(0).toISOString();
+    const tomb=diaryTombstones().find(t=>t.type===type&&t.sync_id===syncId);
+
+    if(cloud.deleted){
+      if(!tomb || new Date(cloudTime)>=new Date(tomb.deleted_at||0)){
+        const existing=typeMaps[type].get(syncId);
+        if(existing) await deleteRecord(store,existing.id);
+        diaryAddTombstone(type,syncId);
+        typeMaps[type].delete(syncId);
+      }
+      continue;
+    }
+
+    /* A local deletion wins if it is newer than the cloud live row. */
+    if(tomb && new Date(tomb.deleted_at||0)>=new Date(cloudTime)) continue;
+
+    const existing=typeMaps[type].get(syncId);
+    const localTime=diaryMetaGet(type,syncId);
+
+    /* On a brand-new installation/device, an existing cloud row is the
+       authoritative copy for the same sync id.  After metadata exists,
+       the newer side wins. */
+    if(existing && localTime && new Date(localTime)>new Date(cloudTime)) continue;
+
+    const record={...cloud};
+    if(type==="event"||type==="todo"||type==="memory"){
+      if(existing) record.id=existing.id;
+      else delete record.id;
+    }
+
+    diaryApplyingCloud=true;
+    try{ await put(store,record); }
+    finally{ diaryApplyingCloud=false; }
+    typeMaps[type].set(syncId,record);
+    diaryMetaSet(type,syncId,cloudTime);
+    diaryRemoveTombstone(type,syncId);
+    touched.add(type+":"+syncId);
+  }
+  return touched;
+}
+
+async function diaryBuildUploadRows(localMaps,cloudRows){
+  const cloudById=new Map((cloudRows||[]).map(r=>[String(r.id),r]));
+  const uploads=[];
+  const groups=[["pages","page"],["events","event"],["todos","todo"],["memories","memory"],["settings","setting"]];
+
+  for(const [store,type] of groups){
+    for(const record of localMaps[type].values()){
+      const syncId=diaryRecordSyncId(type,record);
+      if(!syncId) continue;
+      const cloudId=diaryCloudId(type,syncId);
+      const cloud=cloudById.get(cloudId);
+      const localTime=diaryMetaGet(type,syncId);
+
+      /* If the cloud row exists and the local record has no sync metadata,
+         it was already present before this sync version; do not overwrite it.
+         If it is local-only, upload it. */
+      if(cloud && !localTime) continue;
+      if(cloud && localTime && new Date(cloud.updated_at||0)>=new Date(localTime)) continue;
+
+      uploads.push({
+        id:cloudId,
+        user_id:diaryAuthenticatedUser.id,
+        record_type:type,
+        record_date:diaryCloudDate(record),
+        record_data:record,
+        updated_at:localTime || new Date().toISOString()
+      });
+    }
+  }
+
+  /* Tombstones are always candidates for upload.  The cloud comparison keeps
+     an older remote live row from resurrecting a newer local deletion. */
+  for(const t of diaryTombstones()){
+    if(!t.type||!t.sync_id||!t.deleted_at) continue;
+    const id=diaryCloudId(t.type,t.sync_id);
+    const cloud=cloudById.get(id);
+    if(cloud && new Date(cloud.updated_at||0)>=new Date(t.deleted_at)) continue;
+    uploads.push({
+      id,
+      user_id:diaryAuthenticatedUser.id,
+      record_type:t.type,
+      record_date:null,
+      record_data:{deleted:true,sync_id:t.sync_id,deleted_at:t.deleted_at},
+      updated_at:t.deleted_at
+    });
+  }
+  return uploads;
+}
+
+async function diaryUploadRows(rows){
+  if(!rows.length) return;
+  const client=diaryCreateSupabaseClient();
+  /* Small batches avoid long-running statements and reduce the chance of a
+     timeout when memories contain images or documents. */
+  for(let i=0;i<rows.length;i+=25){
+    const batch=rows.slice(i,i+25);
+    const {error}=await client.from("diary_sync_records").upsert(batch,{onConflict:"id"});
+    if(error) throw error;
+  }
+  for(const row of rows){
+    const type=row.record_type;
+    const syncId=diaryCloudRowSyncId(row);
+    if(syncId && row.record_data && row.record_data.deleted){
+      /* Keep the tombstone. */
+    }else if(syncId){
+      diaryMetaSet(type,syncId,row.updated_at);
+    }
+  }
+}
+
+async function diaryRenderAfterSync(){
+  try{await loadPage();}catch(e){console.warn("Diary page refresh failed",e);}
+  try{await renderEvents();}catch(e){console.warn("Diary events refresh failed",e);}
+  try{await renderTodos();}catch(e){console.warn("Diary todos refresh failed",e);}
+  try{await renderMemories();}catch(e){console.warn("Diary memories refresh failed",e);}
+  try{await renderCalendar();}catch(e){console.warn("Diary calendar refresh failed",e);}
+}
+
+async function diarySyncNow(options={}){
+  if(!diaryAuthenticatedUser){diaryShowAuth(true);return;}
+  if(!navigator.onLine){diaryStatus("Offline");return;}
+  if(diarySyncInProgress) return;
+
   diarySyncInProgress=true;
   try{
+    diaryStatus("Syncing…");
     await diaryEnsureSyncIds();
-    const client=diaryCreateSupabaseClient();
-    const groups=[["pages","page"],["events","event"],["todos","todo"],["memories","memory"],["settings","setting"]];
 
-    // Upload live records.
-    for(const [store,type] of groups){
-      const records=await getAll(store);
-      for(const record of records){
-        const syncId=diaryRecordSyncId(type,record);
-        if(!syncId) continue;
-        const row={
-          id:diaryCloudId(type,syncId),
-          user_id:diaryAuthenticatedUser.id,
-          record_type:type,
-          record_date:diaryCloudDate(record),
-          record_data:record,
-          updated_at:new Date().toISOString()
-        };
-        const {error}=await client.from("diary_sync_records").upsert(row,{onConflict:"id"});
-        if(error) throw error;
-      }
-    }
+    const state=diarySyncStateLoad();
+    const fullSync=!state.initialized || !!options.full;
+    const localMaps=await diaryLocalMaps();
+    const fetched=await diaryFetchCloudRows(fullSync);
 
-    // Upload deletions as tombstones. This is what prevents deleted
-    // records from returning from another device.
-    for(const t of diaryTombstones()){
-      const row={
-        id:diaryCloudId(t.type,t.sync_id),
-        user_id:diaryAuthenticatedUser.id,
-        record_type:t.type,
-        record_date:null,
-        record_data:{deleted:true,sync_id:t.sync_id,deleted_at:t.deleted_at},
-        updated_at:t.deleted_at
-      };
-      const {error}=await client.from("diary_sync_records").upsert(row,{onConflict:"id"});
-      if(error) throw error;
-    }
+    /* Merge remote changes first. */
+    await diaryApplyCloudRows(fetched.rows,localMaps);
+
+    /* Rebuild maps because the merge may have inserted/deleted records. */
+    const mergedMaps=await diaryLocalMaps();
+    const uploadRows=await diaryBuildUploadRows(mergedMaps,fetched.rows);
+    await diaryUploadRows(uploadRows);
+
+    /* Fetch the small set of changes made by this device and other devices
+       after the first read.  This is deliberately incremental, not a second
+       full-table download. */
+    const newestLocalUploadTime=uploadRows.reduce((m,r)=>r.updated_at>m?r.updated_at:m,state.lastCloudUpdatedAt||"1970-01-01T00:00:00.000Z");
+    const nextSince=fetched.rows.reduce((m,r)=>r.updated_at>m?r.updated_at:m,newestLocalUploadTime);
+
+    /* If we uploaded rows, do not immediately perform a full download. The
+       local data already contains those rows. We only advance the cursor after
+       all operations succeeded. */
+    if(nextSince) diarySyncStateSave({initialized:true,lastCloudUpdatedAt:nextSince});
+    else diarySyncStateSave({initialized:true,lastCloudUpdatedAt:state.lastCloudUpdatedAt||new Date().toISOString()});
+
+    await diaryRenderAfterSync();
     diaryStatus("Synced");
+    await checkEventAlerts();
   }catch(error){
-    console.error("Diary upload error",error);
+    console.error("Diary sync error",error);
     diaryStatus("Sync failed — "+(error.message||"check Supabase"));
-  }finally{diarySyncInProgress=false;}
-}
-
-async function diaryDownloadCloud(){
-  if(!diaryAuthenticatedUser) return;
-  try{
-    const client=diaryCreateSupabaseClient();
-    const {data,error}=await client.from("diary_sync_records").select("*").eq("user_id",diaryAuthenticatedUser.id);
-    if(error) throw error;
-    const mapping={page:"pages",event:"events",todo:"todos",memory:"memories",setting:"settings"};
-
-    for(const row of (data||[])){
-      const store=mapping[row.record_type];
-      const cloud=row.record_data;
-      if(!store || !cloud) continue;
-      const type=row.record_type;
-      const syncId=String(cloud.sync_id || (type==="page"?cloud.id:(type==="setting"?cloud.key:"")));
-      if(!syncId) continue;
-
-      if(cloud.deleted){
-        const locals=await getAll(store);
-        for(const local of locals){
-          const localId=diaryRecordSyncId(type,local);
-          if(localId===syncId) await deleteRecord(store,local.id);
-        }
-        diaryAddTombstone(type,syncId);
-        continue;
-      }
-
-      const locals=await getAll(store);
-      const existing=locals.find(local=>diaryRecordSyncId(type,local)===syncId);
-      const record={...cloud};
-
-      // Auto-increment stores must use the local numeric id. Never import
-      // another device's numeric id, otherwise records collide.
-      if(type==="event"||type==="todo"||type==="memory"){
-        if(existing) record.id=existing.id;
-        else delete record.id;
-      }
-      await put(store,record);
-      diaryRemoveTombstone(type,syncId);
-    }
-
-    await loadPage();
-    await renderEvents();
-    await renderTodos();
-    await renderMemories();
-    await renderCalendar();
-  }catch(error){
-    console.error("Diary download error",error);
-    diaryStatus("Download failed — "+(error.message||"check Supabase"));
+  }finally{
+    diarySyncInProgress=false;
   }
 }
+
+/* Compatibility wrappers for the rest of the diary. */
+async function diaryUploadLocal(){await diarySyncNow();}
+async function diaryDownloadCloud(){await diarySyncNow({full:true});}
 
 async function diaryAfterAuthentication(){
   diaryShowAuth(false);
   diaryStatus("Syncing…");
-  // Cloud first, then upload genuine local-only records.
-  await diaryDownloadCloud();
-  await diaryUploadLocal();
-  await diaryDownloadCloud();
+  await diarySyncNow();
   await requestEventNotificationPermission();
   await checkEventAlerts();
 }
 
-async function diarySyncNow(){
-  if(!diaryAuthenticatedUser){diaryShowAuth(true);return;}
-  if(!navigator.onLine){diaryStatus("Offline");return;}
-  await diaryDownloadCloud();
-  await diaryUploadLocal();
-  await diaryDownloadCloud();
-}
-
 function diaryScheduleSync(){
   clearTimeout(diarySyncTimer);
-  diarySyncTimer=setTimeout(()=>{if(diaryAuthenticatedUser&&navigator.onLine) diarySyncNow();},1000);
+  diarySyncTimer=setTimeout(()=>{
+    if(diaryAuthenticatedUser&&navigator.onLine) diarySyncNow();
+  },1000);
 }
 
 async function diaryAuthSignIn(){
@@ -6974,9 +7153,17 @@ async function diaryInitializeAuth(){
       diaryShowAuth(true);diaryStatus("Sign in required");
     }
     client.auth.onAuthStateChange((event,session)=>{
-      if(event==="SIGNED_OUT"){diaryAuthenticatedUser=null;diaryShowAuth(true);diaryStatus("Signed out");}
+      if(event==="SIGNED_OUT"){
+        diaryAuthenticatedUser=null;
+        diaryShowAuth(true);
+        diaryStatus("Signed out");
+      }
     });
-  }catch(error){diaryShowAuth(true);diaryAuthMessage(error.message||String(error));diaryStatus("Configuration needed");}
+  }catch(error){
+    diaryShowAuth(true);
+    diaryAuthMessage(error.message||String(error));
+    diaryStatus("Configuration needed");
+  }
 }
 
 setInterval(()=>{

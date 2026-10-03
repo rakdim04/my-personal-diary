@@ -3518,6 +3518,7 @@ async function saveSettings(){
     "settings",
     settings
   );
+  diaryScheduleSync();
 
 }
 
@@ -3888,6 +3889,7 @@ async function savePage(){
     "pages",
     currentPageRecord
   );
+  diaryScheduleSync();
 
 }
 
@@ -5580,7 +5582,8 @@ async function saveEvent(){
       title:title,
       time:time,
       notes:notes,
-      created:Date.now()
+      created:Date.now(),
+      sync_id: diaryNewSyncId()
     }
   );
 
@@ -5599,27 +5602,21 @@ async function saveEvent(){
 
 
   await renderEvents();
+  diaryScheduleSync();
 
 }
 
 
 async function deleteEvent(id){
 
-  if(
-    !confirm(
-      "Delete this event?"
-    )
-  )
-    return;
+  if(!confirm("Delete this event?")) return;
 
+  const item = await get("events", Number(id));
+  if(item && item.sync_id) diaryAddTombstone("event", item.sync_id);
 
-  await deleteRecord(
-    "events",
-    Number(id)
-  );
-
-
+  await deleteRecord("events", Number(id));
   await renderEvents();
+  diaryScheduleSync();
 
 }
 
@@ -5830,7 +5827,8 @@ async function addTodo(){
       text:text,
       done:false,
       carried:false,
-      created:Date.now()
+      created:Date.now(),
+      sync_id: diaryNewSyncId()
     }
   );
 
@@ -5841,6 +5839,7 @@ async function addTodo(){
 
 
   await renderTodos();
+  diaryScheduleSync();
 
 }
 
@@ -5882,18 +5881,19 @@ async function toggleTodo(
 
 
   await renderTodos();
+  diaryScheduleSync();
 
 }
 
 
 async function deleteTodo(id){
 
-  await deleteRecord(
-    "todos",
-    Number(id)
-  );
+  const item = await get("todos", Number(id));
+  if(item && item.sync_id) diaryAddTombstone("todo", item.sync_id);
 
+  await deleteRecord("todos", Number(id));
   await renderTodos();
+  diaryScheduleSync();
 
 }
 
@@ -5942,7 +5942,8 @@ async function carryForwardTodos(){
           text:task.text,
           done:false,
           carried:true,
-          created:Date.now()
+          created:Date.now(),
+          sync_id: diaryNewSyncId()
         }
       );
 
@@ -6094,7 +6095,8 @@ async function saveMemory(event){
         date:currentDate,
         name:file.name,
         image:image,
-        created:Date.now()
+        created:Date.now(),
+        sync_id: diaryNewSyncId()
       }
     );
 
@@ -6103,6 +6105,7 @@ async function saveMemory(event){
 
 
     await renderMemories();
+    diaryScheduleSync();
 
   }catch(error){
 
@@ -6231,21 +6234,14 @@ async function renderMemories(){
 
 async function deleteMemory(id){
 
-  if(
-    !confirm(
-      "Delete this memory?"
-    )
-  )
-    return;
+  if(!confirm("Delete this memory?")) return;
 
+  const item = await get("memories", Number(id));
+  if(item && item.sync_id) diaryAddTombstone("memory", item.sync_id);
 
-  await deleteRecord(
-    "memories",
-    Number(id)
-  );
-
-
+  await deleteRecord("memories", Number(id));
   await renderMemories();
+  diaryScheduleSync();
 
 }
 
@@ -6512,84 +6508,59 @@ async function restoreDiary(event){
    EVENTS REMINDER
 ========================================================= */
 
-let alertedEvents=
-  new Set();
-
+let alertedEvents = new Set();
 
 async function checkEventAlerts(){
+  try{
+    const events = await getAll("events");
+    const now = new Date();
+    const today = todayISO();
+    const nowMinutes = now.getHours()*60 + now.getMinutes();
 
-  const events=
-    await getAll(
-      "events"
-    );
+    for(const event of events){
+      if(event.date !== today || !event.time) continue;
+      const parts = String(event.time).split(":");
+      const eventMinutes = Number(parts[0])*60 + Number(parts[1]||0);
+      const key = String(event.sync_id || event.id) + "-" + today;
+      const difference = nowMinutes - eventMinutes;
 
-
-  const now=
-    new Date();
-
-
-  const today=
-    todayISO();
-
-
-  const currentTime=
-    String(
-      now.getHours()
-    ).padStart(2,"0")+
-    ":"+
-    String(
-      now.getMinutes()
-    ).padStart(2,"0");
-
-
-  events.forEach(
-    event=>{
-
-      if(
-        event.date!==today ||
-        !event.time
-      )
-        return;
-
-
-      const key=
-        event.id+
-        "-"+
-        today;
-
-
-      if(
-        event.time===currentTime &&
-        !alertedEvents.has(key)
-      ){
-
+      // Fire for the scheduled minute and for up to 5 minutes afterwards,
+      // so a slow timer or app opening just after the scheduled minute
+      // does not silently miss the reminder.
+      if(difference >= 0 && difference <= 5 && !alertedEvents.has(key)){
         alertedEvents.add(key);
-
-
-        /*
-          Use the existing event modal
-          as the alert rather than a browser
-          alert that can be blocked.
-        */
-
-        openEvents();
-
-        alert(
-          "📌 Diary Event\n\n"+
-          event.title+
-          (
-            event.notes
-            ? "\n\n"+
-              event.notes
-            : ""
-          )
-        );
-
+        diaryShowEventAlert(event);
       }
-
     }
-  );
+  }catch(error){
+    console.warn("Event alert check failed", error);
+  }
+}
 
+function diaryShowEventAlert(event){
+  const message =
+    "📌 Diary Event\n\n" +
+    event.title +
+    (event.notes ? "\n\n" + event.notes : "");
+
+  // Use the normal browser alert first because it is visible on Android
+  // without requiring notification permission.
+  try{ alert(message); }catch(e){ console.warn(e); }
+
+  // Also try a native notification when permission is available.
+  if("Notification" in window && Notification.permission === "granted"){
+    try{
+      new Notification("📌 Diary Event", {
+        body: event.title + (event.notes ? " — " + event.notes : "")
+      });
+    }catch(e){ console.warn(e); }
+  }
+}
+
+async function requestEventNotificationPermission(){
+  if("Notification" in window && Notification.permission === "default"){
+    try{ await Notification.requestPermission(); }catch(e){}
+  }
 }
 
 
@@ -6757,9 +6728,7 @@ async function start(){
 
 
 /* =========================================================
-   SUPABASE AUTH + BASIC CLOUD SYNC
-   Existing local IndexedDB remains the diary's local store.
-   Uses the non-destructive public.diary_sync_records table.
+   SUPABASE AUTH + TWO-WAY CLOUD SYNC
 ========================================================= */
 
 const DIARY_SUPABASE_URL = "https://dmkmlftloybapekshzza.supabase.co";
@@ -6767,195 +6736,254 @@ const DIARY_SUPABASE_KEY = "sb_publishable_GxF-SiNTxFCXTUBOIsxBBQ_XgtOW_m7";
 let diarySupabaseClient = null;
 let diaryAuthenticatedUser = null;
 let diarySyncInProgress = false;
+let diarySyncTimer = null;
 
-function diaryStatus(message) {
-  const el = document.getElementById("diarySyncStatus");
-  if (el) el.textContent = "Cloud: " + message;
+function diaryStatus(message){
+  const el=document.getElementById("diarySyncStatus");
+  if(el) el.textContent="Cloud: "+message;
 }
-
-function diaryAuthMessage(message) {
-  const el = document.getElementById("diaryAuthMessage");
-  if (el) el.textContent = message || "";
+function diaryAuthMessage(message){
+  const el=document.getElementById("diaryAuthMessage");
+  if(el) el.textContent=message||"";
 }
-
-function diaryShowAuth(show) {
-  const el = document.getElementById("diaryAuthOverlay");
-  if (el) el.style.display = show ? "flex" : "none";
+function diaryShowAuth(show){
+  const el=document.getElementById("diaryAuthOverlay");
+  if(el) el.style.display=show?"flex":"none";
 }
-
-function diaryCreateSupabaseClient() {
-  if (!window.supabase || !window.supabase.createClient) {
-    throw new Error("Supabase library did not load. Check your internet connection and reload.");
-  }
-  if (DIARY_SUPABASE_URL.includes("PASTE_") || DIARY_SUPABASE_KEY.includes("PASTE_")) {
-    throw new Error("Add your existing Supabase Project URL and publishable/anon key in the two configuration lines in index.html.");
-  }
-  if (!diarySupabaseClient) {
-    diarySupabaseClient = window.supabase.createClient(DIARY_SUPABASE_URL, DIARY_SUPABASE_KEY);
-  }
+function diaryCreateSupabaseClient(){
+  if(!window.supabase || !window.supabase.createClient) throw new Error("Supabase library did not load. Reload with internet access.");
+  if(DIARY_SUPABASE_KEY.includes("PASTE_YOUR_")) throw new Error("Add your Supabase publishable key in index.html.");
+  if(!diarySupabaseClient) diarySupabaseClient=window.supabase.createClient(DIARY_SUPABASE_URL,DIARY_SUPABASE_KEY);
   return diarySupabaseClient;
 }
-
-async function diaryAuthSignIn() {
-  try {
-    const client = diaryCreateSupabaseClient();
-    const email = document.getElementById("diaryAuthEmail").value.trim();
-    const password = document.getElementById("diaryAuthPassword").value;
-    if (!email || !password) { diaryAuthMessage("Enter your email and password."); return; }
-    diaryAuthMessage("Signing in…");
-    const { data, error } = await client.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    diaryAuthenticatedUser = data.user;
-    await diaryAfterAuthentication();
-  } catch (error) { diaryAuthMessage(error.message || String(error)); }
+function diaryNewSyncId(){
+  if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return "sync-"+Date.now()+"-"+Math.random().toString(36).slice(2);
+}
+function diaryTombstones(){
+  try{return JSON.parse(localStorage.getItem("diarySyncTombstones_v2")||"[]");}catch(e){return []}
+}
+function diaryAddTombstone(type,sync_id){
+  if(!sync_id) return;
+  const a=diaryTombstones();
+  if(!a.some(x=>x.type===type&&x.sync_id===sync_id)){
+    a.push({type,sync_id,deleted_at:new Date().toISOString()});
+    localStorage.setItem("diarySyncTombstones_v2",JSON.stringify(a));
+  }
+}
+function diaryRemoveTombstone(type,sync_id){
+  const a=diaryTombstones().filter(x=>!(x.type===type&&x.sync_id===sync_id));
+  localStorage.setItem("diarySyncTombstones_v2",JSON.stringify(a));
+}
+function diaryTypeStore(type){return {page:"pages",event:"events",todo:"todos",memory:"memories",setting:"settings"}[type];}
+function diaryRecordSyncId(type,r){
+  if(type==="page") return String(r.id);
+  if(type==="setting") return String(r.key);
+  return String(r.sync_id || "");
+}
+function diaryCloudId(type,syncId){return String(diaryAuthenticatedUser.id)+":"+type+":"+syncId;}
+function diaryCloudDate(r){
+  const d=r&&(r.date||r.day||r.entryDate);
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(d||""))?d:null;
 }
 
-async function diaryAuthSignUp() {
-  try {
-    const client = diaryCreateSupabaseClient();
-    const email = document.getElementById("diaryAuthEmail").value.trim();
-    const password = document.getElementById("diaryAuthPassword").value;
-    if (!email || password.length < 8) { diaryAuthMessage("Enter your email and a password of at least 8 characters."); return; }
-    diaryAuthMessage("Creating account…");
-    const { data, error } = await client.auth.signUp({ email, password });
-    if (error) throw error;
-    if (data.session && data.user) { diaryAuthenticatedUser = data.user; await diaryAfterAuthentication(); }
-    else diaryAuthMessage("Account created. Confirm your email if requested, then sign in.");
-  } catch (error) { diaryAuthMessage(error.message || String(error)); }
-}
-
-async function diaryAuthReset() {
-  try {
-    const client = diaryCreateSupabaseClient();
-    const email = document.getElementById("diaryAuthEmail").value.trim();
-    if (!email) { diaryAuthMessage("Enter your email address first."); return; }
-    const { error } = await client.auth.resetPasswordForEmail(email);
-    if (error) throw error;
-    diaryAuthMessage("If the account exists, password reset instructions have been sent.");
-  } catch (error) { diaryAuthMessage(error.message || String(error)); }
-}
-
-async function diaryAuthSignOut() {
-  try {
-    if (diarySupabaseClient) {
-      const { error } = await diarySupabaseClient.auth.signOut();
-      if (error) throw error;
+async function diaryEnsureSyncIds(){
+  for(const [store,type] of [["events","event"],["todos","todo"],["memories","memory"]]){
+    const records=await getAll(store);
+    for(const r of records){
+      if(!r.sync_id){r.sync_id=diaryNewSyncId();await put(store,r);}
     }
-    diaryAuthenticatedUser = null;
-    diaryShowAuth(true);
-    diaryStatus("Signed out");
-  } catch (error) { diaryStatus("Sign-out failed: " + (error.message || error)); }
+  }
 }
 
-function diaryCloudId(type, record) {
-  const raw = type === "setting" ? record.key : record.id;
-  return String(diaryAuthenticatedUser.id) + ":" + type + ":" + String(raw);
-}
+async function diaryUploadLocal(){
+  if(!diaryAuthenticatedUser || diarySyncInProgress) return;
+  diarySyncInProgress=true;
+  try{
+    await diaryEnsureSyncIds();
+    const client=diaryCreateSupabaseClient();
+    const groups=[["pages","page"],["events","event"],["todos","todo"],["memories","memory"],["settings","setting"]];
 
-function diaryCloudDate(record) {
-  const date = record && (record.date || record.day || record.entryDate);
-  return /^\d{4}-\d{2}-\d{2}$/.test(String(date || "")) ? date : null;
-}
-
-async function diaryUploadLocal() {
-  if (!diaryAuthenticatedUser || diarySyncInProgress) return;
-  diarySyncInProgress = true;
-  diaryStatus("Uploading local records…");
-  try {
-    const client = diaryCreateSupabaseClient();
-    const groups = [["pages","page"],["events","event"],["todos","todo"],["memories","memory"],["settings","setting"]];
-    for (const [store, type] of groups) {
-      const records = await getAll(store);
-      for (const record of records) {
-        const row = {
-          id: diaryCloudId(type, record),
-          user_id: diaryAuthenticatedUser.id,
-          record_type: type,
-          record_date: diaryCloudDate(record),
-          record_data: record,
-          updated_at: new Date().toISOString()
+    // Upload live records.
+    for(const [store,type] of groups){
+      const records=await getAll(store);
+      for(const record of records){
+        const syncId=diaryRecordSyncId(type,record);
+        if(!syncId) continue;
+        const row={
+          id:diaryCloudId(type,syncId),
+          user_id:diaryAuthenticatedUser.id,
+          record_type:type,
+          record_date:diaryCloudDate(record),
+          record_data:record,
+          updated_at:new Date().toISOString()
         };
-        const { error } = await client.from("diary_sync_records").upsert(row, { onConflict: "id" });
-        if (error) throw error;
+        const {error}=await client.from("diary_sync_records").upsert(row,{onConflict:"id"});
+        if(error) throw error;
       }
     }
-    diaryStatus("Upload complete");
-  } catch (error) {
-    console.error("Diary upload error", error);
-    diaryStatus("Upload failed — " + (error.message || "check connection/table"));
-  } finally { diarySyncInProgress = false; }
+
+    // Upload deletions as tombstones. This is what prevents deleted
+    // records from returning from another device.
+    for(const t of diaryTombstones()){
+      const row={
+        id:diaryCloudId(t.type,t.sync_id),
+        user_id:diaryAuthenticatedUser.id,
+        record_type:t.type,
+        record_date:null,
+        record_data:{deleted:true,sync_id:t.sync_id,deleted_at:t.deleted_at},
+        updated_at:t.deleted_at
+      };
+      const {error}=await client.from("diary_sync_records").upsert(row,{onConflict:"id"});
+      if(error) throw error;
+    }
+    diaryStatus("Synced");
+  }catch(error){
+    console.error("Diary upload error",error);
+    diaryStatus("Sync failed — "+(error.message||"check Supabase"));
+  }finally{diarySyncInProgress=false;}
 }
 
-async function diaryDownloadCloud() {
-  if (!diaryAuthenticatedUser) return;
-  diaryStatus("Downloading cloud records…");
-  try {
-    const client = diaryCreateSupabaseClient();
-    const { data, error } = await client.from("diary_sync_records").select("*").eq("user_id", diaryAuthenticatedUser.id);
-    if (error) throw error;
-    const mapping = { page:"pages", event:"events", todo:"todos", memory:"memories", setting:"settings" };
-    for (const row of (data || [])) {
-      const store = mapping[row.record_type];
-      if (!store || !row.record_data) continue;
-      const record = row.record_data;
-      // The local database's key paths remain unchanged.
-      await put(store, record);
+async function diaryDownloadCloud(){
+  if(!diaryAuthenticatedUser) return;
+  try{
+    const client=diaryCreateSupabaseClient();
+    const {data,error}=await client.from("diary_sync_records").select("*").eq("user_id",diaryAuthenticatedUser.id);
+    if(error) throw error;
+    const mapping={page:"pages",event:"events",todo:"todos",memory:"memories",setting:"settings"};
+
+    for(const row of (data||[])){
+      const store=mapping[row.record_type];
+      const cloud=row.record_data;
+      if(!store || !cloud) continue;
+      const type=row.record_type;
+      const syncId=String(cloud.sync_id || (type==="page"?cloud.id:(type==="setting"?cloud.key:"")));
+      if(!syncId) continue;
+
+      if(cloud.deleted){
+        const locals=await getAll(store);
+        for(const local of locals){
+          const localId=diaryRecordSyncId(type,local);
+          if(localId===syncId) await deleteRecord(store,local.id);
+        }
+        diaryAddTombstone(type,syncId);
+        continue;
+      }
+
+      const locals=await getAll(store);
+      const existing=locals.find(local=>diaryRecordSyncId(type,local)===syncId);
+      const record={...cloud};
+
+      // Auto-increment stores must use the local numeric id. Never import
+      // another device's numeric id, otherwise records collide.
+      if(type==="event"||type==="todo"||type==="memory"){
+        if(existing) record.id=existing.id;
+        else delete record.id;
+      }
+      await put(store,record);
+      diaryRemoveTombstone(type,syncId);
     }
+
     await loadPage();
     await renderEvents();
     await renderTodos();
     await renderMemories();
     await renderCalendar();
-    diaryStatus("Cloud download complete");
-  } catch (error) {
-    console.error("Diary download error", error);
-    diaryStatus("Download failed — " + (error.message || "check connection/table"));
+  }catch(error){
+    console.error("Diary download error",error);
+    diaryStatus("Download failed — "+(error.message||"check Supabase"));
   }
 }
 
-async function diaryAfterAuthentication() {
+async function diaryAfterAuthentication(){
   diaryShowAuth(false);
-  diaryStatus("Connected; downloading…");
+  diaryStatus("Syncing…");
+  // Cloud first, then upload genuine local-only records.
   await diaryDownloadCloud();
   await diaryUploadLocal();
+  await diaryDownloadCloud();
+  await requestEventNotificationPermission();
+  await checkEventAlerts();
 }
 
-async function diarySyncNow() {
-  if (!diaryAuthenticatedUser) { diaryShowAuth(true); return; }
+async function diarySyncNow(){
+  if(!diaryAuthenticatedUser){diaryShowAuth(true);return;}
+  if(!navigator.onLine){diaryStatus("Offline");return;}
+  await diaryDownloadCloud();
   await diaryUploadLocal();
   await diaryDownloadCloud();
 }
 
-async function diaryInitializeAuth() {
-  try {
-    const client = diaryCreateSupabaseClient();
-    const { data, error } = await client.auth.getSession();
-    if (error) throw error;
-    if (data.session && data.session.user) {
-      diaryAuthenticatedUser = data.session.user;
+function diaryScheduleSync(){
+  clearTimeout(diarySyncTimer);
+  diarySyncTimer=setTimeout(()=>{if(diaryAuthenticatedUser&&navigator.onLine) diarySyncNow();},1000);
+}
+
+async function diaryAuthSignIn(){
+  try{
+    const client=diaryCreateSupabaseClient();
+    const email=document.getElementById("diaryAuthEmail").value.trim();
+    const password=document.getElementById("diaryAuthPassword").value;
+    if(!email||!password){diaryAuthMessage("Enter your email and password.");return;}
+    diaryAuthMessage("Signing in…");
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    diaryAuthenticatedUser=data.user;
+    await diaryAfterAuthentication();
+  }catch(error){diaryAuthMessage(error.message||String(error));}
+}
+async function diaryAuthSignUp(){
+  try{
+    const client=diaryCreateSupabaseClient();
+    const email=document.getElementById("diaryAuthEmail").value.trim();
+    const password=document.getElementById("diaryAuthPassword").value;
+    if(!email||password.length<8){diaryAuthMessage("Enter your email and a password of at least 8 characters.");return;}
+    diaryAuthMessage("Creating account…");
+    const {data,error}=await client.auth.signUp({email,password});
+    if(error) throw error;
+    if(data.session&&data.user){diaryAuthenticatedUser=data.user;await diaryAfterAuthentication();}
+    else diaryAuthMessage("Account created. Confirm your email if requested, then sign in.");
+  }catch(error){diaryAuthMessage(error.message||String(error));}
+}
+async function diaryAuthReset(){
+  try{
+    const client=diaryCreateSupabaseClient();
+    const email=document.getElementById("diaryAuthEmail").value.trim();
+    if(!email){diaryAuthMessage("Enter your email address first.");return;}
+    const {error}=await client.auth.resetPasswordForEmail(email);
+    if(error) throw error;
+    diaryAuthMessage("If the account exists, password reset instructions have been sent.");
+  }catch(error){diaryAuthMessage(error.message||String(error));}
+}
+async function diaryAuthSignOut(){
+  try{
+    if(diarySupabaseClient){const {error}=await diarySupabaseClient.auth.signOut();if(error)throw error;}
+    diaryAuthenticatedUser=null;diaryShowAuth(true);diaryStatus("Signed out");
+  }catch(error){diaryStatus("Sign-out failed: "+(error.message||error));}
+}
+
+async function diaryInitializeAuth(){
+  try{
+    const client=diaryCreateSupabaseClient();
+    const {data,error}=await client.auth.getSession();
+    if(error) throw error;
+    if(data.session&&data.session.user){
+      diaryAuthenticatedUser=data.session.user;
       await diaryAfterAuthentication();
-    } else {
-      diaryShowAuth(true);
-      diaryStatus("Sign in required");
+    }else{
+      diaryShowAuth(true);diaryStatus("Sign in required");
     }
-    client.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") { diaryAuthenticatedUser = null; diaryShowAuth(true); diaryStatus("Signed out"); }
+    client.auth.onAuthStateChange((event,session)=>{
+      if(event==="SIGNED_OUT"){diaryAuthenticatedUser=null;diaryShowAuth(true);diaryStatus("Signed out");}
     });
-  } catch (error) {
-    diaryShowAuth(true);
-    diaryAuthMessage(error.message || String(error));
-    diaryStatus("Configuration needed");
-  }
+  }catch(error){diaryShowAuth(true);diaryAuthMessage(error.message||String(error));diaryStatus("Configuration needed");}
 }
 
-// Keep the current local diary usable offline; sync periodically while signed in.
-setInterval(() => {
-  if (diaryAuthenticatedUser && navigator.onLine && !document.hidden) diarySyncNow();
-}, 60000);
+setInterval(()=>{
+  if(diaryAuthenticatedUser&&navigator.onLine&&!document.hidden) diarySyncNow();
+},30000);
+window.addEventListener("online",()=>{if(diaryAuthenticatedUser) diarySyncNow();});
 
-window.addEventListener("online", () => {
-  if (diaryAuthenticatedUser) diarySyncNow();
-});
 
 /* =========================================================
    START

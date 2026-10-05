@@ -2585,16 +2585,7 @@ function get(store,key){
             .get(key);
 
         request.onsuccess=
-          ()=>{
-            try{
-              if(typeof diaryTouchLocalMeta === "function" && !diaryApplyingCloud){
-                diaryTouchLocalMeta(store,value);
-              }
-            }catch(metaError){
-              console.warn("Diary sync metadata warning:",metaError);
-            }
-            resolve(request.result);
-          };
+          ()=>resolve(request.result);
 
         request.onerror=
           ()=>reject(
@@ -2670,9 +2661,16 @@ function put(store,value){
             .put(value);
 
         request.onsuccess=
-          ()=>resolve(
-            request.result
-          );
+          ()=>{
+            try{
+              if(typeof diaryTouchLocalMeta === "function" && !diaryApplyingCloud){
+                diaryTouchLocalMeta(store,value);
+              }
+            }catch(metaError){
+              console.warn("Diary sync metadata warning:",metaError);
+            }
+            resolve(request.result);
+          };
 
         request.onerror=
           ()=>reject(
@@ -6748,8 +6746,8 @@ let diaryAuthenticatedUser = null;
 let diarySyncInProgress = false;
 let diarySyncTimer = null;
 let diaryApplyingCloud = false;
-const DIARY_SYNC_META_KEY = "diarySyncMeta_v3";
-const DIARY_SYNC_STATE_KEY = "diarySyncState_v3";
+const DIARY_SYNC_META_KEY = "diarySyncMeta_v4";
+const DIARY_SYNC_STATE_KEY = "diarySyncState_v4";
 
 function diaryStatus(message){
   const el=document.getElementById("diarySyncStatus");
@@ -6955,6 +6953,98 @@ async function diaryApplyCloudRows(rows,localMaps){
   return touched;
 }
 
+function diaryDuplicateSignature(type, record){
+  if(!record) return "";
+  const clean = v => String(v==null?"":v).trim();
+  if(type==="event"){
+    return [clean(record.date),clean(record.title),clean(record.time),clean(record.notes)].join("\u001f");
+  }
+  if(type==="todo"){
+    return [clean(record.date),clean(record.text),record.done?"1":"0"].join("\u001f");
+  }
+  if(type==="memory"){
+    return [clean(record.date),clean(record.name),clean(record.image)].join("\u001f");
+  }
+  if(type==="page") return [clean(record.date),clean(record.page)].join("\u001f");
+  if(type==="setting") return clean(record.key);
+  return "";
+}
+
+async function diaryDeduplicateLocalRecords(){
+  const groups=[
+    ["events","event"],
+    ["todos","todo"],
+    ["memories","memory"]
+  ];
+  let changed=false;
+  for(const [store,type] of groups){
+    const records=await getAll(store);
+    const seen=new Map();
+    for(const r of records){
+      const sig=diaryDuplicateSignature(type,r);
+      if(!sig) continue;
+      const previous=seen.get(sig);
+      if(!previous){
+        seen.set(sig,r);
+        continue;
+      }
+      // Keep the earliest record so existing references remain as stable as possible.
+      const keep=(Number(previous.created)||0)<= (Number(r.created)||0) ? previous : r;
+      const remove=keep===previous ? r : previous;
+      if(remove.sync_id) diaryAddTombstone(type,remove.sync_id);
+      await deleteRecord(store,remove.id);
+      seen.set(sig,keep);
+      changed=true;
+    }
+  }
+  return changed;
+}
+
+function diaryDeduplicateCloudRows(rows){
+  const chosen=new Map();
+  const duplicateRows=[];
+  for(const row of (rows||[])){
+    if(!row || !row.record_type || !row.record_data || row.record_data.deleted) continue;
+    const type=row.record_type;
+    if(type!=="event" && type!=="todo" && type!=="memory") continue;
+    const sig=diaryDuplicateSignature(type,row.record_data);
+    if(!sig) continue;
+    const key=type+"\u001e"+sig;
+    const prior=chosen.get(key);
+    if(!prior){ chosen.set(key,row); continue; }
+    const priorTime=new Date(prior.updated_at||0).getTime();
+    const rowTime=new Date(row.updated_at||0).getTime();
+    const keep=rowTime>priorTime ? row : prior;
+    const remove=keep===row ? prior : row;
+    chosen.set(key,keep);
+    duplicateRows.push(remove);
+  }
+  return duplicateRows;
+}
+
+async function diaryTombstoneCloudDuplicates(rows){
+  const duplicates=diaryDeduplicateCloudRows(rows);
+  if(!duplicates.length) return [];
+  const nowRows=[];
+  for(const row of duplicates){
+    const type=row.record_type;
+    const syncId=diaryCloudRowSyncId(row);
+    if(!type||!syncId) continue;
+    const deletedAt=new Date().toISOString();
+    nowRows.push({
+      id:String(row.id),
+      user_id:diaryAuthenticatedUser.id,
+      record_type:type,
+      record_date:null,
+      record_data:{deleted:true,sync_id:syncId,deleted_at:deletedAt},
+      updated_at:deletedAt
+    });
+    diaryAddTombstone(type,syncId);
+  }
+  await diaryUploadRows(nowRows);
+  return duplicates;
+}
+
 async function diaryBuildUploadRows(localMaps,cloudRows){
   const cloudById=new Map((cloudRows||[]).map(r=>[String(r.id),r]));
   const uploads=[];
@@ -7045,11 +7135,27 @@ async function diarySyncNow(options={}){
 
     const state=diarySyncStateLoad();
     const fullSync=!state.initialized || !!options.full;
+
+    // First clean exact local duplicates created by earlier sync versions.
+    await diaryDeduplicateLocalRecords();
+
     const localMaps=await diaryLocalMaps();
     const fetched=await diaryFetchCloudRows(fullSync);
 
+    // Clean exact cloud duplicates before merging them into IndexedDB.
+    // The newest copy is kept; older copies become tombstones.
+    if(fullSync && fetched.rows.length){
+      await diaryTombstoneCloudDuplicates(fetched.rows);
+      const refreshed=await diaryFetchCloudRows(true);
+      fetched.rows.splice(0,fetched.rows.length,...refreshed.rows);
+    }
+
     /* Merge remote changes first. */
     await diaryApplyCloudRows(fetched.rows,localMaps);
+
+    // A remote duplicate may have matched a different local sync_id. Clean
+    // the merged local database once more before upload.
+    await diaryDeduplicateLocalRecords();
 
     /* Rebuild maps because the merge may have inserted/deleted records. */
     const mergedMaps=await diaryLocalMaps();

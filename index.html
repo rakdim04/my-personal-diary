@@ -6865,36 +6865,68 @@ async function diaryEnsureSyncIds(){
    "cancelling statement due to statement timeout" error. */
 async function diaryFetchCloudRows(fullSync=false){
   const client=diaryCreateSupabaseClient();
-  const state=diarySyncStateLoad();
-  const since=!fullSync && state.lastCloudUpdatedAt ? state.lastCloudUpdatedAt : null;
-  let offset=0;
-  let batchSize=100;
-  const rows=[];
+  const rowsById=new Map();
+  const today=todayISO();
 
-  while(true){
-    let query=client
+  function addRows(list){
+    for(const row of (list||[])){
+      if(row && row.id) rowsById.set(String(row.id),row);
+    }
+  }
+
+  async function fetchPaged(builderFactory){
+    let offset=0;
+    let batchSize=100;
+    while(true){
+      let result=await builderFactory(offset,batchSize);
+      if(result.error && batchSize>25){
+        batchSize=25;
+        offset=0;
+        continue;
+      }
+      if(result.error) throw result.error;
+      const page=result.data||[];
+      addRows(page);
+      if(page.length<batchSize) break;
+      offset+=batchSize;
+    }
+  }
+
+  if(fullSync){
+    await fetchPaged((offset,batchSize)=>client
       .from("diary_sync_records")
       .select("id,user_id,record_type,record_date,record_data,updated_at")
       .eq("user_id",diaryAuthenticatedUser.id)
       .order("updated_at",{ascending:true})
-      .range(offset,offset+batchSize-1);
-    if(since) query=query.gt("updated_at",since);
+      .range(offset,offset+batchSize-1));
+  }else{
+    /*
+      Never rely solely on a client-side sync cursor. Device clocks can differ,
+      and an older cursor can otherwise make a new mobile entry invisible on a
+      tablet. Every normal sync therefore checks a rolling 7-day window AND
+      every record belonging to TODAY. This covers diary pages, events, todos,
+      memories and settings without repeatedly downloading the entire history.
+    */
+    const windowStart=new Date(Date.now()-7*24*60*60*1000).toISOString();
 
-    let result=await query;
-    if(result.error && batchSize>25){
-      batchSize=25;
-      offset=0;
-      rows.length=0;
-      continue;
-    }
-    if(result.error) throw result.error;
+    await fetchPaged((offset,batchSize)=>client
+      .from("diary_sync_records")
+      .select("id,user_id,record_type,record_date,record_data,updated_at")
+      .eq("user_id",diaryAuthenticatedUser.id)
+      .gte("updated_at",windowStart)
+      .order("updated_at",{ascending:true})
+      .range(offset,offset+batchSize-1));
 
-    const page=result.data||[];
-    rows.push(...page);
-    if(page.length<batchSize) break;
-    offset+=batchSize;
+    await fetchPaged((offset,batchSize)=>client
+      .from("diary_sync_records")
+      .select("id,user_id,record_type,record_date,record_data,updated_at")
+      .eq("user_id",diaryAuthenticatedUser.id)
+      .eq("record_date",today)
+      .order("updated_at",{ascending:true})
+      .range(offset,offset+batchSize-1));
   }
-  return {rows,since};
+
+  return {rows:Array.from(rowsById.values()),since:null};
 }
 
 function diaryCloudRowSyncId(row){
@@ -7180,17 +7212,19 @@ async function diarySyncNow(options={}){
     const uploadRows=await diaryBuildUploadRows(mergedMaps,fetched.rows);
     await diaryUploadRows(uploadRows);
 
-    /* Fetch the small set of changes made by this device and other devices
-       after the first read.  This is deliberately incremental, not a second
-       full-table download. */
-    const newestLocalUploadTime=uploadRows.reduce((m,r)=>r.updated_at>m?r.updated_at:m,state.lastCloudUpdatedAt||"1970-01-01T00:00:00.000Z");
-    const nextSince=fetched.rows.reduce((m,r)=>r.updated_at>m?r.updated_at:m,newestLocalUploadTime);
+    /* Re-read the rolling window after upload. This is important when the
+       tablet was already open while another device made the change. It also
+       guarantees that cloud tombstones and records created by another device
+       are applied to this device during the same sync cycle. */
+    const afterUpload=await diaryFetchCloudRows(false);
+    const afterMaps=await diaryLocalMaps();
+    await diaryApplyCloudRows(afterUpload.rows,afterMaps);
 
-    /* If we uploaded rows, do not immediately perform a full download. The
-       local data already contains those rows. We only advance the cursor after
-       all operations succeeded. */
-    if(nextSince) diarySyncStateSave({initialized:true,lastCloudUpdatedAt:nextSince});
-    else diarySyncStateSave({initialized:true,lastCloudUpdatedAt:state.lastCloudUpdatedAt||new Date().toISOString()});
+    const newest=afterUpload.rows.reduce((m,r)=>{
+      const t=r.updated_at||m;
+      return t>m?t:m;
+    },new Date().toISOString());
+    diarySyncStateSave({initialized:true,lastCloudUpdatedAt:newest});
 
     await diaryRenderAfterSync();
     diaryStatus("Synced");
@@ -7292,8 +7326,14 @@ async function diaryInitializeAuth(){
 
 setInterval(()=>{
   if(diaryAuthenticatedUser&&navigator.onLine&&!document.hidden) diarySyncNow();
-},30000);
+},10000);
 window.addEventListener("online",()=>{if(diaryAuthenticatedUser) diarySyncNow();});
+window.addEventListener("visibilitychange",()=>{
+  if(!document.hidden&&diaryAuthenticatedUser&&navigator.onLine) diarySyncNow();
+});
+window.addEventListener("focus",()=>{
+  if(diaryAuthenticatedUser&&navigator.onLine) diarySyncNow();
+});
 
 
 /* =========================================================

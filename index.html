@@ -5729,7 +5729,7 @@ async function renderTodos(){
   ).textContent=
     past
     ? "🔒 Past-date To-Do is read-only."
-    : "Unfinished tasks are carried forward automatically.";
+    : "To-Do items stay on the date where they were created.";
 
 
   document.getElementById(
@@ -6665,10 +6665,9 @@ async function start(){
 
 
     /*
-      Carry pending tasks forward.
+      Do not automatically copy unfinished To-Do items from previous dates.
+      This prevents old tasks from reappearing or duplicating on startup.
     */
-
-    await carryForwardTodos();
 
 
     /*
@@ -6764,8 +6763,8 @@ let diaryAuthenticatedUser = null;
 let diarySyncInProgress = false;
 let diarySyncTimer = null;
 let diaryApplyingCloud = false;
-const DIARY_SYNC_META_KEY = "diarySyncMeta_v4";
-const DIARY_SYNC_STATE_KEY = "diarySyncState_v4";
+const DIARY_SYNC_META_KEY = "diarySyncMeta_v5";
+const DIARY_SYNC_STATE_KEY = "diarySyncState_v5";
 
 function diaryStatus(message){
   const el=document.getElementById("diarySyncStatus");
@@ -6903,11 +6902,11 @@ async function diaryFetchCloudRows(fullSync=false){
     /*
       Never rely solely on a client-side sync cursor. Device clocks can differ,
       and an older cursor can otherwise make a new mobile entry invisible on a
-      tablet. Every normal sync therefore checks a rolling 7-day window AND
+      tablet. Every normal sync therefore checks a rolling 31-day window AND
       every record belonging to TODAY. This covers diary pages, events, todos,
       memories and settings without repeatedly downloading the entire history.
     */
-    const windowStart=new Date(Date.now()-7*24*60*60*1000).toISOString();
+    const windowStart=new Date(Date.now()-31*24*60*60*1000).toISOString();
 
     await fetchPaged((offset,batchSize)=>client
       .from("diary_sync_records")
@@ -7334,6 +7333,20 @@ window.addEventListener("visibilitychange",()=>{
 window.addEventListener("focus",()=>{
   if(diaryAuthenticatedUser&&navigator.onLine) diarySyncNow();
 });
+
+
+/* =========================================================
+   PWA SERVICE WORKER
+========================================================= */
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"})
+      .then(reg=>{
+        try{ reg.update(); }catch(e){}
+      })
+      .catch(err=>console.warn("Diary service worker registration failed",err));
+  });
+}
 
 
 /* =========================================================

@@ -1982,186 +1982,197 @@ button{
                                       <label>
                                         Photograph / Camera
                                       </label>
+                                      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                                        <button type="button" onclick="document.getElementById('memoryCamera').click()">📷 Camera</button>
+                                        <button type="button" onclick="document.getElementById('memoryFile').click()">📁 Choose File</button>
+                                      </div>
                                       <input
-                                        id="memoryFile"
+                                        id="memoryCamera"
                                         type="file"
                                         accept="image/*"
                                         capture="environment"
-                                        onchange="saveMemory(event)">
-                                      </div>
-                                      <div
-                                        id="memoryGrid"
-                                        class="memorygrid">
-                                      </div>
-                                      <div class="modalbuttons">
-                                        <button
-                                          class="smallbtn"
-                                          onclick="closeModal('memoryModal')">
-                                          Close
-                                        </button>
+                                        onchange="saveMemory(event)"
+                                        style="display:none;">
+                                        <input
+                                          id="memoryFile"
+                                          type="file"
+                                          accept="image/*,.jpg,.jpeg,.png,.webp,.heic,.heif"
+                                          onchange="saveMemory(event)"
+                                          style="display:none;">
+                                        </div>
+                                        <div
+                                          id="memoryGrid"
+                                          class="memorygrid">
+                                        </div>
+                                        <div class="modalbuttons">
+                                          <button
+                                            class="smallbtn"
+                                            onclick="closeModal('memoryModal')">
+                                            Close
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                  <!-- =======================================================
-                                  MOOD
-                                  ======================================================= -->
-                                  <div
-                                    id="moodModal"
-                                    class="modal"
-                                    hidden>
-                                    <div class="modalbox">
-                                      <h2>Choose Mood</h2>
-                                      <div
-                                        style="
-                                        display:grid;
-                                        grid-template-columns:repeat(4,1fr);
-                                        gap:8px;
-                                        ">
-                                        <button class="smallbtn" onclick="setMood('😊')">😊</button>
-                                        <button class="smallbtn" onclick="setMood('😄')">😄</button>
-                                        <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
-                                        <button class="smallbtn" onclick="setMood('😌')">😌</button>
-                                        <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
-                                        <button class="smallbtn" onclick="setMood('😐')">😐</button>
-                                        <button class="smallbtn" onclick="setMood('😔')">😔</button>
-                                        <button class="smallbtn" onclick="setMood('😢')">😢</button>
-                                        <button class="smallbtn" onclick="setMood('😡')">😡</button>
-                                        <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
-                                        <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
-                                        <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
-                                      </div>
-                                      <div class="modalbuttons">
-                                        <button
-                                          class="smallbtn"
-                                          onclick="setMood('')">
-                                          Remove Mood
-                                        </button>
-                                        <button
-                                          class="smallbtn"
-                                          onclick="closeModal('moodModal')">
-                                          Close
-                                        </button>
+                                    <!-- =======================================================
+                                    MOOD
+                                    ======================================================= -->
+                                    <div
+                                      id="moodModal"
+                                      class="modal"
+                                      hidden>
+                                      <div class="modalbox">
+                                        <h2>Choose Mood</h2>
+                                        <div
+                                          style="
+                                          display:grid;
+                                          grid-template-columns:repeat(4,1fr);
+                                          gap:8px;
+                                          ">
+                                          <button class="smallbtn" onclick="setMood('😊')">😊</button>
+                                          <button class="smallbtn" onclick="setMood('😄')">😄</button>
+                                          <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
+                                          <button class="smallbtn" onclick="setMood('😌')">😌</button>
+                                          <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
+                                          <button class="smallbtn" onclick="setMood('😐')">😐</button>
+                                          <button class="smallbtn" onclick="setMood('😔')">😔</button>
+                                          <button class="smallbtn" onclick="setMood('😢')">😢</button>
+                                          <button class="smallbtn" onclick="setMood('😡')">😡</button>
+                                          <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
+                                          <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
+                                          <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
+                                        </div>
+                                        <div class="modalbuttons">
+                                          <button
+                                            class="smallbtn"
+                                            onclick="setMood('')">
+                                            Remove Mood
+                                          </button>
+                                          <button
+                                            class="smallbtn"
+                                            onclick="closeModal('moodModal')">
+                                            Close
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                  <!-- =======================================================
-                                  SETTINGS
-                                  ======================================================= -->
-                                  <div
-                                    id="settingsModal"
-                                    class="modal"
-                                    hidden>
-                                    <div class="modalbox">
-                                      <h2>⚙ Diary Settings</h2>
-                                      <h3>Page Design</h3>
-                                      <div class="designs">
-                                        <div
-                                          class="design design-classic"
-                                          onclick="setDesign('classic')">
-                                          📖 Classic
-                                        </div>
-                                        <div
-                                          class="design design-vintage"
-                                          onclick="setDesign('vintage')">
-                                          🕰 Vintage
-                                        </div>
-                                        <div
-                                          class="design design-blue"
-                                          onclick="setDesign('blue')">
-                                          💙 Blue
-                                        </div>
-                                        <div
-                                          class="design design-green"
-                                          onclick="setDesign('green')">
-                                          🌿 Green
-                                        </div>
-                                        <div
-                                          class="design design-rose"
-                                          onclick="setDesign('rose')">
-                                          🌸 Rose
-                                        </div>
-                                        <div
-                                          class="design design-lavender"
-                                          onclick="setDesign('lavender')">
-                                          💜 Lavender
-                                        </div>
-                                        <div
-                                          class="design design-night"
-                                          onclick="setDesign('night')">
-                                          🌙 Night
-                                        </div>
-                                      </div>
-                                      <hr>
-                                        <div class="field">
-                                          <label>
-                                            Number of lines:
-                                            <span id="lineValue">
-                                            </span>
-                                          </label>
-                                          <input
-                                            id="lineRange"
-                                            type="range"
-                                            min="12"
-                                            max="45"
-                                            value="24"
-                                            oninput="changeLines(this.value)">
+                                    <!-- =======================================================
+                                    SETTINGS
+                                    ======================================================= -->
+                                    <div
+                                      id="settingsModal"
+                                      class="modal"
+                                      hidden>
+                                      <div class="modalbox">
+                                        <h2>⚙ Diary Settings</h2>
+                                        <h3>Page Design</h3>
+                                        <div class="designs">
+                                          <div
+                                            class="design design-classic"
+                                            onclick="setDesign('classic')">
+                                            📖 Classic
                                           </div>
+                                          <div
+                                            class="design design-vintage"
+                                            onclick="setDesign('vintage')">
+                                            🕰 Vintage
+                                          </div>
+                                          <div
+                                            class="design design-blue"
+                                            onclick="setDesign('blue')">
+                                            💙 Blue
+                                          </div>
+                                          <div
+                                            class="design design-green"
+                                            onclick="setDesign('green')">
+                                            🌿 Green
+                                          </div>
+                                          <div
+                                            class="design design-rose"
+                                            onclick="setDesign('rose')">
+                                            🌸 Rose
+                                          </div>
+                                          <div
+                                            class="design design-lavender"
+                                            onclick="setDesign('lavender')">
+                                            💜 Lavender
+                                          </div>
+                                          <div
+                                            class="design design-night"
+                                            onclick="setDesign('night')">
+                                            🌙 Night
+                                          </div>
+                                        </div>
+                                        <hr>
                                           <div class="field">
                                             <label>
-                                              Font size:
-                                              <span id="fontValue">
+                                              Number of lines:
+                                              <span id="lineValue">
                                               </span>
                                             </label>
                                             <input
-                                              id="fontRange"
+                                              id="lineRange"
                                               type="range"
-                                              min="15"
-                                              max="24"
-                                              value="18"
-                                              oninput="changeFont(this.value)">
+                                              min="12"
+                                              max="45"
+                                              value="24"
+                                              oninput="changeLines(this.value)">
                                             </div>
                                             <div class="field">
                                               <label>
-                                                Line spacing:
-                                                <span id="spacingValue">
+                                                Font size:
+                                                <span id="fontValue">
                                                 </span>
                                               </label>
                                               <input
-                                                id="spacingRange"
+                                                id="fontRange"
                                                 type="range"
-                                                min="28"
-                                                max="45"
-                                                value="34"
-                                                oninput="changeSpacing(this.value)">
+                                                min="15"
+                                                max="24"
+                                                value="18"
+                                                oninput="changeFont(this.value)">
                                               </div>
                                               <div class="field">
                                                 <label>
-                                                  Page width:
-                                                  <span id="widthValue">
+                                                  Line spacing:
+                                                  <span id="spacingValue">
                                                   </span>
                                                 </label>
                                                 <input
-                                                  id="widthRange"
+                                                  id="spacingRange"
                                                   type="range"
-                                                  min="900"
-                                                  max="1700"
-                                                  value="1500"
-                                                  oninput="changeWidth(this.value)">
+                                                  min="28"
+                                                  max="45"
+                                                  value="34"
+                                                  oninput="changeSpacing(this.value)">
                                                 </div>
-                                                <div class="modalbuttons">
-                                                  <button
-                                                    class="smallbtn"
-                                                    onclick="closeModal('settingsModal')">
-                                                    Close
-                                                  </button>
+                                                <div class="field">
+                                                  <label>
+                                                    Page width:
+                                                    <span id="widthValue">
+                                                    </span>
+                                                  </label>
+                                                  <input
+                                                    id="widthRange"
+                                                    type="range"
+                                                    min="900"
+                                                    max="1700"
+                                                    value="1500"
+                                                    oninput="changeWidth(this.value)">
+                                                  </div>
+                                                  <div class="modalbuttons">
+                                                    <button
+                                                      class="smallbtn"
+                                                      onclick="closeModal('settingsModal')">
+                                                      Close
+                                                    </button>
+                                                  </div>
                                                 </div>
                                               </div>
-                                            </div>
-                                            <!-- =======================================================
-                                            DATABASE / APPLICATION
-                                            ======================================================= -->
-                                            <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-                                            <script>
+                                              <!-- =======================================================
+                                              DATABASE / APPLICATION
+                                              ======================================================= -->
+                                              <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                                              <script>
 
 /* =========================================================
    DATABASE
@@ -3894,6 +3905,11 @@ async function savePage(){
     "pages",
     currentPageRecord
   );
+  // Mark the page as locally changed before the cloud reconciliation runs.
+  // This is especially important for today's newly-created page.
+  try{
+    diaryTouchLocalMeta("pages",currentPageRecord);
+  }catch(e){}
   diaryScheduleSync();
 
 }
@@ -6114,8 +6130,10 @@ async function saveMemory(event){
 
   }catch(error){
 
+    console.error("Memory save failed",error);
     alert(
-      "Could not save photograph."
+      "Could not save photograph/file.\n"+
+      (error.message||"Please choose an image file and try again.")
     );
 
   }
@@ -7287,5 +7305,5 @@ start().then(() => diaryInitializeAuth()).catch(error => {
 });
 
 </script>
-                                          </body>
-                                        </html>
+                                            </body>
+                                          </html>

@@ -1,5 +1,5 @@
-/* My Personal Diary — cache version intentionally changes when the app is updated. */
-const CACHE_NAME = "my-personal-diary-v2026-10-05-sync5";
+/* My Personal Diary â€” cache version intentionally changes when the app is updated. */
+const CACHE_NAME = "my-personal-diary-v2026-10-10-sync6";
 
 const APP_SHELL = [
   "./",
@@ -31,7 +31,6 @@ self.addEventListener("activate", event => {
 
 self.addEventListener("fetch", event => {
   const request = event.request;
-
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
@@ -49,38 +48,26 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(request, copy);
-            });
+            caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
           }
-
           return response;
         })
         .catch(() => caches.match(request))
     );
-
     return;
   }
 
   /* Cache-first for other application resources. */
   event.respondWith(
-    caches.match(request)
-      .then(cached => {
-        if (cached) return cached;
-
-        return fetch(request)
-          .then(response => {
-            if (response && response.ok && url.origin === self.location.origin) {
-              const copy = response.clone();
-
-              caches.open(CACHE_NAME).then(cache => {
-                cache.put(request, copy);
-              });
-            }
-
-            return response;
-          });
-      })
+    caches.match(request).then(cached => {
+      if (cached) return cached;
+      return fetch(request).then(response => {
+        if (response && response.ok && url.origin === self.location.origin) {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+        }
+        return response;
+      });
+    })
   );
 });

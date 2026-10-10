@@ -6756,7 +6756,7 @@ async function start(){
 
 /* Keep the user's existing Supabase project/key.  The source file had
    accidental whitespace inside these two constants; it is normalized here. */
-const DIARY_SUPABASE_URL = "https://dmkmlftloybapekshzza.supabase.co";
+const DIARY_SUPABASE_URL = "https://dmkmlererert.supabase.co";
 const DIARY_SUPABASE_KEY = "sb_publishable_GxF-SiNTxFCXTUBOIsxBBQ_XgtOW_m7";
 let diarySupabaseClient = null;
 let diaryAuthenticatedUser = null;
@@ -7292,10 +7292,22 @@ async function diaryAuthReset(){
   }catch(error){diaryAuthMessage(error.message||String(error));}
 }
 async function diaryAuthSignOut(){
+  const button=document.getElementById("diaryLogoutButton");
+  if(button){button.disabled=true;button.textContent="Signing out…";}
   try{
-    if(diarySupabaseClient){const {error}=await diarySupabaseClient.auth.signOut();if(error)throw error;}
-    diaryAuthenticatedUser=null;diaryShowAuth(true);diaryStatus("Signed out");
-  }catch(error){diaryStatus("Sign-out failed: "+(error.message||error));}
+    const client=diaryCreateSupabaseClient();
+    const {error}=await client.auth.signOut({scope:"local"});
+    if(error) throw error;
+    diaryAuthenticatedUser=null;
+    diaryShowAuth(true);
+    diaryAuthMessage("You have been signed out.");
+    diaryStatus("Signed out");
+  }catch(error){
+    diaryStatus("Sign-out failed: "+(error&&error.message?error.message:String(error)));
+    diaryAuthMessage("Sign-out failed. Check your connection and try again.");
+  }finally{
+    if(button){button.disabled=false;button.textContent="Log Out";}
+  }
 }
 
 async function diaryInitializeAuth(){

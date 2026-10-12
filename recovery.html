@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diary Recovery Tool</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:760px;margin:24px auto;padding:16px;line-height:1.5;color:#33291f}
+button{padding:12px 16px;margin:8px 4px 8px 0;border:0;border-radius:8px;background:#60452f;color:white;font-size:16px}
+#status{white-space:pre-wrap;background:#f4f0e9;padding:12px;border-radius:8px;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<h2>Personal Diary — Recovery Tool</h2>
+<p>This tool reads diary databases and matching local-storage entries available to this website. It does not edit or delete them.</p>
+<p><strong>Use this on the same website and browser where your old diary entries are visible.</strong></p>
+<button id="scan">Scan available diary storage</button>
+<button id="export" disabled>Download recovery backup</button>
+<div id="status">Ready. No data has been changed.</div>
+<script>
+"use strict";
+let recovery = null;
+const statusBox = document.getElementById("status");
+const scanButton = document.getElementById("scan");
+const exportButton = document.getElementById("export");
+
+function say(message) {
+  statusBox.textContent = message;
+}
+
+function requestResult(request) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("Read failed"));
+  });
+}
+
+function readStore(db, storeName) {
+  return new Promise((resolve, reject) => {
+    try {
+      const tx = db.transaction([storeName], "readonly");
+      const request = tx.objectStore(storeName).getAll();
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => reject(request.error || new Error("Store read failed"));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+async function scan() {
+  scanButton.disabled = true;
+  exportButton.disabled = true;
+  recovery = null;
+  const report = [];
+  const backup = {
+    recoveryToolVersion: 1,
+    createdAt: new Date().toISOString(),
+    note: "Read-only export; inspect before any restore.",
+    databases: [],
+    localStorage: {}
+  };
+
+  try {
+    if (typeof indexedDB.databases !== "function") {
+      say("This Chrome version does not expose the safe database-listing API needed by this tool.\nNo database was opened or changed.\nPlease tell me this message; do not use Restore.");
+      return;
+    }
+
+    const known = await indexedDB.databases();
+    const candidates = known.filter(x => x.name);
+    report.push("Databases found: " + candidates.length);
+
+    for (const item of candidates) {
+      const name = item.name;
+      if (!/diary|personal/i.test(name)) continue;
+
+      let db;
+      try {
+        db = await requestResult(indexedDB.open(name));
+        const record = {name, stores: {}};
+
+        for (const storeName of Array.from(db.objectStoreNames)) {
+          try {
+            const rows = await readStore(db, storeName);
+            record.stores[storeName] = rows;
+            report.push(name + " / " + storeName + ": " + rows.length + " records");
+          } catch (error) {
+            record.stores[storeName] = {readError: String(error)};
+            report.push(name + " / " + storeName + ": READ ERROR");
+          }
+        }
+        backup.databases.push(record);
+      } catch (error) {
+        report.push(name + ": could not read (" + String(error) + ")");
+      } finally {
+        if (db) db.close();
+      }
+    }
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && /diary|journal/i.test(key)) {
+        try {
+          backup.localStorage[key] = localStorage.getItem(key);
+          report.push("Local storage key found: " + key);
+        } catch (error) {
+          report.push("Could not read local storage key: " + key);
+        }
+      }
+    }
+
+    backup.scanSummary = report;
+    recovery = backup;
+    exportButton.disabled = false;
+    say(report.join("\n") + "\n\nScan complete. Download the file and keep it private.");
+  } catch (error) {
+    say("Scan could not finish: " + String(error) + "\nNo records were intentionally modified.");
+  } finally {
+    scanButton.disabled = false;
+  }
+}
+
+function downloadBackup() {
+  if (!recovery) return;
+  const blob = new Blob([JSON.stringify(recovery, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "diary-recovery-readonly.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 3000);
+  say(statusBox.textContent + "\n\nDownload requested: diary-recovery-readonly.json");
+}
+
+scanButton.addEventListener("click", scan);
+exportButton.addEventListener("click", downloadBackup);
+</script>
+</body>
+</html>

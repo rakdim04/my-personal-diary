@@ -2173,6 +2173,9 @@ button{
                                               ======================================================= -->
                                               <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
                                               <script>
+/* LOCAL-ONLY MODE: disable Supabase authentication and cloud sync */
+const DIARY_LOCAL_ONLY = true;
+
 
 /* =========================================================
    DATABASE
@@ -7170,10 +7173,14 @@ async function diaryRenderAfterSync(){
   try{await renderTodos();}catch(e){console.warn("Diary todos refresh failed",e);}
   try{await renderMemories();}catch(e){console.warn("Diary memories refresh failed",e);}
   try{await renderCalendar();}catch(e){console.warn("Diary calendar refresh failed",e);}
-}
-
+}                                          
 async function diarySyncNow(options={}){
+  if(DIARY_LOCAL_ONLY){
+    diaryStatus("Local only — sync disabled");
+    return;
+  }
   if(!diaryAuthenticatedUser){diaryShowAuth(true);return;}
+
   if(!navigator.onLine){diaryStatus("Offline");return;}
   if(diarySyncInProgress) return;
 
@@ -7249,7 +7256,12 @@ async function diaryAfterAuthentication(){
 }
 
 function diaryScheduleSync(){
+  if(DIARY_LOCAL_ONLY){
+    diaryStatus("Local only — sync disabled");
+    return;
+  }
   clearTimeout(diarySyncTimer);
+
   diarySyncTimer=setTimeout(()=>{
     if(diaryAuthenticatedUser&&navigator.onLine) diarySyncNow();
   },1000);
@@ -7310,8 +7322,15 @@ async function diaryAuthSignOut(){
   }
 }
 
+
 async function diaryInitializeAuth(){
+  if(DIARY_LOCAL_ONLY){
+    diaryShowAuth(false);
+    diaryStatus("Local only — sync disabled");
+    return;
+  }
   try{
+
     const client=diaryCreateSupabaseClient();
     const {data,error}=await client.auth.getSession();
     if(error) throw error;
@@ -7365,7 +7384,16 @@ if("serviceWorker" in navigator){
    START
 ========================================================= */
 
-start().then(() => diaryInitializeAuth()).catch(error => {
+
+start().then(() => {
+  if(DIARY_LOCAL_ONLY){
+    diaryShowAuth(false);
+    diaryStatus("Local only — sync disabled");
+  } else {
+    return diaryInitializeAuth();
+  }
+}).catch(error => {
+
   console.error("Diary startup failed", error);
 });
 

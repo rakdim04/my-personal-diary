@@ -2,7 +2,7 @@
   "name": "My Personal Diary",
   "short_name": "My Diary",
   "description": "Personal diary and journal with offline storage and cloud sync.",
-  "start_url": "./",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",

@@ -4003,7 +4003,36 @@ async function newPage(){
 
   }
 
+async function previousPage() {
+  if (currentPage <= 1) {
+    alert("This is the first page for this date.");
+    return;
+  }
 
+  await savePage();
+  currentPage--;
+  await loadPage();
+}
+
+async function nextPage() {
+  await savePage();
+
+  const nextNumber = currentPage + 1;
+  const nextRecord = await get("pages", currentDate + "-" + nextNumber);
+
+  if (nextRecord) {
+    currentPage = nextNumber;
+    await loadPage();
+    return;
+  }
+
+  if (isPastDate(currentDate)) {
+    alert("There is no further saved page for this date.");
+    return;
+  }
+
+  await newPage();
+}
   await savePage();
 
   currentPage++;

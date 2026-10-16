@@ -840,35 +840,29 @@ button{
 
 
 /* =========================================================
-   NEW PAGE
+   PAGE CONTROLS
 ========================================================= */
 
-.newpage{
-
+.pagecontrols{
   position:absolute;
-
   z-index:80;
-
-  right:-1px;
-
+  right:0;
   bottom:17px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 
-  padding:
-    9px 12px;
-
-  border:
-    1px solid #a58b6e;
-
-  border-radius:
-    8px 0 0 8px;
-
+.pagecontrols .newpage,
+.pagecontrols .previouspage{
+  position:static;
+  padding:9px 12px;
+  border:1px solid #a58b6e;
+  border-radius:8px;
   background:#f0dfc6;
-
   color:#533520;
-
-  box-shadow:
-    0 3px 8px rgba(0,0,0,.18);
-
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+  white-space:nowrap;
 }
 
 
@@ -1551,6 +1545,7 @@ button{
   .spine,
   .toolbar,
   .newpage,
+  .pagecontrols,
   .pageactions{
 
     display:none !important;
@@ -1819,15 +1814,19 @@ button{
                               id="drawCanvas">
                             </canvas>
                           </div>
-                          <button
-                            id="newPageButton"
-                            class="newpage"
-                            onclick="newPage()">
-                            + New Page
-                          </button>
-                          <div class="pagenav">
-                            <button type="button" onclick="previousPage()">‹ Previous Page</button>
-                            <button type="button" onclick="nextPage()">Next Page ›</button>
+                          <div class="pagecontrols">
+                            <button
+                              id="newPageButton"
+                              class="newpage"
+                              onclick="newPage()">
+                              + New Page
+                            </button>
+                            <button
+                              type="button"
+                              class="previouspage"
+                              onclick="previousPage()">
+                              ‹ Previous Page
+                            </button>
                           </div>
                         </div>
                       </article>

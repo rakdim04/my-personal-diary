@@ -1825,11 +1825,10 @@ button{
                             onclick="newPage()">
                             + New Page
                           </button>
-<div class="pagenav">
-  <button type="button" onclick="previousPage()">‹ Previous Page</button>
-  <button type="button" onclick="nextPage()">Next Page ›</button>
-</div>
-
+                          <div class="pagenav">
+                            <button type="button" onclick="previousPage()">‹ Previous Page</button>
+                            <button type="button" onclick="nextPage()">Next Page ›</button>
+                          </div>
                         </div>
                       </article>
                     </section>
@@ -3022,7 +3021,7 @@ async function migrateOldDatabase(){
             record
           );
 
-        if(memory){
+        if(memory && !(await diaryMemoryAlreadyExists(memory))){
 
           await put(
             "memories",
@@ -3060,7 +3059,7 @@ async function migrateOldDatabase(){
             record
           );
 
-        if(memory){
+        if(memory && !(await diaryMemoryAlreadyExists(memory))){
 
           await put(
             "memories",
@@ -3404,6 +3403,54 @@ function normalizeMemory(r){
 
 }
 
+
+function diaryMemorySignature(memory){
+  if(!memory) return "";
+  return [
+    String(memory.date||"").trim(),
+    String(memory.name||"").trim(),
+    String(memory.image||"").trim()
+  ].join("\u001f");
+}
+
+let diaryMemoryMigrationSignatures=null;
+
+async function diaryMemoryAlreadyExists(memory){
+  const signature=diaryMemorySignature(memory);
+  if(!signature) return false;
+  if(!diaryMemoryMigrationSignatures){
+    const existing=await getAll("memories");
+    diaryMemoryMigrationSignatures=new Set(
+      existing.map(item=>diaryMemorySignature(item)).filter(Boolean)
+    );
+  }
+  if(diaryMemoryMigrationSignatures.has(signature)) return true;
+  // Reserve the signature so duplicate rows in the same old database are skipped too.
+  diaryMemoryMigrationSignatures.add(signature);
+  return false;
+}
+
+async function diaryDeduplicateMemories(){
+  const records=await getAll("memories");
+  const seen=new Map();
+  let changed=false;
+  records.sort((a,b)=>(Number(a.created)||0)-(Number(b.created)||0));
+  for(const record of records){
+    const signature=diaryMemorySignature(record);
+    if(!signature) continue;
+    const previous=seen.get(signature);
+    if(!previous){
+      seen.set(signature,record);
+      continue;
+    }
+    // Preserve the first saved copy; remove only exact date/name/image matches.
+    if(record.sync_id) diaryAddTombstone("memory",record.sync_id);
+    await deleteRecord("memories",record.id);
+    changed=true;
+  }
+  if(changed) diaryScheduleSync();
+  return changed;
+}
 
 function normalizeSetting(r){
 
@@ -6027,6 +6074,12 @@ async function openMemories(){
     "memoryModal"
   );
 
+  try{
+    await diaryDeduplicateMemories();
+  }catch(error){
+    console.warn("Memory duplicate check could not complete:",error);
+  }
+
   await renderMemories();
 
 }
@@ -7437,6 +7490,6 @@ start().then(() => {
 });
 
 </script>
-<script src="./payment.js"></script>
-</body>
-</html>
+                                              <script src="./payment.js"></script>
+                                            </body>
+                                          </html>

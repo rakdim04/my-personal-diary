@@ -3885,14 +3885,16 @@ async function loadPage(){
     page.content||"";
 
 
-  document.getElementById(
-    "dateText"
-  ).textContent=
-    formatDate(
-      currentDate
-    )+
-    " • Page "+
-    currentPage;
+  const allPages = await getAll("pages");
+  const pagesForDate = allPages.filter(item => item && item.date === currentDate);
+  const highestSavedPage = pagesForDate.reduce((highest, item) => {
+    const number = Number(item.page || String(item.id || "").split("-").pop());
+    return Number.isFinite(number) ? Math.max(highest, number) : highest;
+  }, 1);
+  const totalPages = Math.max(currentPage, highestSavedPage, 1);
+
+  document.getElementById("dateText").textContent =
+    formatDate(currentDate) + " • Page " + currentPage + " of " + totalPages;
 
 
   document.getElementById(
@@ -4042,54 +4044,34 @@ async function newPage() {
     alert("Past diary dates are read-only.");
     return;
   }
-
   await savePage();
   currentPage++;
   await loadPage();
 }
 
 async function previousPage() {
-  if (currentPage <= 1) {
-    alert("This is the first page for this date.");
-    return;
-  }
-
-  await savePage();
-  currentPage--;
-  await loadPage();
-}
-
-async function nextPage() {
   await savePage();
 
-  const nextNumber = currentPage + 1;
-  const nextRecord = await get(
-    "pages",
-    currentDate + "-" + nextNumber
-  );
-
-  if (nextRecord) {
-    currentPage = nextNumber;
+  // First move backward within the current date. If already on page 1,
+  // open the previous calendar date's last saved page.
+  if (currentPage > 1) {
+    currentPage--;
     await loadPage();
     return;
   }
 
-  if (isPastDate(currentDate)) {
-    alert("There is no further saved page for this date.");
-    return;
-  }
+  const previous = dateObj(currentDate);
+  previous.setDate(previous.getDate() - 1);
+  const previousISO = toISO(previous);
+  const allPages = await getAll("pages");
+  const savedPreviousPages = allPages.filter(item => item && item.date === previousISO);
+  const lastPage = savedPreviousPages.reduce((highest, item) => {
+    const number = Number(item.page || String(item.id || "").split("-").pop());
+    return Number.isFinite(number) ? Math.max(highest, number) : highest;
+  }, 1);
 
-  await newPage();
-}
-
-async function previousPage() {
-  if (currentPage <= 1) {
-    alert("This is the first page for this date.");
-    return;
-  }
-
-  await savePage();
-  currentPage--;
+  currentDate = previousISO;
+  currentPage = Math.max(1, lastPage);
   await loadPage();
 }
 

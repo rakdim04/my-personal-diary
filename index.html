@@ -907,6 +907,33 @@ button{
 }
 
 
+
+/* =========================================================
+   HOUSEHOLD REGISTER — polished responsive design
+========================================================= */
+.household-modal{padding:12px;background:rgba(22,30,27,.68);backdrop-filter:blur(5px)}
+.household-box{width:min(1000px,97vw);max-height:94vh;padding:0;overflow:auto;border:1px solid #d9e2d8;border-radius:20px;background:#f7f9f6;color:#26372f;box-shadow:0 28px 80px rgba(0,0,0,.32)}
+.household-hero{position:relative;display:flex;align-items:center;gap:17px;padding:25px 28px;background:linear-gradient(120deg,#163e32,#28634e 65%,#3d7960);color:#fff}
+.household-hero-icon{display:grid;place-items:center;flex:0 0 58px;width:58px;height:58px;border:1px solid rgba(255,255,255,.25);border-radius:17px;background:rgba(255,255,255,.12);font-size:29px}
+.household-hero-copy{min-width:0}.household-eyebrow{font-size:10px;letter-spacing:1.8px;font-weight:800;color:#c9e8d5;margin-bottom:5px}
+.household-hero h2{margin:0 0 5px!important;color:#fff!important;font-size:clamp(22px,3vw,29px);letter-spacing:-.5px}
+.household-hero p{margin:0;color:#e0eee5;font-size:13px;line-height:1.5}
+.household-close{margin-left:auto;align-self:flex-start;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:rgba(255,255,255,.1);color:#fff;padding:8px 11px;cursor:pointer}
+.household-section-heading{display:flex;align-items:center;gap:12px;margin:22px 25px 14px}.household-step{display:grid;place-items:center;flex:0 0 35px;height:35px;border-radius:11px;background:#e1eee5;color:#28634e;font-size:12px;font-weight:800}
+.household-section-heading h3{margin:0;color:#203d30;font-size:17px}.household-section-heading p{margin:3px 0 0;color:#738178;font-size:12px}
+.household-form{margin:0 25px;padding:19px 19px 17px;border:1px solid #e0e7df;border-radius:15px;background:#fff;box-shadow:0 5px 18px rgba(25,54,40,.035)}
+.household-form .formrow{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.household-form .household-grid-item{grid-template-columns:minmax(0,2fr) minmax(90px,.7fr) minmax(100px,.8fr)}
+.household-form .field{min-width:0;margin-bottom:12px}.household-form .field label{margin-bottom:6px;color:#47594f;font-size:12px;font-weight:750}
+.household-form .field input,.household-form .field select{box-sizing:border-box;min-height:42px;padding:10px 11px;border:1px solid #d7e0d7;border-radius:9px;background:#fbfcfa;color:#24372d;font:inherit;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s}
+.household-form .field input:focus,.household-form .field select:focus{border-color:#398061;box-shadow:0 0 0 3px rgba(57,128,97,.12)}
+.household-form-actions{display:flex;align-items:center;gap:10px;margin-top:4px}.household-save{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:42px;padding:10px 17px;border:0;border-radius:10px;background:#236447;color:#fff;font-weight:750;cursor:pointer;box-shadow:0 4px 10px rgba(35,100,71,.16)}.household-save:hover{background:#194d35}.household-save span{font-size:18px;line-height:1}
+.household-clear{min-height:39px;padding:9px 13px;border:1px solid #d7e0d7;border-radius:9px;background:#fff;color:#506056;font-weight:650;cursor:pointer}.household-save-status{margin:13px 0 0!important;padding:11px 13px;border:1px solid #b9dfc4;border-radius:10px;background:#eef9f0;color:#216b3d;font-size:13px;font-weight:700}
+.household-section-divider{height:1px;margin:25px 25px 0;background:#e0e7df}.household-history-heading{margin-top:21px}.household-history-tools{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(180px,.8fr);gap:13px;margin:0 25px}.household-history-tools .field{margin-bottom:12px}.household-history-tools .field label{font-size:12px;color:#47594f;font-weight:750}.household-history-tools .field input,.household-history-tools .field select{box-sizing:border-box;width:100%;min-height:41px;padding:9px 11px;border:1px solid #d7e0d7;border-radius:9px;background:#fff;color:#24372d}
+.household-summary{margin:0 25px 12px;padding:12px 14px;border:1px solid #dce8dd;border-radius:10px;background:#edf5ee;color:#365b44;font-size:12px;font-weight:750}
+.household-history{margin:0 25px 20px;overflow:auto;border:1px solid #e0e7df;border-radius:12px;background:#fff}.household-history table{width:100%;border-collapse:collapse;min-width:760px;font-size:12px}.household-history thead{background:#edf3ed;color:#405a49}.household-history th{padding:12px 10px!important;text-align:left!important;font-size:11px;text-transform:uppercase;letter-spacing:.45px;white-space:nowrap}.household-history td{padding:11px 10px!important;border-top:1px solid #edf0ec;color:#3e4b43;vertical-align:top}.household-history tbody tr:hover{background:#f8fbf7}.household-history td strong{color:#263c2f}.household-history td small{display:inline-block;margin-top:3px;color:#7a877e;line-height:1.5}.household-history td button{padding:5px 9px;border:1px solid #ead3d0;border-radius:7px;background:#fff7f6;color:#a23d35;font-size:11px;cursor:pointer}
+.household-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 25px 19px;border-top:1px solid #e2e8e1;background:#f3f6f2;color:#728076;font-size:11px}.household-footer span{line-height:1.5}
+@media(max-width:650px){.household-box{width:100%;max-height:96vh;border-radius:15px}.household-hero{padding:19px 16px;gap:11px}.household-hero-icon{flex-basis:45px;width:45px;height:45px;border-radius:13px;font-size:23px}.household-eyebrow{font-size:9px;letter-spacing:1px}.household-hero p{max-width:260px;font-size:12px}.household-section-heading{margin:18px 15px 12px}.household-form{margin:0 12px;padding:14px 12px}.household-form .formrow,.household-form .household-grid-item{grid-template-columns:1fr 1fr;gap:9px}.household-form .household-grid-item .field:first-child{grid-column:1/-1}.household-form .field input,.household-form .field select{font-size:13px}.household-history-tools{grid-template-columns:1fr;margin:0 15px;gap:0}.household-summary{margin:0 15px 10px}.household-history{margin:0 15px 16px}.household-section-divider{margin-right:15px;margin-left:15px}.household-footer{align-items:flex-start;flex-direction:column;padding:13px 15px 17px}.household-form-actions{flex-wrap:wrap}.household-save{flex:1}}
+
 /* =========================================================
    MODAL
 ========================================================= */
@@ -2022,12 +2049,26 @@ button{
                                     <!-- =======================================================
                                     HOUSEHOLD PURCHASE REGISTER
                                     ======================================================= -->
-                                    <div id="householdModal" class="modal" hidden>
-                                      <div class="modalbox" style="max-width:900px;">
-                                        <h2>🛒 Household Register</h2>
-                                        <p>Record each purchase separately to preserve price history and compare changes over time.</p>
-                                        <form id="purchaseForm" onsubmit="savePurchase(event)">
-                                          <div class="formrow">
+                                    <div id="householdModal" class="modal household-modal" hidden>
+                                      <div class="modalbox household-box">
+                                        <div class="household-hero">
+                                          <div class="household-hero-icon">🛒</div>
+                                          <div class="household-hero-copy">
+                                            <div class="household-eyebrow">HOME • SPENDING • PRICE TRACKER</div>
+                                            <h2>Household Register</h2>
+                                            <p>Keep every purchase organised and see how prices change over time.</p>
+                                          </div>
+                                          <button type="button" class="household-close" aria-label="Close household register" onclick="closeModal('householdModal')">✕</button>
+                                        </div>
+                                        <div class="household-section-heading">
+                                          <span class="household-step">01</span>
+                                          <div>
+                                            <h3>Add a purchase</h3>
+                                            <p>Save the details from your bill or receipt.</p>
+                                          </div>
+                                        </div>
+                                        <form id="purchaseForm" class="household-form" onsubmit="savePurchase(event)">
+                                          <div class="formrow household-grid-two">
                                             <div class="field">
                                               <label for="purchaseDate">Purchase date</label>
                                               <input id="purchaseDate" type="date" required>
@@ -2043,7 +2084,7 @@ button{
                                                 </select>
                                               </div>
                                             </div>
-                                            <div class="formrow">
+                                            <div class="formrow household-grid-item">
                                               <div class="field">
                                                 <label for="purchaseName">Item name / brand</label>
                                                 <input id="purchaseName" type="text" placeholder="e.g. Cooking oil, Brand / medicine name" required maxlength="120">
@@ -2068,7 +2109,7 @@ button{
                                                     </select>
                                                   </div>
                                                 </div>
-                                                <div class="formrow">
+                                                <div class="formrow household-grid-two">
                                                   <div class="field">
                                                     <label for="purchasePrice">Total paid (₹)</label>
                                                     <input id="purchasePrice" type="number" min="0" step="0.01" required placeholder="e.g. 170">
@@ -2082,13 +2123,23 @@ button{
                                                       <label for="purchaseNotes">Notes (optional)</label>
                                                       <input id="purchaseNotes" type="text" maxlength="300" placeholder="Pack size, strength, discount, etc.">
                                                       </div>
-                                                      <div class="modalbuttons">
-                                                        <button type="submit" class="smallbtn">Save Purchase</button>
-                                                        <button type="button" class="smallbtn" onclick="resetPurchaseForm()">Clear Form</button>
+                                                      <div class="household-form-actions">
+                                                        <button type="submit" class="household-save">
+                                                          <span>＋</span> Save purchase</button>
+                                                          <button type="button" class="household-clear" onclick="resetPurchaseForm()">Clear form</button>
+                                                        </div>
+                                                        <p id="purchaseSaveStatus" class="household-save-status" role="status" aria-live="polite" style="display:none;">✓ Purchase saved successfully.</p>
+                                                      </form>
+                                                      <div class="household-section-divider">
                                                       </div>
-                                                    </form>
-                                                    <hr>
-                                                      <div class="formrow">
+                                                      <div class="household-section-heading household-history-heading">
+                                                        <span class="household-step">02</span>
+                                                        <div>
+                                                          <h3>Purchase history</h3>
+                                                          <p>Search past purchases and compare unit prices.</p>
+                                                        </div>
+                                                      </div>
+                                                      <div class="formrow household-history-tools">
                                                         <div class="field">
                                                           <label for="purchaseSearch">Search item</label>
                                                           <input id="purchaseSearch" type="search" placeholder="Search groceries, medicine..." oninput="renderPurchases()">
@@ -2105,12 +2156,13 @@ button{
                                                             </select>
                                                           </div>
                                                         </div>
-                                                        <div id="purchaseSummary" style="margin:8px 0;font-weight:600;">
+                                                        <div id="purchaseSummary" class="household-summary">
                                                         </div>
-                                                        <div id="purchaseHistory" style="overflow-x:auto;">
+                                                        <div id="purchaseHistory" class="household-history">
                                                         </div>
-                                                        <div class="modalbuttons">
-                                                          <button type="button" class="smallbtn" onclick="closeModal('householdModal')">Close</button>
+                                                        <div class="household-footer">
+                                                          <span>💡 Tip: use the same item name and unit each time for a meaningful price comparison.</span>
+                                                          <button type="button" class="household-clear" onclick="closeModal('householdModal')">Close register</button>
                                                         </div>
                                                       </div>
                                                     </div>
@@ -6539,6 +6591,8 @@ async function savePurchase(event){
   await put("purchases",record);
   resetPurchaseForm();
   await renderPurchases();
+  const status=document.getElementById("purchaseSaveStatus");
+  if(status){status.textContent="✓ Saved successfully: "+name+" — "+purchaseMoney(price)+". It is now listed in Purchase History.";status.style.display="block";}
   if(typeof diaryScheduleSync==="function") diaryScheduleSync();
 }
 

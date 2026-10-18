@@ -4040,39 +4040,78 @@ function applyDatePermissions(){
 ========================================================= */
 
 async function newPage() {
-  if (isPastDate(currentDate)) {
-    alert("Past diary dates are read-only.");
+  // The New Page button also acts as the forward-navigation key. This lets
+  // users move through saved pages of old dates without editing those dates.
+  await savePage();
+  const allPages = await getAll("pages");
+  const pageNumber = item => {
+    const n = Number(item.page || String(item.id || "").split("-").pop());
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  };
+
+  const nextOnSameDate = allPages
+    .filter(item => item && item.date === currentDate && pageNumber(item) > currentPage)
+    .sort((a, b) => pageNumber(a) - pageNumber(b));
+
+  if (nextOnSameDate.length) {
+    currentPage = pageNumber(nextOnSameDate[0]);
+    await loadPage();
     return;
   }
-  await savePage();
+
+  // At the end of this date, move to the earliest later date with saved pages.
+  const laterDates = [...new Set(allPages
+    .filter(item => item && item.date && item.date > currentDate)
+    .map(item => item.date))].sort();
+  if (laterDates.length) {
+    currentDate = laterDates[0];
+    const pagesForDate = allPages.filter(item => item && item.date === currentDate);
+    currentPage = Math.min(...pagesForDate.map(pageNumber));
+    await loadPage();
+    return;
+  }
+
+  // Only create a genuinely new page when the current date is editable.
+  if (isPastDate(currentDate)) {
+    alert("There are no later saved diary pages. Past dates remain read-only.");
+    return;
+  }
   currentPage++;
   await loadPage();
 }
 
 async function previousPage() {
   await savePage();
+  const allPages = await getAll("pages");
+  const pageNumber = item => {
+    const n = Number(item.page || String(item.id || "").split("-").pop());
+    return Number.isFinite(n) && n > 0 ? n : 1;
+  };
 
-  // First move backward within the current date. If already on page 1,
-  // open the previous calendar date's last saved page.
-  if (currentPage > 1) {
-    currentPage--;
+  // First move to the preceding saved page on the same date.
+  const earlierOnSameDate = allPages
+    .filter(item => item && item.date === currentDate && pageNumber(item) < currentPage)
+    .sort((a, b) => pageNumber(b) - pageNumber(a));
+  if (earlierOnSameDate.length) {
+    currentPage = pageNumber(earlierOnSameDate[0]);
     await loadPage();
     return;
   }
 
-  const previous = dateObj(currentDate);
-  previous.setDate(previous.getDate() - 1);
-  const previousISO = toISO(previous);
-  const allPages = await getAll("pages");
-  const savedPreviousPages = allPages.filter(item => item && item.date === previousISO);
-  const lastPage = savedPreviousPages.reduce((highest, item) => {
-    const number = Number(item.page || String(item.id || "").split("-").pop());
-    return Number.isFinite(number) ? Math.max(highest, number) : highest;
-  }, 1);
+  // Otherwise move to the latest earlier date with saved pages, opening its
+  // last page. This skips dates on which no diary page was saved.
+  const earlierDates = [...new Set(allPages
+    .filter(item => item && item.date && item.date < currentDate)
+    .map(item => item.date))].sort().reverse();
+  if (earlierDates.length) {
+    currentDate = earlierDates[0];
+    const pagesForDate = allPages.filter(item => item && item.date === currentDate);
+    currentPage = Math.max(...pagesForDate.map(pageNumber));
+    await loadPage();
+    return;
+  }
 
-  currentDate = previousISO;
-  currentPage = Math.max(1, lastPage);
-  await loadPage();
+  alert("There are no earlier saved diary pages.");
 }
 
 async function previousDate(){

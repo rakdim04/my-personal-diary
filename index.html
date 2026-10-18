@@ -1624,6 +1624,9 @@ button{
                     <button onclick="openMemories()">
                       🖼 Memories
                     </button>
+                    <button onclick="openHouseholdRegister()">
+                      🛒 Household Register
+                    </button>
                     <button onclick="openSettings()">
                       ⚙ Settings
                     </button>
@@ -2017,165 +2020,260 @@ button{
                                       </div>
                                     </div>
                                     <!-- =======================================================
-                                    MOOD
+                                    HOUSEHOLD PURCHASE REGISTER
                                     ======================================================= -->
-                                    <div
-                                      id="moodModal"
-                                      class="modal"
-                                      hidden>
-                                      <div class="modalbox">
-                                        <h2>Choose Mood</h2>
-                                        <div
-                                          style="
-                                          display:grid;
-                                          grid-template-columns:repeat(4,1fr);
-                                          gap:8px;
-                                          ">
-                                          <button class="smallbtn" onclick="setMood('😊')">😊</button>
-                                          <button class="smallbtn" onclick="setMood('😄')">😄</button>
-                                          <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
-                                          <button class="smallbtn" onclick="setMood('😌')">😌</button>
-                                          <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
-                                          <button class="smallbtn" onclick="setMood('😐')">😐</button>
-                                          <button class="smallbtn" onclick="setMood('😔')">😔</button>
-                                          <button class="smallbtn" onclick="setMood('😢')">😢</button>
-                                          <button class="smallbtn" onclick="setMood('😡')">😡</button>
-                                          <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
-                                          <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
-                                          <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
-                                        </div>
-                                        <div class="modalbuttons">
-                                          <button
-                                            class="smallbtn"
-                                            onclick="setMood('')">
-                                            Remove Mood
-                                          </button>
-                                          <button
-                                            class="smallbtn"
-                                            onclick="closeModal('moodModal')">
-                                            Close
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- =======================================================
-                                    SETTINGS
-                                    ======================================================= -->
-                                    <div
-                                      id="settingsModal"
-                                      class="modal"
-                                      hidden>
-                                      <div class="modalbox">
-                                        <h2>⚙ Diary Settings</h2>
-                                        <h3>Page Design</h3>
-                                        <div class="designs">
-                                          <div
-                                            class="design design-classic"
-                                            onclick="setDesign('classic')">
-                                            📖 Classic
-                                          </div>
-                                          <div
-                                            class="design design-vintage"
-                                            onclick="setDesign('vintage')">
-                                            🕰 Vintage
-                                          </div>
-                                          <div
-                                            class="design design-blue"
-                                            onclick="setDesign('blue')">
-                                            💙 Blue
-                                          </div>
-                                          <div
-                                            class="design design-green"
-                                            onclick="setDesign('green')">
-                                            🌿 Green
-                                          </div>
-                                          <div
-                                            class="design design-rose"
-                                            onclick="setDesign('rose')">
-                                            🌸 Rose
-                                          </div>
-                                          <div
-                                            class="design design-lavender"
-                                            onclick="setDesign('lavender')">
-                                            💜 Lavender
-                                          </div>
-                                          <div
-                                            class="design design-night"
-                                            onclick="setDesign('night')">
-                                            🌙 Night
-                                          </div>
-                                        </div>
-                                        <hr>
-                                          <div class="field">
-                                            <label>
-                                              Number of lines:
-                                              <span id="lineValue">
-                                              </span>
-                                            </label>
-                                            <input
-                                              id="lineRange"
-                                              type="range"
-                                              min="12"
-                                              max="45"
-                                              value="24"
-                                              oninput="changeLines(this.value)">
-                                            </div>
+                                    <div id="householdModal" class="modal" hidden>
+                                      <div class="modalbox" style="max-width:900px;">
+                                        <h2>🛒 Household Register</h2>
+                                        <p>Record each purchase separately to preserve price history and compare changes over time.</p>
+                                        <form id="purchaseForm" onsubmit="savePurchase(event)">
+                                          <div class="formrow">
                                             <div class="field">
-                                              <label>
-                                                Font size:
-                                                <span id="fontValue">
-                                                </span>
-                                              </label>
-                                              <input
-                                                id="fontRange"
-                                                type="range"
-                                                min="15"
-                                                max="24"
-                                                value="18"
-                                                oninput="changeFont(this.value)">
+                                              <label for="purchaseDate">Purchase date</label>
+                                              <input id="purchaseDate" type="date" required>
                                               </div>
                                               <div class="field">
-                                                <label>
-                                                  Line spacing:
-                                                  <span id="spacingValue">
-                                                  </span>
-                                                </label>
-                                                <input
-                                                  id="spacingRange"
-                                                  type="range"
-                                                  min="28"
-                                                  max="45"
-                                                  value="34"
-                                                  oninput="changeSpacing(this.value)">
+                                                <label for="purchaseCategory">Category</label>
+                                                <select id="purchaseCategory" required>
+                                                  <option value="Groceries">Groceries</option>
+                                                  <option value="Medicines">Medicines</option>
+                                                  <option value="Household">Household items</option>
+                                                  <option value="Personal care">Personal care</option>
+                                                  <option value="Other">Other</option>
+                                                </select>
+                                              </div>
+                                            </div>
+                                            <div class="formrow">
+                                              <div class="field">
+                                                <label for="purchaseName">Item name / brand</label>
+                                                <input id="purchaseName" type="text" placeholder="e.g. Cooking oil, Brand / medicine name" required maxlength="120">
                                                 </div>
                                                 <div class="field">
-                                                  <label>
-                                                    Page width:
-                                                    <span id="widthValue">
-                                                    </span>
-                                                  </label>
-                                                  <input
-                                                    id="widthRange"
-                                                    type="range"
-                                                    min="900"
-                                                    max="1700"
-                                                    value="1500"
-                                                    oninput="changeWidth(this.value)">
+                                                  <label for="purchaseQuantity">Quantity</label>
+                                                  <input id="purchaseQuantity" type="number" min="0.001" step="any" value="1" required>
                                                   </div>
-                                                  <div class="modalbuttons">
-                                                    <button
-                                                      class="smallbtn"
-                                                      onclick="closeModal('settingsModal')">
-                                                      Close
-                                                    </button>
+                                                  <div class="field">
+                                                    <label for="purchaseUnit">Unit</label>
+                                                    <select id="purchaseUnit">
+                                                      <option>piece</option>
+                                                      <option>kg</option>
+                                                      <option>g</option>
+                                                      <option>L</option>
+                                                      <option>ml</option>
+                                                      <option>pack</option>
+                                                      <option>strip</option>
+                                                      <option>tablet</option>
+                                                      <option>box</option>
+                                                      <option>dozen</option>
+                                                    </select>
                                                   </div>
                                                 </div>
-                                              </div>
-                                              <!-- =======================================================
-                                              DATABASE / APPLICATION
-                                              ======================================================= -->
-                                              <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-                                              <script>
+                                                <div class="formrow">
+                                                  <div class="field">
+                                                    <label for="purchasePrice">Total paid (₹)</label>
+                                                    <input id="purchasePrice" type="number" min="0" step="0.01" required placeholder="e.g. 170">
+                                                    </div>
+                                                    <div class="field">
+                                                      <label for="purchaseShop">Shop / pharmacy (optional)</label>
+                                                      <input id="purchaseShop" type="text" maxlength="120" placeholder="Store name">
+                                                      </div>
+                                                    </div>
+                                                    <div class="field">
+                                                      <label for="purchaseNotes">Notes (optional)</label>
+                                                      <input id="purchaseNotes" type="text" maxlength="300" placeholder="Pack size, strength, discount, etc.">
+                                                      </div>
+                                                      <div class="modalbuttons">
+                                                        <button type="submit" class="smallbtn">Save Purchase</button>
+                                                        <button type="button" class="smallbtn" onclick="resetPurchaseForm()">Clear Form</button>
+                                                      </div>
+                                                    </form>
+                                                    <hr>
+                                                      <div class="formrow">
+                                                        <div class="field">
+                                                          <label for="purchaseSearch">Search item</label>
+                                                          <input id="purchaseSearch" type="search" placeholder="Search groceries, medicine..." oninput="renderPurchases()">
+                                                          </div>
+                                                          <div class="field">
+                                                            <label for="purchaseFilter">Category filter</label>
+                                                            <select id="purchaseFilter" onchange="renderPurchases()">
+                                                              <option value="">All categories</option>
+                                                              <option>Groceries</option>
+                                                              <option>Medicines</option>
+                                                              <option>Household</option>
+                                                              <option>Personal care</option>
+                                                              <option>Other</option>
+                                                            </select>
+                                                          </div>
+                                                        </div>
+                                                        <div id="purchaseSummary" style="margin:8px 0;font-weight:600;">
+                                                        </div>
+                                                        <div id="purchaseHistory" style="overflow-x:auto;">
+                                                        </div>
+                                                        <div class="modalbuttons">
+                                                          <button type="button" class="smallbtn" onclick="closeModal('householdModal')">Close</button>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <!-- =======================================================
+                                                    MOOD
+                                                    ======================================================= -->
+                                                    <div
+                                                      id="moodModal"
+                                                      class="modal"
+                                                      hidden>
+                                                      <div class="modalbox">
+                                                        <h2>Choose Mood</h2>
+                                                        <div
+                                                          style="
+                                                          display:grid;
+                                                          grid-template-columns:repeat(4,1fr);
+                                                          gap:8px;
+                                                          ">
+                                                          <button class="smallbtn" onclick="setMood('😊')">😊</button>
+                                                          <button class="smallbtn" onclick="setMood('😄')">😄</button>
+                                                          <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
+                                                          <button class="smallbtn" onclick="setMood('😌')">😌</button>
+                                                          <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
+                                                          <button class="smallbtn" onclick="setMood('😐')">😐</button>
+                                                          <button class="smallbtn" onclick="setMood('😔')">😔</button>
+                                                          <button class="smallbtn" onclick="setMood('😢')">😢</button>
+                                                          <button class="smallbtn" onclick="setMood('😡')">😡</button>
+                                                          <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
+                                                          <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
+                                                          <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
+                                                        </div>
+                                                        <div class="modalbuttons">
+                                                          <button
+                                                            class="smallbtn"
+                                                            onclick="setMood('')">
+                                                            Remove Mood
+                                                          </button>
+                                                          <button
+                                                            class="smallbtn"
+                                                            onclick="closeModal('moodModal')">
+                                                            Close
+                                                          </button>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <!-- =======================================================
+                                                    SETTINGS
+                                                    ======================================================= -->
+                                                    <div
+                                                      id="settingsModal"
+                                                      class="modal"
+                                                      hidden>
+                                                      <div class="modalbox">
+                                                        <h2>⚙ Diary Settings</h2>
+                                                        <h3>Page Design</h3>
+                                                        <div class="designs">
+                                                          <div
+                                                            class="design design-classic"
+                                                            onclick="setDesign('classic')">
+                                                            📖 Classic
+                                                          </div>
+                                                          <div
+                                                            class="design design-vintage"
+                                                            onclick="setDesign('vintage')">
+                                                            🕰 Vintage
+                                                          </div>
+                                                          <div
+                                                            class="design design-blue"
+                                                            onclick="setDesign('blue')">
+                                                            💙 Blue
+                                                          </div>
+                                                          <div
+                                                            class="design design-green"
+                                                            onclick="setDesign('green')">
+                                                            🌿 Green
+                                                          </div>
+                                                          <div
+                                                            class="design design-rose"
+                                                            onclick="setDesign('rose')">
+                                                            🌸 Rose
+                                                          </div>
+                                                          <div
+                                                            class="design design-lavender"
+                                                            onclick="setDesign('lavender')">
+                                                            💜 Lavender
+                                                          </div>
+                                                          <div
+                                                            class="design design-night"
+                                                            onclick="setDesign('night')">
+                                                            🌙 Night
+                                                          </div>
+                                                        </div>
+                                                        <hr>
+                                                          <div class="field">
+                                                            <label>
+                                                              Number of lines:
+                                                              <span id="lineValue">
+                                                              </span>
+                                                            </label>
+                                                            <input
+                                                              id="lineRange"
+                                                              type="range"
+                                                              min="12"
+                                                              max="45"
+                                                              value="24"
+                                                              oninput="changeLines(this.value)">
+                                                            </div>
+                                                            <div class="field">
+                                                              <label>
+                                                                Font size:
+                                                                <span id="fontValue">
+                                                                </span>
+                                                              </label>
+                                                              <input
+                                                                id="fontRange"
+                                                                type="range"
+                                                                min="15"
+                                                                max="24"
+                                                                value="18"
+                                                                oninput="changeFont(this.value)">
+                                                              </div>
+                                                              <div class="field">
+                                                                <label>
+                                                                  Line spacing:
+                                                                  <span id="spacingValue">
+                                                                  </span>
+                                                                </label>
+                                                                <input
+                                                                  id="spacingRange"
+                                                                  type="range"
+                                                                  min="28"
+                                                                  max="45"
+                                                                  value="34"
+                                                                  oninput="changeSpacing(this.value)">
+                                                                </div>
+                                                                <div class="field">
+                                                                  <label>
+                                                                    Page width:
+                                                                    <span id="widthValue">
+                                                                    </span>
+                                                                  </label>
+                                                                  <input
+                                                                    id="widthRange"
+                                                                    type="range"
+                                                                    min="900"
+                                                                    max="1700"
+                                                                    value="1500"
+                                                                    oninput="changeWidth(this.value)">
+                                                                  </div>
+                                                                  <div class="modalbuttons">
+                                                                    <button
+                                                                      class="smallbtn"
+                                                                      onclick="closeModal('settingsModal')">
+                                                                      Close
+                                                                    </button>
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              <!-- =======================================================
+                                                              DATABASE / APPLICATION
+                                                              ======================================================= -->
+                                                              <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+                                                              <script>
 /* LOCAL-ONLY MODE: disable Supabase authentication and cloud sync */
 const DIARY_LOCAL_ONLY = true;
 
@@ -2201,7 +2299,7 @@ const DB_NAME =
   "myPersonalDiaryDB_v102";
 
 const DB_VERSION =
-  1;
+  2;
 
 const OLD_DB_NAME =
   "myPersonalDiaryDB";
@@ -2517,6 +2615,19 @@ function openNewDB(){
               "date"
             );
 
+          }
+
+
+          if(
+            !database.objectStoreNames
+              .contains("purchases")
+          ){
+            const s=database.createObjectStore(
+              "purchases",
+              {keyPath:"id",autoIncrement:true}
+            );
+            s.createIndex("date","date");
+            s.createIndex("name","name");
           }
 
 
@@ -6387,6 +6498,103 @@ async function deleteMemory(id){
 
 
 /* =========================================================
+   HOUSEHOLD PURCHASE REGISTER
+========================================================= */
+
+async function openHouseholdRegister(){
+  openModal("householdModal");
+  const date=document.getElementById("purchaseDate");
+  if(date&&!date.value) date.value=todayISO();
+  await renderPurchases();
+}
+
+function resetPurchaseForm(){
+  const form=document.getElementById("purchaseForm");
+  if(form) form.reset();
+  const date=document.getElementById("purchaseDate");
+  if(date) date.value=todayISO();
+  const quantity=document.getElementById("purchaseQuantity");
+  if(quantity) quantity.value="1";
+  document.getElementById("purchaseName").focus();
+}
+
+async function savePurchase(event){
+  event.preventDefault();
+  const name=document.getElementById("purchaseName").value.trim();
+  const quantity=Number(document.getElementById("purchaseQuantity").value);
+  const price=Number(document.getElementById("purchasePrice").value);
+  if(!name||!(quantity>0)||!(price>=0)){alert("Please enter an item name, valid quantity and total price.");return;}
+  const record={
+    date:document.getElementById("purchaseDate").value||todayISO(),
+    category:document.getElementById("purchaseCategory").value,
+    name,
+    quantity,
+    unit:document.getElementById("purchaseUnit").value,
+    price,
+    shop:document.getElementById("purchaseShop").value.trim(),
+    notes:document.getElementById("purchaseNotes").value.trim(),
+    created:Date.now(),
+    sync_id:diaryNewSyncId()
+  };
+  await put("purchases",record);
+  resetPurchaseForm();
+  await renderPurchases();
+  if(typeof diaryScheduleSync==="function") diaryScheduleSync();
+}
+
+function purchaseUnitPrice(record){
+  const q=Number(record.quantity)||1;
+  return Number(record.price||0)/q;
+}
+function purchaseMoney(value){
+  return "₹"+Number(value||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function purchasePercent(current,previous){
+  if(!(previous>0)) return "—";
+  const change=((current-previous)/previous)*100;
+  const sign=change>0?"+":"";
+  const color=change>0?"#b42318":change<0?"#187443":"#665b50";
+  return '<span style="color:'+color+';font-weight:600">'+sign+change.toFixed(2)+'%</span>';
+}
+
+async function renderPurchases(){
+  const host=document.getElementById("purchaseHistory");
+  if(!host) return;
+  const query=(document.getElementById("purchaseSearch")?.value||"").trim().toLowerCase();
+  const category=document.getElementById("purchaseFilter")?.value||"";
+  let records=await getAll("purchases");
+  records.sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))||(b.created||0)-(a.created||0));
+  const all=records;
+  records=records.filter(r=>(!category||r.category===category)&&(!query||[r.name,r.category,r.shop,r.notes].join(" ").toLowerCase().includes(query)));
+  const sum=records.reduce((n,r)=>n+Number(r.price||0),0);
+  const summary=document.getElementById("purchaseSummary");
+  if(summary) summary.textContent=records.length+" purchase record(s) shown · Total paid: "+purchaseMoney(sum)+" · All-time records: "+all.length;
+  if(!records.length){host.innerHTML='<p>No matching purchases yet. Add a record above to start your price history.</p>';return;}
+  const groups=new Map();
+  for(const r of all){const k=String(r.name||"").trim().toLowerCase()+"|"+String(r.unit||"").toLowerCase();if(!groups.has(k))groups.set(k,[]);groups.get(k).push(r);}
+  for(const list of groups.values()) list.sort((a,b)=>String(a.date||"").localeCompare(String(b.date||""))||(a.created||0)-(b.created||0));
+  let html='<table style="width:100%;border-collapse:collapse;min-width:760px"><thead><tr><th style="text-align:left;padding:8px">Date</th><th style="text-align:left;padding:8px">Item / category</th><th style="text-align:right;padding:8px">Qty</th><th style="text-align:right;padding:8px">Total paid</th><th style="text-align:right;padding:8px">Unit price</th><th style="text-align:right;padding:8px">Change vs previous</th><th style="padding:8px">Action</th></tr></thead><tbody>';
+  for(const r of records){
+    const key=String(r.name||"").trim().toLowerCase()+"|"+String(r.unit||"").toLowerCase();
+    const list=groups.get(key)||[];const idx=list.findIndex(x=>x.id===r.id);const prev=idx>0?list[idx-1]:null;
+    const change=prev?purchasePercent(purchaseUnitPrice(r),purchaseUnitPrice(prev)):"First record";
+    html+='<tr style="border-top:1px solid #d8cbb8"><td style="padding:8px;white-space:nowrap">'+escapePurchaseHtml(r.date||"")+'</td><td style="padding:8px"><strong>'+escapePurchaseHtml(r.name||"")+'</strong><br><small>'+escapePurchaseHtml(r.category||"Other")+(r.shop?' · '+escapePurchaseHtml(r.shop):'')+(r.notes?'<br>'+escapePurchaseHtml(r.notes):'')+'</small></td><td style="padding:8px;text-align:right">'+Number(r.quantity||1)+' '+escapePurchaseHtml(r.unit||"piece")+'</td><td style="padding:8px;text-align:right;white-space:nowrap">'+purchaseMoney(r.price)+'</td><td style="padding:8px;text-align:right;white-space:nowrap">'+purchaseMoney(purchaseUnitPrice(r))+'/'+escapePurchaseHtml(r.unit||"piece")+'</td><td style="padding:8px;text-align:right;white-space:nowrap">'+(prev?change:'First record')+'</td><td style="padding:8px;text-align:center"><button class="smallbtn" type="button" onclick="deletePurchase('+Number(r.id)+')">Delete</button></td></tr>';
+  }
+  html+='</tbody></table>';
+  host.innerHTML=html;
+}
+function escapePurchaseHtml(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;", "'":"&#39;"}[ch]));}
+async function deletePurchase(id){
+  if(!confirm("Delete this purchase record? Its historical entry will be removed.")) return;
+  const item=await get("purchases",Number(id));
+  if(item&&item.sync_id&&typeof diaryAddTombstone==="function") diaryAddTombstone("purchase",item.sync_id);
+  await deleteRecord("purchases",Number(id));
+  await renderPurchases();
+  if(typeof diaryScheduleSync==="function") diaryScheduleSync();
+}
+
+
+/* =========================================================
    BACKUP
 ========================================================= */
 
@@ -6413,6 +6621,9 @@ async function backupDiary(){
 
     memories:
       await getAll("memories"),
+
+    purchases:
+      await getAll("purchases"),
 
     settings:
       await getAll("settings")
@@ -6500,7 +6711,8 @@ async function restoreDiary(event){
       !data.pages &&
       !data.events &&
       !data.todos &&
-      !data.memories
+      !data.memories &&
+      !data.purchases
     ){
 
       throw new Error(
@@ -6590,6 +6802,23 @@ async function restoreDiary(event){
           normalized
         );
 
+    }
+
+
+    for(const purchase of data.purchases||[]){
+      const normalized={
+        date:purchase.date||todayISO(),
+        category:purchase.category||"Other",
+        name:String(purchase.name||"").trim(),
+        quantity:Number(purchase.quantity)||1,
+        unit:purchase.unit||"piece",
+        price:Number(purchase.price)||0,
+        shop:purchase.shop||"",
+        notes:purchase.notes||"",
+        created:purchase.created||Date.now(),
+        sync_id:purchase.sync_id||diaryNewSyncId()
+      };
+      if(normalized.name) await put("purchases",normalized);
     }
 
 
@@ -6924,7 +7153,7 @@ function diaryRemoveTombstone(type,sync_id){
   const a=diaryTombstones().filter(x=>!(x.type===type&&x.sync_id===sync_id));
   localStorage.setItem("diarySyncTombstones_v2",JSON.stringify(a));
 }
-function diaryTypeStore(type){return {page:"pages",event:"events",todo:"todos",memory:"memories",setting:"settings"}[type];}
+function diaryTypeStore(type){return {page:"pages",event:"events",todo:"todos",memory:"memories",purchase:"purchases",setting:"settings"}[type];}
 function diaryRecordSyncId(type,r){
   if(type==="page") return String(r.id);
   if(type==="setting") return String(r.key);
@@ -6950,7 +7179,7 @@ function diaryMetaSet(type,syncId,iso){
   diaryMetaSave(meta);
 }
 function diaryTouchLocalMeta(store,value){
-  const map={pages:"page",events:"event",todos:"todo",memories:"memory",settings:"setting"};
+  const map={pages:"page",events:"event",todos:"todo",memories:"memory",purchases:"purchase",settings:"setting"};
   const type=map[store];
   if(!type||!value) return;
   const syncId=diaryRecordSyncId(type,value);
@@ -6965,7 +7194,7 @@ function diarySyncStateSave(state){
 function diaryClearSyncState(){localStorage.removeItem(DIARY_SYNC_STATE_KEY);}
 
 async function diaryEnsureSyncIds(){
-  for(const [store,type] of [["events","event"],["todos","todo"],["memories","memory"]]){
+  for(const [store,type] of [["events","event"],["todos","todo"],["memories","memory"],["purchases","purchase"]]){
     const records=await getAll(store);
     for(const r of records){
       if(!r.sync_id){
@@ -7054,18 +7283,19 @@ function diaryCloudRowSyncId(row){
 
 function diaryLocalMaps(){
   return Promise.all([
-    getAll("pages"),getAll("events"),getAll("todos"),getAll("memories"),getAll("settings")
-  ]).then(([pages,events,todos,memories,settings])=>({
+    getAll("pages"),getAll("events"),getAll("todos"),getAll("memories"),getAll("purchases"),getAll("settings")
+  ]).then(([pages,events,todos,memories,purchases,settings])=>({
     page:new Map(pages.map(r=>[diaryRecordSyncId("page",r),r])),
     event:new Map(events.map(r=>[diaryRecordSyncId("event",r),r])),
     todo:new Map(todos.map(r=>[diaryRecordSyncId("todo",r),r])),
     memory:new Map(memories.map(r=>[diaryRecordSyncId("memory",r),r])),
+    purchase:new Map(purchases.map(r=>[diaryRecordSyncId("purchase",r),r])),
     setting:new Map(settings.map(r=>[diaryRecordSyncId("setting",r),r]))
   }));
 }
 
 async function diaryApplyCloudRows(rows,localMaps){
-  const mapping={page:"pages",event:"events",todo:"todos",memory:"memories",setting:"settings"};
+  const mapping={page:"pages",event:"events",todo:"todos",memory:"memories",purchase:"purchases",setting:"settings"};
   const typeMaps=localMaps;
   const touched=new Set();
 
@@ -7214,7 +7444,7 @@ async function diaryTombstoneCloudDuplicates(rows){
 async function diaryBuildUploadRows(localMaps,cloudRows){
   const cloudById=new Map((cloudRows||[]).map(r=>[String(r.id),r]));
   const uploads=[];
-  const groups=[["pages","page"],["events","event"],["todos","todo"],["memories","memory"],["settings","setting"]];
+  const groups=[["pages","page"],["events","event"],["todos","todo"],["memories","memory"],["purchases","purchase"],["settings","setting"]];
 
   for(const [store,type] of groups){
     for(const record of localMaps[type].values()){
@@ -7512,6 +7742,6 @@ start().then(() => {
 });
 
 </script>
-                                              <script src="./payment.js"></script>
-                                            </body>
-                                          </html>
+                                                              <script src="./payment.js"></script>
+                                                            </body>
+                                                          </html>

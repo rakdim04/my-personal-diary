@@ -3997,10 +3997,12 @@ function applyDatePermissions(){
     : "true";
 
 
+  // Keep New Page enabled on past dates because it is also the forward
+  // navigation control for reading already-saved pages. The newPage()
+  // function separately prevents creating a new page for a past date.
   document.getElementById(
     "newPageButton"
-  ).disabled=
-    past;
+  ).disabled = false;
 
 
   document.getElementById(

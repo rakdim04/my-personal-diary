@@ -84,7 +84,52 @@ function initUI(){let st=document.createElement("style");st.textContent=`
 #pModal .pnote{margin:14px 2px 0;padding:11px 13px;border-left:3px solid #91bba0;border-radius:0 8px 8px 0;background:#eef5ef;color:#5e7163;font-size:11px;line-height:1.6}
 @media(max-width:760px){#pModal{padding:6px}#pModal .phead{padding:18px 16px;gap:10px}#pModal .pbody{padding:14px}#pModal .pstats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#pModal .pstat{padding:13px 12px}#pModal .pform{padding:15px}#pModal .pfields{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}}
 @media(max-width:430px){#pModal .phead{align-items:flex-start;padding:16px 13px}#pModal .phead h2{font-size:21px}#pModal .pintro{font-size:12px}#pModal .phead button{padding:7px 8px;font-size:12px}#pModal .pbody{padding:10px}#pModal .pstats{gap:7px}#pModal .pstat strong{font-size:18px}#pModal .pfields{grid-template-columns:1fr}#pModal .wide{grid-column:auto}#pModal .ptools{padding:9px}#pModal .ptools select,#pModal .ptools input{width:100%;max-width:none;flex:1 1 100%}#pModal .pbtns>*{flex:1}#pModal .pacts{white-space:normal}}
-`;document.head.appendChild(st);
+`;
+/* Premium visual refinement */
+st.textContent += `
+#pModal{background:radial-gradient(ellipse at top left,rgba(71,135,94,.26),transparent 45%),rgba(9,25,18,.78);backdrop-filter:blur(9px);padding:clamp(6px,2vw,20px)}
+#pModal .pshell{max-width:1180px;border:1px solid rgba(255,255,255,.65);border-radius:24px;background:#f4f8f4;box-shadow:0 32px 100px rgba(0,0,0,.38)}
+#pModal .phead{position:relative;isolation:isolate;overflow:hidden;padding:clamp(20px,3vw,32px);background:linear-gradient(115deg,#102f25 0%,#1c5039 48%,#438363 100%)}
+#pModal .phead:after{content:"₹";position:absolute;z-index:-1;right:8%;top:-42px;font-size:190px;line-height:1;font-weight:900;color:rgba(255,255,255,.055);transform:rotate(-12deg);pointer-events:none}
+#pModal .phead h2{font-size:clamp(24px,3.4vw,34px);font-weight:850;letter-spacing:-.9px}
+#pModal .phead h2:before{content:"▣";display:inline-grid;place-items:center;width:42px;height:42px;margin-right:11px;border:1px solid rgba(255,255,255,.24);border-radius:13px;background:rgba(255,255,255,.12);font-size:22px;vertical-align:middle}
+#pModal .phead .peyebrow{letter-spacing:2.2px}
+#pModal .phead button{border-radius:12px;padding:10px 14px;font-weight:750;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+#pModal .pbody{padding:clamp(12px,2.2vw,28px)}
+#pModal .pstats{gap:14px;margin-bottom:22px}
+#pModal .pstat{padding:18px 17px 17px;border-radius:17px;box-shadow:0 5px 16px rgba(24,65,42,.045);transition:transform .18s,box-shadow .18s}
+#pModal .pstat:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(24,65,42,.09)}
+#pModal .pstat:before{width:5px}
+#pModal .pstat:after{content:"";position:absolute;width:70px;height:70px;right:-25px;bottom:-35px;border-radius:50%;background:rgba(65,139,92,.055)}
+#pModal .pstat strong{font-size:clamp(19px,2.4vw,27px);letter-spacing:-.7px}
+#pModal .pform{padding:clamp(14px,2vw,23px);border-radius:18px;box-shadow:0 6px 20px rgba(27,67,45,.045)}
+#pModal .pform h3{font-size:19px;margin-bottom:18px}
+#pModal .pform h3:before{width:34px;height:34px;border-radius:11px;box-shadow:inset 0 0 0 1px rgba(40,102,72,.08)}
+#pModal label{font-size:12px;letter-spacing:.1px}
+#pModal input,#pModal select,#pModal textarea{border-radius:11px;background:#fbfdfb;padding:11px 12px}
+#pModal input:focus,#pModal select:focus,#pModal textarea:focus{border-color:#39835a;box-shadow:0 0 0 4px rgba(57,131,90,.12)}
+#pModal .pbtns{gap:9px;margin-top:16px}
+#pModal .pbtns button,#pModal .ptools button{padding:10px 14px;border-radius:11px;font-weight:750}
+#pModal .primary{background:linear-gradient(135deg,#246442,#39835a);border-color:#246442;color:#fff;box-shadow:0 5px 13px rgba(36,100,66,.18)}
+#pModal .primary:hover{background:linear-gradient(135deg,#1c5335,#2d744c);border-color:#1c5335;color:#fff}
+#pModal .ptools{gap:9px;margin:0 0 13px;padding:12px;border:1px solid #e0e9e1;border-radius:14px;background:#fff}
+#pModal .ptools input{flex:1;min-width:145px;max-width:none;padding:10px 12px}
+#pModal .ptools select{width:auto;min-width:145px;margin:0}
+#pModal .ptable{border:1px solid #dce7dd;border-radius:15px;background:#fff;box-shadow:0 5px 18px rgba(27,67,45,.035)}
+#pModal table{min-width:700px;background:#fff;font-size:13px}
+#pModal th{position:sticky;top:0;z-index:1;padding:13px 14px;background:#eaf3ec;color:#345b42;font-size:11px;letter-spacing:.7px;text-transform:uppercase;border-bottom:1px solid #d8e6da}
+#pModal td{padding:13px 14px;border-bottom:1px solid #edf2ed}
+#pModal tbody tr:hover{background:#f7fbf7}
+#pModal td b{color:#263f30}
+#pModal .pst{padding:5px 9px;border:1px solid rgba(40,80,50,.06);font-weight:750}
+#pModal .pacts button{border-radius:8px;padding:6px 8px}
+#pModal .pacts button[data-a="paid"]{background:#e7f5ea;border-color:#c7e5ce;color:#21613a}
+#pModal .pacts button[data-a="del"]{color:#a33d36}
+#pModal .pnote{margin:15px 2px 0;padding:12px 14px;border:1px solid #e1e9e2;border-radius:12px;background:#eef5ef;color:#617365}
+@media(max-width:650px){#pModal .phead{align-items:flex-start;gap:10px}#pModal .phead h2:before{width:34px;height:34px;margin-right:7px;border-radius:10px;font-size:18px}#pModal .pstats{gap:9px}#pModal .pstat{padding:13px 12px}#pModal .ptools{padding:9px}#pModal .ptools select{flex:1;min-width:120px}#pModal .ptools button{flex:1}}
+@media(prefers-reduced-motion:reduce){#pModal *{transition:none!important}}
+`;
+document.head.appendChild(st);
 
 let m=document.createElement("div");m.id="pModal";m.hidden=true;m.innerHTML=`<section class="pshell" role="dialog" aria-modal="true"><header class="phead"><div class="phead-copy"><div class="peyebrow">BILLS • DUE DATES • PAYMENT TRACKER</div><h2>Payments Register</h2><p class="pintro">Keep bills organised, track what is due, and record payments in one place.</p></div><button id="pClose" type="button">✕ Close</button></header><div class="pbody"><div class="pstats"><div class="pstat"><small>✓ PAID THIS MONTH</small><strong id="pPaidTotal">₹0.00</strong><small>Total recorded as paid</small></div><div class="pstat"><small>◷ UPCOMING PAYMENTS</small><strong id="pUpCount">0</strong><small id="pUpTotal">₹0.00</small></div><div class="pstat"><small>! OVERDUE PAYMENTS</small><strong id="pOverCount">0</strong><small id="pOverTotal">₹0.00</small></div><div class="pstat"><small>▣ STORAGE</small><strong>On this device</strong><small>Export a backup regularly</small></div></div><form id="pForm" class="pform"><h3 id="pFormTitle">Add a payment</h3><div class="pfields"><label>Payment / bill name *<input id="pName" required maxlength="120" placeholder="e.g. HDFC credit card"></label><label>Category<select id="pCat">${cats.map(x=>`<option>${esc(x)}</option>`).join("")}</select></label><label>Amount (₹) *<input id="pAmount" type="number" min="0" step=".01" required></label><label>Due date *<input id="pDue" type="date" required></label><label>Status<select id="pStatus"><option value="scheduled">Scheduled / unpaid</option><option value="paid">Paid</option></select></label><label>Paid date<input id="pPaid" type="date"></label><label>Repeat<select id="pRepeat"><option value="none">No repeat</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="quarterly">Quarterly</option><option value="half-yearly">Half-yearly</option><option value="yearly">Yearly</option></select></label><label>Repeat until (optional)<input id="pEnd" type="date"></label><label>Receipt / transaction reference<input id="pRef" maxlength="160"></label><label class="wide">Notes<textarea id="pNotes" maxlength="1500" placeholder="Bill period or helpful details; never enter passwords, PINs or full card details."></textarea></label></div><div class="pbtns"><button class="primary" type="submit">Save payment</button><button id="pCancel" type="button" hidden>Cancel edit</button><button id="pReset" type="button">Clear form</button></div></form><div class="ptools"><select id="pFilter" aria-label="Filter"><option value="all">All records</option><option value="upcoming">Upcoming / due</option><option value="overdue">Overdue</option><option value="paid">Paid</option></select><input id="pSearch" type="search" placeholder="Search payments"><button id="pExport" type="button">Export backup</button><button id="pImport" type="button">Import backup</button><input id="pFile" type="file" accept=".json,application/json" hidden></div><div class="ptable"><table><thead><tr><th>Payment</th><th>Amount</th><th>Due / paid date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pRows"></tbody></table></div><p class="pnote">Payments are stored locally in this browser, separately from diary entries. They are not sent to a server. Export a backup regularly, especially before changing devices or clearing browser data. This tool records and schedules bills; it does not pay them automatically. Browser reminders are not guaranteed when Chrome is closed.</p></div></section>`;document.body.appendChild(m);
 $("pClose").onclick=()=>$("pModal").hidden=true;m.onclick=e=>{if(e.target===m)m.hidden=true};$("pForm").onsubmit=e=>save(e).catch(x=>alert("Save failed: "+x.message));$("pCancel").onclick=reset;$("pReset").onclick=reset;$("pFilter").onchange=e=>{filter=e.target.value;render()};$("pSearch").oninput=e=>{search=e.target.value;render()};$("pExport").onclick=exportBackup;$("pImport").onclick=()=>$("pFile").click();$("pFile").onchange=e=>importBackup(e.target.files[0]);$("pRows").onclick=async e=>{let b=e.target.closest("button[data-a]");if(!b)return;let r=(await all()).find(x=>x.id===b.dataset.id);if(!r)return;if(b.dataset.a==="edit"){editing=r.id;$("pName").value=r.name;$("pCat").value=r.category;$("pAmount").value=r.amount;$("pDue").value=r.due;$("pStatus").value=r.status;$("pPaid").value=r.paidDate||"";$("pRepeat").value=r.repeat||"none";$("pEnd").value=r.end||"";$("pRef").value=r.reference||"";$("pNotes").value=r.notes||"";$("pFormTitle").textContent="Edit payment";$("pCancel").hidden=false;$("pName").focus()}else if(b.dataset.a==="del"){if(confirm(`Delete "${r.name}" from this device?`)){await del(r.id);await render()}}else if(b.dataset.a==="paid"&&confirm(`Mark "${r.name}" as paid?`))await markPaid(r)};reset()}

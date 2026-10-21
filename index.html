@@ -2,12 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-      <meta name="viewport"
-        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-        <meta name="theme-color" content="#563925">
-          <link rel="manifest" href="manifest.json">
-            <title>My Personal Diary v10.2</title>
-            <style>
+    <meta name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="theme-color" content="#563925">
+    <link rel="manifest" href="manifest.json">
+    <title>My Personal Diary v10.2</title>
+    <style>
 
 /* =========================================================
    V10.2 — GLOBAL
@@ -1609,723 +1609,819 @@ button{
 
 }
 
+
+/* =========================================================
+   MODULE SHELF — folder-style home screen
+========================================================= */
+.module-dashboard{max-width:1120px;margin:18px auto 40px;padding:18px 14px 30px;color:#3f2c1e}
+.module-welcome{background:linear-gradient(135deg,#fffaf0,#f1e1c8);border:1px solid #d9c19c;border-radius:22px;padding:22px;margin-bottom:20px;box-shadow:0 8px 24px rgba(68,43,22,.08)}
+.module-welcome h1{margin:0 0 7px;font-size:clamp(23px,4vw,32px);color:#563925}
+.module-welcome p{margin:0;color:#80664d;font-size:14px;line-height:1.5}
+.module-grid{display:grid;grid-template-columns:repeat( auto-fit,minmax(145px,1fr));gap:14px}
+.module-folder{appearance:none;border:1px solid #dfcfb6;background:#fffdf8;border-radius:17px;min-height:142px;padding:15px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;color:#483321;box-shadow:0 5px 14px rgba(61,42,24,.07);cursor:pointer;transition:transform .16s,box-shadow .16s,border-color .16s}
+.module-folder:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(61,42,24,.12);border-color:#b99569}
+.module-folder:active{transform:scale(.98)}
+.module-folder .folder-icon{font-size:37px;line-height:1.15;filter:drop-shadow(0 2px 1px #0000000d)}
+.module-folder strong{font-size:15px;line-height:1.25}
+.module-folder small{font-size:11px;color:#92785d;line-height:1.3}
+.module-folder.featured{background:linear-gradient(145deg,#fff8e9,#f3e1bf);border-color:#cda56e}
+.module-folder.utility{background:#f7faf6;border-color:#d3dfcf}
+.module-dashboard[hidden],#diaryWritingWorkspace[hidden]{display:none!important}
+#diaryWritingWorkspace{padding-top:8px}
+.module-backbar{max-width:1120px;margin:12px auto 0;padding:0 10px;display:flex;justify-content:flex-start}
+.module-backbar button{border:1px solid #cbb391;border-radius:10px;background:#fff8ec;color:#563925;padding:9px 13px;font-weight:700}
+@media(max-width:480px){.module-dashboard{padding:12px 10px 25px;margin-top:8px}.module-welcome{padding:18px;border-radius:17px}.module-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.module-folder{min-height:128px;padding:12px 8px}.module-folder .folder-icon{font-size:33px}}
 </style>
-          </head>
-          <body>
-            <!-- SUPABASE LOGIN OVERLAY -->
-            <div id="diaryAuthOverlay" style="position:fixed;inset:0;z-index:50000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(36,24,15,.94);font-family:Arial,sans-serif;">
-              <section style="width:min(420px,100%);background:#fffaf0;border:1px solid #c8ad83;border-radius:14px;padding:22px;box-shadow:0 12px 40px #0005;color:#35281e;">
-                <h2 style="text-align:center;margin:0 0 8px;">📖 My Personal Diary</h2>
-                <p style="text-align:center;margin:0 0 18px;">Sign in to access and sync your diary.</p>
-                <label for="diaryAuthEmail">Email address</label>
-                <input id="diaryAuthEmail" type="email" autocomplete="email" style="display:block;width:100%;box-sizing:border-box;padding:11px;margin:6px 0 13px;border:1px solid #b8a994;border-radius:7px;">
-                  <label for="diaryAuthPassword">Password</label>
-                  <input id="diaryAuthPassword" type="password" autocomplete="current-password" style="display:block;width:100%;box-sizing:border-box;padding:11px;margin:6px 0 13px;border:1px solid #b8a994;border-radius:7px;">
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                      <button type="button" onclick="diaryAuthSignIn()" style="flex:1;padding:11px;background:#593a27;color:white;border:0;border-radius:7px;">Sign In</button>
-                      <button type="button" onclick="diaryAuthSignUp()" style="flex:1;padding:11px;background:#eee0cc;border:1px solid #b8a994;border-radius:7px;">Create Account</button>
-                    </div>
-                    <button type="button" onclick="diaryAuthReset()" style="width:100%;padding:9px;margin-top:8px;background:transparent;border:0;text-decoration:underline;color:#593a27;">Forgot password?</button>
-                    <p id="diaryAuthMessage" aria-live="polite" style="font-size:13px;overflow-wrap:anywhere;">
-                    </p>
-                    <p style="font-size:12px;color:#76563e;margin-bottom:0;">Your diary remains stored locally on this device. Cloud sync requires an internet connection.</p>
-                  </section>
+  </head>
+  <body>
+    <!-- SUPABASE LOGIN OVERLAY -->
+    <div id="diaryAuthOverlay" style="position:fixed;inset:0;z-index:50000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(36,24,15,.94);font-family:Arial,sans-serif;">
+      <section style="width:min(420px,100%);background:#fffaf0;border:1px solid #c8ad83;border-radius:14px;padding:22px;box-shadow:0 12px 40px #0005;color:#35281e;">
+        <h2 style="text-align:center;margin:0 0 8px;">📖 My Personal Diary</h2>
+        <p style="text-align:center;margin:0 0 18px;">Sign in to access and sync your diary.</p>
+        <label for="diaryAuthEmail">Email address</label>
+        <input id="diaryAuthEmail" type="email" autocomplete="email" style="display:block;width:100%;box-sizing:border-box;padding:11px;margin:6px 0 13px;border:1px solid #b8a994;border-radius:7px;">
+        <label for="diaryAuthPassword">Password</label>
+        <input id="diaryAuthPassword" type="password" autocomplete="current-password" style="display:block;width:100%;box-sizing:border-box;padding:11px;margin:6px 0 13px;border:1px solid #b8a994;border-radius:7px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" onclick="diaryAuthSignIn()" style="flex:1;padding:11px;background:#593a27;color:white;border:0;border-radius:7px;">Sign In</button>
+          <button type="button" onclick="diaryAuthSignUp()" style="flex:1;padding:11px;background:#eee0cc;border:1px solid #b8a994;border-radius:7px;">Create Account</button>
+        </div>
+        <button type="button" onclick="diaryAuthReset()" style="width:100%;padding:9px;margin-top:8px;background:transparent;border:0;text-decoration:underline;color:#593a27;">Forgot password?</button>
+        <p id="diaryAuthMessage" aria-live="polite" style="font-size:13px;overflow-wrap:anywhere;">
+        </p>
+        <p style="font-size:12px;color:#76563e;margin-bottom:0;">Your diary remains stored locally on this device. Cloud sync requires an internet connection.</p>
+      </section>
+    </div>
+    <!-- =======================================================
+    TOP BAR
+    ======================================================= -->
+    <header class="topbar">
+      <div class="brand">
+        📖 My Diary
+      </div>
+      <div class="topbuttons">
+        <button onclick="openCalendar()">
+          📅 Calendar
+        </button>
+        <button onclick="openEvents()">
+          📌 Events
+        </button>
+        <button onclick="openTodo()">
+          ☑ To-Do
+        </button>
+        <button onclick="openMemories()">
+          🖼 Memories
+        </button>
+        <button onclick="openHouseholdRegister()">
+          🛒 Household Register
+        </button>
+        <button onclick="openSettings()">
+          ⚙ Settings
+        </button>
+        <button onclick="backupDiary()">
+          💾 Backup
+        </button>
+        <button onclick="document.getElementById('restoreFile').click()">
+          ↩ Restore
+        </button>
+        <button onclick="window.print()">
+          🖨 Print
+        </button>
+        <button id="diarySyncButton" onclick="diarySyncNow()">☁ Sync</button>
+        <button id="diaryLogoutButton" onclick="diaryAuthSignOut()">Log Out</button>
+      </div>
+    </header>
+    <div id="diarySyncStatus" role="status" style="position:fixed;right:8px;bottom:8px;z-index:12000;background:#fffaf0;border:1px solid #c8b9a4;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;color:#493321;">Cloud: Sign in required</div>
+    <input
+    id="restoreFile"
+    type="file"
+    accept=".json"
+    hidden
+    onchange="restoreDiary(event)"
+    >
+    <!-- =======================================================
+    MODULE HOME — tap a folder to open a feature
+    ======================================================= -->
+    <section id="moduleDashboard" class="module-dashboard" aria-label="Diary modules">
+      <div class="module-welcome">
+        <h1>📚 My Personal Diary</h1>
+        <p>Choose a folder to open a section. Your diary, household records, payments, and personal tools are organised here.</p>
+      </div>
+      <div class="module-grid">
+        <button class="module-folder featured" onclick="openDiaryWriting()">
+          <span class="folder-icon">✍️</span>
+          <strong>Writing</strong>
+          <small>Daily diary and journal</small>
+        </button>
+        <button class="module-folder" onclick="openCalendar()">
+          <span class="folder-icon">📅</span>
+          <strong>Calendar</strong>
+          <small>Dates and diary entries</small>
+        </button>
+        <button class="module-folder" onclick="openEvents()">
+          <span class="folder-icon">📌</span>
+          <strong>Events</strong>
+          <small>Important dates and reminders</small>
+        </button>
+        <button class="module-folder" onclick="openTodo()">
+          <span class="folder-icon">☑️</span>
+          <strong>To-Do List</strong>
+          <small>Tasks and follow-ups</small>
+        </button>
+        <button class="module-folder" onclick="openMemories()">
+          <span class="folder-icon">🖼️</span>
+          <strong>Memories</strong>
+          <small>Photos and moments</small>
+        </button>
+        <button class="module-folder" onclick="openPaymentsRegister()">
+          <span class="folder-icon">💳</span>
+          <strong>Payments</strong>
+          <small>Bills, due dates and status</small>
+        </button>
+        <button class="module-folder" onclick="openHouseholdRegister()">
+          <span class="folder-icon">🛒</span>
+          <strong>Household Register</strong>
+          <small>Groceries, medicines and prices</small>
+        </button>
+        <button class="module-folder" onclick="openSettings()">
+          <span class="folder-icon">⚙️</span>
+          <strong>Settings</strong>
+          <small>Diary and page preferences</small>
+        </button>
+        <button class="module-folder utility" onclick="backupDiary()">
+          <span class="folder-icon">💾</span>
+          <strong>Backup</strong>
+          <small>Save a copy of diary data</small>
+        </button>
+        <button class="module-folder utility" onclick="document.getElementById('restoreFile').click()">
+          <span class="folder-icon">📥</span>
+          <strong>Restore</strong>
+          <small>Load a backup file</small>
+        </button>
+        <button class="module-folder utility" onclick="window.print()">
+          <span class="folder-icon">🖨️</span>
+          <strong>Print</strong>
+          <small>Print or save as PDF</small>
+        </button>
+        <button class="module-folder utility" onclick="diarySyncNow()">
+          <span class="folder-icon">☁️</span>
+          <strong>Cloud Sync</strong>
+          <small>Sync your diary data</small>
+        </button>
+      </div>
+    </section>
+    <div id="writingBackbar" class="module-backbar" hidden>
+      <button type="button" onclick="showModuleDashboard()">← All Modules</button>
+    </div>
+    <!-- =======================================================
+    BOOK
+    ======================================================= -->
+    <main id="diaryWritingWorkspace" class="workspace" hidden>
+      <section class="book">
+        <div class="spine">
+          <div class="spine-line">
+          </div>
+          <div
+            id="rings"
+            class="rings">
+          </div>
+        </div>
+        <article
+          id="diaryPage"
+          class="page design-classic"
+          >
+          <div class="pagecontent">
+            <!-- HEADER -->
+            <div class="pageheader">
+              <div class="datearea">
+                <div class="date">
+                  <span id="dateText">
+                  </span>
+                  <span
+                    id="moodDisplay"
+                    class="mood">
+                  </span>
                 </div>
-                <!-- =======================================================
-                TOP BAR
-                ======================================================= -->
-                <header class="topbar">
-                  <div class="brand">
-                    📖 My Diary
-                  </div>
-                  <div class="topbuttons">
-                    <button onclick="openCalendar()">
-                      📅 Calendar
-                    </button>
-                    <button onclick="openEvents()">
-                      📌 Events
-                    </button>
-                    <button onclick="openTodo()">
-                      ☑ To-Do
-                    </button>
-                    <button onclick="openMemories()">
-                      🖼 Memories
-                    </button>
-                    <button onclick="openHouseholdRegister()">
-                      🛒 Household Register
-                    </button>
-                    <button onclick="openSettings()">
-                      ⚙ Settings
-                    </button>
-                    <button onclick="backupDiary()">
-                      💾 Backup
-                    </button>
-                    <button onclick="document.getElementById('restoreFile').click()">
-                      ↩ Restore
-                    </button>
-                    <button onclick="window.print()">
-                      🖨 Print
-                    </button>
-                    <button id="diarySyncButton" onclick="diarySyncNow()">☁ Sync</button>
-                    <button id="diaryLogoutButton" onclick="diaryAuthSignOut()">Log Out</button>
-                  </div>
-                </header>
-                <div id="diarySyncStatus" role="status" style="position:fixed;right:8px;bottom:8px;z-index:12000;background:#fffaf0;border:1px solid #c8b9a4;border-radius:8px;padding:7px 10px;font:12px Arial,sans-serif;color:#493321;">Cloud: Sign in required</div>
-                <input
-                  id="restoreFile"
-                  type="file"
-                  accept=".json"
-                  hidden
-                  onchange="restoreDiary(event)"
-                  >
-                  <!-- =======================================================
-                  BOOK
-                  ======================================================= -->
-                  <main class="workspace">
-                    <section class="book">
-                      <div class="spine">
-                        <div class="spine-line">
-                        </div>
-                        <div
-                          id="rings"
-                          class="rings">
-                        </div>
-                      </div>
-                      <article
-                        id="diaryPage"
-                        class="page design-classic"
-                        >
-                        <div class="pagecontent">
-                          <!-- HEADER -->
-                          <div class="pageheader">
-                            <div class="datearea">
-                              <div class="date">
-                                <span id="dateText">
-                                </span>
-                                <span
-                                  id="moodDisplay"
-                                  class="mood">
-                                </span>
-                              </div>
-                            </div>
-                            <div class="pageactions">
-                              <button
-                                class="smallbtn"
-                                id="prevDateBtn"
-                                onclick="previousDate()">
-                                ‹
-                              </button>
-                              <button
-                                class="smallbtn"
-                                onclick="goToday()">
-                                Today
-                              </button>
-                              <button
-                                class="smallbtn"
-                                id="nextDateBtn"
-                                onclick="nextDate()">
-                                ›
-                              </button>
-                            </div>
-                          </div>
-                          <div
-                            id="readonlyNote"
-                            class="readonlynote">
-                            🔒 Past diary pages are read-only.
-                          </div>
-                          <!-- QUOTE -->
-                          <div
-                            id="quote"
-                            class="quote">
-                          </div>
-                          <!-- TOOLBAR -->
-                          <div
-                            id="toolbar"
-                            class="toolbar">
-                            <button
-                              onclick="formatText('bold')">
-                              <b>B</b>
-                            </button>
-                            <button
-                              onclick="formatText('italic')">
-                              <i>I</i>
-                            </button>
-                            <button
-                              onclick="formatText('underline')">
-                              <u>U</u>
-                            </button>
-                            <button
-                              onclick="formatText('insertUnorderedList')">
-                              •
-                            </button>
-                            <button
-                              onclick="formatText('insertOrderedList')">
-                              1.
-                            </button>
-                            <button
-                              onclick="formatText('justifyLeft')">
-                              ≡
-                            </button>
-                            <button
-                              onclick="formatText('justifyCenter')">
-                              ≡
-                            </button>
-                            <button
-                              id="clearFormatButton"
-                              onclick="clearFormatting()">
-                              Clear
-                            </button>
-                            <div
-                              id="drawWrap"
-                              class="drawwrap">
-                              <button
-                                id="drawButton"
-                                onclick="toggleDrawMenu()">
-                                ✎ Draw
-                              </button>
-                            </div>
-                          </div>
-                          <!-- DRAW MENU IS PLACED HERE SO IT CAN BE
-                          POSITIONED ABOVE THE PAGE WITHOUT
-                          DISTURBING THE WRITING LINES -->
-                          <div
-                            id="drawMenu"
-                            class="drawmenu"
-                            hidden>
-                            <button
-                              onclick="selectDrawTool('pen')">
-                              ✎ Pen
-                            </button>
-                            <button
-                              onclick="selectDrawTool('line')">
-                              ╱ Line
-                            </button>
-                            <button
-                              onclick="selectDrawTool('circle')">
-                              ○ Circle
-                            </button>
-                            <button
-                              onclick="selectDrawTool('eraser')">
-                              ⌫ Eraser
-                            </button>
-                            <button
-                              onclick="undoDrawing()">
-                              ↶ Undo
-                            </button>
-                            <button
-                              onclick="redoDrawing()">
-                              ↷ Redo
-                            </button>
-                            <button
-                              onclick="clearDrawing()">
-                              Clear
-                            </button>
-                            <button
-                              id="exitDrawButton"
-                              onclick="exitDrawing()">
-                              ✓ Exit Draw
-                            </button>
-                            <span
-                              class="drawhint">
-                              Select a tool — menu closes automatically
-                            </span>
-                          </div>
-                          <!-- EDITOR -->
-                          <div
-                            id="editorWrap"
-                            class="editorwrap">
-                            <div
-                              id="editor"
-                              class="editor"
-                              contenteditable="true"
-                              spellcheck="true">
-                            </div>
-                            <canvas
-                              id="drawCanvas">
-                            </canvas>
-                          </div>
-                          <div class="pagecontrols">
-                            <button
-                              id="newPageButton"
-                              class="newpage"
-                              onclick="newPage()">
-                              + New Page
-                            </button>
-                            <button
-                              type="button"
-                              class="previouspage"
-                              onclick="previousPage()">
-                              ‹ Previous Page
-                            </button>
-                          </div>
-                        </div>
-                      </article>
-                    </section>
-                  </main>
-                  <!-- =======================================================
-                  CALENDAR
-                  ======================================================= -->
-                  <div
-                    id="calendarModal"
-                    class="modal"
-                    hidden>
-                    <div class="modalbox">
-                      <h2>📅 Diary Calendar</h2>
-                      <div class="calnav">
-                        <button
-                          class="smallbtn"
-                          onclick="changeMonth(-1)">
-                          ‹
-                        </button>
-                        <strong id="calendarTitle">
-                        </strong>
-                        <button
-                          class="smallbtn"
-                          onclick="changeMonth(1)">
-                          ›
-                        </button>
-                      </div>
-                      <div
-                        id="calendarGrid"
-                        class="calgrid">
-                      </div>
-                      <div class="eventlist">
-                        <h3>Events this month</h3>
-                        <div id="calendarEvents">
-                        </div>
-                      </div>
-                      <div class="modalbuttons">
-                        <button
-                          class="smallbtn"
-                          onclick="closeModal('calendarModal')">
-                          Close
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- =======================================================
-                  EVENTS
-                  ======================================================= -->
-                  <div
-                    id="eventsModal"
-                    class="modal"
-                    hidden>
-                    <div class="modalbox">
-                      <h2>📌 Diary Events</h2>
-                      <div id="eventList">
-                      </div>
-                      <hr>
-                        <h3>Add Event</h3>
-                        <div class="formrow">
-                          <div class="field">
-                            <label>Date</label>
-                            <input
-                              id="eventDate"
-                              type="date">
-                            </div>
-                            <div class="field">
-                              <label>Time</label>
-                              <input
-                                id="eventTime"
-                                type="time">
-                              </div>
-                            </div>
-                            <div class="field">
-                              <label>Event</label>
-                              <input
-                                id="eventTitle"
-                                type="text"
-                                placeholder="Birthday, appointment, meeting...">
-                              </div>
-                              <div class="field">
-                                <label>Notes</label>
-                                <textarea
-                                  id="eventNotes">
-                                </textarea>
-                              </div>
-                              <div class="modalbuttons">
-                                <button
-                                  class="smallbtn"
-                                  onclick="closeModal('eventsModal')">
-                                  Close
-                                </button>
-                                <button
-                                  id="saveEventButton"
-                                  class="smallbtn primary"
-                                  onclick="saveEvent()">
-                                  Save Event
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <!-- =======================================================
-                          TODO
-                          ======================================================= -->
-                          <div
-                            id="todoModal"
-                            class="modal"
-                            hidden>
-                            <div class="modalbox">
-                              <h2>☑ To-Do List</h2>
-                              <p id="todoInfo">
-                              </p>
-                              <div id="todoList">
-                              </div>
-                              <hr>
-                                <div class="formrow">
-                                  <div class="field">
-                                    <label>Task</label>
-                                    <input
-                                      id="todoText"
-                                      type="text"
-                                      placeholder="Enter task">
-                                    </div>
-                                    <div class="field">
-                                      <label>Date</label>
-                                      <input
-                                        id="todoDate"
-                                        type="date">
-                                      </div>
-                                    </div>
-                                    <div class="modalbuttons">
-                                      <button
-                                        class="smallbtn"
-                                        onclick="closeModal('todoModal')">
-                                        Close
-                                      </button>
-                                      <button
-                                        id="todoAddButton"
-                                        class="smallbtn primary"
-                                        onclick="addTodo()">
-                                        Add
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                                <!-- =======================================================
-                                MEMORY
-                                ======================================================= -->
-                                <div
-                                  id="memoryModal"
-                                  class="modal"
-                                  hidden>
-                                  <div class="modalbox">
-                                    <h2>🖼 Memories</h2>
-                                    <div class="field">
-                                      <label>
-                                        Photograph / Camera
-                                      </label>
-                                      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                                        <button type="button" onclick="document.getElementById('memoryCamera').click()">📷 Camera</button>
-                                        <button type="button" onclick="document.getElementById('memoryFile').click()">📁 Choose File</button>
-                                      </div>
-                                      <input
-                                        id="memoryCamera"
-                                        type="file"
-                                        accept="image/*"
-                                        capture="environment"
-                                        onchange="saveMemory(event)"
-                                        style="display:none;">
-                                        <input
-                                          id="memoryFile"
-                                          type="file"
-                                          accept="image/*,.jpg,.jpeg,.png,.webp,.heic,.heif"
-                                          onchange="saveMemory(event)"
-                                          style="display:none;">
-                                        </div>
-                                        <div
-                                          id="memoryGrid"
-                                          class="memorygrid">
-                                        </div>
-                                        <div class="modalbuttons">
-                                          <button
-                                            class="smallbtn"
-                                            onclick="closeModal('memoryModal')">
-                                            Close
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <!-- =======================================================
-                                    HOUSEHOLD PURCHASE REGISTER
-                                    ======================================================= -->
-                                    <div id="householdModal" class="modal household-modal" hidden>
-                                      <div class="modalbox household-box">
-                                        <div class="household-hero">
-                                          <div class="household-hero-icon">🛒</div>
-                                          <div class="household-hero-copy">
-                                            <div class="household-eyebrow">HOME • SPENDING • PRICE TRACKER</div>
-                                            <h2>Household Register</h2>
-                                            <p>Keep every purchase organised and see how prices change over time.</p>
-                                          </div>
-                                          <button type="button" class="household-close" aria-label="Close household register" onclick="closeModal('householdModal')">✕</button>
-                                        </div>
-                                        <div class="household-section-heading">
-                                          <span class="household-step">01</span>
-                                          <div>
-                                            <h3>Add a purchase</h3>
-                                            <p>Save the details from your bill or receipt.</p>
-                                          </div>
-                                        </div>
-                                        <form id="purchaseForm" class="household-form" onsubmit="savePurchase(event)">
-                                          <div class="formrow household-grid-two">
-                                            <div class="field">
-                                              <label for="purchaseDate">Purchase date</label>
-                                              <input id="purchaseDate" type="date" required>
-                                              </div>
-                                              <div class="field">
-                                                <label for="purchaseCategory">Category</label>
-                                                <select id="purchaseCategory" required>
-                                                  <option value="Groceries">Groceries</option>
-                                                  <option value="Medicines">Medicines</option>
-                                                  <option value="Household">Household items</option>
-                                                  <option value="Personal care">Personal care</option>
-                                                  <option value="Other">Other</option>
-                                                </select>
-                                              </div>
-                                            </div>
-                                            <div class="formrow household-grid-item">
-                                              <div class="field">
-                                                <label for="purchaseName">Item name / brand</label>
-                                                <input id="purchaseName" type="text" placeholder="e.g. Cooking oil, Brand / medicine name" required maxlength="120">
-                                                </div>
-                                                <div class="field">
-                                                  <label for="purchaseQuantity">Quantity</label>
-                                                  <input id="purchaseQuantity" type="number" min="0.001" step="any" value="1" required>
-                                                  </div>
-                                                  <div class="field">
-                                                    <label for="purchaseUnit">Unit</label>
-                                                    <select id="purchaseUnit">
-                                                      <option>piece</option>
-                                                      <option>kg</option>
-                                                      <option>g</option>
-                                                      <option>L</option>
-                                                      <option>ml</option>
-                                                      <option>pack</option>
-                                                      <option>strip</option>
-                                                      <option>tablet</option>
-                                                      <option>box</option>
-                                                      <option>dozen</option>
-                                                    </select>
-                                                  </div>
-                                                </div>
-                                                <div class="formrow household-grid-two">
-                                                  <div class="field">
-                                                    <label for="purchasePrice">Total paid (₹)</label>
-                                                    <input id="purchasePrice" type="number" min="0" step="0.01" required placeholder="e.g. 170">
-                                                    </div>
-                                                    <div class="field">
-                                                      <label for="purchaseShop">Shop / pharmacy (optional)</label>
-                                                      <input id="purchaseShop" type="text" maxlength="120" placeholder="Store name">
-                                                      </div>
-                                                    </div>
-                                                    <div class="field">
-                                                      <label for="purchaseNotes">Notes (optional)</label>
-                                                      <input id="purchaseNotes" type="text" maxlength="300" placeholder="Pack size, strength, discount, etc.">
-                                                      </div>
-                                                      <div class="household-form-actions">
-                                                        <button type="submit" class="household-save">
-                                                          <span>＋</span> Save purchase</button>
-                                                          <button type="button" class="household-clear" onclick="resetPurchaseForm()">Clear form</button>
-                                                        </div>
-                                                        <p id="purchaseSaveStatus" class="household-save-status" role="status" aria-live="polite" style="display:none;">✓ Purchase saved successfully.</p>
-                                                      </form>
-                                                      <div class="household-section-divider">
-                                                      </div>
-                                                      <div class="household-section-heading household-history-heading">
-                                                        <span class="household-step">02</span>
-                                                        <div>
-                                                          <h3>Purchase history</h3>
-                                                          <p>Search past purchases and compare unit prices.</p>
-                                                        </div>
-                                                      </div>
-                                                      <div class="formrow household-history-tools">
-                                                        <div class="field">
-                                                          <label for="purchaseSearch">Search item</label>
-                                                          <input id="purchaseSearch" type="search" placeholder="Search groceries, medicine..." oninput="renderPurchases()">
-                                                          </div>
-                                                          <div class="field">
-                                                            <label for="purchaseFilter">Category filter</label>
-                                                            <select id="purchaseFilter" onchange="renderPurchases()">
-                                                              <option value="">All categories</option>
-                                                              <option>Groceries</option>
-                                                              <option>Medicines</option>
-                                                              <option>Household</option>
-                                                              <option>Personal care</option>
-                                                              <option>Other</option>
-                                                            </select>
-                                                          </div>
-                                                        </div>
-                                                        <div id="purchaseSummary" class="household-summary">
-                                                        </div>
-                                                        <div id="purchaseHistory" class="household-history">
-                                                        </div>
-                                                        <div class="household-footer">
-                                                          <span>💡 Tip: use the same item name and unit each time for a meaningful price comparison.</span>
-                                                          <button type="button" class="household-clear" onclick="closeModal('householdModal')">Close register</button>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                    <!-- =======================================================
-                                                    MOOD
-                                                    ======================================================= -->
-                                                    <div
-                                                      id="moodModal"
-                                                      class="modal"
-                                                      hidden>
-                                                      <div class="modalbox">
-                                                        <h2>Choose Mood</h2>
-                                                        <div
-                                                          style="
-                                                          display:grid;
-                                                          grid-template-columns:repeat(4,1fr);
-                                                          gap:8px;
-                                                          ">
-                                                          <button class="smallbtn" onclick="setMood('😊')">😊</button>
-                                                          <button class="smallbtn" onclick="setMood('😄')">😄</button>
-                                                          <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
-                                                          <button class="smallbtn" onclick="setMood('😌')">😌</button>
-                                                          <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
-                                                          <button class="smallbtn" onclick="setMood('😐')">😐</button>
-                                                          <button class="smallbtn" onclick="setMood('😔')">😔</button>
-                                                          <button class="smallbtn" onclick="setMood('😢')">😢</button>
-                                                          <button class="smallbtn" onclick="setMood('😡')">😡</button>
-                                                          <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
-                                                          <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
-                                                          <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
-                                                        </div>
-                                                        <div class="modalbuttons">
-                                                          <button
-                                                            class="smallbtn"
-                                                            onclick="setMood('')">
-                                                            Remove Mood
-                                                          </button>
-                                                          <button
-                                                            class="smallbtn"
-                                                            onclick="closeModal('moodModal')">
-                                                            Close
-                                                          </button>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                    <!-- =======================================================
-                                                    SETTINGS
-                                                    ======================================================= -->
-                                                    <div
-                                                      id="settingsModal"
-                                                      class="modal"
-                                                      hidden>
-                                                      <div class="modalbox">
-                                                        <h2>⚙ Diary Settings</h2>
-                                                        <h3>Page Design</h3>
-                                                        <div class="designs">
-                                                          <div
-                                                            class="design design-classic"
-                                                            onclick="setDesign('classic')">
-                                                            📖 Classic
-                                                          </div>
-                                                          <div
-                                                            class="design design-vintage"
-                                                            onclick="setDesign('vintage')">
-                                                            🕰 Vintage
-                                                          </div>
-                                                          <div
-                                                            class="design design-blue"
-                                                            onclick="setDesign('blue')">
-                                                            💙 Blue
-                                                          </div>
-                                                          <div
-                                                            class="design design-green"
-                                                            onclick="setDesign('green')">
-                                                            🌿 Green
-                                                          </div>
-                                                          <div
-                                                            class="design design-rose"
-                                                            onclick="setDesign('rose')">
-                                                            🌸 Rose
-                                                          </div>
-                                                          <div
-                                                            class="design design-lavender"
-                                                            onclick="setDesign('lavender')">
-                                                            💜 Lavender
-                                                          </div>
-                                                          <div
-                                                            class="design design-night"
-                                                            onclick="setDesign('night')">
-                                                            🌙 Night
-                                                          </div>
-                                                        </div>
-                                                        <hr>
-                                                          <div class="field">
-                                                            <label>
-                                                              Number of lines:
-                                                              <span id="lineValue">
-                                                              </span>
-                                                            </label>
-                                                            <input
-                                                              id="lineRange"
-                                                              type="range"
-                                                              min="12"
-                                                              max="45"
-                                                              value="24"
-                                                              oninput="changeLines(this.value)">
-                                                            </div>
-                                                            <div class="field">
-                                                              <label>
-                                                                Font size:
-                                                                <span id="fontValue">
-                                                                </span>
-                                                              </label>
-                                                              <input
-                                                                id="fontRange"
-                                                                type="range"
-                                                                min="15"
-                                                                max="24"
-                                                                value="18"
-                                                                oninput="changeFont(this.value)">
-                                                              </div>
-                                                              <div class="field">
-                                                                <label>
-                                                                  Line spacing:
-                                                                  <span id="spacingValue">
-                                                                  </span>
-                                                                </label>
-                                                                <input
-                                                                  id="spacingRange"
-                                                                  type="range"
-                                                                  min="28"
-                                                                  max="45"
-                                                                  value="34"
-                                                                  oninput="changeSpacing(this.value)">
-                                                                </div>
-                                                                <div class="field">
-                                                                  <label>
-                                                                    Page width:
-                                                                    <span id="widthValue">
-                                                                    </span>
-                                                                  </label>
-                                                                  <input
-                                                                    id="widthRange"
-                                                                    type="range"
-                                                                    min="900"
-                                                                    max="1700"
-                                                                    value="1500"
-                                                                    oninput="changeWidth(this.value)">
-                                                                  </div>
-                                                                  <div class="modalbuttons">
-                                                                    <button
-                                                                      class="smallbtn"
-                                                                      onclick="closeModal('settingsModal')">
-                                                                      Close
-                                                                    </button>
-                                                                  </div>
-                                                                </div>
-                                                              </div>
-                                                              <!-- =======================================================
-                                                              DATABASE / APPLICATION
-                                                              ======================================================= -->
-                                                              <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-                                                              <script>
+              </div>
+              <div class="pageactions">
+                <button
+                  class="smallbtn"
+                  id="prevDateBtn"
+                  onclick="previousDate()">
+                  ‹
+                </button>
+                <button
+                  class="smallbtn"
+                  onclick="goToday()">
+                  Today
+                </button>
+                <button
+                  class="smallbtn"
+                  id="nextDateBtn"
+                  onclick="nextDate()">
+                  ›
+                </button>
+              </div>
+            </div>
+            <div
+              id="readonlyNote"
+              class="readonlynote">
+              🔒 Past diary pages are read-only.
+            </div>
+            <!-- QUOTE -->
+            <div
+              id="quote"
+              class="quote">
+            </div>
+            <!-- TOOLBAR -->
+            <div
+              id="toolbar"
+              class="toolbar">
+              <button
+                onclick="formatText('bold')">
+                <b>B</b>
+              </button>
+              <button
+                onclick="formatText('italic')">
+                <i>I</i>
+              </button>
+              <button
+                onclick="formatText('underline')">
+                <u>U</u>
+              </button>
+              <button
+                onclick="formatText('insertUnorderedList')">
+                •
+              </button>
+              <button
+                onclick="formatText('insertOrderedList')">
+                1.
+              </button>
+              <button
+                onclick="formatText('justifyLeft')">
+                ≡
+              </button>
+              <button
+                onclick="formatText('justifyCenter')">
+                ≡
+              </button>
+              <button
+                id="clearFormatButton"
+                onclick="clearFormatting()">
+                Clear
+              </button>
+              <div
+                id="drawWrap"
+                class="drawwrap">
+                <button
+                  id="drawButton"
+                  onclick="toggleDrawMenu()">
+                  ✎ Draw
+                </button>
+              </div>
+            </div>
+            <!-- DRAW MENU IS PLACED HERE SO IT CAN BE
+            POSITIONED ABOVE THE PAGE WITHOUT
+            DISTURBING THE WRITING LINES -->
+            <div
+              id="drawMenu"
+              class="drawmenu"
+              hidden>
+              <button
+                onclick="selectDrawTool('pen')">
+                ✎ Pen
+              </button>
+              <button
+                onclick="selectDrawTool('line')">
+                ╱ Line
+              </button>
+              <button
+                onclick="selectDrawTool('circle')">
+                ○ Circle
+              </button>
+              <button
+                onclick="selectDrawTool('eraser')">
+                ⌫ Eraser
+              </button>
+              <button
+                onclick="undoDrawing()">
+                ↶ Undo
+              </button>
+              <button
+                onclick="redoDrawing()">
+                ↷ Redo
+              </button>
+              <button
+                onclick="clearDrawing()">
+                Clear
+              </button>
+              <button
+                id="exitDrawButton"
+                onclick="exitDrawing()">
+                ✓ Exit Draw
+              </button>
+              <span
+                class="drawhint">
+                Select a tool — menu closes automatically
+              </span>
+            </div>
+            <!-- EDITOR -->
+            <div
+              id="editorWrap"
+              class="editorwrap">
+              <div
+                id="editor"
+                class="editor"
+                contenteditable="true"
+                spellcheck="true">
+              </div>
+              <canvas
+                id="drawCanvas">
+              </canvas>
+            </div>
+            <div class="pagecontrols">
+              <button
+                id="newPageButton"
+                class="newpage"
+                onclick="newPage()">
+                + New Page
+              </button>
+              <button
+                type="button"
+                class="previouspage"
+                onclick="previousPage()">
+                ‹ Previous Page
+              </button>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+    <!-- =======================================================
+    CALENDAR
+    ======================================================= -->
+    <div
+      id="calendarModal"
+      class="modal"
+      hidden>
+      <div class="modalbox">
+        <h2>📅 Diary Calendar</h2>
+        <div class="calnav">
+          <button
+            class="smallbtn"
+            onclick="changeMonth(-1)">
+            ‹
+          </button>
+          <strong id="calendarTitle">
+          </strong>
+          <button
+            class="smallbtn"
+            onclick="changeMonth(1)">
+            ›
+          </button>
+        </div>
+        <div
+          id="calendarGrid"
+          class="calgrid">
+        </div>
+        <div class="eventlist">
+          <h3>Events this month</h3>
+          <div id="calendarEvents">
+          </div>
+        </div>
+        <div class="modalbuttons">
+          <button
+            class="smallbtn"
+            onclick="closeModal('calendarModal')">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- =======================================================
+    EVENTS
+    ======================================================= -->
+    <div
+      id="eventsModal"
+      class="modal"
+      hidden>
+      <div class="modalbox">
+        <h2>📌 Diary Events</h2>
+        <div id="eventList">
+        </div>
+        <hr>
+        <h3>Add Event</h3>
+        <div class="formrow">
+          <div class="field">
+            <label>Date</label>
+            <input
+            id="eventDate"
+            type="date">
+          </div>
+          <div class="field">
+            <label>Time</label>
+            <input
+            id="eventTime"
+            type="time">
+          </div>
+        </div>
+        <div class="field">
+          <label>Event</label>
+          <input
+          id="eventTitle"
+          type="text"
+          placeholder="Birthday, appointment, meeting...">
+        </div>
+        <div class="field">
+          <label>Notes</label>
+          <textarea
+            id="eventNotes">
+          </textarea>
+        </div>
+        <div class="modalbuttons">
+          <button
+            class="smallbtn"
+            onclick="closeModal('eventsModal')">
+            Close
+          </button>
+          <button
+            id="saveEventButton"
+            class="smallbtn primary"
+            onclick="saveEvent()">
+            Save Event
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- =======================================================
+    TODO
+    ======================================================= -->
+    <div
+      id="todoModal"
+      class="modal"
+      hidden>
+      <div class="modalbox">
+        <h2>☑ To-Do List</h2>
+        <p id="todoInfo">
+        </p>
+        <div id="todoList">
+        </div>
+        <hr>
+        <div class="formrow">
+          <div class="field">
+            <label>Task</label>
+            <input
+            id="todoText"
+            type="text"
+            placeholder="Enter task">
+          </div>
+          <div class="field">
+            <label>Date</label>
+            <input
+            id="todoDate"
+            type="date">
+          </div>
+        </div>
+        <div class="modalbuttons">
+          <button
+            class="smallbtn"
+            onclick="closeModal('todoModal')">
+            Close
+          </button>
+          <button
+            id="todoAddButton"
+            class="smallbtn primary"
+            onclick="addTodo()">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- =======================================================
+    MEMORY
+    ======================================================= -->
+    <div
+      id="memoryModal"
+      class="modal"
+      hidden>
+      <div class="modalbox">
+        <h2>🖼 Memories</h2>
+        <div class="field">
+          <label>
+            Photograph / Camera
+          </label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button type="button" onclick="document.getElementById('memoryCamera').click()">📷 Camera</button>
+            <button type="button" onclick="document.getElementById('memoryFile').click()">📁 Choose File</button>
+          </div>
+          <input
+          id="memoryCamera"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onchange="saveMemory(event)"
+          style="display:none;">
+          <input
+          id="memoryFile"
+          type="file"
+          accept="image/*,.jpg,.jpeg,.png,.webp,.heic,.heif"
+          onchange="saveMemory(event)"
+          style="display:none;">
+        </div>
+        <div
+          id="memoryGrid"
+          class="memorygrid">
+        </div>
+        <div class="modalbuttons">
+          <button
+            class="smallbtn"
+            onclick="closeModal('memoryModal')">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- =======================================================
+    HOUSEHOLD PURCHASE REGISTER
+    ======================================================= -->
+    <div id="householdModal" class="modal household-modal" hidden>
+      <div class="modalbox household-box">
+        <div class="household-hero">
+          <div class="household-hero-icon">🛒</div>
+          <div class="household-hero-copy">
+            <div class="household-eyebrow">HOME • SPENDING • PRICE TRACKER</div>
+            <h2>Household Register</h2>
+            <p>Keep every purchase organised and see how prices change over time.</p>
+          </div>
+          <button type="button" class="household-close" aria-label="Close household register" onclick="closeModal('householdModal')">✕</button>
+        </div>
+        <div class="household-section-heading">
+          <span class="household-step">01</span>
+          <div>
+            <h3>Add a purchase</h3>
+            <p>Save the details from your bill or receipt.</p>
+          </div>
+        </div>
+        <form id="purchaseForm" class="household-form" onsubmit="savePurchase(event)">
+          <div class="formrow household-grid-two">
+            <div class="field">
+              <label for="purchaseDate">Purchase date</label>
+              <input id="purchaseDate" type="date" required>
+            </div>
+            <div class="field">
+              <label for="purchaseCategory">Category</label>
+              <select id="purchaseCategory" required>
+                <option value="Groceries">Groceries</option>
+                <option value="Medicines">Medicines</option>
+                <option value="Household">Household items</option>
+                <option value="Personal care">Personal care</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="formrow household-grid-item">
+            <div class="field">
+              <label for="purchaseName">Item name / brand</label>
+              <input id="purchaseName" type="text" placeholder="e.g. Cooking oil, Brand / medicine name" required maxlength="120">
+            </div>
+            <div class="field">
+              <label for="purchaseQuantity">Quantity</label>
+              <input id="purchaseQuantity" type="number" min="0.001" step="any" value="1" required>
+            </div>
+            <div class="field">
+              <label for="purchaseUnit">Unit</label>
+              <select id="purchaseUnit">
+                <option>piece</option>
+                <option>kg</option>
+                <option>g</option>
+                <option>L</option>
+                <option>ml</option>
+                <option>pack</option>
+                <option>strip</option>
+                <option>tablet</option>
+                <option>box</option>
+                <option>dozen</option>
+              </select>
+            </div>
+          </div>
+          <div class="formrow household-grid-two">
+            <div class="field">
+              <label for="purchasePrice">Total paid (₹)</label>
+              <input id="purchasePrice" type="number" min="0" step="0.01" required placeholder="e.g. 170">
+            </div>
+            <div class="field">
+              <label for="purchaseShop">Shop / pharmacy (optional)</label>
+              <input id="purchaseShop" type="text" maxlength="120" placeholder="Store name">
+            </div>
+          </div>
+          <div class="field">
+            <label for="purchaseNotes">Notes (optional)</label>
+            <input id="purchaseNotes" type="text" maxlength="300" placeholder="Pack size, strength, discount, etc.">
+          </div>
+          <div class="household-form-actions">
+            <button type="submit" class="household-save">
+              <span>＋</span> Save purchase</button>
+              <button type="button" class="household-clear" onclick="resetPurchaseForm()">Clear form</button>
+            </div>
+            <p id="purchaseSaveStatus" class="household-save-status" role="status" aria-live="polite" style="display:none;">✓ Purchase saved successfully.</p>
+          </form>
+          <div class="household-section-divider">
+          </div>
+          <div class="household-section-heading household-history-heading">
+            <span class="household-step">02</span>
+            <div>
+              <h3>Purchase history</h3>
+              <p>Search past purchases and compare unit prices.</p>
+            </div>
+          </div>
+          <div class="formrow household-history-tools">
+            <div class="field">
+              <label for="purchaseSearch">Search item</label>
+              <input id="purchaseSearch" type="search" placeholder="Search groceries, medicine..." oninput="renderPurchases()">
+            </div>
+            <div class="field">
+              <label for="purchaseFilter">Category filter</label>
+              <select id="purchaseFilter" onchange="renderPurchases()">
+                <option value="">All categories</option>
+                <option>Groceries</option>
+                <option>Medicines</option>
+                <option>Household</option>
+                <option>Personal care</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div id="purchaseSummary" class="household-summary">
+          </div>
+          <div id="purchaseHistory" class="household-history">
+          </div>
+          <div class="household-footer">
+            <span>💡 Tip: use the same item name and unit each time for a meaningful price comparison.</span>
+            <button type="button" class="household-clear" onclick="closeModal('householdModal')">Close register</button>
+          </div>
+        </div>
+      </div>
+      <!-- =======================================================
+      MOOD
+      ======================================================= -->
+      <div
+        id="moodModal"
+        class="modal"
+        hidden>
+        <div class="modalbox">
+          <h2>Choose Mood</h2>
+          <div
+            style="
+            display:grid;
+            grid-template-columns:repeat(4,1fr);
+            gap:8px;
+            ">
+            <button class="smallbtn" onclick="setMood('😊')">😊</button>
+            <button class="smallbtn" onclick="setMood('😄')">😄</button>
+            <button class="smallbtn" onclick="setMood('🥰')">🥰</button>
+            <button class="smallbtn" onclick="setMood('😌')">😌</button>
+            <button class="smallbtn" onclick="setMood('🙂')">🙂</button>
+            <button class="smallbtn" onclick="setMood('😐')">😐</button>
+            <button class="smallbtn" onclick="setMood('😔')">😔</button>
+            <button class="smallbtn" onclick="setMood('😢')">😢</button>
+            <button class="smallbtn" onclick="setMood('😡')">😡</button>
+            <button class="smallbtn" onclick="setMood('🙏')">🙏</button>
+            <button class="smallbtn" onclick="setMood('❤️')">❤️</button>
+            <button class="smallbtn" onclick="setMood('⭐')">⭐</button>
+          </div>
+          <div class="modalbuttons">
+            <button
+              class="smallbtn"
+              onclick="setMood('')">
+              Remove Mood
+            </button>
+            <button
+              class="smallbtn"
+              onclick="closeModal('moodModal')">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- =======================================================
+      SETTINGS
+      ======================================================= -->
+      <div
+        id="settingsModal"
+        class="modal"
+        hidden>
+        <div class="modalbox">
+          <h2>⚙ Diary Settings</h2>
+          <h3>Page Design</h3>
+          <div class="designs">
+            <div
+              class="design design-classic"
+              onclick="setDesign('classic')">
+              📖 Classic
+            </div>
+            <div
+              class="design design-vintage"
+              onclick="setDesign('vintage')">
+              🕰 Vintage
+            </div>
+            <div
+              class="design design-blue"
+              onclick="setDesign('blue')">
+              💙 Blue
+            </div>
+            <div
+              class="design design-green"
+              onclick="setDesign('green')">
+              🌿 Green
+            </div>
+            <div
+              class="design design-rose"
+              onclick="setDesign('rose')">
+              🌸 Rose
+            </div>
+            <div
+              class="design design-lavender"
+              onclick="setDesign('lavender')">
+              💜 Lavender
+            </div>
+            <div
+              class="design design-night"
+              onclick="setDesign('night')">
+              🌙 Night
+            </div>
+          </div>
+          <hr>
+          <div class="field">
+            <label>
+              Number of lines:
+              <span id="lineValue">
+              </span>
+            </label>
+            <input
+            id="lineRange"
+            type="range"
+            min="12"
+            max="45"
+            value="24"
+            oninput="changeLines(this.value)">
+          </div>
+          <div class="field">
+            <label>
+              Font size:
+              <span id="fontValue">
+              </span>
+            </label>
+            <input
+            id="fontRange"
+            type="range"
+            min="15"
+            max="24"
+            value="18"
+            oninput="changeFont(this.value)">
+          </div>
+          <div class="field">
+            <label>
+              Line spacing:
+              <span id="spacingValue">
+              </span>
+            </label>
+            <input
+            id="spacingRange"
+            type="range"
+            min="28"
+            max="45"
+            value="34"
+            oninput="changeSpacing(this.value)">
+          </div>
+          <div class="field">
+            <label>
+              Page width:
+              <span id="widthValue">
+              </span>
+            </label>
+            <input
+            id="widthRange"
+            type="range"
+            min="900"
+            max="1700"
+            value="1500"
+            oninput="changeWidth(this.value)">
+          </div>
+          <div class="modalbuttons">
+            <button
+              class="smallbtn"
+              onclick="closeModal('settingsModal')">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- =======================================================
+      DATABASE / APPLICATION
+      ======================================================= -->
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script>
 /* LOCAL-ONLY MODE: disable Supabase authentication and cloud sync */
 const DIARY_LOCAL_ONLY = true;
 
@@ -7796,6 +7892,33 @@ start().then(() => {
 });
 
 </script>
-                                                              <script src="./payment.js"></script>
-                                                            </body>
-                                                          </html>
+      <script src="./payment.js"></script>
+      <script>
+function openDiaryWriting(){
+  const dashboard=document.getElementById('moduleDashboard');
+  const workspace=document.getElementById('diaryWritingWorkspace');
+  const back=document.getElementById('writingBackbar');
+  if(dashboard) dashboard.hidden=true;
+  if(workspace) workspace.hidden=false;
+  if(back) back.hidden=false;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showModuleDashboard(){
+  const dashboard=document.getElementById('moduleDashboard');
+  const workspace=document.getElementById('diaryWritingWorkspace');
+  const back=document.getElementById('writingBackbar');
+  if(dashboard) dashboard.hidden=false;
+  if(workspace) workspace.hidden=true;
+  if(back) back.hidden=true;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openPaymentsRegister(){
+  const modal=document.getElementById('pModal');
+  if(modal){modal.hidden=false; if(typeof window.renderPayments==='function') window.renderPayments(); return;}
+  const button=document.getElementById('paymentsTabButton');
+  if(button){button.click();return;}
+  alert('Payments module is not loaded. Please ensure payment.js is included in index.html.');
+}
+</script>
+    </body>
+  </html>

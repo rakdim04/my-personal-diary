@@ -1704,10 +1704,6 @@ button{
     MODULE HOME — tap a folder to open a feature
     ======================================================= -->
     <section id="moduleDashboard" class="module-dashboard" aria-label="Diary modules">
-      <div class="module-welcome">
-        <h1>📚 My Personal Diary</h1>
-        <p>Choose a folder to open a section. Your diary, household records, payments, and personal tools are organised here.</p>
-      </div>
       <div class="module-grid">
         <button class="module-folder featured" onclick="openDiaryWriting()">
           <span class="folder-icon">✍️</span>
@@ -7914,10 +7910,20 @@ function showModuleDashboard(){
 }
 function openPaymentsRegister(){
   const modal=document.getElementById('pModal');
-  if(modal){modal.hidden=false; if(typeof window.renderPayments==='function') window.renderPayments(); return;}
-  const button=document.getElementById('paymentsTabButton');
-  if(button){button.click();return;}
-  alert('Payments module is not loaded. Please ensure payment.js is included in index.html.');
+  if(modal){
+    modal.hidden=false;
+    if(typeof window.renderPayments==='function') window.renderPayments();
+    return;
+  }
+  // payment.js creates its register after the page has loaded; retry briefly if needed.
+  let attempts=0;
+  const retry=()=>{
+    const ready=document.getElementById('pModal');
+    if(ready){ready.hidden=false; if(typeof window.renderPayments==='function') window.renderPayments(); return;}
+    if(++attempts<20){setTimeout(retry,100);return;}
+    alert('Payments could not be opened. Check that payment.js is uploaded beside index.html in the same GitHub folder, then refresh the app.');
+  };
+  retry();
 }
 </script>
     </body>

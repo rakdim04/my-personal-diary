@@ -1,10 +1,11 @@
 /* My Personal Diary â€” cache version intentionally changes when the app is updated. */
-const CACHE_NAME = "my-personal-diary-v2026-10-10-sync6";
+const CACHE_NAME = "my-personal-diary-v2026-10-22-payments1";
 
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./payment.js"
 ];
 
 self.addEventListener("install", event => {

@@ -128,7 +128,108 @@ st.textContent += `
 #pModal .pnote{margin:15px 2px 0;padding:12px 14px;border:1px solid #e1e9e2;border-radius:12px;background:#eef5ef;color:#617365}
 @media(max-width:650px){#pModal .phead{align-items:flex-start;gap:10px}#pModal .phead h2:before{width:34px;height:34px;margin-right:7px;border-radius:10px;font-size:18px}#pModal .pstats{gap:9px}#pModal .pstat{padding:13px 12px}#pModal .ptools{padding:9px}#pModal .ptools select{flex:1;min-width:120px}#pModal .ptools button{flex:1}}
 @media(prefers-reduced-motion:reduce){#pModal *{transition:none!important}}
+
+/* Payments screen visual refinement */
+st.textContent += `
+#pModal .ptools {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  background:#fff;
+  border:1px solid #d9e7dc;
+  border-radius:15px;
+  padding:13px;
+  box-shadow:0 5px 18px rgba(27,67,45,.04);
+}
+#pModal .ptools select,
+#pModal .ptools input {
+  min-height:42px;
+  border-radius:11px;
+}
+#pModal .ptools input {
+  flex:1 1 170px;
+}
+#pModal #pExport,
+#pModal #pImport {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:42px;
+  padding:10px 14px;
+  border-radius:11px;
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+#pModal #pExport {
+  background:#246442;
+  border-color:#246442;
+  color:#fff;
+}
+#pModal #pExport:before {
+  content:"↓";
+  font-size:16px;
+}
+#pModal #pImport {
+  background:#e8f4eb;
+  border-color:#bcd9c3;
+  color:#205d39;
+}
+#pModal #pImport:before {
+  content:"↑";
+  font-size:16px;
+}
+#pModal #pExport:hover {
+  background:#194e36;
+}
+#pModal #pImport:hover {
+  background:#d8ecdd;
+}
+#pModal .pstat {
+  border-radius:16px;
+}
+#pModal .pform,
+#pModal .ptable {
+  box-shadow:0 6px 22px rgba(27,67,45,.045);
+}
+#pModal .pbtns .primary {
+  background:linear-gradient(135deg,#236447,#39835a);
+  color:#fff;
+}
+@media(max-width:650px) {
+  #pModal .ptools {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  #pModal .ptools select,
+  #pModal .ptools input {
+    width:100%;
+    min-width:0;
+    max-width:none;
+    grid-column:1/-1;
+  }
+  #pModal #pExport,
+  #pModal #pImport {
+    width:100%;
+    padding:10px 6px;
+    font-size:12px;
+  }
+}
+@media(max-width:360px) {
+  #pModal .ptools {
+    grid-template-columns:1fr;
+  }
+  #pModal #pExport,
+  #pModal #pImport {
+    grid-column:1;
+  }
+}
 `;
+
+  ;
 document.head.appendChild(st);
 
 let m=document.createElement("div");m.id="pModal";m.hidden=true;m.innerHTML=`<section class="pshell" role="dialog" aria-modal="true"><header class="phead"><div class="phead-copy"><div class="peyebrow">BILLS • DUE DATES • PAYMENT TRACKER</div><h2>Payments Register</h2><p class="pintro">Keep bills organised, track what is due, and record payments in one place.</p></div><button id="pClose" type="button">✕ Close</button></header><div class="pbody"><div class="pstats"><div class="pstat"><small>✓ PAID THIS MONTH</small><strong id="pPaidTotal">₹0.00</strong><small>Total recorded as paid</small></div><div class="pstat"><small>◷ UPCOMING PAYMENTS</small><strong id="pUpCount">0</strong><small id="pUpTotal">₹0.00</small></div><div class="pstat"><small>! OVERDUE PAYMENTS</small><strong id="pOverCount">0</strong><small id="pOverTotal">₹0.00</small></div><div class="pstat"><small>▣ STORAGE</small><strong>On this device</strong><small>Export a backup regularly</small></div></div><form id="pForm" class="pform"><h3 id="pFormTitle">Add a payment</h3><div class="pfields"><label>Payment / bill name *<input id="pName" required maxlength="120" placeholder="e.g. HDFC credit card"></label><label>Category<select id="pCat">${cats.map(x=>`<option>${esc(x)}</option>`).join("")}</select></label><label>Amount (₹) *<input id="pAmount" type="number" min="0" step=".01" required></label><label>Due date *<input id="pDue" type="date" required></label><label>Status<select id="pStatus"><option value="scheduled">Scheduled / unpaid</option><option value="paid">Paid</option></select></label><label>Paid date<input id="pPaid" type="date"></label><label>Repeat<select id="pRepeat"><option value="none">No repeat</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="quarterly">Quarterly</option><option value="half-yearly">Half-yearly</option><option value="yearly">Yearly</option></select></label><label>Repeat until (optional)<input id="pEnd" type="date"></label><label>Receipt / transaction reference<input id="pRef" maxlength="160"></label><label class="wide">Notes<textarea id="pNotes" maxlength="1500" placeholder="Bill period or helpful details; never enter passwords, PINs or full card details."></textarea></label></div><div class="pbtns"><button class="primary" type="submit">Save payment</button><button id="pCancel" type="button" hidden>Cancel edit</button><button id="pReset" type="button">Clear form</button></div></form><div class="ptools"><select id="pFilter" aria-label="Filter"><option value="all">All records</option><option value="upcoming">Upcoming / due</option><option value="overdue">Overdue</option><option value="paid">Paid</option></select><input id="pSearch" type="search" placeholder="Search payments"><button id="pExport" type="button">Export backup</button><button id="pImport" type="button">Import backup</button><input id="pFile" type="file" accept=".json,application/json" hidden></div><div class="ptable"><table><thead><tr><th>Payment</th><th>Amount</th><th>Due / paid date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="pRows"></tbody></table></div><p class="pnote">Payments are stored locally in this browser, separately from diary entries. They are not sent to a server. Export a backup regularly, especially before changing devices or clearing browser data. This tool records and schedules bills; it does not pay them automatically. Browser reminders are not guaranteed when Chrome is closed.</p></div></section>`;document.body.appendChild(m);

@@ -2097,52 +2097,47 @@ button{
     <!-- =======================================================
     MEMORY
     ======================================================= -->
-    
-<div id="memoryModal" class="modal" hidden>
-  <div class="modalbox">
-    <h2>🖼 Memories</h2>
-
-    <div class="field">
-      <label>Photographs and Documents</label>
-
-      <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button type="button"
-          onclick="document.getElementById('memoryCamera').click()">
-          📷 Camera
-        </button>
-
-        <button type="button"
-          onclick="document.getElementById('memoryFile').click()">
-          🖼 Choose Photo
-        </button>
-
-        <button type="button"
-          onclick="document.getElementById('memoryPdfFile').click()">
-          📄 Choose PDF
-        </button>
+    <div
+      id="memoryModal"
+      class="modal"
+      hidden>
+      <div class="modalbox">
+        <h2>🖼 Memories</h2>
+        <div class="field">
+          <label>
+            Photograph / Camera
+          </label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <button type="button" onclick="document.getElementById('memoryCamera').click()">📷 Camera</button>
+            <button type="button" onclick="document.getElementById('memoryFile').click()">📁 Choose File</button>
+          </div>
+          <input
+          id="memoryCamera"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onchange="saveMemory(event)"
+          style="display:none;">
+          <input
+          id="memoryFile"
+          type="file"
+          accept="image/*,.jpg,.jpeg,.png,.webp,.heic,.heif"
+          onchange="saveMemory(event)"
+          style="display:none;">
+        </div>
+        <div
+          id="memoryGrid"
+          class="memorygrid">
+        </div>
+        <div class="modalbuttons">
+          <button
+            class="smallbtn"
+            onclick="closeModal('memoryModal')">
+            Close
+          </button>
+        </div>
       </div>
-
-      <input id="memoryCamera" type="file"
-        accept="image/*" capture="environment"
-        onchange="saveMemory(event)" hidden>
-
-      <input id="memoryFile" type="file"
-        accept="image/*,.jpg,.jpeg,.png,.webp,.heic,.heif"
-        onchange="saveMemory(event)" hidden>
-
-      <input id="memoryPdfFile" type="file"
-        accept="application/pdf,.pdf"
-        onchange="saveMemory(event)" hidden>
     </div>
-
-    <div id="memoryGrid" class="memorygrid"></div>
-
-    <div class="modalbuttons">
-      <button class="smallbtn" type="button"
-        onclick="closeModal('memoryModal')">Close</button>
-    </div>
-  </div>
-</div>
     <!-- =======================================================
     HOUSEHOLD PURCHASE REGISTER
     ======================================================= -->
@@ -6494,72 +6489,50 @@ async function compressImage(file){
 
 async function saveMemory(event){
 
-async function saveMemory(event) {
-  const input = event.target;
-  const file = input.files && input.files[0];
-  if (!file) return;
+  const file=
+    event.target.files[0];
 
-  try {
-    const isPdf =
-      file.type === "application/pdf" ||
-      /\.pdf$/i.test(file.name);
 
-    if (file.size === 0) {
-      throw new Error("The selected file is empty.");
-    }
+  if(!file)
+    return;
 
-    if (isPdf) {
-      if (file.size > 10 * 1024 * 1024) {
-        throw new Error("PDF must be 10 MB or smaller.");
-      }
 
-      const dataUrl = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(
-          new Error("Could not read the PDF.")
-        );
-        reader.readAsDataURL(file);
-      });
+  try{
 
-      await put("memories", {
-        date: currentDate,
-        name: file.name,
-        type: "pdf",
-        dataUrl: dataUrl,
-        created: Date.now(),
+    const image=
+      await compressImage(
+        file
+      );
+
+
+    await put(
+      "memories",
+      {
+        date:currentDate,
+        name:file.name,
+        image:image,
+        created:Date.now(),
         sync_id: diaryNewSyncId()
-      });
-    } else {
-      if (!file.type.startsWith("image/") &&
-          !/\.(jpg|jpeg|png|webp|heic|heif)$/i.test(file.name)) {
-        throw new Error("Choose a photograph or PDF.");
       }
+    );
 
-      const image = await compressImage(file);
 
-      await put("memories", {
-        date: currentDate,
-        name: file.name,
-        type: "image",
-        image: image,
-        created: Date.now(),
-        sync_id: diaryNewSyncId()
-      });
-    }
+    event.target.value="";
+
 
     await renderMemories();
     diaryScheduleSync();
 
-    alert(isPdf ? "PDF saved successfully." :
-                   "Photograph saved successfully.");
+  }catch(error){
 
-  } catch (error) {
-    console.error("Memory save failed:", error);
-    alert("Could not save file: " + (error.message || "Storage error."));
-  } finally {
-    input.value = "";
+    console.error("Memory save failed",error);
+    alert(
+      "Could not save photograph/file.\n"+
+      (error.message||"Please choose an image file and try again.")
+    );
+
   }
+
 }
 
 
@@ -6631,102 +6604,49 @@ async function renderMemories(){
       caption.className=
         "memorycaption";
 
+      caption.textContent=
+        formatDate(
+          memory.date
+        );
 
-async function renderMemories() {
-  const memories = await getAll("memories");
-  memories.sort((a, b) => (b.created || 0) - (a.created || 0));
 
-  const grid = document.getElementById("memoryGrid");
-  if (!grid) return;
+      const del=
+        document.createElement(
+          "button"
+        );
 
-  grid.innerHTML = "";
+      del.className=
+        "smallbtn";
 
-  if (!memories.length) {
-    grid.textContent = "No memories saved yet.";
-    return;
-  }
+      del.textContent=
+        "Delete";
 
-  memories.forEach(memory => {
-    const card = document.createElement("div");
-    card.className = "memory";
+      del.onclick=
+        ()=>deleteMemory(
+          memory.id
+        );
 
-    const isPdf = memory.type === "pdf" ||
-      /\.pdf$/i.test(memory.name || "");
 
-    if (isPdf) {
-      const icon = document.createElement("div");
-      icon.textContent = "📄 PDF";
-      icon.style.fontSize = "28px";
-      card.appendChild(icon);
+      card.appendChild(
+        image
+      );
 
-      const name = document.createElement("p");
-      name.textContent = memory.name || "Memory.pdf";
-      name.style.overflowWrap = "anywhere";
-      card.appendChild(name);
+      card.appendChild(
+        caption
+      );
 
-      const date = document.createElement("div");
-      date.className = "memorycaption";
-      date.textContent = formatDate(memory.date);
-      card.appendChild(date);
+      card.appendChild(
+        del
+      );
 
-      const data = memory.dataUrl || memory.fileData;
 
-      if (data) {
-        const open = document.createElement("button");
-        open.className = "smallbtn";
-        open.textContent = "Open PDF";
-        open.type = "button";
-        open.onclick = () => {
-          const link = document.createElement("a");
-          link.href = data;
-          link.target = "_blank";
-          link.rel = "noopener";
-          link.click();
-        };
-        card.appendChild(open);
+      grid.appendChild(
+        card
+      );
 
-        const download = document.createElement("button");
-        download.className = "smallbtn";
-        download.textContent = "Download";
-        download.type = "button";
-        download.onclick = () => {
-          const link = document.createElement("a");
-          link.href = data;
-          link.download = memory.name || "memory.pdf";
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-        };
-        card.appendChild(download);
-      } else {
-        const warning = document.createElement("p");
-        warning.textContent = "PDF data is unavailable.";
-        card.appendChild(warning);
-      }
-    } else {
-      const img = document.createElement("img");
-      img.src = memory.image || "";
-      img.alt = memory.name || "Diary memory";
-      img.loading = "lazy";
-      card.appendChild(img);
-
-      const caption = document.createElement("div");
-      caption.className = "memorycaption";
-      caption.textContent =
-        (memory.name ? memory.name + " · " : "") +
-        formatDate(memory.date);
-      card.appendChild(caption);
     }
+  );
 
-    const del = document.createElement("button");
-    del.className = "smallbtn";
-    del.textContent = "Delete";
-    del.type = "button";
-    del.onclick = () => deleteMemory(memory.id);
-    card.appendChild(del);
-
-    grid.appendChild(card);
-  });
 }
 
 

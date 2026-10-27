@@ -4319,43 +4319,41 @@ function applyDatePermissions(){
    PAGE NAVIGATION
 ========================================================= */
 
+
 async function newPage() {
-  // The New Page button also acts as the forward-navigation key. This lets
-  // users move through saved pages of old dates without editing those dates.
   await savePage();
+
   const allPages = await getAll("pages");
+
   const pageNumber = item => {
-    const n = Number(item.page || String(item.id || "").split("-").pop());
+    const n = Number(
+      item.page || String(item.id || "").split("-").pop()
+    );
     return Number.isFinite(n) && n > 0 ? n : 1;
   };
 
-  const nextOnSameDate = allPages
-    .filter(item => item && item.date === currentDate && pageNumber(item) > currentPage)
+  // First: open the next existing page for this same date.
+  const sameDatePages = allPages
+    .filter(item => item && item.date === currentDate)
     .sort((a, b) => pageNumber(a) - pageNumber(b));
 
-  if (nextOnSameDate.length) {
-    currentPage = pageNumber(nextOnSameDate[0]);
+  const nextPage = sameDatePages.find(
+    item => pageNumber(item) > currentPage
+  );
+
+  if (nextPage) {
+    currentPage = pageNumber(nextPage);
     await loadPage();
     return;
   }
 
-  // At the end of this date, move to the earliest later date with saved pages.
-  const laterDates = [...new Set(allPages
-    .filter(item => item && item.date && item.date > currentDate)
-    .map(item => item.date))].sort();
-  if (laterDates.length) {
-    currentDate = laterDates[0];
-    const pagesForDate = allPages.filter(item => item && item.date === currentDate);
-    currentPage = Math.min(...pagesForDate.map(pageNumber));
-    await loadPage();
-    return;
-  }
-
-  // Only create a genuinely new page when the current date is editable.
+  // Past entries are read-only; never jump to another date here.
   if (isPastDate(currentDate)) {
-    alert("There are no later saved diary pages. Past dates remain read-only.");
+    alert("No more saved pages for this date.");
     return;
   }
+
+  // Create the next page for the current date.
   currentPage++;
   await loadPage();
 }

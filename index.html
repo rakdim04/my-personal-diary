@@ -1705,6 +1705,11 @@ button{
     ======================================================= -->
     <section id="moduleDashboard" class="module-dashboard" aria-label="Diary modules">
       <div class="module-grid">
+        <button class="module-folder" type="button" onclick="openDrawModule()">
+          <span class="folder-icon">🎨</span>
+          <strong>Draw &amp; Sketch</strong>
+          <small>Draw, save and export sketches</small>
+        </button>
         <button class="module-folder featured" onclick="openDiaryWriting()">
           <span class="folder-icon">✍️</span>
           <strong>Writing</strong>
@@ -1766,6 +1771,49 @@ button{
           <small>Sync your diary data</small>
         </button>
       </div>
+    </section>
+    <!-- PATCH: Standalone Draw & Sketch workspace -->
+    <section id="drawModuleWorkspace" hidden aria-label="Draw and Sketch module">
+      <header class="dm-header">
+        <button type="button" onclick="closeDrawModule()">← All Modules</button>
+        <h2>🎨 Draw &amp; Sketch</h2>
+      </header>
+      <div class="dm-savebar">
+        <input id="drawTitle" type="text" maxlength="100" placeholder="Drawing name" aria-label="Drawing name">
+        <button type="button" onclick="saveModuleDrawing()">💾 Save</button>
+        <button type="button" onclick="exportModuleDrawing()">⬇ Export PNG</button>
+      </div>
+      <div class="dm-toolbar">
+        <label>Tool
+          <select id="dmTool" onchange="dmSetTool(this.value)">
+            <option value="pen">✏️ Pen</option>
+            <option value="eraser">🧽 Eraser</option>
+            <option value="line">／ Line</option>
+            <option value="rect">▱ Rectangle</option>
+            <option value="ellipse">◯ Ellipse</option>
+            <option value="text">T Text</option>
+          </select>
+        </label>
+        <label>Color <input id="dmColor" type="color" value="#35281e" aria-label="Brush color">
+        </label>
+        <label>Brush <input id="dmSize" type="range" min="1" max="40" value="4" aria-label="Brush size">
+        </label>
+        <button type="button" onclick="dmUndo()">↶ Undo</button>
+        <button type="button" onclick="dmRedo()">↷ Redo</button>
+        <button type="button" onclick="dmClear()">Clear canvas</button>
+      </div>
+      <p id="dmStatus" role="status" aria-live="polite">Ready to draw. Saved drawings stay on this device.</p>
+      <div class="dm-canvas-frame">
+        <canvas id="dmCanvas" aria-label="Drawing canvas">
+        </canvas>
+      </div>
+      <div class="dm-library-header">
+        <h3>My saved drawings</h3>
+        <button type="button" onclick="dmRenderList()">Refresh</button>
+      </div>
+      <div id="dmDrawingList" class="dm-drawing-list">
+      </div>
+      <p class="dm-note">Drawings are stored locally on this device. Export important sketches as PNG for a separate backup.</p>
     </section>
     <div id="writingBackbar" class="module-backbar" hidden>
       <button type="button" onclick="showModuleDashboard()">← All Modules</button>
@@ -7911,6 +7959,72 @@ start().then(() => {
 </script>
       <script src="./payment.js"></script>
       <script>
+
+/* PATCH: Separate Draw & Sketch module logic. Uses existing IndexedDB settings store. */
+let dmCanvas=null,dmCtx=null,dmTool='pen',dmDrawing=false,dmStart=null,dmLast=null;
+let dmUndoStack=[],dmRedoStack=[],dmActiveId=null,dmShapeBase=null,dmResizeObserver=null,dmCanvasReady=false;
+const DM_PREFIX='drawing:',DM_HISTORY_LIMIT=20;
+function dmStatus(message){const el=document.getElementById('dmStatus');if(el)el.textContent=message;}
+function openDrawModule(){
+  const dashboard=document.getElementById('moduleDashboard');
+  const writing=document.getElementById('diaryWritingWorkspace');
+  const back=document.getElementById('writingBackbar');
+  if(dashboard)dashboard.hidden=true;if(writing)writing.hidden=true;if(back)back.hidden=true;
+  const section=document.getElementById('drawModuleWorkspace');if(section)section.hidden=false;
+  dmInitCanvas();dmRenderList();window.scrollTo({top:0,behavior:'smooth'});
+}
+function closeDrawModule(){
+  const section=document.getElementById('drawModuleWorkspace');if(section)section.hidden=true;
+  const dashboard=document.getElementById('moduleDashboard');if(dashboard)dashboard.hidden=false;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function dmInitCanvas(){
+  if(dmCanvasReady)return;
+  dmCanvas=document.getElementById('dmCanvas');if(!dmCanvas)return;
+  dmCtx=dmCanvas.getContext('2d');if(!dmCtx)return;
+  const resize=()=>{
+    if(!dmCanvas||document.getElementById('drawModuleWorkspace').hidden)return;
+    const rect=dmCanvas.getBoundingClientRect();if(!rect.width||!rect.height)return;
+    const snapshot=dmCanvas.width&&dmCanvas.height?dmCanvas.toDataURL('image/png'):null;
+    const dpr=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+    dmCanvas.width=Math.round(rect.width*dpr);dmCanvas.height=Math.round(rect.height*dpr);
+    dmCtx=dmCanvas.getContext('2d');dmCtx.setTransform(dpr,0,0,dpr,0,0);dmCtx.lineCap='round';dmCtx.lineJoin='round';
+    dmCtx.fillStyle='#ffffff';dmCtx.fillRect(0,0,rect.width,rect.height);
+    if(snapshot){const image=new Image();image.onload=()=>{dmCtx.save();dmCtx.setTransform(1,0,0,1,0,0);dmCtx.drawImage(image,0,0,dmCanvas.width,dmCanvas.height);dmCtx.restore();dmCtx.setTransform(dpr,0,0,dpr,0,0);};image.src=snapshot;}
+  };
+  resize();
+  if(typeof ResizeObserver!=='undefined'){dmResizeObserver=new ResizeObserver(resize);dmResizeObserver.observe(dmCanvas);}
+  else window.addEventListener('resize',resize);
+  dmCanvas.addEventListener('pointerdown',dmPointerDown);
+  dmCanvas.addEventListener('pointermove',dmPointerMove);
+  dmCanvas.addEventListener('pointerup',dmPointerUp);
+  dmCanvas.addEventListener('pointercancel',dmPointerUp);
+  dmCanvas.addEventListener('contextmenu',e=>e.preventDefault());
+  dmCanvasReady=true;dmPushUndo();
+}
+function dmPoint(event){const r=dmCanvas.getBoundingClientRect();return{x:event.clientX-r.left,y:event.clientY-r.top};}
+function dmSnapshot(){return dmCanvas.toDataURL('image/png');}
+function dmPushUndo(){if(!dmCanvas)return;dmUndoStack.push(dmSnapshot());if(dmUndoStack.length>DM_HISTORY_LIMIT)dmUndoStack.shift();dmRedoStack=[];}
+function dmRestore(data,done){if(!data||!dmCanvas)return;const image=new Image();image.onload=()=>{const r=dmCanvas.getBoundingClientRect();dmCtx.save();dmCtx.setTransform(1,0,0,1,0,0);dmCtx.clearRect(0,0,dmCanvas.width,dmCanvas.height);dmCtx.fillStyle='#fff';dmCtx.fillRect(0,0,dmCanvas.width,dmCanvas.height);dmCtx.drawImage(image,0,0,dmCanvas.width,dmCanvas.height);dmCtx.restore();const dpr=dmCanvas.width/(r.width||1);dmCtx.setTransform(dpr,0,0,dpr,0,0);dmCtx.lineCap='round';dmCtx.lineJoin='round';if(done)done();};image.src=data;}
+function dmSetTool(tool){dmTool=tool;const c=document.getElementById('dmCanvas');if(c)c.style.cursor=tool==='text'?'text':tool==='eraser'?'cell':'crosshair';}
+function dmStyle(){dmCtx.lineWidth=Number(document.getElementById('dmSize').value)||4;dmCtx.strokeStyle=dmTool==='eraser'?'#ffffff':document.getElementById('dmColor').value;dmCtx.fillStyle=document.getElementById('dmColor').value;dmCtx.lineCap='round';dmCtx.lineJoin='round';}
+function dmPointerDown(event){if(!dmCanvas||document.getElementById('drawModuleWorkspace').hidden)return;event.preventDefault();dmCanvas.setPointerCapture?.(event.pointerId);const p=dmPoint(event);dmDrawing=true;dmStart=p;dmLast=p;dmStyle();
+  if(dmTool==='text'){dmDrawing=false;const text=prompt('Enter text to place on the drawing:');if(text){dmPushUndo();dmCtx.save();dmCtx.font=Math.max(14,(Number(document.getElementById('dmSize').value)||4)*4)+'px Georgia,serif';dmCtx.fillStyle=document.getElementById('dmColor').value;dmCtx.fillText(text,p.x,p.y);dmCtx.restore();dmStatus('Text added.');}return;}
+  if(['line','rect','ellipse'].includes(dmTool)){dmShapeBase=dmSnapshot();return;}
+  dmCtx.beginPath();dmCtx.moveTo(p.x,p.y);dmCtx.lineTo(p.x+.1,p.y+.1);dmCtx.stroke();dmStatus(dmTool==='eraser'?'Erasing…':'Drawing…');
+}
+function dmPointerMove(event){if(!dmDrawing||!dmCanvas)return;event.preventDefault();const p=dmPoint(event);dmStyle();if(['line','rect','ellipse'].includes(dmTool)){dmRestore(dmShapeBase,()=>{dmStyle();dmCtx.beginPath();if(dmTool==='line'){dmCtx.moveTo(dmStart.x,dmStart.y);dmCtx.lineTo(p.x,p.y);dmCtx.stroke();}else if(dmTool==='rect'){dmCtx.strokeRect(dmStart.x,dmStart.y,p.x-dmStart.x,p.y-dmStart.y);}else{dmCtx.ellipse((dmStart.x+p.x)/2,(dmStart.y+p.y)/2,Math.abs(p.x-dmStart.x)/2,Math.abs(p.y-dmStart.y)/2,0,0,Math.PI*2);dmCtx.stroke();}});}
+  else{dmCtx.beginPath();dmCtx.moveTo(dmLast.x,dmLast.y);dmCtx.lineTo(p.x,p.y);dmCtx.stroke();}dmLast=p;
+}
+function dmPointerUp(event){if(!dmDrawing)return;dmDrawing=false;try{if(event&&dmCanvas.hasPointerCapture?.(event.pointerId))dmCanvas.releasePointerCapture(event.pointerId);}catch(_){}if(['line','rect','ellipse'].includes(dmTool)){const p=event?dmPoint(event):dmLast;dmRestore(dmShapeBase,()=>{dmStyle();dmCtx.beginPath();if(dmTool==='line'){dmCtx.moveTo(dmStart.x,dmStart.y);dmCtx.lineTo(p.x,p.y);dmCtx.stroke();}else if(dmTool==='rect')dmCtx.strokeRect(dmStart.x,dmStart.y,p.x-dmStart.x,p.y-dmStart.y);else{dmCtx.ellipse((dmStart.x+p.x)/2,(dmStart.y+p.y)/2,Math.abs(p.x-dmStart.x)/2,Math.abs(p.y-dmStart.y)/2,0,0,Math.PI*2);dmCtx.stroke();}});dmShapeBase=null;}dmPushUndo();dmStatus('Drawing updated.');}
+function dmUndo(){if(dmUndoStack.length<2){dmStatus('Nothing to undo.');return;}dmRedoStack.push(dmUndoStack.pop());dmRestore(dmUndoStack[dmUndoStack.length-1]);dmStatus('Undo complete.');}
+function dmRedo(){if(!dmRedoStack.length){dmStatus('Nothing to redo.');return;}const next=dmRedoStack.pop();dmUndoStack.push(next);dmRestore(next);dmStatus('Redo complete.');}
+function dmClear(){if(!dmCanvas||!confirm('Clear the entire drawing canvas?'))return;const r=dmCanvas.getBoundingClientRect();dmCtx.clearRect(0,0,r.width,r.height);dmCtx.fillStyle='#fff';dmCtx.fillRect(0,0,r.width,r.height);dmPushUndo();dmStatus('Canvas cleared.');}
+function exportModuleDrawing(){if(!dmCanvas)return;const a=document.createElement('a');const title=(document.getElementById('drawTitle').value||'my-sketch').trim().replace(/[^a-z0-9_-]+/gi,'-').replace(/^-+|-+$/g,'')||'my-sketch';a.href=dmCanvas.toDataURL('image/png');a.download=title+'.png';a.click();dmStatus('PNG export started.');}
+async function saveModuleDrawing(){try{if(!dmCanvas)return;const title=(document.getElementById('drawTitle').value||'Untitled sketch').trim().slice(0,100);const id=dmActiveId||('sketch-'+Date.now()+'-'+Math.random().toString(36).slice(2,7));const record={key:DM_PREFIX+id,drawingId:id,title,image:dmCanvas.toDataURL('image/png'),updatedAt:new Date().toISOString()};await put('settings',record);dmActiveId=id;document.getElementById('drawTitle').value=title;dmStatus('Saved on this device.');await dmRenderList();}catch(error){console.error(error);dmStatus('Could not save. Please check available device storage.');alert('Could not save this drawing. The device may be low on storage. You can still export it as PNG.');}}
+async function dmRenderList(){const host=document.getElementById('dmDrawingList');if(!host)return;host.replaceChildren();try{const rows=(await getAll('settings')).filter(x=>x&&typeof x.key==='string'&&x.key.startsWith(DM_PREFIX)).sort((a,b)=>(b.updatedAt||'').localeCompare(a.updatedAt||''));if(!rows.length){host.textContent='No saved drawings yet.';return;}rows.forEach(row=>{const card=document.createElement('article');card.className='dm-drawing-card';const img=document.createElement('img');img.src=row.image;img.alt='Preview of '+(row.title||'untitled sketch');img.loading='lazy';const title=document.createElement('strong');title.textContent=row.title||'Untitled sketch';const date=document.createElement('small');date.textContent=row.updatedAt?new Date(row.updatedAt).toLocaleString():'Saved drawing';const actions=document.createElement('div');actions.className='dm-card-actions';const open=document.createElement('button');open.type='button';open.textContent='Open';open.onclick=()=>dmOpenSaved(row);const del=document.createElement('button');del.type='button';del.textContent='Delete';del.onclick=async()=>{if(!confirm('Delete “'+(row.title||'Untitled sketch')+'”?'))return;try{await deleteRecord('settings',row.key);if(dmActiveId===row.drawingId){dmActiveId=null;document.getElementById('drawTitle').value='';}await dmRenderList();dmStatus('Drawing deleted.');}catch(e){dmStatus('Could not delete drawing.');}};actions.append(open,del);card.append(img,title,date,actions);host.append(card);});}catch(error){console.error(error);host.textContent='Could not load saved drawings.';}}
+function dmOpenSaved(row){if(!row||!row.image)return;dmInitCanvas();dmActiveId=row.drawingId||null;document.getElementById('drawTitle').value=row.title||'';dmUndoStack=[];dmRedoStack=[];dmRestore(row.image,()=>{dmUndoStack=[dmSnapshot()];dmRedoStack=[];dmStatus('Opened saved drawing.');});}
+
 function openDiaryWriting(){
   const dashboard=document.getElementById('moduleDashboard');
   const workspace=document.getElementById('diaryWritingWorkspace');
